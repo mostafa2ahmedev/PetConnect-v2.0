@@ -1,0 +1,44 @@
+# ========== Backend (ASP.NET) ==========
+.vs/
+*.user
+*.suo
+
+# Build outputs (recursive for all projects)
+**/bin/
+**/obj/
+*.exe
+*.dll
+*.pdb
+
+# Temporary files
+*.log
+*.vsidx
+*.dbmdl
+*.cache
+
+# Entity Framework Migrations (optional — remove if you want to commit them)
+Migrations/
+
+# Ignore appsettings
+appsettings.json
+appsettings.*.json
+
+# ========== Frontend (Angular) ==========
+# Node modules
+**/node_modules/
+
+# Angular build output
+**/dist/
+**/.angular/cache/
+
+# Optional: Environment files (remove if you want to commit them)
+**/src/environments/*.local.ts
+
+# NPM/Yarn log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ========== OS & Editor Junk ==========
+.DS_Store
+Thumbs.db
