@@ -24,6 +24,13 @@ namespace PetConnect.DAL.Data.GenericRepository
             context.Set<T>().Remove(entity);
            
         }
+        public IQueryable<T> GetAllQueryable(bool withracking = false)
+        {
+            if (withracking)
+                return context.Set<T>();
+            else
+                return context.Set<T>().AsNoTracking();
+        }
         public IEnumerable<T> GetAll(bool withracking = false)
         {
             if (withracking)
@@ -32,6 +39,8 @@ namespace PetConnect.DAL.Data.GenericRepository
                return context.Set<T>().AsNoTracking().ToList();     
 
         }
+
+
 
         public T? GetByID(int id)
         {

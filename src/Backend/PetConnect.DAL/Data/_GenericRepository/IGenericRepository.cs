@@ -10,7 +10,7 @@ namespace PetConnect.DAL.Data.GenericRepository
     public interface IGenericRepository<T>  // T > Entity
     {
         public IEnumerable<T> GetAll(bool withracking = false); // Get All T
-
+        public IQueryable<T> GetAllQueryable(bool withracking = false); // Get All T
         public T? GetByID(int id); // Get Element By Id
 
         public T? GetByID(string id); // Get Element By Id
