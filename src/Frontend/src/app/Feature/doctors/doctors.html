@@ -1,0 +1,112 @@
+
+
+<section id="hero" class="hero section pb-0">
+    <div class="container section-title aos-init aos-animate pb-0" data-aos="fade-up">
+        <h2>Our Vets</h2>
+        <p>Meet the trusted professionals dedicated to keeping your pets safe, healthy, and happy.</p>
+    </div>
+
+    <div class="container d-flex justify-content-center">
+
+        <form method="get" class="col-md-8 mb-4 mt-4">
+
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <input type="text" name="name" class="form-control" placeholder="Search by name..." value="" />
+                </div>
+
+                <div class="col-md-4">
+                    <input type="number" name="maxPrice" class="form-control" placeholder="Max price per hour" step="1" value="@maxPrice" />
+                </div>
+
+                <div class="col-md-4">
+                    <select name="specialty" class="form-select">
+                        <option value="">-- All Specialties --</option>
+                        <!-- @for ( item of specialties; track )
+                        {
+                            @if (item.Value == specialty)
+                            {
+                                <option value="@item.Value" selected>{{item.Text}}</option>
+                            }
+                            @else
+                            {
+                                <option value="@item.Value">{{item.Text}}</option>
+                            }
+                        } -->
+                    </select>
+                </div>
+            </div>
+
+            <div class="row g-3 mt-2 justify-content-center">
+                <div class="col-md-3 d-grid">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+    <div class="container d-flex justify-content-center">
+
+        <!-- if didn't find any -->
+    <!-- @if (!Model.Any())
+    {
+        <div class="alert alert-danger text-center">
+            No doctors found matching your search criteria.
+        </div>
+    } -->
+
+
+    </div>
+
+
+</section>
+
+<section id="team" class="team section light-background">
+    <div class="container aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+        <div class="row g-5">
+            <!-- @for ( doctor of Model)
+            {
+                <div class="col-md-6 col-lg-3 aos-init aos-animate" data-aos="zoom-in" data-aos-delay="100">
+                     <a asp-controller="Doctors"
+                                   asp-action="Profile"
+                                   asp-route-id="@doctor.Id"
+                                   class="text-dark text-decoration-none">
+                    
+                    <div class="team-card text-center">
+                        <div class="team-image">
+                            <img src="@doctor.ImgUrl"
+                                 class="img-fluid"
+                                 alt="Dr. @doctor.FName @doctor.LName" />
+                            <div class="team-overlay">
+                                <p>
+                                    @doctor.PetSpecialty specialist<br />
+                                    Rate: <strong>@doctor.PricePerHour.ToString("F2") EGP/hr</strong>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="team-content">
+                            <h4>
+                                <a asp-controller="Doctors"
+                                   asp-action="Profile"
+                                   asp-route-id="@doctor.Id"
+                                   class="text-dark text-decoration-none">
+                                    Dr. @doctor.FName @doctor.LName
+                                </a>
+                            </h4>
+                            <span class="position">@doctor.PetSpecialty</span>
+                            <div class="rating mt-2">
+                                <i class="bi bi-star-fill text-dark-yellow"></i>
+                                <i class="bi bi-star-fill text-dark-yellow"></i>
+                                <i class="bi bi-star-fill text-dark-yellow"></i>
+                                <i class="bi bi-star-half text-dark-yellow"></i>
+                                <i class="bi bi-star text-dark-yellow"></i>
+                            </div>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+            } -->
+        </div>
+    </div>
+</section>
