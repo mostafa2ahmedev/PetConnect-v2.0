@@ -1,0 +1,93 @@
+<section id="hero" class="hero section py-5 bg-light">
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="row align-items-center gx-5">
+      
+      <div class="col-lg-6 mb-4 mb-lg-0">
+        <div class="mb-3">
+          <span class="badge rounded-pill bg-warning text-dark px-3 py-2 d-inline-flex align-items-center">
+            <i class="bi bi-bell me-2"></i> Next-Gen Animal Care
+          </span>
+        </div>
+        
+        <h1 class="mb-4 fw-bold display-5 text-primary">
+          Find, Adopt & Care <br/> All in One Place
+        </h1>
+        <p class="lead text-muted mb-4">
+          PetConnect makes pet adoption, veterinary care, and pet shopping easier than ever...
+        </p>
+        <a routerLink="/pets" class="btn btn-lg btn-primary">
+          Discover More <i class="bi bi-arrow-right ms-2"></i>
+        </a>
+      </div>
+
+      <div class="col-lg-6 text-center">
+        <img src="images/hero dog.png" class="img-fluid rounded shadow " alt="Hero Dog" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="team" class="team section bg-white py-5">
+  <div class="container text-center mb-5" data-aos="fade-up">
+    <h2 class="fw-bold">Our Vets</h2>
+    <p class="text-muted">Meet the trusted professionals...</p>
+  </div>
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="row g-4">
+      <div *ngFor="let doctor of doctors; let i = index" class="col-12 col-sm-6 col-lg-3" [attr.data-aos-delay]="100 * (i + 1)">
+        <a [routerLink]="['/doctors/profile', doctor.id]" class="text-decoration-none">
+          <div class="card shadow-sm h-100 text-center border-0 hover-shadow">
+            <img [src]="doctor.imgUrl" class="card-img-top" [alt]="'Dr. ' + doctor.fName + ' ' + doctor.lName" />
+            <div class="card-body">
+              <h5 class="card-title mb-1">Dr. {{ doctor.fName }} {{ doctor.lName }}</h5>
+              <small class="text-muted">{{ doctor.petSpecialty }}</small>
+              <div class="mt-2 text-warning">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-half"></i>
+                <i class="bi bi-star"></i>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="mt-5 text-center">
+      <a routerLink="/doctors" class="btn btn-outline-primary">All Vets</a>
+    </div>
+  </div>
+</section>
+
+
+<section id="pets-preview" class="section bg-light py-5">
+  <div class="container text-center mb-5" data-aos="fade-up">
+    <h2 class="fw-bold">Featured Pets</h2>
+    <p class="text-muted">Discover some of the adorable pets waiting for a new home.</p>
+  </div>
+
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="row g-4">
+      <div *ngFor="let pet of pets; let i = index" class="col-12 col-sm-6 col-lg-3" [attr.data-aos-delay]="100 * (i + 1)">
+        <div class="card h-100 border-0 shadow-sm position-relative overflow-hidden text-center">
+          <img [src]="'assets/PetImages/' + pet.imgUrl" class="card-img-top" [alt]="pet.name" />
+          
+          <div class="card-body">
+            <h5 class="card-title fw-semibold">{{ pet.name }}</h5>
+            <small class="text-muted">Status: <strong>{{ pet.status }}</strong></small>
+
+            <div class="d-flex justify-content-center gap-2 mt-3">
+              <a [routerLink]="['/pet/details', pet.id]" class="btn btn-sm btn-outline-primary">Learn More</a>
+              <a [routerLink]="['/pet/adopt', pet.id]" class="btn btn-sm btn-primary">Adopt</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-5 text-center">
+      <a routerLink="/pets" class="btn btn-outline-primary">All Pets</a>
+    </div>
+  </div>
+</section>
