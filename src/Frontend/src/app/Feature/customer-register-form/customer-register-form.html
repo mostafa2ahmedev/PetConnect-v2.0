@@ -1,0 +1,85 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+      <div class="card shadow-lg border-0">
+        <div class="card-body p-4">
+
+          <h2 class="text-center mb-4">Customer Sign Up 🛍️</h2>
+
+          <form (ngSubmit)="onSubmit()" #customerForm="ngForm" class="needs-validation" novalidate>
+            
+            <!-- 🙋 PERSONAL INFO -->
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="fname" class="form-label">First name</label>
+                <input type="text" id="fname" name="fname" [(ngModel)]="customer.fname" class="form-control" required>
+              </div>
+
+              <div class="col-md-6">
+                <label for="lname" class="form-label">Last name</label>
+                <input type="text" id="lname" name="lname" [(ngModel)]="customer.lname" class="form-control" required>
+              </div>
+
+              <div class="col-md-6">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" name="email" [(ngModel)]="customer.email" class="form-control" required>
+              </div>
+
+              <div class="col-md-6">
+                <label for="phone" class="form-label">Phone Number</label>
+                <input type="tel" id="phone" name="phone" [(ngModel)]="customer.phone" class="form-control">
+              </div>
+
+              <div class="col-md-6">
+                <label for="gender" class="form-label">Gender</label>
+                <select id="gender" name="gender" [(ngModel)]="customer.gender" class="form-select" required>
+                  <option value="" disabled>-- Select Gender --</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- 🔐 PASSWORD -->
+            <div class="row g-3 mt-3">
+              <div class="col-md-6">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" [(ngModel)]="customer.password" class="form-control" required>
+              </div>
+
+              <div class="col-md-6">
+                <label for="confirm" class="form-label">Confirm Password</label>
+                <input type="password" id="confirm" name="confirm" [(ngModel)]="customer.confirmPassword" class="form-control" required>
+              </div>
+            </div>
+
+            <!-- 🏠 ADDRESS -->
+            <div class="row g-3 mt-3">
+              <div class="col-md-4">
+                <label for="country" class="form-label">Country</label>
+                <input type="text" id="country" name="country" [(ngModel)]="customer.country" class="form-control">
+              </div>
+
+              <div class="col-md-4">
+                <label for="city" class="form-label">City</label>
+                <input type="text" id="city" name="city" [(ngModel)]="customer.city" class="form-control">
+              </div>
+
+              <div class="col-md-4">
+                <label for="street" class="form-label">Street</label>
+                <input type="text" id="street" name="street" [(ngModel)]="customer.street" class="form-control">
+              </div>
+            </div>
+
+            <!-- 🎯 SUBMIT BUTTON -->
+            <div class="d-grid mt-4">
+              <button type="submit" class="btn btn-primary btn-lg">
+                <i class="bi bi-person-check me-2"></i>Register
+              </button>
+            </div>
+
+            <!-- 🔁 SIGN-IN LINK -->
+            <div class="mt-4 text-center">
+                <a class="text-muted" [routerLink]="['/login']">Already have an account?</a>
+                <a [routerLink]="['/login']" class="ms-2 text-decoration-none fw-semibold text-primary">Sign In</a>
+            </div>
