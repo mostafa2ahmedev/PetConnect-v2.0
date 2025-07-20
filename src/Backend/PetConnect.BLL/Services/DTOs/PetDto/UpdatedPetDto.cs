@@ -1,4 +1,5 @@
-﻿using PetConnect.DAL.Data.Enums;
+﻿using Microsoft.AspNetCore.Http;
+using PetConnect.DAL.Data.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace PetConnect.BLL.Services.DTO.PetDto
         public PetStatus Status { get; set; }
         public bool IsApproved { get; set; }
         public Ownership Ownership { get; set; }
-        public string ImgUrl { get; set; } = null!;
+        public IFormFile form { get; set; } = null!;
         public int BreedId { get; set; }
     }
 }
