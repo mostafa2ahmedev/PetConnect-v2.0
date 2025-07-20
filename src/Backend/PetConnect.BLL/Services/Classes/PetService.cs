@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using PetConnect.DAL.Data.Repositories.Interfaces;
 using PetConnect.DAL.Data.Enums;
+using PetConnect.BLL.Services.DTO.PetCategoryDto;
 
 namespace PetConnect.BLL.Services.Classes
 {
@@ -42,7 +43,7 @@ namespace PetConnect.BLL.Services.Classes
 
 
 
-        public IEnumerable<PetDataDto> GetAllPets()
+        public List<PetDataDto> GetAllPets()
         {
             List<PetDataDto> petDatas = new List<PetDataDto>();
             IEnumerable<Pet> PetList= _unitOfWork.PetRepository.GetAll();
@@ -54,7 +55,7 @@ namespace PetConnect.BLL.Services.Classes
                 petDatas.Add(new PetDataDto()
                 {
                     Name = Pet.Name,
-                    ImgUrl = Pet.ImgUrl,
+                    ImgUrl = $"/assets/PetImages/{Pet.ImgUrl}",
                     Status = Pet.Status,
                     Id = Pet.Id,
                 });
@@ -64,12 +65,13 @@ namespace PetConnect.BLL.Services.Classes
 
         public PetDetailsDto? GetPet(int id)
         {
-           
-            var pet =  _unitOfWork.PetRepository.GetByID(id);
+            var pet = _unitOfWork.PetRepository.GetByID(id);
+            if (pet == null)
+                return null;
             var bread =   _unitOfWork.PetBreedRepository.GetByID(pet.BreedId);
             var Category =   _unitOfWork.PetCategoryRepository.GetByID(bread.CategoryId);
             PetDetailsDto Pet = new PetDetailsDto() {Name = pet.Name , IsApproved = pet.IsApproved ,BreadName =bread.Name  ,
-            ImgUrl = pet.ImgUrl , Ownership = pet.Ownership , Status = pet.Status , CategoryName = Category.Name};
+            ImgUrl = $"/assets/PetImages/{pet.ImgUrl}", Ownership = pet.Ownership , Status = pet.Status , CategoryName = Category.Name};
             return Pet;
         }
 
@@ -93,15 +95,35 @@ namespace PetConnect.BLL.Services.Classes
             return petDatas;
         }
 
-        public void UpdatePet(UpdatedPetDto UpdatedPet)
+        public async Task<int> UpdatePet(UpdatedPetDto UpdatedPet)
         {
-            throw new NotImplementedException();
+            var Image = await _attachmentService.ReplaceAsync("", UpdatedPet.form, "Images");
+            var Pet = new Pet()
+            {
+              Id= UpdatedPet.Id,
+              Name=UpdatedPet.Name,
+              ImgUrl= Image,
+              Ownership = UpdatedPet.Ownership,
+              Status = UpdatedPet.Status,
+              BreedId = UpdatedPet.BreedId,
+              IsApproved= false
+  
+         };
+            _unitOfWork.PetRepository.Update(Pet);
+            return _unitOfWork.SaveChanges();
         }
 
-
-        public void DeletePet(int id)
+ 
+        
+        public int DeletePet(int id)
         {
-
+            var Pet = _unitOfWork.PetRepository.GetByID(id);
+            if (Pet is not null)
+            {
+                _unitOfWork.PetRepository.Delete(Pet);
+                return _unitOfWork.SaveChanges();
+            }
+            return 0;
         }
 
  
