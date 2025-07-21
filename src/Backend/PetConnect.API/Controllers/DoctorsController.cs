@@ -117,7 +117,7 @@ namespace PetConnect.PL.Controllers
 
                 doctorService.Update(dto);
 
-                return Ok("Doctor updated successfully.");
+                return Ok(new { message="Doctor updated successfully." });
             }
             catch (Exception ex)
             {

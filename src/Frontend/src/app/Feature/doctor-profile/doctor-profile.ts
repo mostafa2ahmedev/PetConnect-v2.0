@@ -3,6 +3,7 @@ import { IDoctor } from '../doctors/idoctor';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DoctorsService } from '../doctors/doctors-service';
 import { CurrencyPipe } from '@angular/common';
+import { IDoctorEdit } from '../doctor-edit-profile/idoctor-edit';
 
 @Component({
   selector: 'app-doctor-profile',
