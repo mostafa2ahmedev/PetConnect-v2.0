@@ -120,8 +120,8 @@ namespace PetConnect.BLL.Services.Classes
             pet.Name = updatedPet.Name??pet.Name;
             pet.Ownership = updatedPet.Ownership??pet.Ownership;
             pet.Status = updatedPet.Status??pet.Status;
-            pet.BreedId = updatedPet.BreedId??pet.BreedId;
-            pet.Age = updatedPet.Age??pet.Age;
+            pet.BreedId = updatedPet.BreedId ==0 ? pet.BreedId: updatedPet.BreedId;
+            pet.Age = updatedPet.Age==0? pet.Age:updatedPet.Age;
             pet.IsApproved = false;
 
           

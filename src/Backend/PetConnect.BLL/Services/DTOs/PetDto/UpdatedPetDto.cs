@@ -15,10 +15,10 @@ namespace PetConnect.BLL.Services.DTO.PetDto
         public string? Name { get; set; } = null!;
 
         [Range(0, 50)]
-        public int? Age { get; set; }
+        public int Age { get; set; }
         public PetStatus? Status { get; set; }
         public Ownership? Ownership { get; set; }
         public IFormFile? ImgURL { get; set; } = null!;
-        public int? BreedId { get; set; }
+        public int BreedId { get; set; }
     }
 }
