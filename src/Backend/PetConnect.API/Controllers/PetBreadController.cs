@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PetConnect.BLL.Services.Classes;
 using PetConnect.BLL.Services.DTO.PetBreadDto;
 using PetConnect.BLL.Services.DTO.PetCategoryDto;
+using PetConnect.BLL.Services.DTO.PetDto;
 using PetConnect.BLL.Services.DTOs;
 using PetConnect.BLL.Services.Interfaces;
 
@@ -57,9 +59,27 @@ public class PetBreadController : ControllerBase
         if (id==null)
             return BadRequest(new GeneralResponse(400, "Invalid ID"));
 
-        if (_petBreadService.DeletePetBread(id.Value) > 0)
-            return Ok(new GeneralResponse(200, "Pet bread deleted successfully"));
+        if (_petBreadService.DeletePetBread(id.Value) == 0)
+            return NotFound(new GeneralResponse(404, $"No bread found with ID = {id}"));
 
-        return NotFound(new GeneralResponse(404, $"No bread found with ID = {id}"));
+        return Ok(new GeneralResponse(200, "Pet bread deleted successfully"));
+    }
+
+
+    [HttpGet("Breads/{id}")]
+    [ProducesResponseType(typeof(List<GPetBreadDto>), StatusCodes.Status200OK)]
+    [EndpointSummary("Get Breads By Category")]
+    public IActionResult GetBreadsByCategory(int? id)
+    {
+        if (id == null)
+            return BadRequest(new GeneralResponse(400, "Invalid ID"));
+
+        var BreadList = _petBreadService.GetBreadsByCategoryId(id.Value);
+
+        if (BreadList is not { }) {
+            return NotFound(new GeneralResponse(404, $"No Category found with ID = {id}"));
+        }
+
+        return Ok(new GeneralResponse(200, BreadList));
     }
 }

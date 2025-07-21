@@ -15,6 +15,6 @@ namespace PetConnect.BLL.Services.Interfaces
         public int UpdatePetBread(UPetBreadDto UPetBread);
         public int DeletePetBread(int Id);
 
-        public List<GPetBreadDto> GetBreadsByCategoryId(int CategoryId);
+        public List<GPetBreadDto>? GetBreadsByCategoryId(int CategoryId);
     }
 }
