@@ -97,28 +97,39 @@ namespace PetConnect.BLL.Services.Classes
             }
             return petDatas;
         }
-
-        public async Task<int> UpdatePet(UpdatedPetDto UpdatedPet)
+        public async Task<int> UpdatePet(UpdatedPetDto updatedPet)
         {
-            var Image = await _attachmentService.ReplaceAsync("", UpdatedPet.form, "Images");
-            var Pet = new Pet()
+        
+            var pet = _unitOfWork.PetRepository.GetByID(updatedPet.Id);
+            if (pet == null)
             {
-              Id= UpdatedPet.Id,
-              Name=UpdatedPet.Name,
-              ImgUrl= Image,
-              Ownership = UpdatedPet.Ownership,
-              Status = UpdatedPet.Status,
-              BreedId = UpdatedPet.BreedId,
-              IsApproved=false,
-              Age = UpdatedPet.Age
+                return 0;
+            }
 
-            };
-            _unitOfWork.PetRepository.Update(Pet);
+           
+            if (updatedPet.ImgURL != null)
+            {
+                var fileName = await _attachmentService.UploadAsync(updatedPet.ImgURL, Path.Combine("img", "pets"));
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    pet.ImgUrl = fileName;
+                }
+            }
+
+            
+            pet.Name = updatedPet.Name??pet.Name;
+            pet.Ownership = updatedPet.Ownership??pet.Ownership;
+            pet.Status = updatedPet.Status??pet.Status;
+            pet.BreedId = updatedPet.BreedId??pet.BreedId;
+            pet.Age = updatedPet.Age??pet.Age;
+            pet.IsApproved = false;
+
+          
+            _unitOfWork.PetRepository.Update(pet);
             return _unitOfWork.SaveChanges();
         }
 
- 
-        
+
         public int DeletePet(int id)
         {
             var Pet = _unitOfWork.PetRepository.GetByID(id);

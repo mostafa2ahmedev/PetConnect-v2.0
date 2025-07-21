@@ -44,6 +44,7 @@ namespace PetConnect.API.Controllers
 
 
             var pets = _petService.GetAllPetsByCountForAdoption(count.Value);
+
             return Ok(new GeneralResponse(200, pets));
         }
 
