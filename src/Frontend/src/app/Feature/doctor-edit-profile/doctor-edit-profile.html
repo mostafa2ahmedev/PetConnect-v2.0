@@ -1,0 +1,88 @@
+@if(typeof doctor != 'string'){
+
+<section id="hero" class="hero section pb-3">
+    <div class="container section-title aos-init aos-animate pb-0" data-aos="fade-up">
+        <h2>Hello, Dr. {{doctor.fName}}</h2>
+        <h3>Edit  profile</h3>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <form (onsubmit)="onSubmit()" method="post" class="row g-3" enctype="multipart/form-data">
+            <!-- Hidden Id -->
+            <input type="hidden" [(ngModel)]="doctor.id" name="id"/>
+
+            <div class="col-md-6">
+                <label  class="form-label">First name:</label>
+                <input asp-for="FName" name="fName" [(ngModel)]="doctor.fName" class="form-control" />
+                <span asp-validation-for="FName" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label  class="form-label"> Last name:</label>
+                <input asp-for="LName" [(ngModel)]="doctor.lName" name="lName" class="form-control" />
+                <span asp-validation-for="LName" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Gender" class="form-label">Gender: </label>
+                <select asp-for="Gender" [(ngModel)]="doctor.gender" name="gender" class="form-select" asp-items="Html.GetEnumSelectList<Gender>()">
+                    <option disabled selected value="">-- Select Gender --</option>
+                    <option value="Female">Female</option>
+                    <option value="Male">Male</option>
+                </select>
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="PetSpecialty" class="form-label">Speciality: </label>
+                <select asp-for="PetSpecialty" [(ngModel)]="doctor.petSpecialty" name="specialty" class="form-select" asp-items="Html.GetEnumSelectList<PetSpecialty>()">
+                    <option disabled  value="">-- Select Specialty --</option>
+                    <option value="Dog">Dog</option>
+                    <option value="Cat">Cat</option>
+                </select>
+                <span asp-validation-for="PetSpecialty" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="PricePerHour" class="form-label">Price per hour: </label>
+                <input asp-for="PricePerHour" [(ngModel)]="doctor.pricePerHour" name="pricePerHour" class="form-control" type="number" step="0.01" />
+                <span asp-validation-for="PricePerHour" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="CertificateFile" class="form-label">Certificate Url: </label>
+                <input asp-for="CertificateFile" [(ngModel)]="doctor.certificateUrl" name="certificateUrl" class="form-control" />
+                <span asp-validation-for="CertificateFile" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label  class="form-label">Upload Image: </label>
+                <input  [(ngModel)]="doctor.imgUrl" name="imgUrl" class="form-control" type="file" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Street" class="form-label">Street: </label>
+                <input asp-for="Street" class="form-control" [(ngModel)]="doctor.street" name="street"/>
+                <span asp-validation-for="Street" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label  class="form-label">City: </label>
+                <input  class="form-control" [(ngModel)]="doctor.city" name="city"/>
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+
+            <div class="col-12 mt-4">
+                <button type="submit" class="btn btn-move btn-primary mx-2" >Save Changes</button>
+                <a asp-action="Index" class=" btn btn-outline-danger">Cancel</a>
+            </div>
+        </form>
+    </div>
+</section>
+}
+
+
+

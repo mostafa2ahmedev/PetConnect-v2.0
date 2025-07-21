@@ -10,9 +10,13 @@ import { Categories } from './Feature/categories/categories';
 import { Doctors } from './Feature/doctors/doctors';
 import { DoctorRegisterForm } from './Feature/doctor-register-form/doctor-register-form';
 import { CustomerRegisterForm } from './Feature/customer-register-form/customer-register-form';
+import { DoctorProfile } from './Feature/doctor-profile/doctor-profile';
+import { DoctorEditProfile } from './Feature/doctor-edit-profile/doctor-edit-profile';
 export const routes: Routes = [
       { path: '', component: Home },
   { path: 'doctors', component: Doctors },
+  { path: 'doctors/:id', component: DoctorProfile },
+  { path: 'doctors/update/:id', component: DoctorEditProfile },
   { path: 'pets', component: Pets },
   { path: 'add-pet', component: AddPets },
   { path: 'categories', component: Categories },
