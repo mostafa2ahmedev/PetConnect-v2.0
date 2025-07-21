@@ -1,0 +1,48 @@
+<section class="section">
+  <div class="container">
+    <h2 class="mb-4">Add New Breed</h2>
+
+    <div class="card shadow rounded-4 p-4 col-md-8 mx-auto">
+      <form (ngSubmit)="onSubmit()">
+        <!-- Breed Name -->
+        <div class="mb-3">
+          <label class="form-label">Breed Name</label>
+          <input
+            type="text"
+            [(ngModel)]="breedName"
+            name="breedName"
+            class="form-control"
+            placeholder="Enter breed name"
+            required
+          />
+        </div>
+
+        <!-- Category Select -->
+        <div class="mb-3">
+          <label class="form-label">Select Category</label>
+          <select
+            class="form-select"
+            [(ngModel)]="selectedCategoryId"
+            name="categoryId"
+            required
+          >
+            <option value="0" disabled selected>-- Choose Category --</option>
+            <option *ngFor="let cat of categories" [value]="cat.id">
+              {{ cat.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Error/Success Messages -->
+        <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+        <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+
+        <!-- Buttons -->
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary">Save</button>
+          <a routerLink="/breeds" class="btn btn-secondary">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

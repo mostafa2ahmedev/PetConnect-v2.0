@@ -1,0 +1,45 @@
+<section class="section">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Pet Breeds</h2>
+      <a routerLink="/add-breed" class="btn btn-primary">Add New Breed</a>
+    </div>
+
+    <!-- Category Filter -->
+    <div class="mb-4">
+      <label class="form-label">Filter by Category</label>
+      <select
+        class="form-select"
+        (change)="onCategoryChange($event)"
+        [(ngModel)]="selectedCategoryId"
+      >
+        <option value="0">All Categories</option>
+        <option *ngFor="let cat of categories" [value]="cat.id">
+          {{ cat.name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Breeds List -->
+    <div class="row">
+      <div class="col-md-6 col-lg-4 mb-4" *ngFor="let breed of filteredBreeds">
+        <div class="card shadow border-0 rounded-4 h-100">
+          <div class="card-body d-flex flex-column justify-content-between">
+            <h5 class="card-title text-center">{{ breed.name }}</h5>
+            <p class="text-muted text-center">
+              Category: {{ breed.categoryName }}
+            </p>
+            <div class="d-flex justify-content-center gap-2 mt-3">
+              <a
+                [routerLink]="['/breeds/edit', breed.id]"
+                class="btn btn-outline-primary btn-sm w-100"
+              >
+                <i class="bi bi-pencil-square me-1"></i> Edit
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

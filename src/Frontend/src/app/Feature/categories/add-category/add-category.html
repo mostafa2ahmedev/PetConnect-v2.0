@@ -1,0 +1,35 @@
+<section class="container my-5">
+  <div class="section-title text-center mb-4">
+    <h2>Add New Category</h2>
+    <p>Create a new pet category</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+
+  <form #form="ngForm" (ngSubmit)="onSubmit(form)">
+    <div class="card shadow rounded-4 p-4 mb-3">
+      <div class="mb-3">
+        <label for="name" class="form-label">Category Name</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          class="form-control"
+          required
+          [(ngModel)]="category.name"
+        />
+      </div>
+
+      <div class="d-flex gap-2">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="form.invalid || saving"
+        >
+          {{ saving ? "Saving..." : "Save Category" }}
+        </button>
+        <a routerLink="/categories" class="btn btn-secondary">Cancel</a>
+      </div>
+    </div>
+  </form>
+</section>

@@ -57,9 +57,9 @@ public class PetCategoryController : ControllerBase
         if (id==null)
             return BadRequest(new GeneralResponse(400, "Invalid ID"));
 
-        if (_petCategoryService.DeletePetCategory(id.Value)== 0)
-            return Ok(new GeneralResponse(200, "Pet category deleted successfully"));
+        if (_petCategoryService.DeletePetCategory(id.Value) == 0)
+            return NotFound(new GeneralResponse(404, $"No category found with ID = {id}"));
 
-        return NotFound(new GeneralResponse(404, $"No category found with ID = {id}"));
+        return Ok(new GeneralResponse(200, "Pet category deleted successfully"));
     }
 }

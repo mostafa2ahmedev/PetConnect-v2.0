@@ -1,0 +1,70 @@
+<section id="hero" class="hero section pb-0">
+  <div
+    class="container section-title aos-init aos-animate pb-0"
+    data-aos="fade-up"
+  >
+    <h2>Discover Our Pets</h2>
+    <p>Find your new best friend and give a rescued pet a loving home.</p>
+
+    <div class="mt-3 d-flex justify-content-center gap-3">
+      <a class="btn btn-primary btn-sm" routerLink="/categories">
+        Manage Categories
+      </a>
+      <a class="btn btn-outline-primary btn-sm" href="/PetBread">
+        Manage Breeds
+      </a>
+    </div>
+  </div>
+</section>
+
+<div *ngIf="loading" class="text-center p-5">
+  <div class="spinner-border text-primary" role="status"></div>
+  <p class="mt-3">Loading pet details...</p>
+</div>
+
+<section id="adoptable-pets" class="team section bg-light">
+  <div
+    class="container aos-init aos-animate"
+    data-aos="fade-up"
+    data-aos-delay="100"
+  >
+    <div class="row g-5">
+      <div
+        class="col-md-6 col-lg-3"
+        *ngFor="let pet of pets"
+        data-aos="zoom-in"
+        data-aos-delay="100"
+      >
+        <div class="team-card text-center">
+          <div class="team-image">
+            <img
+              [src]="getFullImageUrl(pet.imgUrl)"
+              class="img-fluid"
+              [alt]="pet.name"
+            />
+          </div>
+          <div class="team-content pet-info">
+            <h4>{{ pet.name }}</h4>
+            <span>Age: 4 years</span>
+            <span>{{ statusMap[pet.status] }}</span>
+            <!-- <span>Posted by: Ahmed K.</span> -->
+            <div class="mt-3 d-flex justify-content-center gap-2">
+              <a
+                [routerLink]="['/pet-details', pet.id]"
+                class="btn btn-outline-primary btn-sm"
+                >Learn More</a
+              >
+              <a [routerLink]="['/pets', pet.id]" class="btn btn-primary btn-sm"
+                >Adopt Now</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="error && !loading" class="alert alert-danger text-center mt-4">
+    {{ error }}
+  </div>
+</section>

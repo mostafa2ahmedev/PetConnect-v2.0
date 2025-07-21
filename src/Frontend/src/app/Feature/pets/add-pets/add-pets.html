@@ -1,0 +1,150 @@
+<!-- Hero Section -->
+<section id="hero" class="hero section">
+  <div
+    class="container section-title aos-init aos-animate pb-0"
+    data-aos="fade-up"
+  >
+    <h2>Add New Pet</h2>
+    <p>Add a new pet for adoption or rescue</p>
+
+    <div class="my-3 d-flex justify-content-center gap-3">
+      <a routerLink="/pets" class="btn btn-outline-primary btn-sm">All Pets</a>
+      <a routerLink="/doctors" class="btn btn-outline-primary btn-sm"
+        >Our Vets</a
+      >
+    </div>
+  </div>
+</section>
+
+<!-- Form Section -->
+<div class="container mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow rounded-4 p-4">
+        <form
+          #form="ngForm"
+          (ngSubmit)="onSubmit(form)"
+          enctype="multipart/form-data"
+        >
+          <!-- Name -->
+          <div class="mb-3">
+            <label class="form-label">Pet Name</label>
+            <input
+              type="text"
+              name="name"
+              class="form-control"
+              [(ngModel)]="pet.name"
+              required
+            />
+          </div>
+          <!-- Category Dropdown -->
+          <div class="mb-3">
+            <label for="categoryList" class="form-label">Categories</label>
+            <select
+              class="form-select"
+              id="categoryList"
+              (change)="onCategoryChange($event)"
+            >
+              <option value="">-- Select Category --</option>
+              <option *ngFor="let cat of categories" [value]="cat.id">
+                {{ cat.name }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Breed Dropdown -->
+          <div class="mb-3">
+            <label class="form-label">Breeds</label>
+            <select
+              class="form-select"
+              name="breedId"
+              [(ngModel)]="pet.breedId"
+              [disabled]="selectedCategoryId === 0"
+            >
+              <option value="0" disabled selected>
+                {{
+                  selectedCategoryId === 0
+                    ? "Select a category first"
+                    : "Select a breed"
+                }}
+              </option>
+              <option *ngFor="let breed of filteredBreeds" [value]="breed.id">
+                {{ breed.name }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Status Dropdown -->
+          <div class="mb-3">
+            <label class="form-label">Status</label>
+            <select
+              class="form-select"
+              name="status"
+              [(ngModel)]="pet.status"
+              required
+            >
+              <option value="">-- Select Status --</option>
+              <option *ngFor="let status of statusOptions" [value]="status.key">
+                {{ status.value }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Ownership Dropdown -->
+          <!-- <div class="mb-3">
+            <label class="form-label">Ownership</label>
+            <select
+              class="form-select"
+              name="ownership"
+              [(ngModel)]="pet.ownership"
+              required
+            >
+              <option value="">-- Select Ownership --</option>
+              <option
+                *ngFor="let owner of ownershipOptions"
+                [value]="owner.key"
+              >
+                {{ owner.value }}
+              </option>
+            </select>
+          </div> -->
+
+          <!-- Approval Checkbox -->
+          <!-- <div class="form-check mb-3">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="isApproved"
+              id="isApproved"
+              [(ngModel)]="pet.isApproved"
+            />
+            <label class="form-check-label" for="isApproved">Is Approved</label>
+          </div> -->
+
+          <!-- Image Upload -->
+          <div class="mb-3">
+            <label class="form-label">Upload Image</label>
+            <input
+              type="file"
+              class="form-control"
+              (change)="onFileChange($event)"
+              required
+            />
+          </div>
+
+          <!-- Buttons -->
+          <div class="d-flex gap-2">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="form.invalid"
+            >
+              Save
+            </button>
+            <a routerLink="/pets" class="btn btn-secondary">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

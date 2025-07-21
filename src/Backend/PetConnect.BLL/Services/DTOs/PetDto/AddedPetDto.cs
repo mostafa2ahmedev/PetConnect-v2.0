@@ -14,8 +14,11 @@ namespace PetConnect.BLL.Services.DTO.PetDto
 
         [Required(ErrorMessage = "The Name is required")]
         public string Name { get; set; } = null!;
+
+        [Range(0,50)]
+        public int Age { get; set; }
         public PetStatus Status { get; set; }
-        public bool IsApproved { get; set; }
+
         public Ownership Ownership { get; set; }
 
         public IFormFile form { get; set; } = null!;

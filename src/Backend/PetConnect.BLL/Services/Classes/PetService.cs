@@ -35,7 +35,7 @@ namespace PetConnect.BLL.Services.Classes
             var Image = await _attachmentService.UploadAsync(addedPet.form, "PetImages");
             var PetData = new Pet() {Name = addedPet.Name , ImgUrl = Image
                 , BreedId = addedPet.BreedId , IsApproved= false , Ownership =addedPet.Ownership ,
-                Status = addedPet.Status };
+                Status = addedPet.Status,Age=addedPet.Age };
    
             _unitOfWork.PetRepository.Add(PetData);
            return _unitOfWork.SaveChanges();
@@ -58,6 +58,7 @@ namespace PetConnect.BLL.Services.Classes
                     ImgUrl = $"/assets/PetImages/{Pet.ImgUrl}",
                     Status = Pet.Status,
                     Id = Pet.Id,
+                    Age = Pet.Age
                 });
         }
             return petDatas;
@@ -70,8 +71,9 @@ namespace PetConnect.BLL.Services.Classes
                 return null;
             var bread =   _unitOfWork.PetBreedRepository.GetByID(pet.BreedId);
             var Category =   _unitOfWork.PetCategoryRepository.GetByID(bread.CategoryId);
-            PetDetailsDto Pet = new PetDetailsDto() {Name = pet.Name , IsApproved = pet.IsApproved ,BreadName =bread.Name  ,
-            ImgUrl = $"/assets/PetImages/{pet.ImgUrl}", Ownership = pet.Ownership , Status = pet.Status , CategoryName = Category.Name};
+
+            PetDetailsDto Pet = new PetDetailsDto() {Id = pet.Id, Name = pet.Name , IsApproved = pet.IsApproved ,BreadName =bread.Name  ,
+            ImgUrl = $"/assets/PetImages/{pet.ImgUrl}", Ownership = pet.Ownership , Status = pet.Status , CategoryName = Category.Name,Age = pet.Age};
             return Pet;
         }
 
@@ -90,31 +92,44 @@ namespace PetConnect.BLL.Services.Classes
                     ImgUrl = Pet.ImgUrl,
                     Status = Pet.Status,
                     Id = Pet.Id,
+                    Age = Pet.Age
                 });
             }
             return petDatas;
         }
-
-        public async Task<int> UpdatePet(UpdatedPetDto UpdatedPet)
+        public async Task<int> UpdatePet(UpdatedPetDto updatedPet)
         {
-            var Image = await _attachmentService.ReplaceAsync("", UpdatedPet.form, "Images");
-            var Pet = new Pet()
+        
+            var pet = _unitOfWork.PetRepository.GetByID(updatedPet.Id);
+            if (pet == null)
             {
-              Id= UpdatedPet.Id,
-              Name=UpdatedPet.Name,
-              ImgUrl= Image,
-              Ownership = UpdatedPet.Ownership,
-              Status = UpdatedPet.Status,
-              BreedId = UpdatedPet.BreedId,
-              IsApproved= false
-  
-         };
-            _unitOfWork.PetRepository.Update(Pet);
+                return 0;
+            }
+
+           
+            if (updatedPet.ImgURL != null)
+            {
+                var fileName = await _attachmentService.UploadAsync(updatedPet.ImgURL, Path.Combine("img", "pets"));
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    pet.ImgUrl = fileName;
+                }
+            }
+
+            
+            pet.Name = updatedPet.Name??pet.Name;
+            pet.Ownership = updatedPet.Ownership??pet.Ownership;
+            pet.Status = updatedPet.Status??pet.Status;
+            pet.BreedId = updatedPet.BreedId??pet.BreedId;
+            pet.Age = updatedPet.Age??pet.Age;
+            pet.IsApproved = false;
+
+          
+            _unitOfWork.PetRepository.Update(pet);
             return _unitOfWork.SaveChanges();
         }
 
- 
-        
+
         public int DeletePet(int id)
         {
             var Pet = _unitOfWork.PetRepository.GetByID(id);

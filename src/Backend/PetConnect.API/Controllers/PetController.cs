@@ -31,6 +31,24 @@ namespace PetConnect.API.Controllers
             var pets = _petService.GetAllPets();
             return Ok(new GeneralResponse(200, pets));
         }
+
+
+        [HttpGet("Count/{count}")]
+        [ProducesResponseType(typeof(List<PetDataDto>), StatusCodes.Status200OK)]
+        [EndpointSummary("Get Pets with Limit")]
+
+        public ActionResult GetAllPetByCount(int? count)
+        {
+            if (count == null)
+                return BadRequest(new GeneralResponse(400, "Invalid Count"));
+
+
+            var pets = _petService.GetAllPetsByCountForAdoption(count.Value);
+
+            return Ok(new GeneralResponse(200, pets));
+        }
+
+
         [HttpGet("{id}")]
         [EndpointSummary("Get Pet By Id")]
         public ActionResult PetDetails(int? id)
@@ -42,6 +60,10 @@ namespace PetConnect.API.Controllers
                 return NotFound(new GeneralResponse(404, $"No Pet found with ID ={id}"));
             return Ok(new GeneralResponse(200, Pet));
         }
+
+
+
+
         [HttpPost()]
         [EndpointSummary("Add A New Pet")]
         public async Task<ActionResult> AddPet( AddedPetDto addPet)
