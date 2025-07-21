@@ -60,7 +60,7 @@ namespace PetConnect.PL.Controllers
             var doctorDTO = doctorService.GetByID(id);
 
             if (doctorDTO == null)
-                return NotFound();
+                return NotFound("Didn't find any doctor with that Id");
 
             return Ok(doctorDTO);
         }

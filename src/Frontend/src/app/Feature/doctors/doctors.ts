@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IDoctor } from './idoctor';
 import { CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { ISpeciality } from './ispeciality';
 
 @Component({
   selector: 'app-doctors',
@@ -16,26 +17,30 @@ export class Doctors implements OnInit{
 doctorService = inject(DoctorsService);
 name:string = "";
 maxPrice:number|null=null;
-allDoctors:any;
+allDoctors:string|IDoctor[] = [];
 specialty:number|null=null;
-specialities:{specialityName:string,value:number}[]=
+specialities:ISpeciality[]=
   [{specialityName:"Dog",value:0},
     {specialityName:"Cat",value:1},
 
   ];
+errorFound:boolean=false;
+errorMesseage:string ="";
 ngOnInit() {
   this.search()
 }
-getAll(){
-  // this.doctorService.getAll().subscribe();
-}
-getById(){
-  // this.doctorService.getById().subscribe();
-}
-editById(){
-  // this.doctorService.editById().subscribe();
-}
+
 search(){
-  this.doctorService.getAll(this.name,this.maxPrice,this.specialty).subscribe(e=>{this.allDoctors= e; console.log(e)});
+  this.doctorService.getAll(this.name,this.maxPrice,this.specialty).subscribe({
+    next:e=>{
+      this.errorFound=false;
+      this.allDoctors= e;},
+    error:err=>{
+      this.errorFound=true;
+      this.errorMesseage=err?.error
+      console.log(this.errorMesseage)
+      
+    }
+  })
 }
 }

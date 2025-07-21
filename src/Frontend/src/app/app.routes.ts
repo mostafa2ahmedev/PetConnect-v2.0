@@ -12,6 +12,7 @@ import { DoctorRegisterForm } from './Feature/doctor-register-form/doctor-regist
 import { CustomerRegisterForm } from './Feature/customer-register-form/customer-register-form';
 import { DoctorProfile } from './Feature/doctor-profile/doctor-profile';
 import { DoctorEditProfile } from './Feature/doctor-edit-profile/doctor-edit-profile';
+import { NotFoundDoctor } from './Feature/not-found-doctor/not-found-doctor';
 export const routes: Routes = [
       { path: '', component: Home },
   { path: 'doctors', component: Doctors },
@@ -26,4 +27,5 @@ export const routes: Routes = [
   { path: 'register', component: Register ,children: []},
   {path:"register/doctor", component:DoctorRegisterForm},
   {path:"register/customer", component:CustomerRegisterForm},
+  {path:"notfound/doctor",component:NotFoundDoctor}
 ];

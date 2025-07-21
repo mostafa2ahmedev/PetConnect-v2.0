@@ -9,22 +9,19 @@ import { IDoctorEdit } from '../doctor-edit-profile/idoctor-edit';
 })
 export class DoctorsService {
   httpClient = inject(HttpClient)
-  getAll(name:any,maxPrice:any,speciality:any):Observable<IDoctor|IDoctor[]|string>{
+  getAll(name:any,maxPrice:any,speciality:any):Observable<IDoctor[]|string>{
     let params = new HttpParams();
     if(name)
-    params=params.set("name", name);
+      params=params.set("name", name);
     if(maxPrice)
-    params=params.set("maxPrice",maxPrice)
+      params=params.set("maxPrice",maxPrice)
     if(speciality)
-    params=params.set("specialty",speciality);
-    return this.httpClient.get<IDoctor | IDoctor[] | string>("https://localhost:7102/api/Doctors",{params})
+      params=params.set("specialty",speciality);
+    return this.httpClient.get< IDoctor[]| string>("https://localhost:7102/api/Doctors",{params})
   }
   getById(id:string):Observable<IDoctor|string>{
     return this.httpClient.get<IDoctor|string>(`https://localhost:7102/api/Doctors/${id}`)
   }
-  // editById(id:string, editedDoctor:IDoctorEdit):Observable<IDoctorEdit|string>{
-  //   return this.httpClient.put<IDoctorEdit|string>(`https://localhost:7102/api/Doctors/${id}`,editedDoctor)
-  // }
   editByIdWithFile
     (id: string, doctor: IDoctorEdit): Observable<any> {
   const formData = new FormData();

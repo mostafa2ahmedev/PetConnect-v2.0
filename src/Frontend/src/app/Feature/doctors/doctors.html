@@ -51,29 +51,25 @@
     <div class="container d-flex justify-content-center">
 
         <!-- if didn't find any -->
-    <!-- @if (!Model.Any())
+    @if (typeof allDoctors== "string" || errorFound)
     {
         <div class="alert alert-danger text-center">
-            No doctors found matching your search criteria.
+            {{errorMesseage}}
         </div>
-    } -->
+    }
 
 
     </div>
 
 
 </section>
-
+@if(typeof allDoctors != "string" && !errorFound) {
 <section id="team" class="team section light-background">
     <div class="container aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
         <div class="row g-5">
             @for( doctor of allDoctors ; track doctor.id)
             {
                 <div class="col-md-6 col-lg-3 aos-init aos-animate" data-aos="zoom-in" data-aos-delay="100">
-                     <!-- <a asp-controller="Doctors"
-                                   asp-action="Profile"
-                                   asp-route-id="@doctor.Id"
-                                   class="text-dark text-decoration-none"> -->
                     <a [routerLink]="['/doctors', doctor.id]"
                                    class="text-dark text-decoration-none">
                     <div class="team-card text-center">
@@ -112,3 +108,4 @@
         </div>
     </div>
 </section>
+}
