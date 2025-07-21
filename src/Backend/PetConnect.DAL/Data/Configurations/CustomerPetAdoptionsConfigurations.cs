@@ -14,9 +14,15 @@ namespace PetConnect.DAL.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<CustomerPetAdoptions> builder)
         {
-            builder.HasKey(CPA => new { CPA.PetId, CPA.CustomerId });
-            builder.HasOne(CPA => CPA.Customer).WithMany(S => S.CustomerPetAdoptions)
-                .HasForeignKey(CPA => CPA.CustomerId);
+            builder.HasKey(CPA => new { CPA.PetId, CPA.RequesterCustomerId,CPA.AdoptionDate });
+
+            builder.HasOne(CPA => CPA.RequesterCustomer).WithMany(S => S.RequestedPetAdoptions)
+                .HasForeignKey(CPA => CPA.RequesterCustomerId)
+                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(CPA => CPA.ReceiverCustomer).WithMany(S => S.ReceivedAdoptions)
+                .HasForeignKey(CPA => CPA.ReceiverCustomerId)
+                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(CPA => CPA.Pet).WithMany(S => S.CustomerPetAdoptions)
                 .HasForeignKey(CPA => CPA.PetId);

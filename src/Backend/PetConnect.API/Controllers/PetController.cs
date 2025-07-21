@@ -69,7 +69,7 @@ namespace PetConnect.API.Controllers
         public async Task<ActionResult> AddPet( AddedPetDto addPet)
         {
             if (!ModelState.IsValid)
-                return BadRequest(new GeneralResponse(400, "Invalid input data"));
+                return BadRequest(new GeneralResponse(400, ModelState.Values.SelectMany(e=>e.Errors.Select(e=>e.ErrorMessage))));
 
             await _petService.AddPet(addPet);
             return Ok(new GeneralResponse(200, "Pet added successfully"));

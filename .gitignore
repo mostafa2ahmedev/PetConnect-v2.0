@@ -16,8 +16,7 @@
 *.dbmdl
 *.cache
 
-# Entity Framework Migrations (optional — remove if you want to commit them)
-Migrations/
+
 
 # Ignore appsettings
 appsettings.json

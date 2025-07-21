@@ -10,6 +10,7 @@ namespace PetConnect.DAL.Data.Models
     public class Customer:ApplicationUser
     {
         public ICollection<CustomerAddedPets> CustomerAddedPets { get; set; } = new HashSet<CustomerAddedPets>();
-        public ICollection<CustomerPetAdoptions> CustomerPetAdoptions { get; set; } = new HashSet<CustomerPetAdoptions>();
+        public ICollection<CustomerPetAdoptions> RequestedPetAdoptions { get; set; } = new HashSet<CustomerPetAdoptions>();
+        public ICollection<CustomerPetAdoptions> ReceivedAdoptions { get; set; } = new HashSet<CustomerPetAdoptions>();
     }
 }

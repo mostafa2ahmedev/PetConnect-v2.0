@@ -28,8 +28,17 @@ public class PetCategoryController : ControllerBase
     [EndpointSummary("Add A New Category")]
     public IActionResult Add(AddedPetCategoryDTO addedPetCategoryDto)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(new GeneralResponse(400, "Invalid input data"));
+        if (!ModelState.IsValid) {
+            var errors = ModelState
+             .Where(ms => ms.Value.Errors.Count > 0)
+             .ToDictionary(
+                 kvp => kvp.Key,
+            kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+         );
+
+            return BadRequest(new GeneralResponse(400, ModelState));
+
+        }
 
         if (_petCategoryService.AddPetCategory(addedPetCategoryDto) > 0)
             return Ok(new GeneralResponse(200, "Pet category added successfully"));
