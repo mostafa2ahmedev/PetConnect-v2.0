@@ -11,6 +11,7 @@ namespace PetConnect.BLL.Services.DTO.PetDto
 {
     public class UpdatedPetDto
     {
+        [Required(ErrorMessage = "ID is required")]
         public int Id { get; set; }
         public string? Name { get; set; } = null!;
 

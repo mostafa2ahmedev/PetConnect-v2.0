@@ -52,13 +52,17 @@ namespace PetConnect.BLL.Services.Classes
 
             foreach (var Pet in PetList)
             {
+                var petBread = _unitOfWork.PetBreedRepository.GetByID(Pet.BreedId);
+                var petCategory = _unitOfWork.PetCategoryRepository.GetByID(petBread!.CategoryId);
                 petDatas.Add(new PetDataDto()
                 {
                     Name = Pet.Name,
                     ImgUrl = $"/assets/PetImages/{Pet.ImgUrl}",
                     Status = Pet.Status,
                     Id = Pet.Id,
-                    Age = Pet.Age
+                    Age = Pet.Age,
+                    CategoryName = petCategory!.Name
+
                 });
         }
             return petDatas;
@@ -86,13 +90,17 @@ namespace PetConnect.BLL.Services.Classes
 
             foreach (var Pet in PetList)
             {
+                var petBread = _unitOfWork.PetBreedRepository.GetByID(Pet.BreedId);
+                var petCategory = _unitOfWork.PetCategoryRepository.GetByID(petBread!.CategoryId);
+               
                 petDatas.Add(new PetDataDto()
                 {
                     Name = Pet.Name,
                     ImgUrl = Pet.ImgUrl,
                     Status = Pet.Status,
                     Id = Pet.Id,
-                    Age = Pet.Age
+                    Age = Pet.Age,
+                    CategoryName = petCategory!.Name
                 });
             }
             return petDatas;

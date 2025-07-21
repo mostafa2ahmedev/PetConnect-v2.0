@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetConnect.BLL.Services.Classes;
 using PetConnect.BLL.Services.DTO.PetBreadDto;
-using PetConnect.BLL.Services.DTO.PetCategoryDto;
-using PetConnect.BLL.Services.DTO.PetDto;
 using PetConnect.BLL.Services.DTOs;
 using PetConnect.BLL.Services.Interfaces;
 
@@ -28,10 +26,19 @@ public class PetBreadController : ControllerBase
 
     [HttpPost]
     [EndpointSummary("Add A New Bread")]
-    public IActionResult Add(AddedPetBreadDto addedPetBreadDto)
+    public IActionResult Add([FromForm] AddedPetBreadDto addedPetBreadDto)
     {
         if (!ModelState.IsValid)
-            return BadRequest(new GeneralResponse(400, "Invalid input data"));
+        {
+            var errors = ModelState
+                .Where(ms => ms.Value.Errors.Count > 0)
+                .ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                );
+
+            return BadRequest(new GeneralResponse(400, errors));
+        }
 
         if (_petBreadService.AddPetBread(addedPetBreadDto) > 0)
             return Ok(new GeneralResponse(200, "Pet bread added successfully"));
@@ -41,10 +48,19 @@ public class PetBreadController : ControllerBase
 
     [HttpPut]
     [EndpointSummary("Modify An Existing Bread")]
-    public IActionResult Edit( UPetBreadDto uPetBreadDto)
+    public IActionResult Edit([FromForm] UPetBreadDto uPetBreadDto)
     {
         if (!ModelState.IsValid)
-            return BadRequest(new GeneralResponse(400, "Invalid input data"));
+        {
+            var errors = ModelState
+                .Where(ms => ms.Value.Errors.Count > 0)
+                .ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                );
+
+            return BadRequest(new GeneralResponse(400, errors));
+        }
 
         if (_petBreadService.UpdatePetBread(uPetBreadDto) > 0)
             return Ok(new GeneralResponse(200, "Pet bread updated successfully"));
@@ -56,7 +72,7 @@ public class PetBreadController : ControllerBase
     [EndpointSummary("Delete An Existing Bread")]
     public IActionResult Delete(int? id)
     {
-        if (id==null)
+        if (id == null)
             return BadRequest(new GeneralResponse(400, "Invalid ID"));
 
         if (_petBreadService.DeletePetBread(id.Value) == 0)
@@ -64,7 +80,6 @@ public class PetBreadController : ControllerBase
 
         return Ok(new GeneralResponse(200, "Pet bread deleted successfully"));
     }
-
 
     [HttpGet("Breads/{id}")]
     [ProducesResponseType(typeof(List<GPetBreadDto>), StatusCodes.Status200OK)]
@@ -76,9 +91,8 @@ public class PetBreadController : ControllerBase
 
         var BreadList = _petBreadService.GetBreadsByCategoryId(id.Value);
 
-        if (BreadList is not { }) {
+        if (BreadList is not { })
             return NotFound(new GeneralResponse(404, $"No Category found with ID = {id}"));
-        }
 
         return Ok(new GeneralResponse(200, BreadList));
     }

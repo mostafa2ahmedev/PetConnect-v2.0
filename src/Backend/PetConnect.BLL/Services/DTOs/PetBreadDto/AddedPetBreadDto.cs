@@ -12,7 +12,7 @@ namespace PetConnect.BLL.Services.DTO.PetBreadDto
         [Required(ErrorMessage ="The Name is Required")]
         public string Name { get; set; } = null!;
         [Display(Name="Category")]
-        [Required(ErrorMessage = "The Name is Required")]
+        [Required(ErrorMessage = "The Category is Required")]
         public int CategoryId { get; set; }
 
     }

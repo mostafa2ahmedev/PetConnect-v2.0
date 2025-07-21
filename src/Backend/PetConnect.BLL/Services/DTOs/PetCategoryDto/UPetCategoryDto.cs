@@ -10,6 +10,7 @@ namespace PetConnect.BLL.Services.DTO.PetCategoryDto
 {
     public class UPetCategoryDto :IValidatableObject
     {
+        [Required(ErrorMessage = "ID is Required")]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "The Name is Required")]
