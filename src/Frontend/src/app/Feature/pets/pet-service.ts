@@ -40,27 +40,28 @@ export class PetService {
 
   addPet(pet: AddPetRequest): Observable<any> {
     const formData = new FormData();
-    formData.append('Name', pet.name);
-    formData.append('Status', pet.status.toString());
-    formData.append('IsApproved', pet.isApproved.toString());
-    formData.append('Ownership', pet.ownership.toString());
-    formData.append('BreedId', pet.breedId.toString());
-    formData.append('form', pet.imageFile); // adjust key if backend expects a different one
+    formData.append('Name', pet.Name);
+    formData.append('Status', pet.Status.toString());
+    formData.append('Ownership', pet.Ownership.toString());
 
+    formData.append('BreedId', pet.BreedId.toString());
+    formData.append('ImgURL', pet.ImgURL); // adjust key if backend expects a different one
+    formData.append('Age', pet.Age.toString());
     return this.http.post(`${this.apiUrl}/pet`, formData);
   }
 
   updatePet(id: number, pet: AddPetRequest): Observable<any> {
     const formData = new FormData();
     formData.append('Id', id.toString());
-    formData.append('Name', pet.name);
-    formData.append('Status', pet.status.toString());
+    formData.append('Name', pet.Name);
+    formData.append('Status', pet.Status.toString());
     formData.append('IsApproved', 'false'); // backend sets it anyway
     formData.append('Ownership', '0'); // backend sets it anyway
-    formData.append('BreedId', pet.breedId.toString());
+    formData.append('BreedId', pet.BreedId.toString());
+    formData.append('Age', pet.Age.toString());
 
-    if (pet.imageFile) {
-      formData.append('form', pet.imageFile);
+    if (pet.ImgURL) {
+      formData.append('ImgURL', pet.ImgURL);
     }
 
     return this.http.put(`${this.apiUrl}/pet`, formData);

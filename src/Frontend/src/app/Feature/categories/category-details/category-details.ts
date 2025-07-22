@@ -1,13 +1,14 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Category } from '../../../models/category';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CategoryService } from '../category-service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AlertService } from '../../../core/services/alert-service';
 
 @Component({
   selector: 'app-category-details',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './category-details.html',
   styleUrl: './category-details.css',
 })
@@ -21,7 +22,9 @@ export class CategoryDetails {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private cdRef: ChangeDetectorRef,
+    private alert: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -32,6 +35,7 @@ export class CategoryDetails {
           const found = all.find((c) => c.id === id);
           if (found) {
             this.category = { ...found };
+            this.cdRef.detectChanges();
           } else {
             this.error = 'Category not found';
           }
@@ -49,7 +53,7 @@ export class CategoryDetails {
   }
 
   updateCategory(): void {
-    if (!this.category.name.trim()) {
+    if (!this.category.name || !this.category.name.trim()) {
       alert('Name is required');
       return;
     }
@@ -57,12 +61,14 @@ export class CategoryDetails {
     this.saving = true;
     this.categoryService.updateCategory(this.category).subscribe({
       next: () => {
-        alert('Category updated successfully');
+        this.alert.success('Category updated successfully!');
+
         this.router.navigate(['/categories']);
       },
       error: (err) => {
         console.error('Update failed', err);
-        alert('Failed to update category');
+        this.alert.error('Failed to update category');
+
         this.saving = false;
       },
     });
@@ -70,12 +76,12 @@ export class CategoryDetails {
 
   deleteCategory(): void {
     console.log('dellll', this.category.id);
-    if (!confirm('Are you sure you want to delete this category?')) return;
+    // if (!confirm('Are you sure you want to delete this category?')) return;
 
     this.deleting = true;
     this.categoryService.deleteCategory(this.category.id).subscribe({
       next: () => {
-        alert('Category deleted successfully');
+        this.alert.success('Category Deleted Successfully');
         this.router.navigate(['/categories']);
       },
       error: (err) => {

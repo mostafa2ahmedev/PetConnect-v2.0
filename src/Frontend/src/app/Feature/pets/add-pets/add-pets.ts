@@ -9,6 +9,7 @@ import { Category } from '../../../models/category';
 import { CategoryService } from '../../categories/category-service';
 import { BreedService } from '../../breeds/breed-service';
 import { Breed } from '../../../models/breed';
+import { AlertService } from '../../../core/services/alert-service';
 
 @Component({
   selector: 'app-add-pets',
@@ -22,23 +23,25 @@ export class AddPets {
   breeds: Breed[] = [];
   filteredBreeds: Breed[] = [];
   pet: AddPetRequest = {
-    name: '',
-    status: 0,
-    isApproved: false,
-    ownership: 0,
-    breedId: 0,
-    imageFile: null!,
+    Name: '',
+    Status: 0,
+    Age: 0,
+    Ownership: 0,
+    BreedId: 0,
+    ImgURL: null!,
   };
-
+  imageError: string = '';
   statusOptions: { key: number; value: string }[] = [];
   ownershipOptions: { key: number; value: string }[] = [];
+  backendErrors: { [key: string]: string[] } = {};
 
   constructor(
     private petService: PetService,
     private router: Router,
     private enumService: EnumService,
     private categoryService: CategoryService,
-    private breedService: BreedService
+    private breedService: BreedService,
+    private alert: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -53,21 +56,38 @@ export class AddPets {
   onFileChange(event: any): void {
     const file = event.target.files[0];
     if (file) {
-      this.pet.imageFile = file;
+      this.pet.ImgURL = file;
+      this.imageError = '';
+    } else {
+      this.imageError = 'Image is required.';
     }
   }
-
   onSubmit(form: NgForm): void {
-    if (form.invalid || !this.pet.imageFile) {
-      return;
+    this.imageError = '';
+
+    if (form.invalid || !this.pet.ImgURL) {
+      if (form.invalid || !this.pet.ImgURL) {
+        Object.values(form.controls).forEach((control) =>
+          control.markAsTouched()
+        );
+
+        this.imageError = !this.pet.ImgURL ? 'Image is required.' : '';
+        return;
+      }
     }
 
     this.petService.addPet(this.pet).subscribe({
       next: () => {
-        alert('Pet added successfully!');
+        this.alert.success('Pet added successfully!');
+
         this.router.navigate(['/pets']);
       },
       error: (err) => {
+        if (err.status === 400 && err.error?.data) {
+          this.backendErrors = err.error.data;
+        } else {
+          console.error('Unexpected error:', err);
+        }
         console.error('Error adding pet:', err);
       },
     });
@@ -97,7 +117,7 @@ export class AddPets {
 
   onCategoryChange(event: Event): void {
     this.selectedCategoryId = Number((event.target as HTMLSelectElement).value);
-    this.pet.breedId = 0;
+    this.pet.BreedId = 0;
 
     const selectedCategory = this.categories.find(
       (cat) => cat.id === this.selectedCategoryId

@@ -21,17 +21,30 @@ export class BreedService {
 
   // POST add a new breed
   addBreed(name: string, categoryId: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}`, { name, categoryId });
+    const formData = new FormData();
+    formData.append('Name', name);
+    formData.append('CategoryId', categoryId.toString());
+
+    return this.http.post(`${this.apiUrl}`, formData);
   }
 
   // PUT update an existing breed
   updateBreed(breed: Breed): Observable<any> {
-    return this.http.put(`${this.apiUrl}`, breed);
+    const formData = new FormData();
+    formData.append('Id', breed.id.toString());
+    formData.append('Name', breed.name);
+    formData.append('CategoryId', breed.categoryId.toString());
+
+    return this.http.put(`${this.apiUrl}`, formData);
   }
 
   // DELETE a breed by ID (as query param)
   deleteBreed(id: number): Observable<any> {
     const params = new HttpParams().set('id', id);
     return this.http.delete(`${this.apiUrl}/PetBread`, { params });
+  }
+
+  getBreedById(id: number): Observable<Breed> {
+    return this.http.get<Breed>(`${this.apiUrl}/${id}`);
   }
 }

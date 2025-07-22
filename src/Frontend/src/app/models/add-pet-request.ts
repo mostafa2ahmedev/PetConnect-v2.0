@@ -1,8 +1,8 @@
 export interface AddPetRequest {
-  name: string;
-  status: number;
-  isApproved: boolean;
-  ownership: number;
-  breedId: number;
-  imageFile: File;
+  Name: string;
+  Status: number;
+  Ownership: number;
+  BreedId: number;
+  ImgURL: File;
+  Age: number;
 }

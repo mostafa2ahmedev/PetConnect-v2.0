@@ -14,10 +14,7 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "src/main.ts",
-            "polyfills": [
-              "zone.js",
-              "@angular/localize/init"
-            ],
+            "polyfills": ["zone.js", "@angular/localize/init"],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
@@ -30,12 +27,14 @@
               "node_modules/glightbox/dist/css/glightbox.min.css",
               "node_modules/swiper/swiper-bundle.min.css",
               "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+              "node_modules/sweetalert2/dist/sweetalert2.min.css",
+
               "src/styles.css"
             ],
             "scripts": [
-           "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
-                      ]
-
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+              "node_modules/sweetalert2/dist/sweetalert2.all.min.js"
+            ]
           },
           "configurations": {
             "production": {

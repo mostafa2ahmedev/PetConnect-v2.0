@@ -22,12 +22,21 @@ export class CategoryService {
 
   // POST add a new category
   addCategory(name: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/PetCategory`, { name });
+    console.log('Sending category name:', name); // ✅ DEBUG
+
+    const formData = new FormData();
+    formData.append('Name', name);
+
+    return this.http.post(`${this.apiUrl}/PetCategory`, formData);
   }
 
   // PUT update an existing category
   updateCategory(category: Category): Observable<any> {
-    return this.http.put(`${this.apiUrl}/PetCategory`, category);
+    const formData = new FormData();
+    formData.append('Id', category.id.toString());
+    formData.append('Name', category.name);
+
+    return this.http.put(`${this.apiUrl}/PetCategory`, formData);
   }
 
   // DELETE a category by ID (as query param)

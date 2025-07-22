@@ -6,7 +6,6 @@
   >
     <h2>Add New Pet</h2>
     <p>Add a new pet for adoption or rescue</p>
-
     <div class="my-3 d-flex justify-content-center gap-3">
       <a routerLink="/pets" class="btn btn-outline-primary btn-sm">All Pets</a>
       <a routerLink="/doctors" class="btn btn-outline-primary btn-sm"
@@ -25,6 +24,7 @@
           #form="ngForm"
           (ngSubmit)="onSubmit(form)"
           enctype="multipart/form-data"
+          novalidate
         >
           <!-- Name -->
           <div class="mb-3">
@@ -33,35 +33,72 @@
               type="text"
               name="name"
               class="form-control"
-              [(ngModel)]="pet.name"
+              [(ngModel)]="pet.Name"
+              #name="ngModel"
               required
+              minlength="3"
+              maxlength="20"
             />
+            <span
+              *ngIf="name.errors?.['required'] && (name.dirty || name.touched)"
+              class="text-danger"
+            >
+              Pet name is required.
+            </span>
+            <span
+              *ngIf="name.errors?.['minlength'] && (name.dirty || name.touched)"
+              class="text-danger"
+            >
+              Name must be at least 3 characters.
+            </span>
+            <span
+              *ngIf="name.errors?.['maxlength'] && (name.dirty || name.touched)"
+              class="text-danger"
+            >
+              Name cannot exceed 20 characters.
+            </span>
+            <span *ngIf="backendErrors['Name']" class="text-danger">
+              {{ backendErrors["Name"][0] }}
+            </span>
           </div>
-          <!-- Category Dropdown -->
+
+          <!-- Category -->
           <div class="mb-3">
             <label for="categoryList" class="form-label">Categories</label>
             <select
               class="form-select"
               id="categoryList"
+              [(ngModel)]="selectedCategoryId"
+              name="category"
+              #category="ngModel"
               (change)="onCategoryChange($event)"
+              required
             >
-              <option value="">-- Select Category --</option>
+              <option value="0" selected>-- Select Category --</option>
               <option *ngFor="let cat of categories" [value]="cat.id">
                 {{ cat.name }}
               </option>
             </select>
+            <span
+              *ngIf="category.value == '0' && category.touched"
+              class="text-danger"
+            >
+              Category is required.
+            </span>
           </div>
 
-          <!-- Breed Dropdown -->
+          <!-- Breed -->
           <div class="mb-3">
             <label class="form-label">Breeds</label>
             <select
               class="form-select"
               name="breedId"
-              [(ngModel)]="pet.breedId"
+              [(ngModel)]="pet.BreedId"
+              #breedId="ngModel"
               [disabled]="selectedCategoryId === 0"
+              required
             >
-              <option value="0" disabled selected>
+              <option value="0" disabled>
                 {{
                   selectedCategoryId === 0
                     ? "Select a category first"
@@ -72,15 +109,25 @@
                 {{ breed.name }}
               </option>
             </select>
+            <span
+              *ngIf="breedId.value == '0' && breedId.touched"
+              class="text-danger"
+            >
+              Breed selection is required.
+            </span>
+            <span *ngIf="backendErrors['BreedId']" class="text-danger">
+              {{ backendErrors["BreedId"][0] }}
+            </span>
           </div>
 
-          <!-- Status Dropdown -->
+          <!-- Status -->
           <div class="mb-3">
             <label class="form-label">Status</label>
             <select
               class="form-select"
               name="status"
-              [(ngModel)]="pet.status"
+              [(ngModel)]="pet.Status"
+              #status="ngModel"
               required
             >
               <option value="">-- Select Status --</option>
@@ -88,38 +135,52 @@
                 {{ status.value }}
               </option>
             </select>
+            <span
+              *ngIf="status.invalid && (status.dirty || status.touched)"
+              class="text-danger"
+            >
+              Status is required.
+            </span>
+            <span *ngIf="backendErrors['Status']" class="text-danger">
+              {{ backendErrors["Status"][0] }}
+            </span>
           </div>
 
-          <!-- Ownership Dropdown -->
-          <!-- <div class="mb-3">
-            <label class="form-label">Ownership</label>
-            <select
-              class="form-select"
-              name="ownership"
-              [(ngModel)]="pet.ownership"
-              required
-            >
-              <option value="">-- Select Ownership --</option>
-              <option
-                *ngFor="let owner of ownershipOptions"
-                [value]="owner.key"
-              >
-                {{ owner.value }}
-              </option>
-            </select>
-          </div> -->
-
-          <!-- Approval Checkbox -->
-          <!-- <div class="form-check mb-3">
+          <!-- Age -->
+          <div class="mb-3">
+            <label class="form-label">Age</label>
             <input
-              class="form-check-input"
-              type="checkbox"
-              name="isApproved"
-              id="isApproved"
-              [(ngModel)]="pet.isApproved"
+              type="number"
+              name="Age"
+              class="form-control"
+              [(ngModel)]="pet.Age"
+              #Age="ngModel"
+              required
+              min="0"
+              max="50"
             />
-            <label class="form-check-label" for="isApproved">Is Approved</label>
-          </div> -->
+            <span
+              *ngIf="Age.errors?.['required'] && (Age.dirty || Age.touched)"
+              class="text-danger"
+            >
+              Age is required.
+            </span>
+            <span
+              *ngIf="Age.errors?.['min'] && (Age.dirty || Age.touched)"
+              class="text-danger"
+            >
+              Age must be at least 0.
+            </span>
+            <span *ngIf="backendErrors['Age']" class="text-danger">
+              {{ backendErrors["Age"][0] }}
+            </span>
+            <span
+              *ngIf="Age.errors?.['max'] && (Age.dirty || Age.touched)"
+              class="text-danger"
+            >
+              Age must be less than or equal to 50.
+            </span>
+          </div>
 
           <!-- Image Upload -->
           <div class="mb-3">
@@ -128,8 +189,8 @@
               type="file"
               class="form-control"
               (change)="onFileChange($event)"
-              required
             />
+            <span *ngIf="imageError" class="text-danger">{{ imageError }}</span>
           </div>
 
           <!-- Buttons -->

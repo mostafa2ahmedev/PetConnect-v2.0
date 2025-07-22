@@ -4,6 +4,7 @@ import { PetService } from '../pet-service';
 import { CommonModule } from '@angular/common';
 import { PetDetailsModel } from '../../../models/pet-details';
 import { EnumService } from '../../../core/services/enum-service';
+import { AlertService } from '../../../core/services/alert-service';
 
 @Component({
   selector: 'app-pet-details',
@@ -23,7 +24,8 @@ export class PetDetails implements OnInit {
     private route: ActivatedRoute,
     private petService: PetService,
     private enumservice: EnumService,
-    private router: Router
+    private router: Router,
+    private alert: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -50,17 +52,18 @@ export class PetDetails implements OnInit {
   }
 
   deletePetById(id: number): void {
-    if (!confirm('Are you sure you want to delete this pet?')) return;
+    // if (!confirm('Are you sure you want to delete this pet?')) return;
 
     this.petService
       .deletePet(Number(this.route.snapshot.paramMap.get('id')))
       .subscribe({
         next: () => {
-          alert('Pet deleted successfully.');
+          this.alert.success('Pet deleted successfully!');
           this.router.navigate(['/pets']);
         },
         error: (err) => {
-          alert('Failed to delete pet.');
+          this.alert.error('Failed to delete pet.');
+
           console.error(err);
         },
       });

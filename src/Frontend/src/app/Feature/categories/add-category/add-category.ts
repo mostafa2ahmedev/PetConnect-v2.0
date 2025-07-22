@@ -3,40 +3,53 @@ import { Category } from '../../../models/category';
 import { CategoryService } from '../category-service';
 import { Router } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { AlertService } from '../../../core/services/alert-service';
 
 @Component({
   selector: 'app-add-category',
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './add-category.html',
   styleUrl: './add-category.css',
 })
 export class AddCategory {
-  category: Category = {
-    id: 0,
-    name: '',
-  };
-
+  category: Category = { id: 0, name: '' };
   saving = false;
   error = '';
+  fieldErrors: { [key: string]: string[] } = {}; // backend errors
 
   constructor(
     private categoryService: CategoryService,
-    private router: Router
+    private router: Router,
+    private alert: AlertService
   ) {}
 
   onSubmit(form: NgForm): void {
-    if (form.invalid) return;
+    this.fieldErrors = {};
+
+    if (form.invalid) {
+      // Mark all fields as touched and dirty to trigger validation messages
+      Object.values(form.controls).forEach((control) => {
+        control.markAsTouched();
+        control.markAsDirty();
+      });
+      return;
+    }
 
     this.saving = true;
     this.categoryService.addCategory(this.category.name).subscribe({
       next: () => {
-        alert('Category added successfully!');
+        this.alert.success('Category added successfully!');
         this.router.navigate(['/categories']);
       },
       error: (err) => {
-        console.error('Add failed:', err);
-        this.error = 'Failed to add category.';
         this.saving = false;
+        if (err.status === 400 && err.error?.data) {
+          this.fieldErrors = err.error.data;
+        } else {
+          console.error('Add failed:', err);
+          this.alert.error('Failed to add category');
+        }
       },
     });
   }

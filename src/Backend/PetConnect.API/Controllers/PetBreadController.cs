@@ -24,6 +24,16 @@ public class PetBreadController : ControllerBase
         return Ok(new GeneralResponse(200, breads));
     }
 
+    [HttpGet("{id}")]
+    [EndpointSummary("Get Bread By Id")]
+    public ActionResult PetBreadDetails(int id)
+    {
+        //if(id==null)  > GetAll
+        var PetBread= _petBreadService.GetBreadById(id);
+        if (PetBread == null)
+            return NotFound(new GeneralResponse(404, $"No BREAD found with ID ={id}"));
+        return Ok(new GeneralResponse(200, PetBread));
+    }
     [HttpPost]
     [EndpointSummary("Add A New Bread")]
     public IActionResult Add([FromForm] AddedPetBreadDto addedPetBreadDto)
