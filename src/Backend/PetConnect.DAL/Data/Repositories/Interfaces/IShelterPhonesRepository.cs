@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace PetConnect.DAL.Data.Repositories.Interfaces
 {
-    public interface IShelterPhonesRepository : IGenericRepository<ShelterPhones>
+
+    public interface IShelterPhonesRepository:IGenericRepository<ShelterPhones>
     {
     }
 }

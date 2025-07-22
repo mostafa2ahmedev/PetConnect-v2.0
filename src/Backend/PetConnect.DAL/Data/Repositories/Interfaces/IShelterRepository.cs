@@ -9,6 +9,6 @@ using System.Threading.Tasks;
 namespace PetConnect.DAL.Data.Repositories.Interfaces
 {
     public interface IShelterRepository : IGenericRepository<Shelter>
-    {
+    { 
     }
 }

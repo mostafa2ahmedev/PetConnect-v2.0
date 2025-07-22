@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace PetConnect.DAL.Data.Repositories.Interfaces
 {
-    public interface IShelterImagesRepository:IGenericRepository<ShelterImages>
-    {
-    }
+    public interface IShelterImagesRepository : IGenericRepository<ShelterImages> { }
+ 
 }

@@ -10,5 +10,7 @@ namespace PetConnect.DAL.Data.Repositories.Interfaces
 {
     public interface IShelterLocationsRepository : IGenericRepository<ShelterLocations>
     {
+
     }
+    
 }

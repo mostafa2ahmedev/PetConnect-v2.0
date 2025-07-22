@@ -32,7 +32,7 @@ namespace PetConnect.BLL.Services.Classes
 
         public async Task <int> AddPet(AddedPetDto addedPet )
         {
-            var Image = await _attachmentService.UploadAsync(addedPet.form, "PetImages");
+            var Image = await _attachmentService.UploadAsync(addedPet.ImgURL, "PetImages");
             var PetData = new Pet() {Name = addedPet.Name , ImgUrl = Image
                 , BreedId = addedPet.BreedId , IsApproved= false , Ownership =addedPet.Ownership ,
                 Status = addedPet.Status,Age=addedPet.Age };
@@ -40,10 +40,10 @@ namespace PetConnect.BLL.Services.Classes
             _unitOfWork.PetRepository.Add(PetData);
            return _unitOfWork.SaveChanges();
         }
+   
 
 
-
-        public List<PetDataDto> GetAllPets()
+        public IEnumerable<PetDataDto> GetAllPets()
         {
             List<PetDataDto> petDatas = new List<PetDataDto>();
             IEnumerable<Pet> PetList= _unitOfWork.PetRepository.GetAll();
@@ -140,7 +140,21 @@ namespace PetConnect.BLL.Services.Classes
             }
             return 0;
         }
+        public PetDataDto? GetPetDataWithCustomer(int id)
+        {
+            var Pet = _unitOfWork.PetRepository.GetPetDataWithCustomer(id);
+            PetDataDto petData = new PetDataDto()
+            {
+                Name = Pet.Name,
+                ImgUrl = Pet.ImgUrl,
+                Status = Pet.Status,
+                Id = Pet.Id,
+                CustomerId = Pet.CustomerAddedPets.CustomerId
 
- 
+            };
+            return petData;
+        }
+
+     
     }
 }

@@ -21,7 +21,7 @@ namespace PetConnect.BLL.Services.DTO.PetDto
 
         public Ownership Ownership { get; set; }
 
-        public IFormFile form { get; set; } = null!;
+        public IFormFile ImgURL { get; set; } = null!;
         public int BreedId { get; set; }
 
     }
