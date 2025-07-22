@@ -30,7 +30,7 @@ namespace PetConnect.API
                .AddDefaultTokenProviders();
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer("Server=db22694.public.databaseasp.net; Database=db22694; User Id=db22694; Password=Qf9?z@N38k!P; Encrypt=True; TrustServerCertificate=True; MultipleActiveResultSets=True;");
+                options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection"));
             });
             //Repositories Services register
             RepositoriesCollectionExtensions.AddDalRepositories(builder.Services);
