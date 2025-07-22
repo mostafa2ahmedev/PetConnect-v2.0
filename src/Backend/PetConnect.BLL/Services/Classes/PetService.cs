@@ -34,7 +34,7 @@ namespace PetConnect.BLL.Services.Classes
         {
             var Image = await _attachmentService.UploadAsync(addedPet.ImgURL, "PetImages");
             var PetData = new Pet() {Name = addedPet.Name , ImgUrl = Image
-                , BreedId = addedPet.BreedId , IsApproved= false , Ownership =addedPet.Ownership ,
+                , BreedId = addedPet.BreedId  , IsApproved= false , Ownership =addedPet.Ownership ,
                 Status = addedPet.Status,Age=addedPet.Age };
    
             _unitOfWork.PetRepository.Add(PetData);

@@ -15,8 +15,8 @@ namespace PetConnect.BLL.Services.DTO.PetDto
         [Required(ErrorMessage = "The Name is required")]
         public string Name { get; set; } = null!;
 
-        [Required(ErrorMessage = "Age should be between 0 and 50")]
-        [Range(0,50)]
+        [Required]
+        [Range(0,50, ErrorMessage = "Age should be between 0 and 50")]
         public int Age { get; set; }
 
         [Required(ErrorMessage ="Status can't be null")]

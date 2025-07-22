@@ -15,7 +15,7 @@ namespace PetConnect.BLL.Services.DTO.PetDto
         public int Id { get; set; }
         public string? Name { get; set; } = null!;
 
-        [Range(0, 50)]
+        [Range(0, 50 , ErrorMessage = "Age should be between 0 and 50")]
         public int Age { get; set; }
         public PetStatus? Status { get; set; }
         public Ownership? Ownership { get; set; }
