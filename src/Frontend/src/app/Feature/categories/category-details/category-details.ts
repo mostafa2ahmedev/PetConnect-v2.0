@@ -74,19 +74,25 @@ export class CategoryDetails {
     });
   }
 
-  deleteCategory(): void {
-    console.log('dellll', this.category.id);
-    // if (!confirm('Are you sure you want to delete this category?')) return;
+  async deleteCategory(): Promise<void> {
+    const confirmed = await this.alert.confirm(
+      'Are you sure you want to delete this category?',
+      'Delete Confirmation',
+      'Yes, delete it',
+      'Cancel'
+    );
+
+    if (!confirmed) return;
 
     this.deleting = true;
     this.categoryService.deleteCategory(this.category.id).subscribe({
       next: () => {
-        this.alert.success('Category Deleted Successfully');
+        this.alert.success('Category deleted successfully');
         this.router.navigate(['/categories']);
       },
       error: (err) => {
         console.error('Delete failed', err);
-        alert('Failed to delete category');
+        this.alert.error('Failed to delete category');
         this.deleting = false;
       },
     });

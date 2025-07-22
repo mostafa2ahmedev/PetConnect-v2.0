@@ -50,24 +50,28 @@ export class PetDetails implements OnInit {
 
     this.enumservice.loadAllEnums().subscribe();
   }
+  async deletePetById(id: number): Promise<void> {
+    const confirmed = await this.alert.confirm(
+      'Are you sure you want to delete this pet?',
+      'Delete Confirmation',
+      'Yes, delete it',
+      'Cancel'
+    );
 
-  deletePetById(id: number): void {
-    // if (!confirm('Are you sure you want to delete this pet?')) return;
+    if (!confirmed) return;
 
-    this.petService
-      .deletePet(Number(this.route.snapshot.paramMap.get('id')))
-      .subscribe({
-        next: () => {
-          this.alert.success('Pet deleted successfully!');
-          this.router.navigate(['/pets']);
-        },
-        error: (err) => {
-          this.alert.error('Failed to delete pet.');
-
-          console.error(err);
-        },
-      });
+    this.petService.deletePet(id).subscribe({
+      next: () => {
+        this.alert.success('Pet deleted successfully!');
+        this.router.navigate(['/pets']);
+      },
+      error: (err) => {
+        this.alert.error('Failed to delete pet.');
+        console.error(err);
+      },
+    });
   }
+
   getOwnershipLabel(code: number): string {
     return this.enumservice.getOwnershipLabel(code);
   }

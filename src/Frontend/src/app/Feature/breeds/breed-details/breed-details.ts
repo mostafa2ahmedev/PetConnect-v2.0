@@ -95,8 +95,15 @@ export class BreedDetails {
     });
   }
 
-  deleteBreed(): void {
-    // if (!confirm('Are you sure you want to delete this breed?')) return;
+  async deleteBreed(): Promise<void> {
+    const confirmed = await this.alert.confirm(
+      'Are you sure you want to delete this breed?',
+      'Delete Confirmation',
+      'Yes, delete it',
+      'Cancel'
+    );
+
+    if (!confirmed) return;
 
     this.deleting = true;
     this.breedService.deleteBreed(this.breed.id).subscribe({
@@ -106,7 +113,6 @@ export class BreedDetails {
       },
       error: (err) => {
         console.error('Delete failed:', err);
-
         this.alert.error('Failed to delete breed', 'Error');
         this.deleting = false;
       },
