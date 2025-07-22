@@ -2,13 +2,14 @@ import { Component } from '@angular/core';
 import { Category } from '../../../models/category';
 import { BreedService } from '../breed-service';
 import { CategoryService } from '../../categories/category-service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AlertService } from '../../../core/services/alert-service';
 
 @Component({
   selector: 'app-add-breed',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterModule],
   templateUrl: './add-breed.html',
   styleUrl: './add-breed.css',
 })
@@ -18,16 +19,19 @@ export class AddBreed {
   categories: Category[] = [];
   error = '';
   success = '';
-
+  loading = true;
   constructor(
     private breedService: BreedService,
     private categoryService: CategoryService,
-    private router: Router
+    private router: Router,
+    private alert: AlertService
   ) {}
 
   ngOnInit(): void {
     this.categoryService.getCategories().subscribe({
-      next: (data) => (this.categories = data),
+      next: (data) => {
+        (this.categories = data), (this.loading = false);
+      },
       error: (err) => {
         this.error = 'Failed to load categories.';
         console.error(err);
@@ -46,11 +50,13 @@ export class AddBreed {
       .subscribe({
         next: () => {
           this.success = 'Breed added successfully!';
+
           this.router.navigate(['/breeds']);
         },
         error: (err) => {
           this.error = 'Failed to add breed.';
           console.error(err);
+          this.alert.error('Failed to add breed.');
         },
       });
   }

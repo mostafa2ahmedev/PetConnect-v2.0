@@ -15,6 +15,7 @@ import { CategoryDetails } from './Feature/categories/category-details/category-
 import { AddCategory } from './Feature/categories/add-category/add-category';
 import { AllBreeds } from './Feature/breeds/all-breeds/all-breeds';
 import { AddBreed } from './Feature/breeds/add-breed/add-breed';
+import { BreedDetails } from './Feature/breeds/breed-details/breed-details';
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'doctors', component: Doctors },
@@ -27,6 +28,8 @@ export const routes: Routes = [
   { path: 'add-category', component: AddCategory },
 
   { path: 'breeds', component: AllBreeds },
+  { path: 'breed/:id', component: BreedDetails },
+
   { path: 'add-breed', component: AddBreed },
   { path: 'contact', component: Contact },
   { path: 'login', component: Login },

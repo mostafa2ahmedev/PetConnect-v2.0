@@ -20,6 +20,7 @@ export class AllBreeds {
   filteredBreeds: Breed[] = [];
   categories: Category[] = [];
   selectedCategoryId: number = 0;
+  loading = true;
 
   constructor(
     private breedService: BreedService,
@@ -36,6 +37,7 @@ export class AllBreeds {
       next: (data) => {
         this.breeds = data;
         this.filteredBreeds = data;
+        this.loading = false;
       },
       error: (err) => console.error('Failed to load breeds', err),
     });

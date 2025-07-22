@@ -1,15 +1,16 @@
 import { Component } from '@angular/core';
 import { Breed } from '../../../models/breed';
 import { Category } from '../../../models/category';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { BreedService } from '../breed-service';
 import { CategoryService } from '../../categories/category-service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AlertService } from '../../../core/services/alert-service';
 
 @Component({
   selector: 'app-breed-details',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './breed-details.html',
   styleUrl: './breed-details.css',
 })
@@ -26,17 +27,27 @@ export class BreedDetails {
     private route: ActivatedRoute,
     private router: Router,
     private breedService: BreedService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private alert: AlertService
   ) {}
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-
+    this.loadCategories();
     if (!isNaN(id)) {
+      // Load categories first
       this.breedService.getBreedById(id).subscribe({
-        next: (data) => {
-          this.breed = data;
-          this.loadCategories();
+        next: (res) => {
+          this.breed = res;
+
+          // 🔧 Try to find the category ID using the name
+          const matched = this.categories.find(
+            (c) => c.name === this.breed.categoryName
+          );
+          if (matched) {
+            this.breed.categoryId = matched.id;
+          }
+          console.log('Breed loaded:', this.breed);
           this.loading = false;
         },
         error: () => {
@@ -59,17 +70,17 @@ export class BreedDetails {
 
   updateBreed(): void {
     this.fieldErrors = {};
-    const nameTrimmed = this.breed.name?.trim();
+    // const nameTrimmed = this.breed.name?.trim();
 
-    if (!nameTrimmed) {
-      alert('Please enter a breed name');
-      return;
-    }
+    // if (!nameTrimmed) {
+    //   alert('Please enter a breed name');
+    //   return;
+    // }
 
     this.saving = true;
     this.breedService.updateBreed(this.breed).subscribe({
       next: () => {
-        alert('Breed updated successfully');
+        this.alert.success('Breed updated successfully');
         this.router.navigate(['/breeds']);
       },
       error: (err) => {
@@ -78,24 +89,25 @@ export class BreedDetails {
         if (err.status === 400 && err.error?.data) {
           this.fieldErrors = err.error.data;
         } else {
-          alert('Failed to update breed');
+          this.alert.error('Failed to update breed', 'Error');
         }
       },
     });
   }
 
   deleteBreed(): void {
-    if (!confirm('Are you sure you want to delete this breed?')) return;
+    // if (!confirm('Are you sure you want to delete this breed?')) return;
 
     this.deleting = true;
     this.breedService.deleteBreed(this.breed.id).subscribe({
       next: () => {
-        alert('Breed deleted successfully');
+        this.alert.success('Breed deleted successfully');
         this.router.navigate(['/breeds']);
       },
       error: (err) => {
         console.error('Delete failed:', err);
-        alert('Failed to delete breed');
+
+        this.alert.error('Failed to delete breed', 'Error');
         this.deleting = false;
       },
     });
