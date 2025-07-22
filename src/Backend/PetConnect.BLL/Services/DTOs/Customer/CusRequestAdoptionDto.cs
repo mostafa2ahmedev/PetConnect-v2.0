@@ -8,7 +8,8 @@ namespace PetConnect.BLL.Services.DTOs.Customer
 {
     public class CusRequestAdoptionDto
     {
-        public string CustomerId { get; set; } = null!;
+        public string ReqCustomerId { get; set; } = null!;
+        public string RecCustomerId { get; set; } = null!;
         public int PetId { get; set; }
     }
 }

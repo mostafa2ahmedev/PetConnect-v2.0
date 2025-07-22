@@ -1,6 +1,8 @@
-﻿using PetConnect.DAL.Data.Enums;
+﻿using Microsoft.AspNetCore.Http;
+using PetConnect.DAL.Data.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,12 +11,15 @@ namespace PetConnect.BLL.Services.DTO.PetDto
 {
     public class UpdatedPetDto
     {
+        [Required(ErrorMessage = "ID is required")]
         public int Id { get; set; }
-        public string Name { get; set; } = null!;
-        public PetStatus Status { get; set; }
-        public bool IsApproved { get; set; }
-        public Ownership Ownership { get; set; }
-        public string ImgUrl { get; set; } = null!;
+        public string? Name { get; set; } = null!;
+
+        [Range(0, 50 , ErrorMessage = "Age should be between 0 and 50")]
+        public int Age { get; set; }
+        public PetStatus? Status { get; set; }
+        public Ownership? Ownership { get; set; }
+        public IFormFile? ImgURL { get; set; } = null!;
         public int BreedId { get; set; }
     }
 }

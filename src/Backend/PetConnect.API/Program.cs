@@ -6,6 +6,7 @@ using PetConnect.BLL.Services.Interfaces;
 using PetConnect.DAL.Data.Identity;
 using PetConnect.DAL.Data;
 using PetConnect.DAL.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -33,6 +34,12 @@ namespace PetConnect.API
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection"));
             });
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+            //Repositories Services register
+
 
             // Repositories Services register
             RepositoriesCollectionExtensions.AddDalRepositories(builder.Services);

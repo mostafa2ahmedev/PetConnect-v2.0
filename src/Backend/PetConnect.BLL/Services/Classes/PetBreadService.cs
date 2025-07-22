@@ -33,21 +33,26 @@ namespace PetConnect.BLL.Services.Classes
             }
             return GPetBreadDtos;
         }
-        public List<GPetBreadDto> GetBreadsByCategoryId(int CategoryId)
+        public List<GPetBreadDto>? GetBreadsByCategoryId(int CategoryId)
         {
             var Category = _unitOfWork.PetCategoryRepository.GetByID(CategoryId);
+            if (Category == null) {
+                return null;
+            }
            return _unitOfWork.PetBreedRepository.GetAll()
                 .Where(B => B.CategoryId == CategoryId)
                 .Select(B =>
                  new GPetBreadDto() { Id=B.Id,Name=B.Name,CategoryName=Category.Name }).ToList();
 
         }
-        public UPetBreadDto? GetBreadById(int Id)
+        public GPetBreadDto? GetBreadById(int Id)
         {
             var PetBread = _unitOfWork.PetBreedRepository.GetByID(Id);
+     
             if (PetBread is not null) {
-                var UPetBreadDto = new UPetBreadDto() { Id = PetBread.Id, Name = PetBread.Name, CategoryId = PetBread.CategoryId };
-                return UPetBreadDto;
+                var Category = _unitOfWork.PetCategoryRepository.GetByID(PetBread.CategoryId);
+                var GPetBreadDto = new GPetBreadDto() { Id = PetBread.Id, Name = PetBread.Name, CategoryName = Category!.Name};
+                return GPetBreadDto;
             }
             return null;
         }

@@ -28,5 +28,9 @@ namespace PetConnect.DAL.Data.Repositories.Classes
                 .Where(p => !p.IsApproved);
         }
 
+        public Pet? GetPetDataWithCustomer(int id)
+        {
+            return context.Pets.Include(P => P.CustomerAddedPets).FirstOrDefault(p => p.Id == id);
+        }
     }
 }

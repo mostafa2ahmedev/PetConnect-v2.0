@@ -1,0 +1,61 @@
+<section class="container my-5">
+  <div class="section-title text-center mb-4">
+    <h2>Add New Category</h2>
+    <p>Create a new pet category</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+
+  <form #form="ngForm" (ngSubmit)="onSubmit(form)" novalidate>
+    <div class="card shadow rounded-4 p-4 mb-3">
+      <!-- Name Input -->
+      <div class="mb-3">
+        <label for="name" class="form-label">Category Name</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          class="form-control"
+          required
+          minlength="3"
+          maxlength="20"
+          [(ngModel)]="category.name"
+          #name="ngModel"
+        />
+
+        <!-- Frontend Validation -->
+        <span
+          *ngIf="name.errors?.['required'] && (name.dirty || name.touched)"
+          class="text-danger"
+        >
+          Name is required.
+        </span>
+        <span
+          *ngIf="name.errors?.['minlength'] && (name.dirty || name.touched)"
+          class="text-danger"
+        >
+          Name must be at least 3 characters.
+        </span>
+        <span *ngIf="name.errors?.['maxlength'] " class="text-danger">
+          Name must be 20 characters or less.
+        </span>
+
+        <!-- Backend Validation -->
+        <span *ngIf="fieldErrors['Name']" class="text-danger">
+          {{ fieldErrors["Name"][0] }}
+        </span>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="form.invalid || saving"
+        >
+          {{ saving ? "Saving..." : "Save Category" }}
+        </button>
+        <a routerLink="/categories" class="btn btn-secondary">Cancel</a>
+      </div>
+    </div>
+  </form>
+</section>
