@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PetConnect.BLL.Common.AttachmentServices;
@@ -7,6 +6,9 @@ using PetConnect.BLL.Services.Interfaces;
 using PetConnect.DAL.Data.Identity;
 using PetConnect.DAL.Data;
 using PetConnect.DAL.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace PetConnect.API
 {
@@ -19,30 +21,28 @@ namespace PetConnect.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
                .AddEntityFrameworkStores<AppDbContext>()
                .AddDefaultTokenProviders();
+
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection"));
-
             });
-            //Repositories Services register
+
+            // Repositories Services register
             RepositoriesCollectionExtensions.AddDalRepositories(builder.Services);
             ServicesCollectionExtensions.AddBLLRepositories(builder.Services);
-
-
 
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IDoctorService, DoctorService>();
             builder.Services.AddScoped<IAttachmentService, AttachmentService>();
             builder.Services.AddScoped<IAdminService, AdminService>();
+            builder.Services.AddTransient<IJwtService, JwtService>();
 
             builder.Services.AddCors(options =>
             {
@@ -50,12 +50,33 @@ namespace PetConnect.API
                     builder =>
                     {
                         builder
-                            .WithOrigins("http://localhost:4200")  // Allow only Angular dev server origin
+                            .WithOrigins("http://localhost:4200")
                             .AllowAnyMethod()
                             .AllowAnyHeader();
                     });
             });
 
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    
+                    ValidateAudience = true,
+                    ValidAudience = builder.Configuration["Jwt:Audience"],
+                    ValidateIssuer = true,
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+                };
+
+            });
 
             var app = builder.Build();
 
@@ -67,18 +88,13 @@ namespace PetConnect.API
             }
 
             app.UseHttpsRedirection();
-
             app.UseStaticFiles();
-
-
+            app.UseRouting();
             app.UseCors(AngularCorsPolicy);
-
+            app.UseRouting();
             app.UseAuthentication();
-
             app.UseAuthorization();
-
             app.MapControllers();
-
             app.Run();
         }
     }

@@ -1,0 +1,150 @@
+<div class="container my-5">
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+
+    <div *ngIf="generalErrors.length > 0" class="alert alert-danger">
+      <ul>
+        <li *ngFor="let error of generalErrors">{{ error }}</li>
+      </ul>
+    </div>
+
+    <!-- First Name -->
+    <div class="row mb-3">
+      <label for="fName" class="col-sm-3 col-form-label">First Name</label>
+      <div class="col-sm-9">
+        <input type="text" class="form-control" id="fName" formControlName="fName">
+        <div class="text-danger" *ngIf="(fName?.touched || isSubmitted) && fName?.errors?.['required']">
+          First Name can't be blank
+        </div>
+      </div>
+    </div>
+
+    <!-- Last Name -->
+    <div class="row mb-3">
+      <label for="lName" class="col-sm-3 col-form-label">Last Name</label>
+      <div class="col-sm-9">
+        <input type="text" class="form-control" id="lName" formControlName="lName">
+        <div class="text-danger" *ngIf="(lName?.touched || isSubmitted) && lName?.errors?.['required']">
+          Last Name can't be blank
+        </div>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="row mb-3">
+      <label for="email" class="col-sm-3 col-form-label">Email</label>
+      <div class="col-sm-9">
+        <input type="email" class="form-control" id="email" formControlName="email">
+        <div class="text-danger" *ngIf="(email?.touched || isSubmitted) && email?.errors?.['required']">
+          Email can't be blank
+        </div>
+        <div class="text-danger" *ngIf="(email?.touched || isSubmitted) && email?.errors?.['email']">
+          Please enter a valid email
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone Number -->
+    <div class="row mb-3">
+      <label for="phoneNumber" class="col-sm-3 col-form-label">Phone Number</label>
+      <div class="col-sm-9">
+        <input type="text" class="form-control" id="phoneNumber" formControlName="phoneNumber">
+        <div class="text-danger" *ngIf="(phoneNumber?.touched || isSubmitted) && phoneNumber?.errors?.['required']">
+          Phone Number can't be blank
+        </div>
+        <div class="text-danger" *ngIf="(phoneNumber?.touched || isSubmitted) && phoneNumber?.errors?.['pattern']">
+          Please enter only numbers
+        </div>
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="row mb-3">
+      <label for="password" class="col-sm-3 col-form-label">Password</label>
+      <div class="col-sm-9">
+        <input type="password" class="form-control" id="password" formControlName="password">
+        <div class="text-danger" *ngIf="(password?.touched || isSubmitted) && password?.errors?.['required']">
+          Password can't be blank
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Password -->
+    <div class="row mb-3">
+      <label for="confirmationPassword" class="col-sm-3 col-form-label">Confirm Password</label>
+      <div class="col-sm-9">
+        <input type="password" class="form-control" id="confirmationPassword" formControlName="confirmationPassword">
+        <div class="text-danger"
+          *ngIf="(confirmationPassword?.touched || isSubmitted) && confirmationPassword?.errors?.['required']">
+          Confirm Password can't be blank
+        </div>
+        <div class="text-danger"
+          *ngIf="(confirmationPassword?.touched || isSubmitted) && confirmationPassword?.errors?.['compareValidator']">
+          Passwords do not match
+        </div>
+      </div>
+    </div>
+
+    <!-- Gender -->
+    <div class="row mb-3">
+      <label for="gender" class="col-sm-3 col-form-label">Gender</label>
+      <div class="col-sm-9">
+        <select class="form-select" id="gender" formControlName="gender">
+          <option value=""  selected disabled>Select gender</option>
+          <option *ngFor="let option of genderOptions" [ngValue]="option.id">
+            {{ option.name }}
+          </option>
+        </select>
+        <div class="text-danger" *ngIf="(gender?.touched || isSubmitted) && gender?.errors?.['required']">
+          Gender is required
+        </div>
+      </div>
+    </div>
+
+    <!-- Image -->
+    <div class="row mb-3">
+      <label for="image" class="col-sm-3 col-form-label">Image</label>
+      <div class="col-sm-9">
+        <input type="file" class="form-control" id="image" (change)="onImageSelected($event)">
+        <div *ngIf="imageError" class="text-danger mt-1">{{ imageError }}</div>
+      </div>
+    </div>
+
+    <!-- Country -->
+    <div class="row mb-3">
+      <label for="country" class="col-sm-3 col-form-label">Country</label>
+      <div class="col-sm-9">
+        <input type="text" class="form-control" id="country" formControlName="country">
+        <div class="text-danger" *ngIf="(country?.touched || isSubmitted) && country?.errors?.['required']">
+          Country can't be blank
+        </div>
+      </div>
+    </div>
+
+    <!-- City -->
+    <div class="row mb-3">
+      <label for="city" class="col-sm-3 col-form-label">City</label>
+      <div class="col-sm-9">
+        <input type="text" class="form-control" id="city" formControlName="city">
+        <div class="text-danger" *ngIf="(city?.touched || isSubmitted) && city?.errors?.['required']">
+          City can't be blank
+        </div>
+      </div>
+    </div>
+
+    <!-- Street -->
+    <div class="row mb-3">
+      <label for="street" class="col-sm-3 col-form-label">Street</label>
+      <div class="col-sm-9">
+        <input type="text" class="form-control" id="street" formControlName="street">
+        <div class="text-danger" *ngIf="(street?.touched || isSubmitted) && street?.errors?.['required']">
+          Street can't be blank
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-primary px-4">Register</button>
+    </div>
+  </form>
+</div>
