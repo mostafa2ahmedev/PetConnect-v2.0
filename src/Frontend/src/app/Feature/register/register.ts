@@ -12,6 +12,7 @@ import { Router, RouterLink } from '@angular/router';
 export class Register {
   selectedRole: string = '';
 
+
   constructor(private router: Router) {}
 
   navigateToForm() {
