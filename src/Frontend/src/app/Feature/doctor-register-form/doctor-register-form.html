@@ -1,113 +1,184 @@
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-8 col-md-10">
-      <div class="card shadow-lg border-0">
-        <div class="card-body p-4">
+<div class="container my-5">
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
 
-          <h2 class="text-center mb-4">Register as a Doctor 👨‍⚕️</h2>
-
-          <form (ngSubmit)="onSubmit()" #doctorForm="ngForm" class="needs-validation" novalidate>
-            <!-- Basic Info -->
-            <div class="row g-3">
-              <div class="col-md-6">
-                <label for="fname" class="form-label">First name</label>
-                <input type="text" id="fname" name="fname" [(ngModel)]="doctor.fname" class="form-control" required>
-              </div>
-
-              <div class="col-md-6">
-                <label for="lname" class="form-label">Last name</label>
-                <input type="text" id="lname" name="lname" [(ngModel)]="doctor.lname" class="form-control" required>
-              </div>
-
-              <div class="col-md-6">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" id="email" name="email" [(ngModel)]="doctor.email" class="form-control" required>
-              </div>
-
-              <div class="col-md-6">
-                <label for="gender" class="form-label">Gender</label>
-                <select id="gender" name="gender" [(ngModel)]="doctor.gender" class="form-select" required>
-                  <option value="" disabled>-- Select Gender --</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </select>
-              </div>
-            </div>
-
-            <!-- Password -->
-            <div class="row g-3 mt-3">
-              <div class="col-md-6">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" id="password" name="password" [(ngModel)]="doctor.password" class="form-control" required>
-              </div>
-                <div class="col-md-6">
-                <label for="confirm" class="form-label">Confirm Password</label>
-                <input type="password" id="confirm" name="confirm" [(ngModel)]="doctor.confirmPassword" class="form-control" required>
-              </div>
-            </div>
-
-            <!-- Doctor Details -->
-            <div class="row g-3 mt-3">
-              <div class="col-md-6">
-                <label for="price" class="form-label">Price per hour</label>
-                <input type="number" id="price" name="price" [(ngModel)]="doctor.pricePerHour" class="form-control" required>
-              </div>
-
-              <div class="col-md-6">
-                <label for="specialty" class="form-label">Specialty</label>
-                <select id="specialty" name="specialty" [(ngModel)]="doctor.petSpecialty" class="form-select" required>
-                  <option value="" disabled>-- Select Specialty --</option>
-                  <option value="Cats">Cats</option>
-                  <option value="Dogs">Dogs</option>
-                  <option value="Birds">Birds</option>
-                </select>
-              </div>
-
-              <div class="col-md-6">
-                <label for="certUrl" class="form-label">Certificate URL</label>
-                <input type="url" id="certUrl" name="certUrl" [(ngModel)]="doctor.certificateUrl" class="form-control">
-              </div>
-
-              <div class="col-md-6">
-                <label for="imageUrl" class="form-label">Image URL</label>
-                <input type="url" id="imageUrl" name="imageUrl" [(ngModel)]="doctor.imageUrl" class="form-control">
-              </div>
-            </div>
-
-            <!-- Address -->
-            <div class="row g-3 mt-3">
-              <div class="col-md-4">
-                <label for="country" class="form-label">Country</label>
-                <input type="text" id="country" name="country" [(ngModel)]="doctor.country" class="form-control">
-              </div>
-
-              <div class="col-md-4">
-                <label for="city" class="form-label">City</label>
-                <input type="text" id="city" name="city" [(ngModel)]="doctor.city" class="form-control">
-              </div>
-
-              <div class="col-md-4">
-                <label for="street" class="form-label">Street</label>
-                <input type="text" id="street" name="street" [(ngModel)]="doctor.street" class="form-control">
-              </div>
-            </div>
-
-            <!-- Submit Button -->
-            <div class="d-grid mt-4">
-              <button type="submit" class="btn btn-success btn-lg">
-                <i class="bi bi-person-plus-fill me-2"></i>Register
-              </button>
-            </div>
-
-            <!-- Sign In Link -->
-            <div class="mt-4 text-center">
-                <a class="text-muted" [routerLink]="['/login']">Already have an account?</a>
-              <a routerLink="/login" class="ms-2 text-decoration-none fw-semibold text-primary">Sign In</a>
-            </div>
-
-          </form>
+    <div *ngIf="generalErrors.length > 0" class="alert alert-danger">
+      <ul>
+        <li *ngFor="let error of generalErrors">{{ error }}</li>
+      </ul>
+    </div>
+    <!-- First Name -->
+    <div class="row mb-3">
+      <label for="fName" class="col-sm-3 col-form-label">First Name</label>
+      <div class="col-sm-9">
+        <input type="text" class="form-control" id="fName" formControlName="fName">
+        <div class="text-danger" *ngIf="(fName?.touched || isSubmitted) && fName?.errors?.['required']">
+          First Name can't be blank
         </div>
       </div>
     </div>
-  </div>
+
+    <!-- Last Name -->
+    <div class="row mb-3">
+      <label for="lName" class="col-sm-3 col-form-label">Last Name</label>
+      <div class="col-sm-9">
+        <input type="text" class="form-control" id="lName" formControlName="lName">
+        <div class="text-danger" *ngIf="(lName?.touched || isSubmitted) && lName?.errors?.['required']">
+          Last Name can't be blank
+        </div>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="row mb-3">
+      <label for="email" class="col-sm-3 col-form-label">Email</label>
+      <div class="col-sm-9">
+        <input type="email" class="form-control" id="email" formControlName="email">
+        <div class="text-danger" *ngIf="(email?.touched || isSubmitted) && email?.errors?.['required']">
+          Email can't be blank
+        </div>
+        <div class="text-danger" *ngIf="(email?.touched || isSubmitted) && email?.errors?.['email']">
+          Please enter a valid email
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone Number -->
+    <div class="row mb-3">
+      <label for="phoneNumber" class="col-sm-3 col-form-label">Phone Number</label>
+      <div class="col-sm-9">
+        <input type="text" class="form-control" id="phoneNumber" formControlName="phoneNumber">
+        <div class="text-danger" *ngIf="(phoneNumber?.touched || isSubmitted) && phoneNumber?.errors?.['required']">
+          Phone Number can't be blank
+        </div>
+        <div class="text-danger" *ngIf="(phoneNumber?.touched || isSubmitted) && phoneNumber?.errors?.['pattern']">
+          Please enter only numbers
+        </div>
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="row mb-3">
+      <label for="password" class="col-sm-3 col-form-label">Password</label>
+      <div class="col-sm-9">
+        <input type="password" class="form-control" id="password" formControlName="password">
+        <div class="text-danger" *ngIf="(password?.touched || isSubmitted) && password?.errors?.['required']">
+          Password can't be blank
+        </div>
+        <div class="text-danger" *ngIf="(password?.touched || isSubmitted) && password?.errors?.['pattern']">
+          Password must be at least 6 characters long, contain at least one letter and one special character.
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Password -->
+    <div class="row mb-3">
+      <label for="confirmationPassword" class="col-sm-3 col-form-label">Confirm Password</label>
+      <div class="col-sm-9">
+        <input type="password" class="form-control" id="confirmationPassword" formControlName="confirmationPassword">
+        <div class="text-danger"
+          *ngIf="(confirmationPassword?.touched || isSubmitted) && confirmationPassword?.errors?.['required']">
+          Confirm Password can't be blank
+        </div>
+        <div class="text-danger"
+          *ngIf="(confirmationPassword?.touched || isSubmitted) && confirmationPassword?.errors?.['compareValidator']">
+          Passwords do not match
+        </div>
+      </div>
+    </div>
+
+    <!-- Gender -->
+    <div class="row mb-3">
+      <label for="gender" class="col-sm-3 col-form-label">Gender</label>
+      <div class="col-sm-9">
+        <select class="form-select" id="gender" formControlName="gender">
+          <option value="" disabled>Select gender</option>
+          <option *ngFor="let option of genderOptions" [ngValue]="option.id">{{ option.name }}</option>
+        </select>
+        <div class="text-danger" *ngIf="(gender?.touched || isSubmitted) && gender?.errors?.['required']">
+          Gender is required
+        </div>
+      </div>
+    </div>
+
+    <!-- Pet Specialty -->
+    <div class="row mb-3">
+      <label for="petSpecialty" class="col-sm-3 col-form-label">Pet Specialty</label>
+      <div class="col-sm-9">
+        <select class="form-select" id="petSpecialty" formControlName="petSpecialty">
+          <option value="" disabled>Select pet specialty</option>
+          <option *ngFor="let option of petSpecialtyOptions" [ngValue]="option.id">{{ option.name }}</option>
+        </select>
+        <div class="text-danger" *ngIf="(petSpecialty?.touched || isSubmitted) && petSpecialty?.errors?.['required']">
+          Pet Specialty is required
+        </div>
+      </div>
+    </div>
+
+    <!-- Image -->
+    <div class="row mb-3">
+      <label for="image" class="col-sm-3 col-form-label">Image</label>
+      <div class="col-sm-9">
+        <input type="file" class="form-control" id="image" (change)="onImageSelected($event)">
+        <div *ngIf="imageError" class="text-danger mt-1">{{ imageError }}</div>
+      </div>
+    </div>
+
+    <!-- Certificate -->
+    <div class="row mb-3">
+      <label for="certificate" class="col-sm-3 col-form-label">Certificate</label>
+      <div class="col-sm-9">
+        <input type="file" class="form-control" id="certificate" (change)="onCertificateSelected($event)">
+        <div *ngIf="certificateError" class="text-danger mt-1">{{ certificateError }}</div>
+      </div>
+    </div>
+
+    <!-- Price Per Hour -->
+    <div class="row mb-3">
+      <label for="pricePerHour" class="col-sm-3 col-form-label">Price Per Hour</label>
+      <div class="col-sm-9">
+        <input type="number" class="form-control" id="pricePerHour" formControlName="pricePerHour">
+        <div class="text-danger" *ngIf="(pricePerHour?.touched || isSubmitted) && pricePerHour?.errors?.['required']">
+          Price Per Hour can't be blank
+        </div>
+      </div>
+    </div>
+
+    <!-- Country -->
+    <div class="row mb-3">
+      <label for="country" class="col-sm-3 col-form-label">Country</label>
+      <div class="col-sm-9">
+        <input type="text" class="form-control" id="country" formControlName="country">
+        <div class="text-danger" *ngIf="(country?.touched || isSubmitted) && country?.errors?.['required']">
+          Country can't be blank
+        </div>
+      </div>
+    </div>
+
+    <!-- City -->
+    <div class="row mb-3">
+      <label for="city" class="col-sm-3 col-form-label">City</label>
+      <div class="col-sm-9">
+        <input type="text" class="form-control" id="city" formControlName="city">
+        <div class="text-danger" *ngIf="(city?.touched || isSubmitted) && city?.errors?.['required']">
+          City can't be blank
+        </div>
+      </div>
+    </div>
+
+    <!-- Street -->
+    <div class="row mb-3">
+      <label for="street" class="col-sm-3 col-form-label">Street</label>
+      <div class="col-sm-9">
+        <input type="text" class="form-control" id="street" formControlName="street">
+        <div class="text-danger" *ngIf="(street?.touched || isSubmitted) && street?.errors?.['required']">
+          Street can't be blank
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-primary px-4">Register</button>
+    </div>
+  </form>
 </div>
