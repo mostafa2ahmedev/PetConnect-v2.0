@@ -1,41 +1,73 @@
-<section id="hero" class="hero section mb-0 pb-0">
-	<div class="container section-title aos-init aos-animate pb-0" data-aos="fade-up">
-		<h2>Sign In</h2>
-		<p>*****************</p>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card"> <!-- Removed shadow -->
+        <div class="card-body">
+          <h3 class="text-center mb-4">Login</h3>
 
-	</div>
-</section>
+          <!-- Display error message if login fails -->
+          <div *ngIf="errorMessage" class="alert alert-danger mb-3">
+            {{ errorMessage }}
+          </div>
 
-<section class="mb-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-10 col-lg-6">
-                <form method="post">
-                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+          <form (ngSubmit)="onLogin()" #loginForm="ngForm">
 
-                    <div class="mb-3">
-                        <label  class="form-label">Email</label>
-                        <input [(ngModel)]="Email" class="form-control" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
-                    </div>
-
-                    <div class="mb-3">
-                        <label  class="form-label">Password</label>
-                        <input [(ngModel)]="Password" class="form-control" />
-                        <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-check mb-3">
-                        <input [(ngModel)]="remembered" class="form-check-input" type="checkbox" />
-                        <label asp-for="RememberMe" class="form-check-label">Remember me</label>
-                        <span  class="text-danger"></span>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary w-100">Sign In</button>
-                </form>
+            <!-- Email -->
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                required
+                [(ngModel)]="Email"
+                placeholder="Enter your email"
+                autocomplete="username" 
+              />
             </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                required
+                [(ngModel)]="Password"
+                placeholder="Enter your password"
+                autocomplete="current-password" 
+              />
+            </div>
+
+            <!-- Remember Me -->
+            <div class="mb-3 form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="remembered"
+                name="remembered"
+                [(ngModel)]="remembered"
+              />
+              <label class="form-check-label" for="remembered">
+                Remember Me
+              </label>
+            </div>
+
+            <!-- Submit Button -->
+            <button 
+              type="submit" 
+              class="btn btn-primary w-100"
+              [disabled]="loginForm.invalid" 
+            >
+              Login
+            </button>
+
+          </form>
         </div>
+      </div>
     </div>
-</section>
-
-
+  </div>
+</div>
