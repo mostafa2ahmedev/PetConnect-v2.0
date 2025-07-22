@@ -12,34 +12,36 @@
 
             <div class="row g-3">
                 <div class="col-md-4">
-                    <input type="text" name="name" class="form-control" placeholder="Search by name..." value="" />
+                    <input type="text" name="name" [(ngModel)]="name" class="form-control" placeholder="Search by name..."  />
                 </div>
 
                 <div class="col-md-4">
-                    <input type="number" name="maxPrice" class="form-control" placeholder="Max price per hour" step="1" value="@maxPrice" />
+                    <input type="number" name="maxPrice" [(ngModel)]="maxPrice" class="form-control" placeholder="Max price per hour" step="1" value="" />
                 </div>
 
                 <div class="col-md-4">
-                    <select name="specialty" class="form-select">
-                        <option value="">-- All Specialties --</option>
-                        <!-- @for ( item of specialties; track )
+                    <select [(ngModel)]="specialty" class="form-select" name="specialty">
+                        <option value="" selected disabled>-- All Specialties --</option>
+                        @for ( speciality of specialities; track speciality.value )
                         {
-                            @if (item.Value == specialty)
+                            <option [value]="speciality.value" >{{speciality.specialityName}}</option>
+
+                            <!-- @if (item.Value == "specialty")
                             {
-                                <option value="@item.Value" selected>{{item.Text}}</option>
+                                <option [value]="speciality.value" selected>{{speciality.specialityName}}</option>
                             }
                             @else
                             {
-                                <option value="@item.Value">{{item.Text}}</option>
-                            }
-                        } -->
+                                <option [value]="speciality.value">{{speciality.specialityName}}</option>
+                            }  -->
+                        }
                     </select>
                 </div>
             </div>
 
             <div class="row g-3 mt-2 justify-content-center">
                 <div class="col-md-3 d-grid">
-                    <button type="submit" class="btn btn-primary">Search</button>
+                    <button type="submit" class="btn btn-primary" (click)="search()">Search</button>
                 </div>
 
             </div>
@@ -49,39 +51,36 @@
     <div class="container d-flex justify-content-center">
 
         <!-- if didn't find any -->
-    <!-- @if (!Model.Any())
+    @if (typeof allDoctors== "string" || errorFound)
     {
         <div class="alert alert-danger text-center">
-            No doctors found matching your search criteria.
+            {{errorMesseage}}
         </div>
-    } -->
+    }
 
 
     </div>
 
 
 </section>
-
+@if(typeof allDoctors != "string" && !errorFound) {
 <section id="team" class="team section light-background">
     <div class="container aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
         <div class="row g-5">
-            <!-- @for ( doctor of Model)
+            @for( doctor of allDoctors ; track doctor.id)
             {
                 <div class="col-md-6 col-lg-3 aos-init aos-animate" data-aos="zoom-in" data-aos-delay="100">
-                     <a asp-controller="Doctors"
-                                   asp-action="Profile"
-                                   asp-route-id="@doctor.Id"
+                    <a [routerLink]="['/doctors', doctor.id]"
                                    class="text-dark text-decoration-none">
-                    
                     <div class="team-card text-center">
                         <div class="team-image">
-                            <img src="@doctor.ImgUrl"
+                            <img src="{{server}}{{doctor.imgUrl}}"
                                  class="img-fluid"
-                                 alt="Dr. @doctor.FName @doctor.LName" />
+                                 alt="Dr. {{doctor.fName}} {{doctor.lName}}" />
                             <div class="team-overlay">
                                 <p>
-                                    @doctor.PetSpecialty specialist<br />
-                                    Rate: <strong>@doctor.PricePerHour.ToString("F2") EGP/hr</strong>
+                                    {{doctor.petSpecialty}} specialist<br />
+                                    Rate: <strong>{{doctor.pricePerHour | currency:'EGP':true}}</strong>
                                 </p>
                             </div>
                         </div>
@@ -89,12 +88,11 @@
                             <h4>
                                 <a asp-controller="Doctors"
                                    asp-action="Profile"
-                                   asp-route-id="@doctor.Id"
                                    class="text-dark text-decoration-none">
-                                    Dr. @doctor.FName @doctor.LName
+                                    Dr. {{doctor.fName}} {{doctor.lName}}
                                 </a>
                             </h4>
-                            <span class="position">@doctor.PetSpecialty</span>
+                            <span class="position">{{doctor.petSpecialty}}</span>
                             <div class="rating mt-2">
                                 <i class="bi bi-star-fill text-dark-yellow"></i>
                                 <i class="bi bi-star-fill text-dark-yellow"></i>
@@ -106,7 +104,8 @@
                     </div>
                     </a>
                 </div>
-            } -->
+            } 
         </div>
     </div>
 </section>
+}
