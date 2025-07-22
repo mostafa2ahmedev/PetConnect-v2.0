@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PetConnect.BLL.Services.Classes;
 using PetConnect.BLL.Services.DTO.PetCategoryDto;
 using PetConnect.BLL.Services.DTOs;
 using PetConnect.BLL.Services.Interfaces;
@@ -21,6 +22,17 @@ public class PetCategoryController : ControllerBase
     {
         var categories = _petCategoryService.GetAllCategories();
         return Ok(new GeneralResponse(200, categories));
+    }
+
+    [HttpGet("{id}")]
+    [EndpointSummary("Get Category By Id")]
+    public ActionResult PetCategoryDetails(int id)
+    {
+        //if(id==null)  > GetAll
+        var PetCategory = _petCategoryService.GetPetCategoryById(id);
+        if (PetCategory == null)
+            return NotFound(new GeneralResponse(404, $"No Category found with ID ={id}"));
+        return Ok(new GeneralResponse(200, PetCategory));
     }
 
     [HttpPost]

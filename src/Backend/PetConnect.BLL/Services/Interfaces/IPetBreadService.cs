@@ -10,7 +10,7 @@ namespace PetConnect.BLL.Services.Interfaces
     public interface IPetBreadService
     {
         public List<GPetBreadDto> GetAllBreads();
-        public UPetBreadDto? GetBreadById(int Id);
+        public GPetBreadDto? GetBreadById(int Id);
         public int AddPetBread(AddedPetBreadDto AddedPetBread);
         public int UpdatePetBread(UPetBreadDto UPetBread);
         public int DeletePetBread(int Id);
