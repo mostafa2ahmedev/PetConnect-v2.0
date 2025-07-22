@@ -1,0 +1,113 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+      <div class="card shadow-lg border-0">
+        <div class="card-body p-4">
+
+          <h2 class="text-center mb-4">Register as a Doctor 👨‍⚕️</h2>
+
+          <form (ngSubmit)="onSubmit()" #doctorForm="ngForm" class="needs-validation" novalidate>
+            <!-- Basic Info -->
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="fname" class="form-label">First name</label>
+                <input type="text" id="fname" name="fname" [(ngModel)]="doctor.fname" class="form-control" required>
+              </div>
+
+              <div class="col-md-6">
+                <label for="lname" class="form-label">Last name</label>
+                <input type="text" id="lname" name="lname" [(ngModel)]="doctor.lname" class="form-control" required>
+              </div>
+
+              <div class="col-md-6">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" name="email" [(ngModel)]="doctor.email" class="form-control" required>
+              </div>
+
+              <div class="col-md-6">
+                <label for="gender" class="form-label">Gender</label>
+                <select id="gender" name="gender" [(ngModel)]="doctor.gender" class="form-select" required>
+                  <option value="" disabled>-- Select Gender --</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="row g-3 mt-3">
+              <div class="col-md-6">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" [(ngModel)]="doctor.password" class="form-control" required>
+              </div>
+                <div class="col-md-6">
+                <label for="confirm" class="form-label">Confirm Password</label>
+                <input type="password" id="confirm" name="confirm" [(ngModel)]="doctor.confirmPassword" class="form-control" required>
+              </div>
+            </div>
+
+            <!-- Doctor Details -->
+            <div class="row g-3 mt-3">
+              <div class="col-md-6">
+                <label for="price" class="form-label">Price per hour</label>
+                <input type="number" id="price" name="price" [(ngModel)]="doctor.pricePerHour" class="form-control" required>
+              </div>
+
+              <div class="col-md-6">
+                <label for="specialty" class="form-label">Specialty</label>
+                <select id="specialty" name="specialty" [(ngModel)]="doctor.petSpecialty" class="form-select" required>
+                  <option value="" disabled>-- Select Specialty --</option>
+                  <option value="Cats">Cats</option>
+                  <option value="Dogs">Dogs</option>
+                  <!-- <option value="Birds">Birds</option> -->
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label for="certUrl" class="form-label">Certificate URL</label>
+                <input type="url" id="certUrl" name="certUrl" [(ngModel)]="doctor.certificateUrl" class="form-control">
+              </div>
+
+              <div class="col-md-6">
+                <label for="imageUrl" class="form-label">Image URL</label>
+                <input type="url" id="imageUrl" name="imageUrl" [(ngModel)]="doctor.imageUrl" class="form-control">
+              </div>
+            </div>
+
+            <!-- Address -->
+            <div class="row g-3 mt-3">
+              <div class="col-md-4">
+                <label for="country" class="form-label">Country</label>
+                <input type="text" id="country" name="country" [(ngModel)]="doctor.country" class="form-control">
+              </div>
+
+              <div class="col-md-4">
+                <label for="city" class="form-label">City</label>
+                <input type="text" id="city" name="city" [(ngModel)]="doctor.city" class="form-control">
+              </div>
+
+              <div class="col-md-4">
+                <label for="street" class="form-label">Street</label>
+                <input type="text" id="street" name="street" [(ngModel)]="doctor.street" class="form-control">
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid mt-4">
+              <button type="submit" class="btn btn-success btn-lg">
+                <i class="bi bi-person-plus-fill me-2"></i>Register
+              </button>
+            </div>
+
+            <!-- Sign In Link -->
+            <div class="mt-4 text-center">
+                <a class="text-muted" [routerLink]="['/login']">Already have an account?</a>
+              <a routerLink="/login" class="ms-2 text-decoration-none fw-semibold text-primary">Sign In</a>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

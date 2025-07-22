@@ -1,0 +1,139 @@
+
+
+
+
+
+        <section id="hero" class="hero section">
+            <div class="container section-title aos-init aos-animate pb-0" data-aos="fade-up">
+                <h2>Add New Pet</h2>
+                <p>Add a new pet for adoption or rescue</p>
+
+                <div class="my-3 d-flex justify-content-center gap-3">
+                    <a asp-controller="pet" asp-action="Index" class="btn btn-outline-primary btn-sm">
+                        All Pets
+                    </a>
+                    <a asp-controller="doctors" asp-action="Index" class="btn btn-outline-primary btn-sm">
+                        Our Vets
+                    </a>
+                </div>
+
+
+
+            </div>
+        </section>
+
+
+
+
+
+
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow rounded-4 p-4">
+                <!-- @* <h2 class="mb-4">Add New Pet</h2> *@ -->
+
+                <!-- ✅ كاتيجوري ليست -->
+                <div class="mb-3">
+                    <label class="form-label">Categories</label>
+                    <select class="form-select" id="categoryList">
+                        <option value="">-- Select Category --</option>
+                        <!-- @foreach (var cat in ViewBag.Categories)
+                        {
+                            
+                            <option value="@cat.Id">@cat.Name</option>
+                        } -->
+                    </select>
+                </div>
+
+
+
+                <form asp-action="AddPet" method="post" enctype="multipart/form-data">
+                    <!-- ✅ بريد ليست فاضية في الأول -->
+                    <div class="mb-3">
+                        <label class="form-label">Breeds</label>
+                        <select class="form-select" id="BreadList" asp-for="BreedId">
+
+                            <option value="">-- Select Breed --</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Status" class="form-label"></label>
+                        <select asp-for="Status" class="form-select">
+                            <!-- @foreach (var status in Enum.GetValues(typeof(PetStatus)).Cast<PetStatus>())
+                            {
+                                <option value="@status">@status</option>
+                            } -->
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Ownership" class="form-label"></label>
+                        <select asp-for="Ownership" class="form-select">
+                            <!-- @foreach (var owner in Enum.GetValues(typeof(Ownership)).Cast<Ownership>())
+                            {
+                                <option value="@owner">@owner</option>
+                            } -->
+                        </select>
+                    </div>
+
+     
+                    <div class="mb-3">
+                        <label asp-for="form" class="form-label"></label>
+                        <input asp-for="form" class="form-control" type="file" />
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <a asp-action="Index" asp-controller="Pet" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const categoryList = document.getElementById('categoryList');
+        const breedList = document.getElementById('BreadList');
+
+        categoryList.addEventListener('change', function () {
+            const categoryId = this.value;
+
+            // Clear the breed list
+            breedList.innerHTML = '<option value="">-- Select Breed --</option>';
+
+            if (!categoryId) return;
+
+            fetch('/PetBread/GetBreadsByCategory/' + categoryId)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    data.forEach(breed => {
+                        const option = document.createElement('option');
+                        option.value = breed.id; 
+                        option.textContent = breed.name;
+                        breedList.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching breeds:', error);
+                    alert('Error loading breeds.');
+                });
+        });
+    });
+</script>
+
+
+

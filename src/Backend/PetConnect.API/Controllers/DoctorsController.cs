@@ -60,7 +60,11 @@ namespace PetConnect.PL.Controllers
             var doctorDTO = doctorService.GetByID(id);
 
             if (doctorDTO == null)
+<<<<<<< HEAD
+                return NotFound("Didn't find any doctor with that Id");
+=======
                 return NotFound();
+>>>>>>> 2cbe314e0ebe89ad38838e649048b9cd7790c6da
 
             return Ok(doctorDTO);
         }
@@ -117,12 +121,23 @@ namespace PetConnect.PL.Controllers
 
                 doctorService.Update(dto);
 
+<<<<<<< HEAD
+                return Ok(new { message="Doctor updated successfully." });
+=======
                 return Ok("Doctor updated successfully.");
+>>>>>>> 2cbe314e0ebe89ad38838e649048b9cd7790c6da
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Update failed: {ex.Message}");
             }
         }
+<<<<<<< HEAD
+
+
     }
 }
+=======
+    }
+}
+>>>>>>> 2cbe314e0ebe89ad38838e649048b9cd7790c6da

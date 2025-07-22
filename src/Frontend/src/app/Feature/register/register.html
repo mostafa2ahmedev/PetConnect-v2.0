@@ -1,0 +1,49 @@
+
+<section id="hero" class="hero section mb-0 pb-0">
+    <div class="container section-title aos-init aos-animate pb-0" data-aos="fade-up">
+        <h2>Sign Up</h2>
+        <p>*****************</p>
+
+    </div>
+</section>
+
+
+
+
+
+<div class="container mt-3 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-center mb-4">Create an Account</h2>
+            <p class="text-muted text-center mb-4">Please select your role to register as a doctor or a regular user.</p>
+
+            <form method="post" asp-action="RegisterPost">
+                <div class="mb-3">
+                    <label asp-for="Role" class="form-label">Select Role</label>
+                    <select asp-for="Role" class="form-select">
+                        <option value="" disabled selected>-- Select a role --</option>
+                        <!-- @foreach (var role in ViewBag.Roles)
+                        {
+                            <option value="@role">@role</option>
+                        } -->
+                    </select>
+                    <span asp-validation-for="Role" class="text-danger"></span>
+                </div>
+
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-primary">Continue</button>
+                </div>
+                <a class="text-muted mx-5" [routerLink]="['/register', 'doctor']">Doctor Form</a>
+                <a class="text-muted" [routerLink]="['/register', 'customer']">Customer Form</a>
+            </form>
+
+            <div class="mt-4 text-center">
+                <a class="text-muted " [routerLink]="['/login']">Already have an account?</a>
+                <a asp-action="SignIn" asp-controller="account" class="ms-2 text-decoration-none fw-semibold text-primary">
+                    Sign In
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+

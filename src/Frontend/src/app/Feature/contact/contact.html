@@ -1,0 +1,172 @@
+
+
+<section id="hero" class="hero section pb-0">
+    <div class="container section-title aos-init aos-animate pb-0" data-aos="fade-up">
+        <h2>Contact</h2>
+        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+    </div><!-- End Section Title -->
+</section>
+
+
+
+<section id="contact" class="contact section">
+
+
+
+    <div class="container aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-4 mb-5">
+            <div class="col-lg-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+                <div class="info-card">
+                    <div class="icon-box">
+                        <i class="bi bi-geo-alt"></i>
+                    </div>
+                    <h3>Our Address</h3>
+                    <p>2847 Rainbow Road, Springfield, IL 62701, USA</p>
+                </div>
+            </div>
+
+            <div class="col-lg-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
+                <div class="info-card">
+                    <div class="icon-box">
+                        <i class="bi bi-telephone"></i>
+                    </div>
+                    <h3>Contact Number</h3>
+                    <p>
+                        Mobile: +1 (555) 123-4567<br>
+                        Email: infoexample.com
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="300">
+                <div class="info-card">
+                    <div class="icon-box">
+                        <i class="bi bi-clock"></i>
+                    </div>
+                    <h3>Opening Hour</h3>
+                    <p>
+                        Monday - Saturday: 9:00 - 18:00<br>
+                        Sunday: Closed
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-wrapper aos-init aos-animate" data-aos="fade-up" data-aos-delay="400">
+                    <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input type="text" name="name" class="form-control" placeholder="Your name*" required="">
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                    <input type="email" class="form-control" name="email" placeholder="Email address*" required="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6 form-group">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-phone"></i></span>
+                                    <input type="text" class="form-control" name="phone" placeholder="Phone number*" required="">
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-list"></i></span>
+                                    <select name="subject" class="form-control" required="">
+                                        <option value="" disabled selected> ---- Select service ---- *</option>
+                                        <option value="Service 1">Consulting</option>
+                                        <option value="Service 2">Development</option>
+                                        <option value="Service 3">Marketing</option>
+                                        <option value="Service 4">Support</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group mt-3">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-chat-dots"></i></span>
+                                    <textarea class="form-control" name="message" rows="6" placeholder="Write a message*" required=""></textarea>
+                                </div>
+                            </div>
+                    
+                            <div class="text-center mt-3">
+                                <button type="submit" class="btn btn-success shadow-sm">Submit Message</button>
+                            </div>
+
+                        </div>
+                    </form>
+
+
+<!-- 
+                    @* <div class="row"> *@
+
+                    @* <div class="form-contianer col-md-8"> *@
+                    @* <h3 class="mt-5 ps-3 fw-bold">Form Title</h3> *@
+
+                    @* <form asp-action="Contact" method="post" class="p-3"> *@
+                    @*     <div class="mb-3"> *@
+                    @*         <label for="name" class="form-label">Your Name *</label> *@
+                    @*         <input type="text" name="name" id="name" class="form-control" required /> *@
+                    @*     </div> *@
+
+                    @*     <div class="mb-3"> *@
+                    @*         <label for="email" class="form-label">Email Address *</label> *@
+                    @*         <input type="email" name="email" id="email" class="form-control" required /> *@
+                    @*     </div> *@
+
+                    @*     <div class="mb-3"> *@
+                    @*         <label for="phone" class="form-label">Phone Number *</label> *@
+                    @*         <input type="text" name="phone" id="phone" class="form-control" required /> *@
+                    @*     </div> *@
+
+                    @*     <div class="mb-3"> *@
+                    @*         <label for="subject" class="form-label">Select Service *</label> *@
+                    @*         <select name="subject" id="subject" class="form-select" required> *@
+                    @*             <option value="">-- Please select --</option> *@
+                    @*             <option value="Consulting">Consulting</option> *@
+                    @*             <option value="Development">Development</option> *@
+                    @*             <option value="Marketing">Marketing</option> *@
+                    @*             <option value="Support">Support</option> *@
+                    @*         </select> *@
+                    @*     </div> *@
+
+                    @*     <div class="mb-3"> *@
+                    @*         <label for="message" class="form-label">Message *</label> *@
+                    @*         <textarea name="message" id="message" rows="5" class="form-control" required></textarea> *@
+                    @*     </div> *@
+
+                    @*     <div class="text-center"> *@
+                    @*         <button type="submit" class="btn btn-primary">Submit Message</button> *@
+                    @*     </div> *@
+                    @* </form> *@
+                    @* </div> *@
+
+                    @* <div class="col-md-3"> *@
+                    @*     <img src="assets\img\pets\shenity.jpg" alt="" class="img-fluid mt-3"/> *@
+                    @* </div> *@
+                    @* </div> *@ -->
+
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+
+
+
+
+
+
