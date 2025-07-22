@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetConnect.BLL.Services.DTO.PetCategoryDto;
-using PetConnect.BLL.Services.DTO.PetDto;
 using PetConnect.BLL.Services.DTOs;
 using PetConnect.BLL.Services.Interfaces;
 
@@ -26,18 +25,18 @@ public class PetCategoryController : ControllerBase
 
     [HttpPost]
     [EndpointSummary("Add A New Category")]
-    public IActionResult Add(AddedPetCategoryDTO addedPetCategoryDto)
+    public IActionResult Add([FromForm] AddedPetCategoryDTO addedPetCategoryDto)
     {
-        if (!ModelState.IsValid) {
+        if (!ModelState.IsValid)
+        {
             var errors = ModelState
-             .Where(ms => ms.Value.Errors.Count > 0)
-             .ToDictionary(
-                 kvp => kvp.Key,
-            kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
-         );
+                .Where(ms => ms.Value.Errors.Count > 0)
+                .ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                );
 
-            return BadRequest(new GeneralResponse(400, ModelState));
-
+            return BadRequest(new GeneralResponse(400, errors));
         }
 
         if (_petCategoryService.AddPetCategory(addedPetCategoryDto) > 0)
@@ -48,10 +47,19 @@ public class PetCategoryController : ControllerBase
 
     [HttpPut]
     [EndpointSummary("Modify An Existing Category")]
-    public IActionResult Edit( UPetCategoryDto uPetCategoryDto)
+    public IActionResult Edit([FromForm] UPetCategoryDto uPetCategoryDto)
     {
         if (!ModelState.IsValid)
-            return BadRequest(new GeneralResponse(400, "Invalid input data"));
+        {
+            var errors = ModelState
+                .Where(ms => ms.Value.Errors.Count > 0)
+                .ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                );
+
+            return BadRequest(new GeneralResponse(400, errors));
+        }
 
         if (_petCategoryService.UpdatePetCategory(uPetCategoryDto) > 0)
             return Ok(new GeneralResponse(200, "Pet category updated successfully"));
@@ -63,7 +71,7 @@ public class PetCategoryController : ControllerBase
     [EndpointSummary("Delete An Existing Category")]
     public IActionResult Delete(int? id)
     {
-        if (id==null)
+        if (id == null)
             return BadRequest(new GeneralResponse(400, "Invalid ID"));
 
         if (_petCategoryService.DeletePetCategory(id.Value) == 0)
