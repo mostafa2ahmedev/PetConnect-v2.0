@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { Pet } from '../../../models/pet';
 import { PetService } from '../pet-service';
 import { EnumService } from '../../../core/services/enum-service';
+import { AccountService } from '../../../core/services/account-service';
 
 @Component({
   selector: 'app-pets',
@@ -19,7 +20,8 @@ export class Pets implements OnInit {
   error = '';
   constructor(
     private petService: PetService,
-    private enumService: EnumService
+    private enumService: EnumService,
+    public accountservice: AccountService
   ) {}
 
   ngOnInit(): void {

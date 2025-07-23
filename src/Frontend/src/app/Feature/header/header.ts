@@ -2,17 +2,25 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AccountService } from '../../core/services/account-service';
+import { AuthService } from '../../core/services/auth-service';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink,CommonModule],
+  imports: [RouterLink, CommonModule],
   templateUrl: './header.html',
-  styleUrl: './header.css'
+  styleUrl: './header.css',
 })
 export class Header {
+  test: any;
 
-  constructor(private accontService : AccountService,private router : Router) {}
-
+  constructor(
+    private accontService: AccountService,
+    private router: Router,
+    private authService: AuthService
+  ) {
+    this.test = this.authService.getUserRoles();
+    console.log('User Role:', this.test);
+  }
   isAuthenticated(): boolean {
     return this.accontService.isAuthenticated();
   }
