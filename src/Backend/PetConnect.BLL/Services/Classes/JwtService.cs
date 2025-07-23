@@ -46,7 +46,7 @@ namespace PetConnect.BLL.Services.Classes
 
             SigningCredentials signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            JwtSecurityToken securityTokenGenerator = new JwtSecurityToken(configuration["Jwt:Issuer"], configuration["Jwt:Audience"], claims:claims, expires: DateTime.Now.AddHours(1), signingCredentials: signingCredentials);
+            JwtSecurityToken securityTokenGenerator = new JwtSecurityToken(configuration["Jwt:Issuer"], configuration["Jwt:Audience"], claims:claims, expires: DateTime.Now.AddDays(1), signingCredentials: signingCredentials);
 
             JwtSecurityTokenHandler jwt = new JwtSecurityTokenHandler();
 
