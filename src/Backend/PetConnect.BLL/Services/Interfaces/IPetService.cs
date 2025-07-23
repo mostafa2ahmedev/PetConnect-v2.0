@@ -14,16 +14,16 @@ namespace PetConnect.BLL.Services.Interfaces
     {
 
 
-        Task <int> AddPet(AddedPetDto addedPet );
+        Task <int> AddPet(AddedPetDto addedPet ,string CustomerId);
 
         Task<int> UpdatePet(UpdatedPetDto UpdatedPet);
         int DeletePet(int id);
-
-        IEnumerable<PetDataDto> GetAllPets();
+        IEnumerable<PetDataDto> GetAllPetsWithBelongsToCustomer();
+        //IEnumerable<PetDataDto> GetAllPets();
         PetDetailsDto? GetPet(int id);
         IEnumerable<PetDataDto> GetAllPetsByCountForAdoption(int count);
 
-        PetDataDto? GetPetDataWithCustomer(int id);
+   
 
     }
 }

@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { PetDetailsModel } from '../../../models/pet-details';
 import { EnumService } from '../../../core/services/enum-service';
 import { AlertService } from '../../../core/services/alert-service';
+import { AuthService } from '../../../core/services/auth-service';
 
 @Component({
   selector: 'app-pet-details',
@@ -25,7 +26,8 @@ export class PetDetails implements OnInit {
     private petService: PetService,
     private enumservice: EnumService,
     private router: Router,
-    private alert: AlertService
+    private alert: AlertService,
+    public authServie: AuthService
   ) {}
 
   ngOnInit(): void {

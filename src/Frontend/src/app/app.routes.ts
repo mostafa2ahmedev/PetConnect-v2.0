@@ -20,6 +20,7 @@ import { DoctorProfile } from './Feature/doctor-profile/doctor-profile';
 import { DoctorEditProfile } from './Feature/doctor-edit-profile/doctor-edit-profile';
 import { NotFoundDoctor } from './Feature/not-found-doctor/not-found-doctor';
 import { authGuard } from './core/guards/auth-guard';
+import { CustomerProfile } from './Feature/customer-profile/customer-profile';
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'doctors', component: Doctors },
@@ -47,6 +48,8 @@ export const routes: Routes = [
   { path: 'add-breed', component: AddBreed, canActivate: [authGuard] },
   { path: 'contact', component: Contact },
   { path: 'login', component: Login },
+  { path: 'profile/:id', component: CustomerProfile, canActivate: [authGuard] },
+
   { path: 'register', component: Register, children: [] },
   { path: 'register/doctor', component: DoctorRegisterForm },
   { path: 'register/customer', component: CustomerRegisterForm },

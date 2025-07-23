@@ -37,7 +37,11 @@ namespace PetConnect.BLL.Services.Classes
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
+            //New
 
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
+
+            //New
             SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
 
             SigningCredentials signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);

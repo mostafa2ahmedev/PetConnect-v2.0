@@ -14,7 +14,7 @@ export class AuthService {
     return sessionStorage.getItem(key) || localStorage.getItem(key);
   }
 
-  isLoggedIn(): boolean {
+  isAuthenticated(): boolean {
     return !!this.getFromStorage(this.tokenKey);
   }
 

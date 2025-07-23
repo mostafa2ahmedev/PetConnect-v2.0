@@ -5,6 +5,10 @@ import { Pet } from '../../../models/pet';
 import { PetService } from '../pet-service';
 import { EnumService } from '../../../core/services/enum-service';
 import { AccountService } from '../../../core/services/account-service';
+import { AuthService } from '../../../core/services/auth-service';
+import { AdoptionService } from '../../../core/services/adoption-service';
+import { AdoptionRequest } from '../../../models/adoption-request';
+import { AlertService } from '../../../core/services/alert-service';
 
 @Component({
   selector: 'app-pets',
@@ -21,13 +25,17 @@ export class Pets implements OnInit {
   constructor(
     private petService: PetService,
     private enumService: EnumService,
-    public accountservice: AccountService
+    public authService: AuthService,
+    public adoptionService: AdoptionService,
+    private alert: AlertService
   ) {}
+  requestedPetIds: number[] = []; // pet IDs user has requested
 
   ngOnInit(): void {
     this.enumService.loadAllEnums().subscribe();
 
     this.loadPets();
+    this.loadSubmittedRequests();
   }
 
   loadPets(): void {
@@ -50,5 +58,36 @@ export class Pets implements OnInit {
 
   getFullImageUrl(relativePath: string): string {
     return `https://localhost:7102${relativePath}`;
+  }
+
+  sendAdoptionRequest(pet: Pet) {
+    const recCustomerId = this.authService.getUserId();
+
+    if (!recCustomerId) {
+      console.error('User ID is null. User might not be logged in.');
+      return;
+    }
+
+    const request: AdoptionRequest = {
+      recCustomerId,
+      petId: pet.id,
+    };
+    console.log(request);
+    this.adoptionService.submitRequest(request).subscribe({
+      next: () => this.alert.success('Adoption request sent'),
+      error: (err) => console.error(err),
+    });
+  }
+
+  loadSubmittedRequests(): void {
+    this.adoptionService.getIncomingRequests().subscribe({
+      next: (requests) => {
+        console.log(requests);
+        this.requestedPetIds = requests.map((r) => r.petId);
+      },
+      error: (err) => {
+        console.error('Failed to load submitted requests', err);
+      },
+    });
   }
 }

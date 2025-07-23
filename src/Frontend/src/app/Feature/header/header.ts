@@ -11,16 +11,11 @@ import { AuthService } from '../../core/services/auth-service';
   styleUrl: './header.css',
 })
 export class Header {
-  test: any;
-
   constructor(
     private accontService: AccountService,
     private router: Router,
-    private authService: AuthService
-  ) {
-    this.test = this.authService.getUserRoles();
-    console.log('User Role:', this.test);
-  }
+    public authService: AuthService
+  ) {}
   isAuthenticated(): boolean {
     return this.accontService.isAuthenticated();
   }

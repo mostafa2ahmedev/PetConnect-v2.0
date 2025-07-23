@@ -23,7 +23,7 @@
             >Doctors</a
           >
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="!isAuthenticated()">
           <a
             class="nav-link text-dark fw-semibold pointer"
             *ngIf="!isAuthenticated()"
@@ -31,6 +31,7 @@
             >Pets</a
           >
         </li>
+
         <li class="nav-item dropdown" *ngIf="isAuthenticated()">
           <a
             class="nav-link dropdown-toggle text-dark fw-semibold pointer"
@@ -75,6 +76,12 @@
         </ng-container>
         <ng-container *ngIf="isAuthenticated()">
           <button class="btn btn-danger" (click)="logout()">Logout</button>
+          <a
+            class="btn btn-primary m-2"
+            routerLink="/profile/{{ authService.getUserId() }}"
+            *ngIf="isAuthenticated() && authService.isCustomer()"
+            >Profile</a
+          >
         </ng-container>
       </div>
 
@@ -109,6 +116,9 @@
           class="nav-link pointer"
           routerLink="/categories"
           *ngIf="isAuthenticated()"
+          >Manage Categories</a
+        >
+        <a class="nav-link pointer" routerLink="/categories"
           >Manage Categories</a
         >
       </li>

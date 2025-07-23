@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PetConnect.BLL.Services.Classes;
 
@@ -8,6 +9,7 @@ using PetConnect.BLL.Services.DTOs;
 using PetConnect.BLL.Services.Interfaces;
 using PetConnect.DAL.Data.Models;
 using PetConnect.DAL.UnitofWork;
+using System.Security.Claims;
 
 namespace PetConnect.API.Controllers
 {
@@ -29,7 +31,7 @@ namespace PetConnect.API.Controllers
         [EndpointSummary("Get All Pets")]
         public ActionResult GetAll()
         {
-            var pets = _petService.GetAllPets();
+            var pets = _petService.GetAllPetsWithBelongsToCustomer();
             return Ok(new GeneralResponse(200, pets));
         }
 
@@ -72,6 +74,7 @@ namespace PetConnect.API.Controllers
         #region Add Pet
         [HttpPost()]
         [EndpointSummary("Add A New Pet")]
+        [Authorize(Roles ="Customer")]
         public async Task<ActionResult> AddPet([FromForm] AddedPetDto addPet)
         {
             if (!ModelState.IsValid)
@@ -85,9 +88,12 @@ namespace PetConnect.API.Controllers
 
                 return BadRequest(new GeneralResponse(400, errors));
             }
-          
 
-            await _petService.AddPet(addPet);
+            var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            
+            await _petService.AddPet(addPet,customerId!);
+
             return Ok(new GeneralResponse(200, "Pet added successfully"));
         }
 

@@ -1,0 +1,154 @@
+<div class="container-fluid px-4 mt-3">
+  <div class="row">
+    <!-- 🔹 Full-height Left Sidebar -->
+    <div
+      class="col-md-3 d-flex flex-column shadow-sm rounded p-3 bg-primary text-white"
+      style="min-height: 95vh"
+    >
+      <!-- Header -->
+      <div class="mb-3 border-bottom pb-2">
+        <h5 class="text-center">Customer Profile</h5>
+      </div>
+
+      <!-- Profile Content (scrolls if overflows) -->
+      <div class="flex-grow-1 overflow-auto">
+        <div class="r mb-3">
+          <img
+            src="https://localhost:7102/assets/UserImages/default-user.png"
+            class="img-fluid border"
+            alt="Customer Profile Picture"
+            style="width: 130px; height: 130px; object-fit: cover"
+          />
+        </div>
+
+        <h5 class="text-white">{{ customer.name || "Eslaam Mohamed" }}</h5>
+
+        <ul class="list-unstyled mt-3">
+          <li><strong>Email:</strong> {{ customer.email }}</li>
+          <li><strong>Gender:</strong> {{ customer.gender }}</li>
+          <li><strong>Phone:</strong> {{ customer.phone }}</li>
+          <li><strong>Joined:</strong> {{ customer.createdAt }}</li>
+        </ul>
+      </div>
+
+      <!-- Footer -->
+      <div class="pt-2 border-top text-center">
+        <a
+          class="btn btn-outline-secondary btn-sm w-100 mt-2"
+          routerLink="/edit-profile"
+          >Edit Profile</a
+        >
+      </div>
+    </div>
+
+    <!-- 🔸 Right Content (Scrollable Sections) -->
+    <div class="col-md-9" style="max-height: 95vh; overflow-y: auto">
+      <!-- My Pets Section -->
+      <!-- <div class="mb-5">
+        <h4 class="mb-3">My Pets</h4>
+        <div class="row">
+          <div
+            class="col-md-6 col-lg-4 mb-3"
+            *ngFor="let pet of customer.pets"
+            data-aos="zoom-in"
+          >
+            <div class="team-card text-center shadow-sm h-100">
+              <div class="team-image">
+                <img
+                  class="img-fluid"
+                  [src]="
+                    pet.imageUrl ||
+                    'https://localhost:7102/assets/PetImages/default.png'
+                  "
+                  alt="{{ pet.name }}"
+                />
+              </div>
+              <div class="team-content pet-info p-2">
+                <h5>{{ pet.name }}</h5>
+                <span>Age: {{ pet.age }} years</span><br />
+                <span>Breed: {{ pet.breedName }}</span>
+                <div class="mt-2 d-flex justify-content-center gap-2">
+                  <a
+                    class="btn btn-outline-primary btn-sm"
+                    [routerLink]="['/pet-details', pet.id]"
+                    >Learn More</a
+                  >
+                  <a
+                    class="btn btn-primary btn-sm"
+                    [routerLink]="['/pets', pet.id]"
+                    >Adopt Now</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- Adoption Requests Received -->
+      <!-- <div class="mb-5">
+        <h4 class="mb-3">Adoption Requests Received</h4>
+        <div *ngIf="customer.receivedRequests.length > 0; else noReceived">
+          <div
+            *ngFor="let req of customer.receivedRequests"
+            class="card p-3 mb-3 shadow-sm"
+          >
+            <p class="mb-1">
+              <strong>{{ req.requesterName }}</strong> wants to adopt
+              <a [routerLink]="['/pet-details', req.petId]">{{ req.petName }}</a
+              >.
+            </p>
+            <div class="d-flex gap-2">
+              <button class="btn btn-success btn-sm">Approve</button>
+              <button class="btn btn-danger btn-sm">Reject</button>
+            </div>
+          </div>
+        </div>
+        <ng-template #noReceived>
+          <p class="text-muted">No requests received yet.</p>
+        </ng-template>
+      </div> -->
+
+      <!-- Adoption Requests Sent -->
+      <div class="sent-requests mt-4">
+        <h4 class="mb-3">Sent Adoption Requests</h4>
+
+        <!-- No requests -->
+        <!-- <div
+          *ngIf="customer.sentRequests.length === 0"
+          class="alert alert-info"
+        >
+          You haven’t sent any adoption requests yet.
+        </div> -->
+
+        <!-- Requests list -->
+        <div class="row" *ngIf="customer.sentRequests.length > 0">
+          <div
+            class="col-md-6 col-lg-4 mb-3"
+            *ngFor="let req of customer.sentRequests"
+          >
+            <div class="card shadow-sm h-100">
+              <div class="card-body">
+                <h5 class="card-title">{{ req.petName }}</h5>
+                <p class="card-text mb-1">
+                  You Requested to adopt {{ req.petName }}
+                  <strong>{{ req.recCustomerId }}</strong>
+                </p>
+                <span
+                  class="badge"
+                  [ngClass]="{
+                    'bg-warning text-dark': req.adoptionStatus === 'Pending',
+                    'bg-success': req.adoptionStatus === 'Approved',
+                    'bg-danger': req.adoptionStatus === 'Cancelled'
+                  }"
+                >
+                  {{ req.adoptionStatus }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

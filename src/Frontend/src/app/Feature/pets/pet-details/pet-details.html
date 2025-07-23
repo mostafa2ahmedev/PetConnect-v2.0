@@ -68,12 +68,14 @@
                 <a
                   [routerLink]="['/pets/update', UrlId]"
                   class="btn btn-warning btn-sm"
+                  *ngIf="authServie.isAuthenticated()"
                 >
                   Update
                 </a>
                 <a
                   class="btn btn-danger btn-sm"
                   (click)="deletePetById(pet.id)"
+                  *ngIf="authServie.isAuthenticated()"
                 >
                   Delete
                 </a>
@@ -81,9 +83,13 @@
                 <a
                   [routerLink]="['/adoption/request', pet.id]"
                   class="btn btn-success btn-sm"
+                  *ngIf="authServie.isAuthenticated()"
                 >
                   Adopt
                 </a>
+                <p *ngIf="!authServie.isAuthenticated()">
+                  <a routerLink="/login">Login</a> , to adopt or add a new pet
+                </p>
               </div>
             </div>
           </div>
