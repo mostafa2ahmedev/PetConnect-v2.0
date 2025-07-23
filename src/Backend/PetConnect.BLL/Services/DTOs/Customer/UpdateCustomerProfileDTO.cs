@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
+using PetConnect.DAL.Data.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace PetConnect.BLL.Services.DTOs.Customer
 {
-    public class CustomerProfileDTO
+    public class UpdateCustomerProfileDTO
     {
-        public string Id { get; set; } = null!;
 
         [Required(ErrorMessage = "First name is required.")]
         [StringLength(50)]
@@ -17,14 +17,12 @@ namespace PetConnect.BLL.Services.DTOs.Customer
         [Display(Name = "Last Name")]
         public string LName { get; set; } = null!;
 
-        public string ImgUrl { get; set; } = null!; // current image URL (used when no new image is uploaded)
-
         [Display(Name = "Profile Image")]
-        public IFormFile? ImageFile { get; set; } // for upload
+        public IFormFile? ImageFile { get; set; } 
 
         [Required(ErrorMessage = "Gender is required.")]
         [Display(Name = "Gender")]
-        public string Gender { get; set; } = null!;
+        public Gender Gender { get; set; }
 
         [Required(ErrorMessage = "Street is required.")]
         public string Street { get; set; } = null!;

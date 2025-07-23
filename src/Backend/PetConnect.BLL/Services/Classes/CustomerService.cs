@@ -126,33 +126,33 @@ namespace PetConnect.BLL.Services.Classes
 
 
 
-        public CustomerProfileDTO GetProfile(string id)
+        public CustomerDetailsDTO? GetProfile(string id)
         {
             var customer = _unitOfWork.CustomerRepository.GetByID(id);
 
             if (customer == null)
-                return null; // or throw exception
+                return null; 
 
-            return new CustomerProfileDTO
+            return new CustomerDetailsDTO
             {
-                Id = customer.Id,
                 FName = customer.FName,
                 LName = customer.LName,
                 ImgUrl = customer.ImgUrl,
-                Gender = customer.Gender.ToString(),
+                Gender = customer.Gender,
                 Street = customer.Address.Street,
-                City = customer.Address.City
+                City = customer.Address.City,
+                Country = customer.Address.Country,
             };
         }
 
 
 
-        public IEnumerable<CustomerDetailsDTO> GetAllCustomers()
+        public IEnumerable<CustomerDataDto> GetAllCustomers()
         {
             return _unitOfWork.CustomerRepository.GetAll()
-                .Select(c => new CustomerDetailsDTO
+                .Select(c => new CustomerDataDto
                 {
-                    Id = c.Id,
+                    CustomerId = c.Id,
                     FName = c.FName,
                     LName = c.LName,
                     ImgUrl = c.ImgUrl,
@@ -161,25 +161,25 @@ namespace PetConnect.BLL.Services.Classes
         }
 
 
-        public void Delete(string id)
+        public int Delete(string id)
         {
             var customer = _unitOfWork.CustomerRepository.GetByID(id);
             if (customer is not null)
             {
                 _unitOfWork.CustomerRepository.Delete(customer);
-                _unitOfWork.SaveChanges();
+            return    _unitOfWork.SaveChanges();
             }
-
+            return 0;
         }
 
 
 
         //update
-        public async Task UpdateProfile(CustomerProfileDTO dto)
+        public async Task<int> UpdateProfile(UpdateCustomerProfileDTO dto,string CustomerId)
         {
-            var customer = _unitOfWork.CustomerRepository.GetByID(dto.Id);
+            var customer = _unitOfWork.CustomerRepository.GetByID(CustomerId);
             if (customer == null)
-                throw new Exception("Customer not found");
+                return 0;
 
             if (dto.ImageFile != null && dto.ImageFile.Length > 0)
             {
@@ -192,18 +192,21 @@ namespace PetConnect.BLL.Services.Classes
 
             customer.FName = dto.FName;
             customer.LName = dto.LName;
+            customer.Gender = dto.Gender;
 
             if (customer.Address == null)
-                customer.Address = new Address();
+                customer.Address = new Address() { 
+                City = dto.City,
+                Street =  dto.Street
 
-            customer.Address.Street = dto.Street;
-            customer.Address.City = dto.City;
+                };
 
-            if (Enum.TryParse(dto.Gender, out Gender gender))
-                customer.Gender = gender;
+
+       
+
 
             _unitOfWork.CustomerRepository.Update(customer);
-            _unitOfWork.SaveChanges();
+           return _unitOfWork.SaveChanges();
         }
 
      

@@ -92,7 +92,8 @@ namespace PetConnect.BLL.Services.Classes
             PetDetailsDto Pet = new PetDetailsDto() {Id = pet.Id, Name = pet.Name , IsApproved = pet.IsApproved ,BreadName =bread.Name  ,
             ImgUrl = $"/assets/PetImages/{pet.ImgUrl}", Ownership = pet.Ownership , Status = pet.Status , CategoryName = Category.Name,Age = pet.Age ,
                 CustomerId = pet.CustomerAddedPets.CustomerId,
-                CustomerName  = pet.CustomerAddedPets.Customer.FName+""+pet.CustomerAddedPets.Customer.LName
+                CustomerName  = pet.CustomerAddedPets.Customer.FName+" "+pet.CustomerAddedPets.Customer.LName
+            
             };
             return Pet;
         }
