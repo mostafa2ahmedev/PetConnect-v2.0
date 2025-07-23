@@ -43,9 +43,9 @@ namespace PetConnect.BLL.Services.Classes
             _unitOfWork.CustomerPetAdpotionsRepository.Add(CusReqAdoption);
             _unitOfWork.SaveChanges();
         }
-        public List<DetailsCustomerRequestAdoption> GetCustomerReqAdoptionsPendingData(string userId)
+        public IEnumerable<DetailsCustomerRequestAdoption> GetCustomerReqAdoptionsPendingData(string userId)
         {
-            var CustomerReqAdoptionsData = _unitOfWork.CustomerPetAdpotionsRepository.GetAll().Where(CPA => CPA.RequesterCustomerId == userId && CPA.Status== AdoptionStatus.Pending ).ToList();
+            var CustomerReqAdoptionsData = _unitOfWork.CustomerPetAdpotionsRepository.GetAllQueryable().Where(CPA => CPA.RequesterCustomerId == userId && CPA.Status== AdoptionStatus.Pending ).ToList();
 
             List<DetailsCustomerRequestAdoption> detailsCustomerRequestAdoption = new List<DetailsCustomerRequestAdoption>();
 
@@ -69,6 +69,29 @@ namespace PetConnect.BLL.Services.Classes
 
             return detailsCustomerRequestAdoption;
         }
+        public IEnumerable<DetailsCustomerReceivedAdoption> GetCustomerRecAdoptionsPendingData(string userId)
+        {
+
+            var CustomerReqAdoptionsData = _unitOfWork.CustomerPetAdpotionsRepository.GetAllQueryable().Include(CPA=>CPA.RequesterCustomer)
+                .Include(CPA=>CPA.Pet)
+                .ThenInclude(P=>P.Breed)
+                .ThenInclude(B=>B.Category)
+                .Where(CPA => CPA.ReceiverCustomerId == userId && CPA.Status == AdoptionStatus.Pending)
+                .Select(CPA=> new DetailsCustomerReceivedAdoption() { 
+                AdoptionDate= CPA.AdoptionDate,
+                PetId = CPA.PetId,
+                PetName = CPA.Pet.Name,
+                RequesterFullName = $"{CPA.RequesterCustomer.FName} {CPA.RequesterCustomer.LName}",
+                ReqPhoneNumber = CPA.RequesterCustomer.PhoneNumber,
+                PetBreadName = CPA.Pet.Breed.Name,
+                PetCategoryName = CPA.Pet.Breed.Category.Name,
+                ReqCustomerId = CPA.RequesterCustomerId,
+                AdoptionStatus = CPA.Status
+                }).ToList();
+
+            return CustomerReqAdoptionsData;
+        }
+
         public string? ApproveOrCancelCustomerAdoptionRequest( ApproveORCancelCustomerRequest approveORCancelCustomerRequestDto,string userId)
         {
             string? result = null;
@@ -93,17 +116,17 @@ namespace PetConnect.BLL.Services.Classes
 
         }
 
-        public IEnumerable<PetDataDto> GetCustomerOwnedPetsForCustomer(string UserId)
+        public IEnumerable<CustomerOwnedPetsDto> GetCustomerOwnedPets(string UserId)
         {
-            List<PetDataDto> petDatas = new List<PetDataDto>();
+            List<CustomerOwnedPetsDto> petDatas = new List<CustomerOwnedPetsDto>();
             IEnumerable<Pet> PetList = _unitOfWork.PetRepository.GetAllQueryable()
                                        .Include(p=>p.CustomerAddedPets).Include(p=>p.Breed).ThenInclude(B=>B.Category)
-                                       .Where(p => p.CustomerAddedPets.CustomerId == UserId);
+                                       .Where(p => p.CustomerAddedPets.CustomerId == UserId && p.Status == PetStatus.Owned);
 
             foreach (var Pet in PetList)
             {
                
-                petDatas.Add(new PetDataDto()
+                petDatas.Add(new CustomerOwnedPetsDto()
                 {
                     Name = Pet.Name,
                     ImgUrl = $"/assets/PetImages/{Pet.ImgUrl}",
@@ -111,7 +134,8 @@ namespace PetConnect.BLL.Services.Classes
                     Id = Pet.Id,
                     Age = Pet.Age,
                     CategoryName = Pet.Breed.Category.Name,
-                    CustomerId = Pet.CustomerAddedPets.CustomerId
+
+                    
 
                 });
             }
@@ -194,13 +218,13 @@ namespace PetConnect.BLL.Services.Classes
             customer.LName = dto.LName;
             customer.Gender = dto.Gender;
 
-            if (customer.Address == null)
-                customer.Address = new Address() { 
+            customer.Address = new Address()
+            {
                 City = dto.City,
-                Street =  dto.Street
-
-                };
-
+                Street = dto.Street,
+                Country = dto.Country
+            };
+      
 
        
 
@@ -209,6 +233,6 @@ namespace PetConnect.BLL.Services.Classes
            return _unitOfWork.SaveChanges();
         }
 
-     
+      
     }
 }

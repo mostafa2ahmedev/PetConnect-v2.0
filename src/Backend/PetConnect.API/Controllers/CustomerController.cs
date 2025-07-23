@@ -32,16 +32,31 @@ namespace PetConnect.API.Controllers
         //[Authorize(Roles = "Admin")]
         public ActionResult GetAll()
         {
-            var pets = _customerService.GetAllCustomers();
-            return Ok(new GeneralResponse(200, pets));
+            var Customers = _customerService.GetAllCustomers();
+            return Ok(new GeneralResponse(200, Customers));
         }
+
+
+
+        [HttpGet("Profile")]
+        [ProducesResponseType(typeof(List<CustomerDataDto>), StatusCodes.Status200OK)]
+        [EndpointSummary("Get Customer Profile")]
+        [Authorize(Roles = "Customer")]
+
+        public ActionResult GetCustomerProfile()
+        {
+            var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var Customer = _customerService.GetProfile(customerId!);
+            return Ok(new GeneralResponse(200, Customer));
+        }
+
 
 
 
         [HttpPut("UpdateProfile")]
         [EndpointSummary("Update Customer Profile")]
         [Authorize(Roles = "Customer")]
-        public  async Task<ActionResult> UpdateCustomerProfile([FromBody] UpdateCustomerProfileDTO CustomerProfileDTO)
+        public  async Task<ActionResult> UpdateCustomerProfile([FromForm] UpdateCustomerProfileDTO CustomerProfileDTO)
         {
             if (!ModelState.IsValid) {
                     var errors = ModelState
@@ -109,13 +124,24 @@ namespace PetConnect.API.Controllers
 
         
         [HttpGet("CusReqAdoptions")]
-        [EndpointSummary("Get Customer Adoption Requests")]
+        [EndpointSummary("Get Sent Adoption Requests")]
         [Authorize(Roles = "Customer")]
-        public ActionResult GetCustomerAdoptionRequests()
+        public ActionResult GetSentAdoptionRequests()
         {
 
             var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result=    _customerService.GetCustomerReqAdoptionsPendingData(customerId!);
+
+            return Ok(new GeneralResponse(200, result));
+        }
+        [HttpGet("CusRecAdoptions")]
+        [EndpointSummary("Get Received Adoption Requests")]
+        [Authorize(Roles = "Customer")]
+        public ActionResult GetReceivedAdoptionRequests()
+        {
+
+            var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = _customerService.GetCustomerRecAdoptionsPendingData(customerId!);
 
             return Ok(new GeneralResponse(200, result));
         }
@@ -147,7 +173,7 @@ namespace PetConnect.API.Controllers
         {
 
             var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = _customerService.GetCustomerOwnedPetsForCustomer(customerId!);
+            var result = _customerService.GetCustomerOwnedPets(customerId!);
 
             return Ok(new GeneralResponse(statusCode: 200, result));
 

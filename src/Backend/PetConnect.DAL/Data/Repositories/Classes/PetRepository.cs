@@ -28,11 +28,11 @@ namespace PetConnect.DAL.Data.Repositories.Classes
                 .Where(p => !p.IsApproved);
         }
 
-        public IQueryable<Pet> GetPetDataWithCustomer()
+        public IQueryable<Pet> GetPetBreadCategoryDataWithCustomer()
         {
-            return context.Pets.Include(P => P.CustomerAddedPets).ThenInclude(d => d.Customer);
+            return context.Pets.Include(P => P.CustomerAddedPets).Include(P=>P.Breed).ThenInclude(B=>B.Category);
         }
-        public Pet GetPetDetails(int id)
+        public Pet? GetPetDetails(int id)
         {
             return context.Pets
                 .Include(p => p.Breed)

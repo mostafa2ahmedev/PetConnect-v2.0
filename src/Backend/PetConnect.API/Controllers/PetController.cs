@@ -37,6 +37,29 @@ namespace PetConnect.API.Controllers
 
         #endregion
 
+
+        #region GetAll "For Adoption Pets"
+        [HttpGet("ForAdoptions")]
+        [ProducesResponseType(typeof(List<PetDataDto>), StatusCodes.Status200OK)]
+        [EndpointSummary("Get All For Adoption Pets")]
+        public ActionResult GetAllForAdoptionPets()
+        {
+            var pets = _petService.GetAllForAdoptionPetsWithCustomerData();
+            return Ok(new GeneralResponse(200, pets));
+        }
+        #endregion
+
+        #region GetAll "For Rescue Pets"
+        [HttpGet("ForRescue")]
+        [ProducesResponseType(typeof(List<PetDataDto>), StatusCodes.Status200OK)]
+        [EndpointSummary("Get All For Rescue Pets")]
+        public ActionResult GetAllForRescuePets()
+        {
+            var pets = _petService.GetAllForRescuePetsWithCustomerData();
+            return Ok(new GeneralResponse(200, pets));
+        }
+        #endregion
+
         #region Get All By Count For Adoption
         [HttpGet("Count/{count}")]
         [ProducesResponseType(typeof(List<PetDataDto>), StatusCodes.Status200OK)]
