@@ -71,7 +71,9 @@ namespace PetConnect.BLL.Services.Classes
                     Id = Pet.Id,
                     Age = Pet.Age,
                     CategoryName = petCategory!.Name,
-                    CustomerId = Pet.CustomerAddedPets.CustomerId
+                    CustomerId = Pet.CustomerAddedPets.CustomerId,
+                    CustomerName = Pet.CustomerAddedPets.Customer.FName + "" + Pet.CustomerAddedPets.Customer.LName
+
 
                 });
         }
@@ -80,14 +82,18 @@ namespace PetConnect.BLL.Services.Classes
 
         public PetDetailsDto? GetPet(int id)
         {
-            var pet = _unitOfWork.PetRepository.GetByID(id);
+            var pet = _unitOfWork.PetRepository.GetPetDetails(id);
             if (pet == null)
                 return null;
             var bread =   _unitOfWork.PetBreedRepository.GetByID(pet.BreedId);
             var Category =   _unitOfWork.PetCategoryRepository.GetByID(bread.CategoryId);
 
+
             PetDetailsDto Pet = new PetDetailsDto() {Id = pet.Id, Name = pet.Name , IsApproved = pet.IsApproved ,BreadName =bread.Name  ,
-            ImgUrl = $"/assets/PetImages/{pet.ImgUrl}", Ownership = pet.Ownership , Status = pet.Status , CategoryName = Category.Name,Age = pet.Age};
+            ImgUrl = $"/assets/PetImages/{pet.ImgUrl}", Ownership = pet.Ownership , Status = pet.Status , CategoryName = Category.Name,Age = pet.Age ,
+                CustomerId = pet.CustomerAddedPets.CustomerId,
+                CustomerName  = pet.CustomerAddedPets.Customer.FName+""+pet.CustomerAddedPets.Customer.LName
+            };
             return Pet;
         }
 
