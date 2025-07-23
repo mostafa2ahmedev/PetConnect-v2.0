@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PetConnect.BLL.Services.DTOs.TimeSlotDto
 {
-    class UpdatedTimeSlotDto
+    public class UpdatedTimeSlotDto
     {
         public string Id { get; set; }
         [Required(ErrorMessage = "The Doctor Id cannot be null")]

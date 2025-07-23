@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace PetConnect.BLL.Services.Interfaces
 {
-    interface ITimeSlotService
+    public interface ITimeSlotService
     {
         Task<int> AddTimeSlot(AddedTimeSlotDto addedTimeSlot);
         Task<int> UpdateTimeSlot(UpdatedTimeSlotDto UpdatedTimeSlot);
         int DeleteTimeSlot(int id);
 
-        IEnumerable<DataTimeSlotsDto> GetAllTimeSlots();
+        IEnumerable<DataTimeSlotsDto> GetAllTimeSlots(string doctorId);
         DataTimeSlotsDto? GetTimeSlot(int id);
-        IEnumerable<DataTimeSlotsDto> GetAllActiveTimeSlots();
+        IEnumerable<DataTimeSlotsDto> GetAllActiveTimeSlots(string doctorId);
 
     }
 }

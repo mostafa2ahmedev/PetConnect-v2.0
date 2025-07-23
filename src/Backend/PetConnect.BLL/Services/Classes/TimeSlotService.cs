@@ -41,11 +41,10 @@ namespace PetConnect.BLL.Services.Classes
             return 0;
         }
 
-        public IEnumerable<DataTimeSlotsDto> GetAllActiveTimeSlots()
+        public IEnumerable<DataTimeSlotsDto> GetAllActiveTimeSlots(string doctorId)
         {
-            IEnumerable<TimeSlot> activeTimeSlots = _unitOfWork.TimeSlotsRepository.GetAll().Where(e => e.IsActive == true);
+            IEnumerable<TimeSlot> activeTimeSlots = _unitOfWork.TimeSlotsRepository.GetAll().Where(e => e.IsActive == true && e.DoctorId== doctorId);
             return activeTimeSlots.Select(ts =>
-            {
                 new DataTimeSlotsDto
                 {
                     BookedCount = ts.BookedCount,
@@ -53,24 +52,21 @@ namespace PetConnect.BLL.Services.Classes
                     StartTime = ts.StartTime,
                     IsActive = ts.IsActive,
                     MaxCapacity = ts.MaxCapacity
-                };
             });
         }
 
-        public IEnumerable<DataTimeSlotsDto> GetAllTimeSlots()
+        public IEnumerable<DataTimeSlotsDto> GetAllTimeSlots(string doctorId)
         {
-            IEnumerable<TimeSlot> allTimeSlots = _unitOfWork.TimeSlotsRepository.GetAll();
+            IEnumerable<TimeSlot> allTimeSlots = _unitOfWork.TimeSlotsRepository.GetAll().Where(e=> e.DoctorId == doctorId);
 
             return allTimeSlots.Select(ts =>
+            new DataTimeSlotsDto
             {
-                new DataTimeSlotsDto
-                {
-                    BookedCount = ts.BookedCount,
-                    EndTime = ts.EndTime,
-                    StartTime = ts.StartTime,
-                    IsActive = ts.IsActive,
-                    MaxCapacity = ts.MaxCapacity
-                };
+                BookedCount = ts.BookedCount,
+                EndTime = ts.EndTime,
+                StartTime = ts.StartTime,
+                IsActive = ts.IsActive,
+                MaxCapacity = ts.MaxCapacity
             });
         }
 
@@ -89,8 +85,21 @@ namespace PetConnect.BLL.Services.Classes
                     };
             return null;
         }
-        public Task<int> UpdateTimeSlot(UpdatedTimeSlotDto UpdatedTimeSlot)
+        public async Task<int> UpdateTimeSlot(UpdatedTimeSlotDto updatedTimeSlot)
         {
+            TimeSlot ts = _unitOfWork.TimeSlotsRepository.GetByID(updatedTimeSlot.Id);
+            if (ts == null)
+                return 0;
+
+            ts.DoctorId = updatedTimeSlot.DoctorId;
+            ts.StartTime = updatedTimeSlot.StartTime;
+            ts.EndTime = updatedTimeSlot.EndTime;
+            ts.MaxCapacity = updatedTimeSlot.MaxCapacity;
+            ts.BookedCount = updatedTimeSlot.BookedCount;
+            ts.IsActive = updatedTimeSlot.IsActive;
+
+            _unitOfWork.TimeSlotsRepository.Update(ts);
+            return _unitOfWork.SaveChanges();
         }
     }
 }
