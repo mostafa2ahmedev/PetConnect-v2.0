@@ -17,9 +17,10 @@ namespace PetConnect.DAL.Data
         public DbSet<Shelter> Shelters { get; set; }
         public DbSet<ShelterAddedPets> ShelterAddedPets { get; set; }
         public DbSet<ShelterPetAdoptions> ShelterPetAdoptions { get; set; }
-
         public DbSet<CustomerAddedPets> CustomerAddedPets { get; set; }
         public DbSet<CustomerPetAdoptions> CustomerPetAdoptions { get; set; }
+        public DbSet<TimeSlot> TimeSlots { get; set; }
+        public DbSet<Appointment> Appointments { get; set; }
 
         
         public AppDbContext(DbContextOptions<AppDbContext> contextOptions) : base(contextOptions)
