@@ -37,12 +37,16 @@ namespace PetConnect.BLL.Services.Classes
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
+            //New
 
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
+
+            //New
             SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
 
             SigningCredentials signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            JwtSecurityToken securityTokenGenerator = new JwtSecurityToken(configuration["Jwt:Issuer"], configuration["Jwt:Audience"], claims:claims, expires: DateTime.Now.AddHours(1), signingCredentials: signingCredentials);
+            JwtSecurityToken securityTokenGenerator = new JwtSecurityToken(configuration["Jwt:Issuer"], configuration["Jwt:Audience"], claims:claims, expires: DateTime.Now.AddDays(1), signingCredentials: signingCredentials);
 
             JwtSecurityTokenHandler jwt = new JwtSecurityTokenHandler();
 
