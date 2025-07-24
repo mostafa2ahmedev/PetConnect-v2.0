@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace PetConnect.BLL.Services.DTOs.OrderProduct
+{
+    public class OrderProductDTO
+    {
+        public int ProductId { get; set; }
+        public int OrderId { get; set; }
+
+        public string ProductName { get; set; } = string.Empty;
+
+        public decimal Price { get; set; }
+
+        public int Quantity { get; set; }
+    }
+}
