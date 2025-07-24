@@ -74,19 +74,23 @@
 
       <!-- Auth Buttons (Mobile) -->
 
-      <div class="btns d-none d-xl-block ms-3">
+
+
+      <div class="btns d-block d-xl-none ms-3">
         <ng-container *ngIf="!isAuthenticated()">
           <a class="btn btn-outline-primary me-2" routerLink="/login">Login</a>
           <a class="btn btn-primary" routerLink="/register">Register</a>
         </ng-container>
         <ng-container *ngIf="isAuthenticated()">
           <button class="btn btn-danger" (click)="logout()">Logout</button>
+         
           <a
             class="btn btn-primary m-2"
             routerLink="/profile/{{ authService.getUserId() }}"
             *ngIf="isAuthenticated() && authService.isCustomer()"
             >Profile</a
           >
+
         </ng-container>
       </div>
 
@@ -100,6 +104,7 @@
         <i class="bi bi-list fs-4 text-dark"></i>
       </button>
     </nav>
+
   </div>
 
   <!-- Mobile Menu -->
@@ -148,3 +153,4 @@
     </ul>
   </div>
 </header>
+  </div>

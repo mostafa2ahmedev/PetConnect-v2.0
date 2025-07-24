@@ -47,6 +47,8 @@ namespace PetConnect.DAL.UnitofWork
 
         public IShelterPhonesRepository ShelterPhonesRepository => new ShelterPhonesRepository(context);
 
+        public ITimeSlotsRepository TimeSlotsRepository =>  new TimeSlotsRepository(context);
+
         public void Dispose()
         {
             context.Dispose();
