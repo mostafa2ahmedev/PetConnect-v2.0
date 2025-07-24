@@ -49,6 +49,7 @@ namespace PetConnect.API
             builder.Services.AddScoped<IDoctorService, DoctorService>();
             builder.Services.AddScoped<IAttachmentService, AttachmentService>();
             builder.Services.AddScoped<IAdminService, AdminService>();
+            builder.Services.AddScoped<IAppointmentService, AppointmentService>();
             builder.Services.AddTransient<IJwtService, JwtService>();
 
             builder.Services.AddCors(options =>
