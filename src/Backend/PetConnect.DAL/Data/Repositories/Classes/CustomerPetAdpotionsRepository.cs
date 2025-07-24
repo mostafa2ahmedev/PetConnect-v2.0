@@ -18,9 +18,9 @@ namespace PetConnect.DAL.Data.Repositories.Classes
             context = _context;
         }
 
-        public CustomerPetAdoptions? GetCustomerAdoptionRecord(string UserId, string RecCustomerId, int PetId)
+        public CustomerPetAdoptions? GetCustomerAdoptionRecord(string RecUserId, string ReqCustomerId, int PetId,string AdoptionDate)
         {
-         return   context.CustomerPetAdoptions.Where(CPA=>CPA.PetId==PetId && CPA.RequesterCustomerId==UserId &&CPA.ReceiverCustomerId==RecCustomerId).FirstOrDefault();
+         return   context.CustomerPetAdoptions.Where(CPA=>CPA.PetId==PetId && CPA.ReceiverCustomerId== RecUserId && CPA.RequesterCustomerId== ReqCustomerId && CPA.AdoptionDate.ToString()==AdoptionDate).SingleOrDefault();
         }
     }
 }

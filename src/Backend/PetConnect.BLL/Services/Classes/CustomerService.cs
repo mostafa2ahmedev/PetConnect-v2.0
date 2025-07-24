@@ -19,12 +19,14 @@ namespace PetConnect.BLL.Services.Classes
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPetService _petService;
         private readonly IAttachmentService attachmentSetvice;
+        private readonly ICustomerAddedPetsService _customerAddedPetsService;
 
-        public CustomerService(IUnitOfWork unitOfWork, IPetService petService, IAttachmentService attachmentSetvice)
+        public CustomerService(IUnitOfWork unitOfWork, IPetService petService, IAttachmentService attachmentSetvice,ICustomerAddedPetsService customerAddedPetsService)
         {
             _unitOfWork = unitOfWork;
             _petService = petService;
             this.attachmentSetvice = attachmentSetvice;
+            _customerAddedPetsService = customerAddedPetsService;
         }
 
 
@@ -43,6 +45,20 @@ namespace PetConnect.BLL.Services.Classes
             _unitOfWork.CustomerPetAdpotionsRepository.Add(CusReqAdoption);
             _unitOfWork.SaveChanges();
         }
+        public int DeleteRequestAdoption(DelCusRequestAdoptionDto DeladoptionDto, string ReqCustomerId)
+        {
+            var AdoptionRecord = _unitOfWork.CustomerPetAdpotionsRepository
+                .GetCustomerAdoptionRecord(DeladoptionDto.RecCustomerId, ReqCustomerId, DeladoptionDto.PetId,DeladoptionDto.AdoptionDate);
+
+            if (AdoptionRecord is not null) {
+                _unitOfWork.CustomerPetAdpotionsRepository.Delete(AdoptionRecord);
+               return _unitOfWork.SaveChanges();
+            }
+            return 0;
+     
+        }
+
+
         public IEnumerable<DetailsCustomerRequestAdoption> GetCustomerReqAdoptionsPendingData(string userId)
         {
             var CustomerReqAdoptionsData = _unitOfWork.CustomerPetAdpotionsRepository.GetAllQueryable().Where(CPA => CPA.RequesterCustomerId == userId && CPA.Status== AdoptionStatus.Pending ).ToList();
@@ -92,10 +108,11 @@ namespace PetConnect.BLL.Services.Classes
             return CustomerReqAdoptionsData;
         }
 
-        public string? ApproveOrCancelCustomerAdoptionRequest( ApproveORCancelCustomerRequest approveORCancelCustomerRequestDto,string userId)
+        public string? ApproveOrCancelCustomerAdoptionRequest(ApproveORCancelReceivedCustomerRequest approveORCancelCustomerRequestDto,string RecuserId)
         {
             string? result = null;
-            var CustomerAdoptionsRecord = _unitOfWork.CustomerPetAdpotionsRepository.GetCustomerAdoptionRecord(userId,approveORCancelCustomerRequestDto.RecCustomerId,approveORCancelCustomerRequestDto.PetId);
+            var CustomerAdoptionsRecord = _unitOfWork.CustomerPetAdpotionsRepository
+                .GetCustomerAdoptionRecord(RecuserId, approveORCancelCustomerRequestDto.ReqCustomerId,approveORCancelCustomerRequestDto.PetId,approveORCancelCustomerRequestDto.AdoptionDate);
 
             if (CustomerAdoptionsRecord == null)
                 return result;
@@ -104,6 +121,11 @@ namespace PetConnect.BLL.Services.Classes
             {
                 CustomerAdoptionsRecord.Status = AdoptionStatus.Approved;
                 result = AdoptionStatus.Approved.ToString();
+
+                var CAPRecord=  _unitOfWork.CustomerAddedPetsRepository.DeleteCustomerAddedPetRecord(approveORCancelCustomerRequestDto.PetId, RecuserId);
+                _customerAddedPetsService.RegisterCustomerPetAddition(approveORCancelCustomerRequestDto.ReqCustomerId, approveORCancelCustomerRequestDto.PetId);
+               
+
             }
 
             else if (approveORCancelCustomerRequestDto.AdoptionStatus == AdoptionStatus.Cancelled) {
@@ -113,8 +135,8 @@ namespace PetConnect.BLL.Services.Classes
             _unitOfWork.SaveChanges();
             return result;
 
-
         }
+      
 
         public IEnumerable<CustomerOwnedPetsDto> GetCustomerOwnedPets(string UserId)
         {
