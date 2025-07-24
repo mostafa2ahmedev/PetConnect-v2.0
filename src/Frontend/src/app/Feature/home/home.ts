@@ -5,8 +5,8 @@ import { RouterLink } from '@angular/router';
   selector: 'app-home',
   imports: [RouterLink],
   templateUrl: './home.html',
-  styleUrl: './home.css'
+  styleUrl: './home.css',
 })
 export class Home {
- doctors = [{fName:"h", id:1 ,lName:"e",petSpecialty:"cat"}]
+  doctors = [{ fName: 'h', id: 1, lName: 'e', petSpecialty: 'cat' }];
 }

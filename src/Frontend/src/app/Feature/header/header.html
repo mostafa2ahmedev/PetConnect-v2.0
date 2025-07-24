@@ -1,23 +1,49 @@
 <header class="header bg-light border-bottom py-2">
   <div class="container d-flex justify-content-between align-items-center">
-
     <!-- Logo -->
-    <a routerLink="/" class="logo text-decoration-none d-flex align-items-center">
-      <h1 class="sitename mb-0 fw-bold text-primary pointer">PetConnect</h1>
+    <a
+      routerLink="/"
+      class="logo text-decoration-none d-flex align-items-center"
+    >
+      <h1
+        class="sitename mb-0 fw-bold text-dark pointer"
+        style="font-size: 26px"
+      >
+        PetConnect
+      </h1>
       <span class="text-danger fs-4 ms-1">.</span>
     </a>
-
     <!-- Navigation -->
     <nav class="navmenu d-flex align-items-center">
       <ul class="nav list-unstyled mb-0 d-none d-xl-flex">
         <li class="nav-item">
-          <a class="nav-link text-dark fw-semibold pointer" routerLink="/">Home</a>
+          <a class="nav-link text-dark fw-semibold pointer" routerLink="/"
+            >Home</a
+          >
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark fw-semibold pointer" routerLink="/doctors">Doctors</a>
+          <a
+            class="nav-link text-dark fw-semibold pointer"
+            routerLink="/doctors"
+            >Doctors</a
+          >
         </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle text-dark fw-semibold pointer" data-bs-toggle="dropdown" href="#">Pets</a>
+        <li class="nav-item" *ngIf="!isAuthenticated()">
+          <a
+            class="nav-link text-dark fw-semibold pointer"
+            *ngIf="!isAuthenticated()"
+            routerLink="/pets"
+            >Pets</a
+          >
+        </li>
+
+        <li class="nav-item dropdown" *ngIf="isAuthenticated()">
+          <a
+            class="nav-link dropdown-toggle text-dark fw-semibold pointer"
+            data-bs-toggle="dropdown"
+            href="#"
+            >Pets</a
+          >
           <ul class="dropdown-menu shadow">
             <li>
               <a class="dropdown-item pointer" routerLink="/pets">All Pets</a>
@@ -26,22 +52,29 @@
               <a class="dropdown-item pointer" routerLink="/add-pet">Add Pet</a>
             </li>
             <li>
-              <a class="dropdown-item pointer" routerLink="/categories">Manage Categories</a>
+              <a class="dropdown-item pointer" routerLink="/categories"
+                >Manage Categories</a
+              >
             </li>
             <li>
-              <a class="dropdown-item pointer" routerLink="/breeds">Manage Breeds</a>
+              <a class="dropdown-item pointer" routerLink="/breeds"
+                >Manage Breeds</a
+              >
             </li>
           </ul>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark fw-semibold pointer" routerLink="/contact">Contact</a>
+          <a
+            class="nav-link text-dark fw-semibold pointer"
+            routerLink="/contact"
+            >Contact</a
+          >
         </li>
       </ul>
 
       <!-- Auth Buttons (Mobile) -->
-      <div class="btns d-none d-xl-block ms-3">
-        <a class="btn btn-outline-primary me-2" routerLink="/login">Login</a>
-        <a class="btn btn-primary" routerLink="/register">Register</a>
+
+
 
       <div class="btns d-block d-xl-none ms-3">
         <ng-container *ngIf="!isAuthenticated()">
@@ -50,6 +83,14 @@
         </ng-container>
         <ng-container *ngIf="isAuthenticated()">
           <button class="btn btn-danger" (click)="logout()">Logout</button>
+         
+          <a
+            class="btn btn-primary m-2"
+            routerLink="/profile/{{ authService.getUserId() }}"
+            *ngIf="isAuthenticated() && authService.isCustomer()"
+            >Profile</a
+          >
+
         </ng-container>
       </div>
 
@@ -62,6 +103,7 @@
       >
         <i class="bi bi-list fs-4 text-dark"></i>
       </button>
+    </nav>
 
   </div>
 
@@ -71,19 +113,44 @@
       <li><a class="nav-link pointer" routerLink="/">Home</a></li>
       <li><a class="nav-link pointer" routerLink="/doctors">Doctors</a></li>
       <li><a class="nav-link pointer" routerLink="/pets">All Pets</a></li>
-      <li><a class="nav-link pointer" routerLink="/add-pet">Add Pet</a></li>
       <li>
-        <a class="nav-link pointer" routerLink="/categories">Manage Categories</a>
+        <a
+          class="nav-link pointer"
+          routerLink="/add-pet"
+          *ngIf="isAuthenticated()"
+          >Add Pet</a
+        >
       </li>
       <li>
-        <a class="nav-link pointer" routerLink="/breeds">Manage Breeds</a>
+        <a
+          class="nav-link pointer"
+          routerLink="/categories"
+          *ngIf="isAuthenticated()"
+          >Manage Categories</a
+        >
+        <a class="nav-link pointer" routerLink="/categories"
+          >Manage Categories</a
+        >
+      </li>
+      <li>
+        <a
+          class="nav-link pointer"
+          routerLink="/breeds"
+          *ngIf="isAuthenticated()"
+          >Manage Breeds</a
+        >
       </li>
       <li><a class="nav-link pointer" routerLink="/contact">Contact</a></li>
-      <li>
+      <li *ngIf="!isAuthenticated()">
         <a class="btn btn-outline-primary mt-2" routerLink="/login">Login</a>
       </li>
-      <li>
+      <li *ngIf="!isAuthenticated()">
         <a class="btn btn-primary mt-2" routerLink="/register">Register</a>
       </li>
+      <li *ngIf="isAuthenticated()">
+        <button class="btn btn-danger" (click)="logout()">Logout</button>
+      </li>
     </ul>
+  </div>
+</header>
   </div>

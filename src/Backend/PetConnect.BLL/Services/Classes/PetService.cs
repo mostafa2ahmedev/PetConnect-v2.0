@@ -54,14 +54,13 @@ namespace PetConnect.BLL.Services.Classes
         public IEnumerable<PetDataDto> GetAllPetsWithBelongsToCustomer()
         {
             List<PetDataDto> petDatas = new List<PetDataDto>();
-            IEnumerable<Pet> PetList= _unitOfWork.PetRepository.GetPetDataWithCustomer();
+            IEnumerable<Pet> PetList= _unitOfWork.PetRepository.GetPetBreadCategoryDataWithCustomer();
 
 
 
             foreach (var Pet in PetList)
             {
-                var petBread = _unitOfWork.PetBreedRepository.GetByID(Pet.BreedId);
-                var petCategory = _unitOfWork.PetCategoryRepository.GetByID(petBread!.CategoryId);
+
           
                 petDatas.Add(new PetDataDto()
                 {
@@ -70,16 +69,55 @@ namespace PetConnect.BLL.Services.Classes
                     Status = Pet.Status,
                     Id = Pet.Id,
                     Age = Pet.Age,
-                    CategoryName = petCategory!.Name,
+                    CategoryName = Pet.Breed.Category.Name,
                     CustomerId = Pet.CustomerAddedPets.CustomerId,
-                    CustomerName = Pet.CustomerAddedPets.Customer.FName + "" + Pet.CustomerAddedPets.Customer.LName
+                    CustomerName = Pet.CustomerAddedPets.Customer.FName + " " + Pet.CustomerAddedPets.Customer.LName
 
 
                 });
-        }
+             }
             return petDatas;
         }
+        public IEnumerable<PetDataDto> GetAllForAdoptionPetsWithCustomerData()
+        {
+            var PetList = _unitOfWork.PetRepository.GetPetBreadCategoryDataWithCustomer().Where(P=>P.Status == PetStatus.ForAdoption).Select(P=>
+            new PetDataDto() {
+                Name = P.Name,
+                ImgUrl = $"/assets/PetImages/{P.ImgUrl}",
+                Status = P.Status,
+                Id = P.Id,
+                Age = P.Age,
+                CategoryName = P!.Name,
+                CustomerId = P.CustomerAddedPets.CustomerId,
+                CustomerName = P.CustomerAddedPets.Customer.FName + " " + P.CustomerAddedPets.Customer.LName
 
+            }
+            
+            ).ToList();
+
+            return PetList;
+        }
+
+        public IEnumerable<PetDataDto> GetAllForRescuePetsWithCustomerData()
+        {
+            var PetList = _unitOfWork.PetRepository.GetPetBreadCategoryDataWithCustomer().Where(P => P.Status == PetStatus.ForRescue).Select(P =>
+            new PetDataDto()
+            {
+                Name = P.Name,
+                ImgUrl = $"/assets/PetImages/{P.ImgUrl}",
+                Status = P.Status,
+                Id = P.Id,
+                Age = P.Age,
+                CategoryName = P!.Name,
+                CustomerId = P.CustomerAddedPets.CustomerId,
+                CustomerName = P.CustomerAddedPets.Customer.FName + " " + P.CustomerAddedPets.Customer.LName
+
+            }
+
+            ).ToList();
+
+            return PetList;
+        }
         public PetDetailsDto? GetPet(int id)
         {
             var pet = _unitOfWork.PetRepository.GetPetDetails(id);
@@ -101,7 +139,7 @@ namespace PetConnect.BLL.Services.Classes
         public IEnumerable<PetDataDto> GetAllPetsByCountForAdoption(int count)
         {
             List<PetDataDto> petDatas = new List<PetDataDto>();
-            IEnumerable<Pet> PetList = _unitOfWork.PetRepository.GetPetDataWithCustomer().Where(P => P.Status == PetStatus.ForAdoption).Take(count) ;
+            IEnumerable<Pet> PetList = _unitOfWork.PetRepository.GetPetBreadCategoryDataWithCustomer().Where(P => P.Status == PetStatus.ForAdoption).Take(count);
 
 
 
@@ -118,7 +156,8 @@ namespace PetConnect.BLL.Services.Classes
                     Id = Pet.Id,
                     Age = Pet.Age,
                     CategoryName = petCategory!.Name,
-                    CustomerId = Pet.CustomerAddedPets.CustomerId
+                    CustomerId = Pet.CustomerAddedPets.CustomerId,
+                     CustomerName = Pet.CustomerAddedPets.Customer.FName + " " + Pet.CustomerAddedPets.Customer.LName
                 });
             }
             return petDatas;

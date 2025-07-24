@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 
 namespace PetConnect.BLL.Services.DTOs.Customer
 {
-    public class ApproveORCancelCustomerRequest
-    {
+    public class ApproveORCancelReceivedCustomerRequest
+    {      
         public AdoptionStatus AdoptionStatus { get; set; }
+        public string AdoptionDate { get; set; } = null!;
         public int PetId { get; set; }
-        public string RecCustomerId { get; set; } = null!;
+        public string ReqCustomerId { get; set; } = null!;
+
 
     }
 }

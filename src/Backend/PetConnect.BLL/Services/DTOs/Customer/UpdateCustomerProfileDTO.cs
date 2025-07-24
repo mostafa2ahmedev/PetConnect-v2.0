@@ -29,5 +29,8 @@ namespace PetConnect.BLL.Services.DTOs.Customer
 
         [Required(ErrorMessage = "City is required.")]
         public string City { get; set; } = null!;
+
+        [Required(ErrorMessage = "City is required.")]
+        public string Country { get; set; } = null!; 
     }
 }

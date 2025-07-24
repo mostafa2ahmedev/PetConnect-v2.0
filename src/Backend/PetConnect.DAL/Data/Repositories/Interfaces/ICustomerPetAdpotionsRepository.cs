@@ -10,6 +10,7 @@ namespace PetConnect.DAL.Data.Repositories.Interfaces;
     public interface ICustomerPetAdoptionsRepository : IGenericRepository<CustomerPetAdoptions>
     {
 
-    public CustomerPetAdoptions? GetCustomerAdoptionRecord(string UserId,string RecCustomerId,int PetId);
+
+    public CustomerPetAdoptions? GetCustomerAdoptionRecord(string RecUserId, string ReqCustomerId, int PetId, string AdoptionDate);
     }
 
