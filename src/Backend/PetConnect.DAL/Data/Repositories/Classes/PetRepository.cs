@@ -30,7 +30,7 @@ namespace PetConnect.DAL.Data.Repositories.Classes
 
         public IQueryable<Pet> GetPetBreadCategoryDataWithCustomer()
         {
-            return context.Pets.Include(P => P.CustomerAddedPets).Include(P=>P.Breed).ThenInclude(B=>B.Category);
+            return context.Pets.Include(P => P.CustomerAddedPets).ThenInclude(P=>P.Customer).Include(P=>P.Breed).ThenInclude(B=>B.Category);
         }
         public Pet? GetPetDetails(int id)
         {
