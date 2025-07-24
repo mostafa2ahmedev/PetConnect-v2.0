@@ -91,7 +91,7 @@
                 <button
                   class="btn btn-primary btn-sm"
                   [disabled]="!isDataReady"
-                  *ngIf="!isDataReady"
+                  *ngIf="!isDataReady && authService.isAuthenticated()"
                 >
                   loading
                 </button>
