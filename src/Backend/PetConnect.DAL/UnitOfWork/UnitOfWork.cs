@@ -23,7 +23,7 @@ namespace PetConnect.DAL.UnitofWork
 
         public ICustomerAddedPetsRepository CustomerAddedPetsRepository => new CustomerAddedPetsRepository(context);
 
-        public ICustomerPetAdoptionsRepository CustomerPetAdpotionsRepository => new CustomerPetAdpotionsRepository(context);
+        public ICustomerPetAdoptionsRepository CustomerPetAdpotionsRepository => new CustomerPetAdoptionsRepository(context);
 
         public IDoctorRepository DoctorRepository => new DoctorRepository(context);
 
@@ -50,6 +50,9 @@ namespace PetConnect.DAL.UnitofWork
         public IProductRepository ProductRepository => new ProductRepository(context);
         public IProductTypeRepository ProductTypeRepository => new ProductTypeRepository(context);
         public IOrderRepository OrderRepository => new OrderRepository(context);
+
+        public ITimeSlotsRepository TimeSlotsRepository =>  new TimeSlotsRepository(context);
+
         public void Dispose()
         {
             context.Dispose();

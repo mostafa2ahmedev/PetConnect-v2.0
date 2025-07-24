@@ -19,6 +19,7 @@ namespace PetConnect.BLL.Services.DTO.PetDto
         public string CategoryName { get; set; } = null!;
 
         public string CustomerId { get; set; } = null!;
+        public string CustomerName { get; set; } = null!;
 
     }
 }

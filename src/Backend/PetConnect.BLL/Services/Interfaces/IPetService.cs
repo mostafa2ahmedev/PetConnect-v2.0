@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Http;
 using PetConnect.BLL.Services.DTO.PetDto;
+using PetConnect.BLL.Services.DTOs.Customer;
 using PetConnect.DAL.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -14,16 +15,17 @@ namespace PetConnect.BLL.Services.Interfaces
     {
 
 
-        Task <int> AddPet(AddedPetDto addedPet );
+        Task <int> AddPet(AddedPetDto addedPet ,string CustomerId);
 
         Task<int> UpdatePet(UpdatedPetDto UpdatedPet);
         int DeletePet(int id);
-
-        IEnumerable<PetDataDto> GetAllPets();
+        IEnumerable<PetDataDto> GetAllPetsWithBelongsToCustomer();
+        //IEnumerable<PetDataDto> GetAllPets();
         PetDetailsDto? GetPet(int id);
         IEnumerable<PetDataDto> GetAllPetsByCountForAdoption(int count);
 
-        PetDataDto? GetPetDataWithCustomer(int id);
+        public IEnumerable<PetDataDto> GetAllForAdoptionPetsWithCustomerData();
+        public IEnumerable<PetDataDto> GetAllForRescuePetsWithCustomerData();
 
     }
 }

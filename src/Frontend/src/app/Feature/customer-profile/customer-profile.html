@@ -1,0 +1,190 @@
+<section id="hero" class="hero section pb-0">
+  <div
+    class="container section-title aos-init aos-animate pb-0"
+    data-aos="fade-up"
+  >
+    <h2>Profile</h2>
+    <p>
+      Keep track of your adoption journey.
+      <br />
+      Check the adoption reqests you sent, received and pets you added so far.
+    </p>
+  </div>
+  <!-- End Section Title -->
+</section>
+
+<div class="container-fluid p-5">
+  <div class="row px-5">
+    <!-- 🔹 Full-height Left Sidebar -->
+    <div
+      class="col-md-3 d-none flex-column shadow-sm rounded p-3 bg-primary text-white"
+      style="min-height: 95vh"
+    >
+      <!-- Header -->
+      <div class="mb-3 border-bottom pb-2">
+        <h5 class="text-center">Customer Profile</h5>
+      </div>
+
+      <!-- Profile Content (scrolls if overflows) -->
+      <!-- <div class="flex-grow-1 overflow-auto">
+        <div class="r mb-3">
+          <img
+            src="https://localhost:7102/assets/UserImages/default-user.png"
+            class="img-fluid border"
+            alt="Customer Profile Picture"
+            style="width: 130px; height: 130px; object-fit: cover"
+          />
+        </div>
+
+        <h5 class="text-white">{{ customer.name || "Eslaam Mohamed" }}</h5>
+
+        <ul class="list-unstyled mt-3">
+          <li><strong>Email:</strong> {{ customer.email }}</li>
+          <li><strong>Gender:</strong> {{ customer.gender }}</li>
+          <li><strong>Phone:</strong> {{ customer.phone }}</li>
+          <li><strong>Joined:</strong> {{ customer.createdAt }}</li>
+        </ul>
+      </div> -->
+
+      <!-- Footer -->
+      <!-- <div class="pt-2 border-top text-center">
+        <a
+          class="btn btn-outline-secondary btn-sm w-100 mt-2"
+          routerLink="/edit-profile"
+          >Edit Profile</a
+        >
+      </div> -->
+    </div>
+
+    <!-- 🔸 Right Content (Scrollable Sections) -->
+    <div class="col-md-12" style="">
+      <!-- Adoption Requests Sent -->
+      <div class="sent-requests mb-3 mt-5 p-3">
+        <h3 class="mb-5 text-center fw-bold">Sent Adoption Requests</h3>
+        <div *ngIf="loadingReuests" class="text-center p-5">
+          <div class="spinner-border text-primary" role="status"></div>
+          <p class="mt-3">Loading Adoption request...</p>
+        </div>
+        <!-- No requests -->
+        <div
+          *ngIf="!loadingReuests && customer.sentRequests.length === 0"
+          class="alert alert-info"
+        >
+          You haven’t sent any adoption requests yet.
+        </div>
+
+        <!-- Requests list -->
+        <div
+          class="row justify-content-center"
+          *ngIf="customer.sentRequests.length > 0"
+        >
+          <div
+            class="col-md-6 col-lg-4 mb-3"
+            *ngFor="let req of customer.sentRequests"
+          >
+            <div class="card shadow-sm h-100">
+              <div class="card-body">
+                <!-- <h5 class="card-title">{{ req.petName }}</h5> -->
+                <p class="card-text mb-1">
+                  You Requested to adopt <strong>{{ req.petName }}</strong>
+                  <!-- <strong>{{ req.recCustomerId }}</strong> -->
+                </p>
+                <span
+                  class="badge"
+                  [ngClass]="{
+                    'bg-warning text-dark': req.adoptionStatus === 'Pending',
+                    'bg-success': req.adoptionStatus === 'Approved',
+                    'bg-danger': req.adoptionStatus === 'Cancelled'
+                  }"
+                >
+                  {{ req.adoptionStatus }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- My Pets Section -->
+      <div class="mb-3 mt-2 p-3">
+        <h3 class="mb-5 text-center fw-bold">My Pets</h3>
+        <div class="row justify-content-center">
+          <div
+            class="col-md-6 col-lg-4 mb-3"
+            *ngFor="let pet of myPets"
+            data-aos="zoom-in"
+          >
+            <div class="team-card text-center shadow-sm h-100">
+              <div class="team-image">
+                <img
+                  class="img-fluid"
+                  [src]="getFullImageUrl(pet.imgUrl)"
+                  alt="{{ pet.name }}"
+                />
+              </div>
+              <div class="team-content pet-info p-2">
+                <h5>{{ pet.name }}</h5>
+                <p><strong>Age:</strong> {{ pet.age }} years</p>
+                <p><strong>Category:</strong> {{ pet.categoryName }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Adoption Requests Received -->
+      <div class="mb-5">
+        <h3 class="mb-5 text-center fw-bold">Adoption Requests Received</h3>
+
+        <div *ngIf="ReceivedRequests.length > 0; else noReceived">
+          <div class="row">
+            <!-- ✅ Row added to group col-md-6 cards -->
+            <div
+              *ngFor="let request of ReceivedRequests"
+              class="col-md-6 mb-4"
+              data-aos="fade-up"
+            >
+              <div class="card shadow-sm h-100">
+                <div class="card-body">
+                  <h5 class="card-title">
+                    <i class="bi bi-person-circle me-2 text-primary"></i>
+                    {{ request.requesterFullName }} wants to adopt
+                    <strong>{{ request.petName }}</strong>
+                  </h5>
+
+                  <p class="mb-2 text-muted">
+                    <i class="bi bi-calendar-event me-1"></i>
+                    <small>
+                      Requested on: {{ request.adoptionDate | date : "medium" }}
+                    </small>
+                  </p>
+
+                  <button
+                    class="btn btn-outline-success btn-sm"
+                    (click)="request.showPhone = !request.showPhone"
+                  >
+                    <i class="bi bi-whatsapp me-1"></i> Contact Customer
+                  </button>
+
+                  <div *ngIf="request.showPhone" class="mt-2">
+                    <a
+                      [href]="'https://wa.me/2' + request.reqPhoneNumber"
+                      target="_blank"
+                      class="btn btn-success btn-sm"
+                    >
+                      📞 {{ request.reqPhoneNumber }}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noReceived>
+          <p class="text-muted text-center">No requests received yet.</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

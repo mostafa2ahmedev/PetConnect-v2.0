@@ -28,7 +28,7 @@ export class BreedDetails {
     private router: Router,
     private breedService: BreedService,
     private categoryService: CategoryService,
-    private alert: AlertService
+    public alert: AlertService
   ) {}
 
   ngOnInit(): void {

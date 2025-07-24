@@ -49,6 +49,7 @@ export class UpdatePet {
     imgUrl: '',
     categoryName: '',
     age: 0,
+    customerId: '',
   };
 
   statusOptions: { key: number; value: string }[] = [];

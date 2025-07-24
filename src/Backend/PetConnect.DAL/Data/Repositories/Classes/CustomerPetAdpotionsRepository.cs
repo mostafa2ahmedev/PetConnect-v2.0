@@ -9,13 +9,18 @@ using PetConnect.DAL.Data.Repositories.Interfaces;
 
 namespace PetConnect.DAL.Data.Repositories.Classes
 {
-    public class CustomerPetAdpotionsRepository : GenericRepository<CustomerPetAdoptions>, ICustomerPetAdoptionsRepository
+    public class CustomerPetAdoptionsRepository : GenericRepository<CustomerPetAdoptions>, ICustomerPetAdoptionsRepository
     {
         private readonly AppDbContext context;
 
-        public CustomerPetAdpotionsRepository(AppDbContext _context) : base(_context)
+        public CustomerPetAdoptionsRepository(AppDbContext _context) : base(_context)
         {
             context = _context;
+        }
+
+        public CustomerPetAdoptions? GetCustomerAdoptionRecord(string RecUserId, string ReqCustomerId, int PetId,string AdoptionDate)
+        {
+         return   context.CustomerPetAdoptions.Where(CPA=>CPA.PetId==PetId && CPA.ReceiverCustomerId== RecUserId && CPA.RequesterCustomerId== ReqCustomerId && CPA.AdoptionDate.ToString()==AdoptionDate).SingleOrDefault();
         }
     }
 }

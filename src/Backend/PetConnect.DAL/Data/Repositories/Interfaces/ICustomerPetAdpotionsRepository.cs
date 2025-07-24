@@ -9,5 +9,8 @@ using System.Threading.Tasks;
 namespace PetConnect.DAL.Data.Repositories.Interfaces;
     public interface ICustomerPetAdoptionsRepository : IGenericRepository<CustomerPetAdoptions>
     {
+
+
+    public CustomerPetAdoptions? GetCustomerAdoptionRecord(string RecUserId, string ReqCustomerId, int PetId, string AdoptionDate);
     }
 

@@ -1,4 +1,6 @@
-﻿using PetConnect.BLL.Common.AttachmentServices;
+﻿using Microsoft.EntityFrameworkCore;
+using PetConnect.BLL.Common.AttachmentServices;
+using PetConnect.BLL.Services.DTO.PetDto;
 using PetConnect.BLL.Services.DTOs.Customer;
 using PetConnect.BLL.Services.Interfaces;
 using PetConnect.DAL.Data.Enums;
@@ -17,21 +19,23 @@ namespace PetConnect.BLL.Services.Classes
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPetService _petService;
         private readonly IAttachmentService attachmentSetvice;
+        private readonly ICustomerAddedPetsService _customerAddedPetsService;
 
-        public CustomerService(IUnitOfWork unitOfWork, IPetService petService, IAttachmentService attachmentSetvice)
+        public CustomerService(IUnitOfWork unitOfWork, IPetService petService, IAttachmentService attachmentSetvice,ICustomerAddedPetsService customerAddedPetsService)
         {
             _unitOfWork = unitOfWork;
             _petService = petService;
             this.attachmentSetvice = attachmentSetvice;
+            _customerAddedPetsService = customerAddedPetsService;
         }
 
 
 
-        public void RequestAdoption(CusRequestAdoptionDto adoptionDto)
+        public void RequestAdoption(CusRequestAdoptionDto adoptionDto,string ReqCustomerId)
         {
             var CusReqAdoption = new CustomerPetAdoptions()
             {
-                RequesterCustomerId = adoptionDto.ReqCustomerId,
+                RequesterCustomerId = ReqCustomerId,
                 ReceiverCustomerId = adoptionDto.RecCustomerId,
                 PetId = adoptionDto.PetId,
                 Status = AdoptionStatus.Pending,
@@ -41,59 +45,160 @@ namespace PetConnect.BLL.Services.Classes
             _unitOfWork.CustomerPetAdpotionsRepository.Add(CusReqAdoption);
             _unitOfWork.SaveChanges();
         }
-        public List<DetailsCustomerRequestAdoption> GetCustomerReqAdoptionsData(string userId)
+        public int DeleteRequestAdoption(DelCusRequestAdoptionDto DeladoptionDto, string ReqCustomerId)
         {
-            var CustomerReqAdoptionsData = _unitOfWork.CustomerPetAdpotionsRepository.GetAll().Where(CPA => CPA.RequesterCustomerId == userId).ToList();
+            var AdoptionRecord = _unitOfWork.CustomerPetAdpotionsRepository
+                .GetCustomerAdoptionRecord(DeladoptionDto.RecCustomerId, ReqCustomerId, DeladoptionDto.PetId,DeladoptionDto.AdoptionDate);
 
-            List<DetailsCustomerRequestAdoption> detailsCustomerRequestAdoption = new List<DetailsCustomerRequestAdoption>() { };
+            if (AdoptionRecord is not null) {
+                _unitOfWork.CustomerPetAdpotionsRepository.Delete(AdoptionRecord);
+               return _unitOfWork.SaveChanges();
+            }
+            return 0;
+     
+        }
 
-            foreach (var item in CustomerReqAdoptionsData)
+
+        public IEnumerable<DetailsCustomerRequestAdoption> GetCustomerReqAdoptionsPendingData(string userId)
+        {
+            var CustomerReqAdoptionsData = _unitOfWork.CustomerPetAdpotionsRepository.GetAllQueryable().Where(CPA => CPA.RequesterCustomerId == userId && CPA.Status== AdoptionStatus.Pending ).ToList();
+
+            List<DetailsCustomerRequestAdoption> detailsCustomerRequestAdoption = new List<DetailsCustomerRequestAdoption>();
+
+            foreach (var CPA in CustomerReqAdoptionsData)
             {
-                var Pet = _unitOfWork.PetRepository.GetByID(item.PetId);
-                var Bread = _unitOfWork.PetBreedRepository.GetByID(Pet.BreedId);
-                var Category = _unitOfWork.PetCategoryRepository.GetByID(Bread.CategoryId);
+                var Pet = _unitOfWork.PetRepository.GetByID(CPA.PetId);
+                var Bread = _unitOfWork.PetBreedRepository.GetByID(Pet!.BreedId);
+                var Category = _unitOfWork.PetCategoryRepository.GetByID(Bread!.CategoryId);
 
                 detailsCustomerRequestAdoption.Add(new DetailsCustomerRequestAdoption()
                 {
-                    AdoptionDate = item.AdoptionDate,
-                    Status = item.Status,
+                    AdoptionDate = CPA.AdoptionDate,
+                    AdoptionStatus = CPA.Status.ToString(),
                     PetName = Pet.Name,
                     PetBreadName = Bread.Name,
-                    PetCategoryName = Category.Name
+                    PetCategoryName = Category!.Name,
+                    RecCustomerId = CPA.ReceiverCustomerId,
+                    PetId = Pet.Id,
                 });
             }
 
             return detailsCustomerRequestAdoption;
         }
+        public IEnumerable<DetailsCustomerReceivedAdoption> GetCustomerRecAdoptionsPendingData(string userId)
+        {
+
+            var CustomerReqAdoptionsData = _unitOfWork.CustomerPetAdpotionsRepository.GetAllQueryable().Include(CPA=>CPA.RequesterCustomer)
+                .Include(CPA=>CPA.Pet)
+                .ThenInclude(P=>P.Breed)
+                .ThenInclude(B=>B.Category)
+                .Where(CPA => CPA.ReceiverCustomerId == userId && CPA.Status == AdoptionStatus.Pending)
+                .Select(CPA=> new DetailsCustomerReceivedAdoption() { 
+                AdoptionDate= CPA.AdoptionDate,
+                PetId = CPA.PetId,
+                PetName = CPA.Pet.Name,
+                RequesterFullName = $"{CPA.RequesterCustomer.FName} {CPA.RequesterCustomer.LName}",
+                ReqPhoneNumber = CPA.RequesterCustomer.PhoneNumber,
+                PetBreadName = CPA.Pet.Breed.Name,
+                PetCategoryName = CPA.Pet.Breed.Category.Name,
+                ReqCustomerId = CPA.RequesterCustomerId,
+                AdoptionStatus = CPA.Status
+                }).ToList();
+
+            return CustomerReqAdoptionsData;
+        }
+
+        public string? ApproveOrCancelCustomerAdoptionRequest(ApproveORCancelReceivedCustomerRequest approveORCancelCustomerRequestDto,string RecuserId)
+        {
+            string? result = null;
+            var CustomerAdoptionsRecord = _unitOfWork.CustomerPetAdpotionsRepository
+                .GetCustomerAdoptionRecord(RecuserId, approveORCancelCustomerRequestDto.ReqCustomerId,approveORCancelCustomerRequestDto.PetId,approveORCancelCustomerRequestDto.AdoptionDate);
+
+            if (CustomerAdoptionsRecord == null)
+                return result;
+
+            if (approveORCancelCustomerRequestDto.AdoptionStatus == AdoptionStatus.Approved)
+            {
+                CustomerAdoptionsRecord.Status = AdoptionStatus.Approved;
+                result = AdoptionStatus.Approved.ToString();
+
+                var CAPRecord=  _unitOfWork.CustomerAddedPetsRepository.DeleteCustomerAddedPetRecord(approveORCancelCustomerRequestDto.PetId, RecuserId);
+                _customerAddedPetsService.RegisterCustomerPetAddition(approveORCancelCustomerRequestDto.ReqCustomerId, approveORCancelCustomerRequestDto.PetId);
+               
+
+            }
+
+            else if (approveORCancelCustomerRequestDto.AdoptionStatus == AdoptionStatus.Cancelled) {
+                CustomerAdoptionsRecord.Status = AdoptionStatus.Cancelled;
+                result = AdoptionStatus.Cancelled.ToString();
+            }
+            _unitOfWork.SaveChanges();
+            return result;
+
+        }
+      
+
+        public IEnumerable<CustomerOwnedPetsDto> GetCustomerOwnedPets(string UserId)
+        {
+            List<CustomerOwnedPetsDto> petDatas = new List<CustomerOwnedPetsDto>();
+            IEnumerable<Pet> PetList = _unitOfWork.PetRepository.GetAllQueryable()
+                                       .Include(p=>p.CustomerAddedPets).Include(p=>p.Breed).ThenInclude(B=>B.Category)
+                                       .Where(p => p.CustomerAddedPets.CustomerId == UserId );
+
+            foreach (var Pet in PetList)
+            {
+               
+                petDatas.Add(new CustomerOwnedPetsDto()
+                {
+                    Name = Pet.Name,
+                    ImgUrl = $"/assets/PetImages/{Pet.ImgUrl}",
+                    Status = Pet.Status,
+                    Id = Pet.Id,
+                    Age = Pet.Age,
+                    CategoryName = Pet.Breed.Category.Name,
+
+                    
+
+                });
+            }
+            return petDatas;
+        }
 
 
-        public CustomerProfileDTO GetProfile(string id)
+
+
+
+
+
+
+
+        public CustomerDetailsDTO? GetProfile(string id)
         {
             var customer = _unitOfWork.CustomerRepository.GetByID(id);
 
             if (customer == null)
-                return null; // or throw exception
+                return null; 
 
-            return new CustomerProfileDTO
+            return new CustomerDetailsDTO
             {
-                Id = customer.Id,
                 FName = customer.FName,
                 LName = customer.LName,
                 ImgUrl = customer.ImgUrl,
-                Gender = customer.Gender.ToString(),
+                Gender = customer.Gender,
                 Street = customer.Address.Street,
-                City = customer.Address.City
+                City = customer.Address.City,
+                Country = customer.Address.Country,
             };
         }
 
 
 
-        public IEnumerable<CustomerDetailsDTO> GetAllCustomers()
+        public IEnumerable<CustomerDataDto> GetAllCustomers()
         {
             return _unitOfWork.CustomerRepository.GetAll()
-                .Select(c => new CustomerDetailsDTO
+                .Select(c => new CustomerDataDto
                 {
-                    Id = c.Id,
+                    CustomerId = c.Id,
                     FName = c.FName,
                     LName = c.LName,
                     ImgUrl = c.ImgUrl,
@@ -102,25 +207,25 @@ namespace PetConnect.BLL.Services.Classes
         }
 
 
-        public void Delete(string id)
+        public int Delete(string id)
         {
             var customer = _unitOfWork.CustomerRepository.GetByID(id);
             if (customer is not null)
             {
                 _unitOfWork.CustomerRepository.Delete(customer);
-                _unitOfWork.SaveChanges();
+            return    _unitOfWork.SaveChanges();
             }
-
+            return 0;
         }
 
 
 
         //update
-        public async Task UpdateProfile(CustomerProfileDTO dto)
+        public async Task<int> UpdateProfile(UpdateCustomerProfileDTO dto,string CustomerId)
         {
-            var customer = _unitOfWork.CustomerRepository.GetByID(dto.Id);
+            var customer = _unitOfWork.CustomerRepository.GetByID(CustomerId);
             if (customer == null)
-                throw new Exception("Customer not found");
+                return 0;
 
             if (dto.ImageFile != null && dto.ImageFile.Length > 0)
             {
@@ -133,20 +238,23 @@ namespace PetConnect.BLL.Services.Classes
 
             customer.FName = dto.FName;
             customer.LName = dto.LName;
+            customer.Gender = dto.Gender;
 
-            if (customer.Address == null)
-                customer.Address = new Address();
+            customer.Address = new Address()
+            {
+                City = dto.City,
+                Street = dto.Street,
+                Country = dto.Country
+            };
+      
 
-            customer.Address.Street = dto.Street;
-            customer.Address.City = dto.City;
+       
 
-            if (Enum.TryParse(dto.Gender, out Gender gender))
-                customer.Gender = gender;
 
             _unitOfWork.CustomerRepository.Update(customer);
-            _unitOfWork.SaveChanges();
+           return _unitOfWork.SaveChanges();
         }
 
-
+      
     }
 }

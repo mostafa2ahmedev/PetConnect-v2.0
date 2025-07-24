@@ -18,7 +18,7 @@ namespace PetConnect.DAL.Data
             // Repositories / Unit of Work
             services.AddScoped<IAdminRepository, AdminRepository>();
             services.AddScoped<ICustomerAddedPetsRepository, CustomerAddedPetsRepository>();
-            services.AddScoped<ICustomerPetAdoptionsRepository, CustomerPetAdpotionsRepository>();
+            services.AddScoped<ICustomerPetAdoptionsRepository, CustomerPetAdoptionsRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IDoctorRepository, DoctorRepository>();
             services.AddScoped<IPetBreedRepository, PetBreedRepository>();
@@ -35,6 +35,7 @@ namespace PetConnect.DAL.Data
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
             services.AddScoped<IOrderProductRepository, OrderProductRepository>();
+            services.AddScoped<ITimeSlotsRepository, TimeSlotsRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;

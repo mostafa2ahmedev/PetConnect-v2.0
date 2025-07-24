@@ -19,30 +19,41 @@ import { BreedDetails } from './Feature/breeds/breed-details/breed-details';
 import { DoctorProfile } from './Feature/doctor-profile/doctor-profile';
 import { DoctorEditProfile } from './Feature/doctor-edit-profile/doctor-edit-profile';
 import { NotFoundDoctor } from './Feature/not-found-doctor/not-found-doctor';
+import { authGuard } from './core/guards/auth-guard';
+import { CustomerProfile } from './Feature/customer-profile/customer-profile';
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'doctors', component: Doctors },
   { path: 'doctors/:id', component: DoctorProfile },
-  { path: 'doctors/update/:id', component: DoctorEditProfile },
+  {
+    path: 'doctors/update/:id',
+    component: DoctorEditProfile,
+    canActivate: [authGuard],
+  },
   { path: 'pets', component: Pets },
   { path: 'pet-details/:id', component: PetDetails },
-  { path: 'add-pet', component: AddPets },
-  { path: 'pets/update/:id', component: UpdatePet },
-  { path: 'categories', component: Categories },
-  { path: 'category/:id', component: CategoryDetails },
-  { path: 'add-category', component: AddCategory },
+  { path: 'add-pet', component: AddPets, canActivate: [authGuard] },
+  { path: 'pets/update/:id', component: UpdatePet, canActivate: [authGuard] },
+  { path: 'categories', component: Categories, canActivate: [authGuard] },
+  {
+    path: 'category/:id',
+    component: CategoryDetails,
+    canActivate: [authGuard],
+  },
+  { path: 'add-category', component: AddCategory, canActivate: [authGuard] },
 
-  { path: 'breeds', component: AllBreeds },
-  { path: 'breed/:id', component: BreedDetails },
+  { path: 'breeds', component: AllBreeds, canActivate: [authGuard] },
+  { path: 'breed/:id', component: BreedDetails, canActivate: [authGuard] },
 
-  { path: 'add-breed', component: AddBreed },
+  { path: 'add-breed', component: AddBreed, canActivate: [authGuard] },
   { path: 'contact', component: Contact },
   { path: 'login', component: Login },
+  { path: 'profile/:id', component: CustomerProfile, canActivate: [authGuard] },
+
   { path: 'register', component: Register, children: [] },
   { path: 'register/doctor', component: DoctorRegisterForm },
   { path: 'register/customer', component: CustomerRegisterForm },
-  { path: 'register', component: Register ,children: []},
-  {path:"register/doctor", component:DoctorRegisterForm},
-  {path:"register/customer", component:CustomerRegisterForm},
-  {path:"notfound/doctor",component:NotFoundDoctor}
+  { path: 'register', component: Register, children: [] },
+
+  { path: 'notfound/doctor', component: NotFoundDoctor },
 ];

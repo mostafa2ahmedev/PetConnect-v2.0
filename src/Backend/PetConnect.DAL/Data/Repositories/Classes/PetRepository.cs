@@ -17,7 +17,7 @@ namespace PetConnect.DAL.Data.Repositories.Classes
         public PetRepository(AppDbContext _context) : base(_context)
         {
             context = _context;
-           
+
         }
 
         public IQueryable<Pet> GetPendingPetsWithBreedAndCategory()
@@ -28,9 +28,19 @@ namespace PetConnect.DAL.Data.Repositories.Classes
                 .Where(p => !p.IsApproved);
         }
 
-        public Pet? GetPetDataWithCustomer(int id)
+        public IQueryable<Pet> GetPetBreadCategoryDataWithCustomer()
         {
-            return context.Pets.Include(P => P.CustomerAddedPets).FirstOrDefault(p => p.Id == id);
+            return context.Pets.Include(P => P.CustomerAddedPets).ThenInclude(P=>P.Customer).Include(P=>P.Breed).ThenInclude(B=>B.Category);
         }
+        public Pet? GetPetDetails(int id)
+        {
+            return context.Pets
+                .Include(p => p.Breed)
+                .Include(p => p.Breed.Category)
+                .Include(p => p.CustomerAddedPets)
+                    .ThenInclude(c => c.Customer)
+                .FirstOrDefault(p => p.Id == id);
+        }
+
     }
 }

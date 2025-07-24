@@ -292,7 +292,7 @@ namespace PetConnect.DAL.Data.Migrations
                     b.Property<string>("CustomerId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("AdoptionDate")
+                    b.Property<DateTime>("AdditionDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
@@ -680,7 +680,6 @@ namespace PetConnect.DAL.Data.Migrations
                     b.HasBaseType("PetConnect.DAL.Data.Identity.ApplicationUser");
 
                     b.Property<string>("CertificateUrl")
-                        .IsRequired()
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("PetSpecialty")
