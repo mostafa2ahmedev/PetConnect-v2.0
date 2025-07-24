@@ -1,45 +1,551 @@
-<section id="hero" class="hero section py-5 bg-light">
-  <div class="container" data-aos="fade-up" data-aos-delay="100">
-    <div class="row align-items-center gx-5">
-      
+<section id="hero" class="hero section">
+  <div
+    class="container aos-init aos-animate"
+    data-aos="fade-up"
+    data-aos-delay="100"
+  >
+    <div class="row align-items-center mb-5">
       <div class="col-lg-6 mb-4 mb-lg-0">
-        <div class="mb-3">
-          <span class="badge rounded-pill bg-warning text-dark px-3 py-2 d-inline-flex align-items-center">
-            <i class="bi bi-bell me-2"></i> Next-Gen Animal Care
-          </span>
+        <div class="badge-wrapper mb-3">
+          <div
+            class="d-inline-flex align-items-center rounded-pill border border-accent-light"
+          >
+            <div class="icon-circle me-2">
+              <i class="bi bi-bell"></i>
+            </div>
+            <span class="badge-text me-3"> Next-Gen Animal Care </span>
+          </div>
         </div>
-        
-        <h1 class="mb-4 fw-bold display-5 text-primary">
-          Find, Adopt & Care <br/> All in One Place
+
+        <h1 class="hero-title mb-4">
+          Find, Adopt & Care <br />
+          All in One Place
         </h1>
-        <p class="lead text-muted mb-4">
-          PetConnect makes pet adoption, veterinary care, and pet shopping easier than ever...
+
+        <p class="hero-description mb-4">
+          PetConnect makes pet adoption, veterinary care, and pet shopping
+          easier than ever. Discover trusted vets, rescued animals, and quality
+          pet products — all from one platform built for Egypt’s growing
+          pet-loving community.
         </p>
-        <a routerLink="/pets" class="btn btn-lg btn-primary">
-          Discover More <i class="bi bi-arrow-right ms-2"></i>
-        </a>
+
+        <div class="cta-wrapper">
+          <a asp-action="index" asp-controller="pet" class="btn btn-primary"
+            >Discover More <i class="bi bi-arrow-right btn-icon"></i
+          ></a>
+        </div>
+      </div>
+      <div class="col-lg-1"></div>
+      <div class="col-lg-5">
+        <div class="hero-image">
+          <img
+            src="assets\img\hero dog.png"
+            alt="Business Growth"
+            class="img-fluid"
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="row feature-boxes">
+      <div
+        class="col-lg-4 mb-4 mb-lg-0 aos-init"
+        data-aos="fade-up"
+        data-aos-delay="200"
+      >
+        <div class="feature-box">
+          <div class="feature-icon me-sm-4 mb-3 mb-sm-0">
+            <i class="bi bi-1-circle-fill"></i>
+          </div>
+          <div class="feature-content">
+            <h3 class="feature-title">Find</h3>
+            <p class="feature-text">
+              Discover your perfect companion from trusted shelters and rescuers
+              near you.
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div class="col-lg-6 text-center">
-        <img src="images/hero dog.png" class="img-fluid rounded shadow " alt="Hero Dog" loading="lazy" />
+      <div
+        class="col-lg-4 mb-4 mb-lg-0 aos-init"
+        data-aos="fade-up"
+        data-aos-delay="300"
+      >
+        <div class="feature-box">
+          <div class="feature-icon me-sm-4 mb-3 mb-sm-0">
+            <i class="bi bi-2-circle-fill"></i>
+          </div>
+          <div class="feature-content">
+            <h3 class="feature-title">Adopt</h3>
+            <p class="feature-text">
+              Give a loving home to a pet in need — and gain a loyal friend for
+              life.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 aos-init" data-aos="fade-up" data-aos-delay="400">
+        <div class="feature-box">
+          <div class="feature-icon me-sm-4 mb-3 mb-sm-0">
+            <i class="bi bi-3-circle-fill"></i>
+          </div>
+          <div class="feature-content">
+            <h3 class="feature-title">Care</h3>
+            <p class="feature-text">
+              Book vet visits, get expert advice, and shop for food, meds, and
+              more — all in one place.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<section id="team" class="team section bg-white py-5">
+<section id="how-we-work" class="how-we-work section">
+  <!-- Section Title -->
+  <div class="container section-title aos-init aos-animate" data-aos="fade-up">
+    <h2>How PetConnect Works</h2>
+    <p>
+      From discovery to care — everything your pet needs in one seamless
+      experience.
+    </p>
+  </div>
+  <!-- End Section Title -->
+
+  <div
+    class="container aos-init aos-animate"
+    data-aos="fade-up"
+    data-aos-delay="100"
+  >
+    <div class="steps-5">
+      <div class="process-container">
+        <div
+          class="process-item aos-init aos-animate"
+          data-aos="fade-up"
+          data-aos-delay="200"
+        >
+          <div class="content">
+            <span class="step-number">01</span>
+            <div class="card-body">
+              <div class="step-icon">
+                <i class="bi bi-pencil-square"></i>
+              </div>
+              <div class="step-content">
+                <h3>Browse Pets</h3>
+                <p>
+                  Explore adoptable pets, nearby vets, and top pet products —
+                  all in one place.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Process Item -->
+
+        <div
+          class="process-item aos-init aos-animate"
+          data-aos="fade-up"
+          data-aos-delay="300"
+        >
+          <div class="content">
+            <span class="step-number">02</span>
+            <div class="card-body">
+              <div class="step-icon">
+                <i class="bi bi-gear"></i>
+              </div>
+              <div class="step-content">
+                <h3>Send a Request</h3>
+                <p>
+                  Apply to adopt a pet, book a vet appointment, or place an
+                  order with just a few clicks.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Process Item -->
+
+        <div
+          class="process-item aos-init aos-animate"
+          data-aos="fade-up"
+          data-aos-delay="400"
+        >
+          <div class="content">
+            <span class="step-number">03</span>
+            <div class="card-body">
+              <div class="step-icon">
+                <i class="bi bi-search"></i>
+              </div>
+              <div class="step-content">
+                <h3>Connect & Confirm</h3>
+                <p>
+                  We notify shelters, vets, or sellers — and help confirm
+                  availability or next steps.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Process Item -->
+
+        <div
+          class="process-item aos-init aos-animate"
+          data-aos="fade-up"
+          data-aos-delay="500"
+        >
+          <div class="content">
+            <span class="step-number">04</span>
+            <div class="card-body">
+              <div class="step-icon">
+                <i class="bi bi-rocket-takeoff"></i>
+              </div>
+              <div class="step-content">
+                <h3>Adopt. Care. Repeat.</h3>
+                <p>
+                  Bring home your new pet, track vet visits, and keep shopping
+                  for all your pet needs.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Process Item -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<section
+  id="call-to-action-2"
+  class="call-to-action-2 section light-background"
+>
+  <div
+    class="container aos-init aos-animate"
+    data-aos="fade-up"
+    data-aos-delay="100"
+  >
+    <div class="row g-5 align-items-center">
+      <div
+        class="col-lg-6 aos-init aos-animate"
+        data-aos="fade-right"
+        data-aos-delay="200"
+      >
+        <div class="cta-image-wrapper">
+          <img
+            src="assets\img\person\doctor_dog.png"
+            alt="Call to Action"
+            class="img-fluid rounded-4"
+          />
+
+          <!-- <div class="cta-pattern"></div> -->
+        </div>
+      </div>
+
+      <div
+        class="col-lg-6 aos-init aos-animate"
+        data-aos="fade-left"
+        data-aos-delay="300"
+      >
+        <div class="cta-content">
+          <h2>
+            Trusted Vets.<br />
+            Compassionate Care.
+          </h2>
+          <p class="lead">
+            At PetConnect, your pet’s health comes first. We partner only with
+            verified, licensed veterinarians who offer both online and in-clinic
+            consultations — ensuring safe, expert care from the moment your pet
+            needs it.
+          </p>
+
+          <div class="cta-features">
+            <div
+              class="feature-item aos-init aos-animate"
+              data-aos="zoom-in"
+              data-aos-delay="400"
+            >
+              <i class="bi bi-check-circle-fill"></i>
+              <span>Certified Professionals</span>
+            </div>
+            <div
+              class="feature-item aos-init aos-animate"
+              data-aos="zoom-in"
+              data-aos-delay="450"
+            >
+              <i class="bi bi-check-circle-fill"></i>
+              <span>Nearby & Available</span>
+            </div>
+            <div
+              class="feature-item aos-init aos-animate"
+              data-aos="zoom-in"
+              data-aos-delay="500"
+            >
+              <i class="bi bi-check-circle-fill"></i>
+              <span>Gentle, Reliable Care</span>
+            </div>
+          </div>
+
+          <div class="cta-action mt-5">
+            <a
+              asp-action="index"
+              asp-controller="doctors"
+              class="btn btn-primary btn-lg me-3"
+              >Get Started</a
+            >
+            <a
+              asp-action="index"
+              asp-controller="pet"
+              class="btn btn-outline-primary btn-lg"
+              >Learn More</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="testimonials" class="testimonials section">
+  <!-- Section Title -->
+  <div class="container section-title aos-init aos-animate" data-aos="fade-up">
+    <h2>Testimonials</h2>
+    <p>
+      Real stories from pet lovers who adopted and cared for animals through our
+      platform.
+    </p>
+  </div>
+  <!-- End Section Title -->
+
+  <div
+    class="container aos-init aos-animate"
+    data-aos="fade-up"
+    data-aos-delay="100"
+  >
+    <div class="testimonials-slider swiper init-swiper">
+      <script type="application/json" class="swiper-config">
+        {
+          "loop": true,
+          "speed": 800,
+          "autoplay": {
+            "delay": 5000
+          },
+          "slidesPerView": 1,
+          "spaceBetween": 30,
+          "pagination": {
+            "el": ".swiper-pagination",
+            "type": "bullets",
+            "clickable": true
+          },
+          "breakpoints": {
+            "768": {
+              "slidesPerView": 2
+            },
+            "1200": {
+              "slidesPerView": 3
+            }
+          }
+        }
+      </script>
+
+      <div class="swiper-wrapper">
+        <!-- Testimonial 1 -->
+        <div class="swiper-slide">
+          <div class="testimonial-card">
+            <div class="testimonial-content">
+              <p>
+                <i class="bi bi-quote quote-icon"></i>
+                Adopting Bella through this site was a seamless experience. The
+                vet follow-up service was prompt and professional. I’m beyond
+                grateful!
+              </p>
+            </div>
+            <div class="testimonial-profile">
+              <div class="rating">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i
+                ><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i
+                ><i class="bi bi-star-fill"></i>
+              </div>
+              <div class="profile-info">
+                <img
+                  src="assets/img/person/person-f-3.webp"
+                  alt="Profile Image"
+                />
+                <div>
+                  <h3>Layla Ahmed</h3>
+                  <h4>Pet Adopter</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 2 -->
+        <div class="swiper-slide">
+          <div class="testimonial-card">
+            <div class="testimonial-content">
+              <p>
+                <i class="bi bi-quote quote-icon"></i>
+                I found Max here, and the adoption process was fast and caring.
+                Their vet even helped me with his vaccination schedule. Highly
+                recommend!
+              </p>
+            </div>
+            <div class="testimonial-profile">
+              <div class="rating">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i
+                ><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i
+                ><i class="bi bi-star-fill"></i>
+              </div>
+              <div class="profile-info">
+                <img
+                  src="assets/img/person/person-m-5.webp"
+                  alt="Profile Image"
+                />
+                <div>
+                  <h3>Youssef El Sayed</h3>
+                  <h4>Software Engineer</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 3 -->
+        <div class="swiper-slide">
+          <div class="testimonial-card">
+            <div class="testimonial-content">
+              <p>
+                <i class="bi bi-quote quote-icon"></i>
+                My rescued kitten was treated for free by a certified vet I
+                found here. This platform truly supports animal welfare in every
+                way.
+              </p>
+            </div>
+            <div class="testimonial-profile">
+              <div class="rating">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i
+                ><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i
+                ><i class="bi bi-star-fill"></i>
+              </div>
+              <div class="profile-info">
+                <img
+                  src="assets/img/person/person-f-7.webp"
+                  alt="Profile Image"
+                />
+                <div>
+                  <h3>Mariam Nabil</h3>
+                  <h4>Animal Rescuer</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 4 -->
+        <div class="swiper-slide">
+          <div class="testimonial-card">
+            <div class="testimonial-content">
+              <p>
+                <i class="bi bi-quote quote-icon"></i>
+                We adopted a dog and got access to quality pet food and
+                emergency care through this website. It’s a full solution for
+                pet lovers.
+              </p>
+            </div>
+            <div class="testimonial-profile">
+              <div class="rating">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i
+                ><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i
+                ><i class="bi bi-star-fill"></i>
+              </div>
+              <div class="profile-info">
+                <img
+                  src="assets/img/person/person-m-8.webp"
+                  alt="Profile Image"
+                />
+                <div>
+                  <h3>Omar Khaled</h3>
+                  <h4>New Pet Owner</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 5 -->
+        <div class="swiper-slide">
+          <div class="testimonial-card">
+            <div class="testimonial-content">
+              <p>
+                <i class="bi bi-quote quote-icon"></i>
+                Their online vet consultation saved my cat during a critical
+                illness. Thank you for providing such a valuable service!
+              </p>
+            </div>
+            <div class="testimonial-profile">
+              <div class="rating">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i
+                ><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i
+                ><i class="bi bi-star-fill"></i>
+              </div>
+              <div class="profile-info">
+                <img
+                  src="assets/img/person/person-f-10.webp"
+                  alt="Profile Image"
+                />
+                <div>
+                  <h3>Salma Fathy</h3>
+                  <h4>Pet Owner</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination Dots -->
+      <div
+        class="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal"
+      ></div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .text-dark-yellow {
+    color: #c28800 !important;
+  }
+</style>
+<!-- <section id="team" class="team section bg-white py-5">
   <div class="container text-center mb-5" data-aos="fade-up">
     <h2 class="fw-bold">Our Vets</h2>
     <p class="text-muted">Meet the trusted professionals...</p>
   </div>
   <div class="container" data-aos="fade-up" data-aos-delay="100">
     <div class="row g-4">
-      <div *ngFor="let doctor of doctors; let i = index" class="col-12 col-sm-6 col-lg-3" [attr.data-aos-delay]="100 * (i + 1)">
-        <a [routerLink]="['/doctors/profile', doctor.id]" class="text-decoration-none">
+      <div
+        *ngFor="let doctor of doctors; let i = index"
+        class="col-12 col-sm-6 col-lg-3"
+        [attr.data-aos-delay]="100 * (i + 1)"
+      >
+        <a
+          [routerLink]="['/doctors/profile', doctor.id]"
+          class="text-decoration-none"
+        >
           <div class="card shadow-sm h-100 text-center border-0 hover-shadow">
-            <img [src]="doctor.imgUrl" class="card-img-top" [alt]="'Dr. ' + doctor.fName + ' ' + doctor.lName" />
+            <img
+              [src]="doctor.imgUrl"
+              class="card-img-top"
+              [alt]="'Dr. ' + doctor.fName + ' ' + doctor.lName"
+            />
             <div class="card-body">
-              <h5 class="card-title mb-1">Dr. {{ doctor.fName }} {{ doctor.lName }}</h5>
+              <h5 class="card-title mb-1">
+                Dr. {{ doctor.fName }} {{ doctor.lName }}
+              </h5>
               <small class="text-muted">{{ doctor.petSpecialty }}</small>
               <div class="mt-2 text-warning">
                 <i class="bi bi-star-fill"></i>
@@ -60,26 +566,47 @@
   </div>
 </section>
 
-
 <section id="pets-preview" class="section bg-light py-5">
   <div class="container text-center mb-5" data-aos="fade-up">
     <h2 class="fw-bold">Featured Pets</h2>
-    <p class="text-muted">Discover some of the adorable pets waiting for a new home.</p>
+    <p class="text-muted">
+      Discover some of the adorable pets waiting for a new home.
+    </p>
   </div>
 
   <div class="container" data-aos="fade-up" data-aos-delay="100">
     <div class="row g-4">
-      <div *ngFor="let pet of pets; let i = index" class="col-12 col-sm-6 col-lg-3" [attr.data-aos-delay]="100 * (i + 1)">
-        <div class="card h-100 border-0 shadow-sm position-relative overflow-hidden text-center">
-          <img [src]="'assets/PetImages/' + pet.imgUrl" class="card-img-top" [alt]="pet.name" />
-          
+      <div
+        *ngFor="let pet of pets; let i = index"
+        class="col-12 col-sm-6 col-lg-3"
+        [attr.data-aos-delay]="100 * (i + 1)"
+      >
+        <div
+          class="card h-100 border-0 shadow-sm position-relative overflow-hidden text-center"
+        >
+          <img
+            [src]="'assets/PetImages/' + pet.imgUrl"
+            class="card-img-top"
+            [alt]="pet.name"
+          />
+
           <div class="card-body">
             <h5 class="card-title fw-semibold">{{ pet.name }}</h5>
-            <small class="text-muted">Status: <strong>{{ pet.status }}</strong></small>
+            <small class="text-muted"
+              >Status: <strong>{{ pet.status }}</strong></small
+            >
 
             <div class="d-flex justify-content-center gap-2 mt-3">
-              <a [routerLink]="['/pet/details', pet.id]" class="btn btn-sm btn-outline-primary">Learn More</a>
-              <a [routerLink]="['/pet/adopt', pet.id]" class="btn btn-sm btn-primary">Adopt</a>
+              <a
+                [routerLink]="['/pet/details', pet.id]"
+                class="btn btn-sm btn-outline-primary"
+                >Learn More</a
+              >
+              <a
+                [routerLink]="['/pet/adopt', pet.id]"
+                class="btn btn-sm btn-primary"
+                >Adopt</a
+              >
             </div>
           </div>
         </div>
@@ -90,4 +617,4 @@
       <a routerLink="/pets" class="btn btn-outline-primary">All Pets</a>
     </div>
   </div>
-</section>
+</section> -->

@@ -22,7 +22,7 @@ export class AdoptionService {
 
   // Get requests where current user is the receiver (owner of the pet)
   getIncomingRequests(): Observable<AdoptionResponse[]> {
-    return this.http.get<any>(`${this.baseUrl}`).pipe(
+    return this.http.get<any>(`${this.baseUrl}/CusReqAdoptions`).pipe(
       map((response) => response.data) // because your API wraps result in { statusCode, data }
     );
   }
@@ -35,5 +35,27 @@ export class AdoptionService {
   // Get pets owned by the current customer
   getCustomerPets(): Observable<Pet[]> {
     return this.http.get<Pet[]>(`${this.baseUrl}/CustomerPets`);
+  }
+
+  cancelRequest(request: {
+    recCustomerId: string;
+    petId: number;
+    adoptionDate: string;
+  }): Observable<any> {
+    console.log('Cancelling request:', request);
+    return this.http.request('DELETE', `${this.baseUrl}`, {
+      body: request,
+    });
+  }
+  getReceivedAdoptionRequests(): Observable<AdoptionResponse[]> {
+    return this.http
+      .get<any>(`${this.baseUrl}/CusRecAdoptions`)
+      .pipe(map((response) => response.data as AdoptionResponse[]));
+  }
+  padDate(date: string): string {
+    // Example: "2025-07-24T06:28:14.01601" -> "2025-07-24T06:28:14.0160100"
+    const [main, millis = ''] = date.split('.');
+    const paddedMillis = (millis + '0000000').substring(0, 7);
+    return `${main}.${paddedMillis}`;
   }
 }

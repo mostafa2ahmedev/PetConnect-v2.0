@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Pet } from '../../../models/pet';
@@ -9,6 +9,7 @@ import { AuthService } from '../../../core/services/auth-service';
 import { AdoptionService } from '../../../core/services/adoption-service';
 import { AdoptionRequest } from '../../../models/adoption-request';
 import { AlertService } from '../../../core/services/alert-service';
+import { AdoptionResponse } from '../../../models/adoption-response';
 
 @Component({
   selector: 'app-pets',
@@ -22,15 +23,17 @@ export class Pets implements OnInit {
   statusMap: { [key: number]: string } = {};
   loading = true;
   error = '';
+  isDataReady: boolean = false;
   constructor(
     private petService: PetService,
     private enumService: EnumService,
     public authService: AuthService,
     public adoptionService: AdoptionService,
-    private alert: AlertService
+    private alert: AlertService,
+    private cdRef: ChangeDetectorRef
   ) {}
   requestedPetIds: number[] = []; // pet IDs user has requested
-
+  allSentRequests: AdoptionResponse[] = []; // all requests sent by the user
   ngOnInit(): void {
     this.enumService.loadAllEnums().subscribe();
 
@@ -74,7 +77,11 @@ export class Pets implements OnInit {
     };
     console.log(request);
     this.adoptionService.submitRequest(request).subscribe({
-      next: () => this.alert.success('Adoption request sent'),
+      next: () => {
+        this.alert.success('Adoption request sent');
+        this.loadSubmittedRequests();
+        this.cdRef.detectChanges();
+      },
       error: (err) => console.error(err),
     });
   }
@@ -83,11 +90,36 @@ export class Pets implements OnInit {
     this.adoptionService.getIncomingRequests().subscribe({
       next: (requests) => {
         console.log(requests);
+        this.allSentRequests = requests;
         this.requestedPetIds = requests.map((r) => r.petId);
+        this.isDataReady = true;
       },
       error: (err) => {
         console.error('Failed to load submitted requests', err);
       },
+    });
+  }
+
+  cancelAdoptionRequest(pet: Pet): void {
+    const request = this.allSentRequests.find((r) => r.petId === pet.id);
+    if (!request) return;
+
+    const body = {
+      petId: pet.id,
+      recCustomerId: this.authService.getUserId(),
+      adoptionDate: this.adoptionService.padDate(
+        request.adoptionDate.replace('T', ' ').replace('Z', '')
+      ),
+    };
+    console.log('Cancelling request:', body);
+    this.adoptionService.cancelRequest(body).subscribe({
+      next: () => {
+        this.alert.success('Request cancelled.');
+
+        this.loadSubmittedRequests();
+        this.cdRef.detectChanges();
+      },
+      error: (err) => this.alert.error('Failed to cancel request.'),
     });
   }
 }

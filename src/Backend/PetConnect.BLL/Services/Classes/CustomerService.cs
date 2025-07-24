@@ -143,7 +143,7 @@ namespace PetConnect.BLL.Services.Classes
             List<CustomerOwnedPetsDto> petDatas = new List<CustomerOwnedPetsDto>();
             IEnumerable<Pet> PetList = _unitOfWork.PetRepository.GetAllQueryable()
                                        .Include(p=>p.CustomerAddedPets).Include(p=>p.Breed).ThenInclude(B=>B.Category)
-                                       .Where(p => p.CustomerAddedPets.CustomerId == UserId && p.Status == PetStatus.Owned);
+                                       .Where(p => p.CustomerAddedPets.CustomerId == UserId );
 
             foreach (var Pet in PetList)
             {

@@ -39,13 +39,14 @@
         data-aos-delay="100"
       >
         <div class="team-card text-center">
-          <div class="team-image">
-            <img
-              [src]="getFullImageUrl(pet.imgUrl)"
-              class="img-fluid"
-              [alt]="pet.name"
-            />
-          </div>
+          <a [routerLink]="['/pet-details', pet.id]">
+            <div class="team-image">
+              <img
+                [src]="getFullImageUrl(pet.imgUrl)"
+                class="img-fluid"
+                [alt]="pet.name"
+              /></div
+          ></a>
           <div class="team-content pet-info">
             <h4>{{ pet.name }}</h4>
             <span>Age: {{ pet.age }} years</span>
@@ -68,6 +69,7 @@
               <button
                 class="btn btn-primary btn-sm"
                 *ngIf="
+                  isDataReady &&
                   authService.isAuthenticated() &&
                   authService.getUserId() !== pet.customerId &&
                   !requestedPetIds.includes(pet.id)
@@ -77,8 +79,14 @@
                 Adopt Now
               </button>
               <button
-                *ngIf="requestedPetIds.includes(pet.id)"
+                *ngIf="
+                  isDataReady &&
+                  authService.isAuthenticated() &&
+                  authService.getUserId() !== pet.customerId &&
+                  requestedPetIds.includes(pet.id)
+                "
                 class="btn btn-danger btn-sm"
+                (click)="cancelAdoptionRequest(pet)"
               >
                 Cancel Request
               </button>

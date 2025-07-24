@@ -88,10 +88,17 @@
                 >
                   Delete
                 </a>
-
+                <button
+                  class="btn btn-primary btn-sm"
+                  [disabled]="!isDataReady"
+                  *ngIf="!isDataReady"
+                >
+                  loading
+                </button>
                 <button
                   class="btn btn-primary btn-sm"
                   *ngIf="
+                    isDataReady &&
                     authService.isAuthenticated() &&
                     authService.getUserId() !== pet.customerId &&
                     !requestedPetIds.includes(pet.id)
@@ -103,6 +110,7 @@
                 <button
                   *ngIf="requestedPetIds.includes(pet.id)"
                   class="btn btn-danger btn-sm"
+                  (click)="cancelAdoptionRequest(pet)"
                 >
                   Cancel Request
                 </button>
