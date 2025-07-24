@@ -17,5 +17,18 @@ namespace PetConnect.DAL.Data.Repositories.Classes
         {
             context = _context;
         }
+
+        public CustomerAddedPets? GetCustomerAddedPetRecord(int petId, string CustomerId)
+        {
+            return context.CustomerAddedPets.Where(CAP => CAP.PetId == petId && CAP.CustomerId == CustomerId).SingleOrDefault();
+        }
+        public int? DeleteCustomerAddedPetRecord(int petId, string CustomerId)
+        {
+            var record = GetCustomerAddedPetRecord(petId, CustomerId);
+            if (record == null)
+                return null;
+             context.CustomerAddedPets.Remove(record);
+             return context.SaveChanges();
+        }
     }
 }

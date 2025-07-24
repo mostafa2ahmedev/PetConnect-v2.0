@@ -13,9 +13,8 @@ namespace PetConnect.BLL.Services.Interfaces
     {
 
         public void RequestAdoption(CusRequestAdoptionDto adoptionDto, string ReqCustomerId);
-
-   
-        public string? ApproveOrCancelCustomerAdoptionRequest(ApproveORCancelCustomerRequest approveORCancelCustomerRequestDto, string userId);
+        public string? ApproveOrCancelCustomerAdoptionRequest(ApproveORCancelReceivedCustomerRequest approveORCancelCustomerRequestDto, string userId);
+        public int DeleteRequestAdoption(DelCusRequestAdoptionDto DeladoptionDto, string ReqCustomerId);
         public IEnumerable<CustomerOwnedPetsDto> GetCustomerOwnedPets(string UserId);
         public CustomerDetailsDTO? GetProfile(string id);
         public IEnumerable<CustomerDataDto> GetAllCustomers();
@@ -23,6 +22,7 @@ namespace PetConnect.BLL.Services.Interfaces
         public IEnumerable<DetailsCustomerRequestAdoption> GetCustomerReqAdoptionsPendingData(string userId);
         public IEnumerable<DetailsCustomerReceivedAdoption> GetCustomerRecAdoptionsPendingData(string userId);
         Task<int> UpdateProfile(UpdateCustomerProfileDTO model,string CustomerId);
+
 
  
     }
