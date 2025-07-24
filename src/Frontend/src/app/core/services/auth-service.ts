@@ -22,8 +22,8 @@ export class AuthService {
     return this.getFromStorage(this.tokenKey);
   }
 
-  getUserId(): string | null {
-    return this.getFromStorage(this.userIdKey);
+  getUserId(): string {
+    return this.getFromStorage(this.userIdKey) || '';
   }
 
   getUserRoles(): string[] {

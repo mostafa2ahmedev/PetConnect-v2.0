@@ -6,4 +6,5 @@ export interface Pet {
   imgUrl: string;
   categoryName: string;
   customerId: string;
+  customerName: string;
 }

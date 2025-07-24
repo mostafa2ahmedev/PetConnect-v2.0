@@ -8,4 +8,6 @@ export interface PetDetailsModel {
   imgUrl: string;
   breadName: string;
   categoryName: string;
+  customerId: string;
+  customerName?: string;
 }

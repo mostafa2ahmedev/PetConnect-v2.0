@@ -50,7 +50,15 @@
             <h4>{{ pet.name }}</h4>
             <span>Age: {{ pet.age }} years</span>
             <span>{{ statusMap[pet.status] }}</span>
-            <span>Posted by: {{ pet.customerId }}</span>
+            <span
+              class="text-success"
+              *ngIf="authService.getUserId() === pet.customerId"
+              >Your Pet</span
+            >
+
+            <span *ngIf="authService.getUserId() !== pet.customerId"
+              >Posted by: {{ pet.customerName }}</span
+            >
             <div class="mt-3 d-flex justify-content-center gap-2">
               <a
                 [routerLink]="['/pet-details', pet.id]"

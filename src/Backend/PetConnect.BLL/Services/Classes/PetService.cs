@@ -72,7 +72,7 @@ namespace PetConnect.BLL.Services.Classes
                     Age = Pet.Age,
                     CategoryName = petCategory!.Name,
                     CustomerId = Pet.CustomerAddedPets.CustomerId,
-                    CustomerName = Pet.CustomerAddedPets.Customer.FName + "" + Pet.CustomerAddedPets.Customer.LName
+                    CustomerName = Pet.CustomerAddedPets.Customer.FName + " " + Pet.CustomerAddedPets.Customer.LName
 
 
                 });
