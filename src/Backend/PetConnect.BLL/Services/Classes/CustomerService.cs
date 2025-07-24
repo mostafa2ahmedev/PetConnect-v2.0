@@ -88,7 +88,7 @@ namespace PetConnect.BLL.Services.Classes
         public IEnumerable<DetailsCustomerReceivedAdoption> GetCustomerRecAdoptionsPendingData(string userId)
         {
 
-            var CustomerReqAdoptionsData = _unitOfWork.CustomerPetAdpotionsRepository.GetAllQueryable().Include(CPA=>CPA.RequesterCustomer)
+            var CustomerReqAdoptionsData = _unitOfWork.CustomerPetAdpotionsRepository.GetAllQueryable().Include(CPA=>CPA.ReceiverCustomer)
                 .Include(CPA=>CPA.Pet)
                 .ThenInclude(P=>P.Breed)
                 .ThenInclude(B=>B.Category)

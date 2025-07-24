@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PetConnect.BLL.Services.DTO.PetBreadDto
 {
-    public class AddedPetBreadDto
+    public class AddedPetBreedDto
     {
         [Required(ErrorMessage ="The Name is Required")]
         public string Name { get; set; } = null!;
