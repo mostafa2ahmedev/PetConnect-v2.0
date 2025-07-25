@@ -20,13 +20,16 @@ namespace PetConnect.BLL.Services.Classes
         private readonly IPetService _petService;
         private readonly IAttachmentService attachmentSetvice;
         private readonly ICustomerAddedPetsService _customerAddedPetsService;
+        private readonly IAdoptionNotificationService _adoptionNotificationService;
 
-        public CustomerService(IUnitOfWork unitOfWork, IPetService petService, IAttachmentService attachmentSetvice,ICustomerAddedPetsService customerAddedPetsService)
+        public CustomerService(IUnitOfWork unitOfWork, IPetService petService,
+            IAttachmentService attachmentSetvice,ICustomerAddedPetsService customerAddedPetsService,IAdoptionNotificationService adoptionNotificationService)
         {
             _unitOfWork = unitOfWork;
             _petService = petService;
             this.attachmentSetvice = attachmentSetvice;
             _customerAddedPetsService = customerAddedPetsService;
+            _adoptionNotificationService = adoptionNotificationService;
         }
 
 
@@ -124,7 +127,10 @@ namespace PetConnect.BLL.Services.Classes
 
                 var CAPRecord=  _unitOfWork.CustomerAddedPetsRepository.DeleteCustomerAddedPetRecord(approveORCancelCustomerRequestDto.PetId, RecuserId);
                 _customerAddedPetsService.RegisterCustomerPetAddition(approveORCancelCustomerRequestDto.ReqCustomerId, approveORCancelCustomerRequestDto.PetId);
-               
+
+                var pet = _petService.GetPet(approveORCancelCustomerRequestDto.PetId);
+
+                _adoptionNotificationService.AddAdoptionNotification($"Adoption Completed Successfully, You own {pet!.Name} Now 🎉", RecuserId);
 
             }
 
@@ -247,6 +253,7 @@ namespace PetConnect.BLL.Services.Classes
             customer.Gender = dto.Gender;
             customer.PhoneNumber = dto.PhoneNumber;
             customer.UserName = dto.UserName;   
+            
 
             customer.Address = new Address()
             {
