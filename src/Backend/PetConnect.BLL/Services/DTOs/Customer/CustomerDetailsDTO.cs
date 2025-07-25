@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PetConnect.BLL.Services.DTOs.Customer
 {
-   public  class CustomerDetailsDTO
+   public class CustomerDetailsDTO
     {
 
         public string FName { get; set; } = null!;
@@ -19,5 +19,13 @@ namespace PetConnect.BLL.Services.DTOs.Customer
         public string Street { get; set; } = null!;
         public string City { get; set; } = null!;
         public string Country { get; set; } = null!;
+        public bool IsApproved { get; set; }
+        public string UserName { get; set; } = null!;
+        public string Email { get; set; } = null!;
+        public string PhoneNumber { get; set; } = null!;
+        
+            
+            
+
     }
 }

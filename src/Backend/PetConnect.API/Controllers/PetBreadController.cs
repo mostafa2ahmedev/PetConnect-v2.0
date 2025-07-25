@@ -16,7 +16,7 @@ public class PetBreedController : ControllerBase
     }
 
     [HttpGet]
-    [EndpointSummary("Get All Breads")]
+    [EndpointSummary("Get All Breeds")]
     [ProducesResponseType(typeof(List<GPetBreedDto>), StatusCodes.Status200OK)]
     public ActionResult GetAll()
     {

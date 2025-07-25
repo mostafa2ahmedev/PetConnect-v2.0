@@ -181,13 +181,19 @@ namespace PetConnect.BLL.Services.Classes
 
             return new CustomerDetailsDTO
             {
+                UserName = customer.UserName!,
                 FName = customer.FName,
                 LName = customer.LName,
-                ImgUrl = customer.ImgUrl,
+                ImgUrl = customer.ImgUrl!,
                 Gender = customer.Gender,
                 Street = customer.Address.Street,
                 City = customer.Address.City,
                 Country = customer.Address.Country,
+                Email =customer.Email!,
+                IsApproved= customer.IsApproved,
+                PhoneNumber = customer.PhoneNumber!
+            
+                
             };
         }
 
@@ -239,6 +245,8 @@ namespace PetConnect.BLL.Services.Classes
             customer.FName = dto.FName;
             customer.LName = dto.LName;
             customer.Gender = dto.Gender;
+            customer.PhoneNumber = dto.PhoneNumber;
+            customer.UserName = dto.UserName;   
 
             customer.Address = new Address()
             {
@@ -246,11 +254,7 @@ namespace PetConnect.BLL.Services.Classes
                 Street = dto.Street,
                 Country = dto.Country
             };
-      
-
-       
-
-
+     
             _unitOfWork.CustomerRepository.Update(customer);
            return _unitOfWork.SaveChanges();
         }
