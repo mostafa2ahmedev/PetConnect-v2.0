@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace PetConnect.BLL.Services.DTOs.OrderProduct
 {
-    public class OrderProductDTO
+    public class UpdatedOrderProductDTO
     {
-        public string ProductName { get; set; } = null!;
-
-        public decimal Price { get; set; }
-
+        public int ProductId { get; set; } 
         public int Quantity { get; set; }
+        public decimal Price { get; set; }
     }
 }

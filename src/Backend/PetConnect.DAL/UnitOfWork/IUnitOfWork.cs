@@ -28,6 +28,8 @@ namespace PetConnect.DAL.UnitofWork
         public IProductRepository ProductRepository { get; }
         public IProductTypeRepository ProductTypeRepository { get; }
         public IOrderRepository OrderRepository { get; }
+
+        public IOrderProductRepository orderProductRepository { get; }
         public int SaveChanges();
     }
 

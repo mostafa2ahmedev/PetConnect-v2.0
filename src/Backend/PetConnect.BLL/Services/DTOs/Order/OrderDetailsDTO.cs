@@ -12,14 +12,10 @@ namespace PetConnect.BLL.Services.DTOs.Order
     {
 
         public DateTime OrderDate { get; set; }
-        public decimal TotalPrice { get; set; }
-        public string CustomerId { get; set; }
+        
         public string CustomerName { get; set; } = null!;
-        public List<OrderProductDTO> products { get; set; } = new();
-
-        public int ProductQuantity { get; set; }
-        public string ProductName { get; set; }
-        public decimal ProductPrice { get; set; }
+        public List<OrderProductDTO> Products { get; set; }
+        public decimal TotalPrice => Products?.Sum(p => p.Price * p.Quantity) ?? 0;
 
     }
 }
