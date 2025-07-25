@@ -71,7 +71,11 @@ namespace PetConnect.BLL.Services.Classes
                     Age = Pet.Age,
                     CategoryName = Pet.Breed.Category.Name,
                     CustomerId = Pet.CustomerAddedPets.CustomerId,
-                    CustomerName = Pet.CustomerAddedPets.Customer.FName + " " + Pet.CustomerAddedPets.Customer.LName
+                    CustomerName = Pet.CustomerAddedPets.Customer.FName + " " + Pet.CustomerAddedPets.Customer.LName,
+                    CustomerCity = Pet.CustomerAddedPets.Customer.Address.City,
+                    CustomerCountry = Pet.CustomerAddedPets.Customer.Address.Country,
+                    CustomerStreet = Pet.CustomerAddedPets.Customer.Address.Street
+
 
 
                 });
@@ -89,7 +93,10 @@ namespace PetConnect.BLL.Services.Classes
                 Age = P.Age,
                 CategoryName = P!.Name,
                 CustomerId = P.CustomerAddedPets.CustomerId,
-                CustomerName = P.CustomerAddedPets.Customer.FName + " " + P.CustomerAddedPets.Customer.LName
+                CustomerName = P.CustomerAddedPets.Customer.FName + " " + P.CustomerAddedPets.Customer.LName,
+                CustomerCity = P.CustomerAddedPets.Customer.Address.City,
+                CustomerCountry = P.CustomerAddedPets.Customer.Address.Country,
+                CustomerStreet = P.CustomerAddedPets.Customer.Address.Street
 
             }
             
@@ -110,8 +117,10 @@ namespace PetConnect.BLL.Services.Classes
                 Age = P.Age,
                 CategoryName = P!.Name,
                 CustomerId = P.CustomerAddedPets.CustomerId,
-                CustomerName = P.CustomerAddedPets.Customer.FName + " " + P.CustomerAddedPets.Customer.LName
-
+                CustomerName = P.CustomerAddedPets.Customer.FName + " " + P.CustomerAddedPets.Customer.LName,
+                CustomerCity = P.CustomerAddedPets.Customer.Address.City,
+                CustomerCountry = P.CustomerAddedPets.Customer.Address.Country,
+                CustomerStreet = P.CustomerAddedPets.Customer.Address.Street
             }
 
             ).ToList();
@@ -130,8 +139,11 @@ namespace PetConnect.BLL.Services.Classes
             PetDetailsDto Pet = new PetDetailsDto() {Id = pet.Id, Name = pet.Name , IsApproved = pet.IsApproved ,BreadName =bread.Name  ,
             ImgUrl = $"/assets/PetImages/{pet.ImgUrl}", Ownership = pet.Ownership , Status = pet.Status , CategoryName = Category.Name,Age = pet.Age ,
                 CustomerId = pet.CustomerAddedPets.CustomerId,
-                CustomerName  = pet.CustomerAddedPets.Customer.FName+" "+pet.CustomerAddedPets.Customer.LName
-            
+                CustomerName  = pet.CustomerAddedPets.Customer.FName+" "+pet.CustomerAddedPets.Customer.LName,
+                CustomerCity = pet.CustomerAddedPets.Customer.Address.City,
+                CustomerCountry = pet.CustomerAddedPets.Customer.Address.Country,
+                CustomerStreet = pet.CustomerAddedPets.Customer.Address.Street
+
             };
             return Pet;
         }
@@ -157,7 +169,10 @@ namespace PetConnect.BLL.Services.Classes
                     Age = Pet.Age,
                     CategoryName = petCategory!.Name,
                     CustomerId = Pet.CustomerAddedPets.CustomerId,
-                     CustomerName = Pet.CustomerAddedPets.Customer.FName + " " + Pet.CustomerAddedPets.Customer.LName
+                    CustomerName = Pet.CustomerAddedPets.Customer.FName + " " + Pet.CustomerAddedPets.Customer.LName,
+                    CustomerCity = Pet.CustomerAddedPets.Customer.Address.City,
+                    CustomerCountry = Pet.CustomerAddedPets.Customer.Address.Country,
+                    CustomerStreet = Pet.CustomerAddedPets.Customer.Address.Street
                 });
             }
             return petDatas;
@@ -205,20 +220,7 @@ namespace PetConnect.BLL.Services.Classes
             }
             return 0;
         }
-        //public PetDataDto? GetPetDataWithCustomer(int id)
-        //{
-        //    var Pet = _unitOfWork.PetRepository.GetPetDataWithCustomer(id);
-        //    PetDataDto petData = new PetDataDto()
-        //    {
-        //        Name = Pet.Name,
-        //        ImgUrl = Pet.ImgUrl,
-        //        Status = Pet.Status,
-        //        Id = Pet.Id,
-        //        CustomerId = Pet.CustomerAddedPets.CustomerId
-
-        //    };
-        //    return petData;
-        //}
+       
 
     }
 }
