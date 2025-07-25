@@ -14,9 +14,10 @@ namespace PetConnect.DAL.Data.Models
         public bool IsApproved { get; set; }
         public Ownership Ownership{ get; set; }
         public string ImgUrl { get; set; } = null!;
+        public string Notes { get; set; } = null!;
         //Navs
-       
-       
+
+
         public int BreedId { get; set; }
         public PetBreed Breed{ get; set; } = null!; // Set No Action 
 
