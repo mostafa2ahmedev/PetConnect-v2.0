@@ -14,5 +14,6 @@ namespace PetConnect.DAL.Data.Identity
         public Gender Gender{ get; set; }
         public Address Address { get; set; } = null!;
         public string? ImgUrl{ get; set; } = null!;
+        public bool IsDeleted { get; set; }
     }
 }

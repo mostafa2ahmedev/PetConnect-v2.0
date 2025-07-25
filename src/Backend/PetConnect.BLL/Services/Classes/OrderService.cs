@@ -22,7 +22,8 @@ namespace PetConnect.BLL.Services.Classes
         }
         public async Task<int> AddOrder(AddedOrderDTO addedOrderDTO)
         {
-            
+            throw new NotImplementedException();
+
         }
 
         public int DeleteOrder(int id)
