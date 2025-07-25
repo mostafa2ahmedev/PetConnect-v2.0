@@ -25,7 +25,12 @@ namespace PetConnect.DAL.UnitofWork
         public IShelterImagesRepository ShelterImagesRepository { get; }
         public IShelterLocationsRepository ShelterLocationsRepository { get; }
         public IShelterPhonesRepository ShelterPhonesRepository { get; }
+        public IProductRepository ProductRepository { get; }
+        public IProductTypeRepository ProductTypeRepository { get; }
+        public IOrderRepository OrderRepository { get; }
         public ITimeSlotsRepository TimeSlotsRepository { get; }
+        public IAdoptionNotificationRepository AdoptionNotificationRepository { get; }
+        public INotificationRepository NotificationRepository { get; }
         public int SaveChanges();
     }
 

@@ -13,13 +13,21 @@ namespace PetConnect.BLL.Services.DTO.PetDto
     {
         [Required(ErrorMessage = "ID is required")]
         public int Id { get; set; }
-        public string? Name { get; set; } = null!;
+        [Required(ErrorMessage = "Name is required.")]
+        public string Name { get; set; } = null!;
 
         [Range(0, 50 , ErrorMessage = "Age should be between 0 and 50")]
         public int Age { get; set; }
-        public PetStatus? Status { get; set; }
-        public Ownership? Ownership { get; set; }
-        public IFormFile? ImgURL { get; set; } = null!;
+        [Required(ErrorMessage = "PetStatus is required.")]
+        public PetStatus Status { get; set; }
+        [Required(ErrorMessage = "Ownership is required.")]
+        public Ownership Ownership { get; set; }
+        [Required(ErrorMessage = "ImgURL is required.")]
+        public IFormFile ImgURL { get; set; } = null!;
+
+        [Required(ErrorMessage = "Breed Id is required.")]
         public int BreedId { get; set; }
+
+        public string Notes { get; set; } = null!;
     }
 }

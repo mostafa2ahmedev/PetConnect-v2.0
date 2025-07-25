@@ -16,7 +16,10 @@ namespace PetConnect.DAL.Data.Configurations
         {
             builder.Property(P => P.Name).HasColumnType("varchar(20)");
             builder.Property(P => P.ImgUrl).HasColumnType("varchar(100)");
-           
+            builder.Property(P => P.Notes).HasColumnType("varchar(200)");
+            builder.Property(AU => AU.IsDeleted).HasDefaultValue(false);
+
+
 
             builder.HasOne(P => P.Breed).WithMany(PB=>PB.Pets).HasForeignKey(P=>P.BreedId);
 

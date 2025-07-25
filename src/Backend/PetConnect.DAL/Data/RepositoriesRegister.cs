@@ -31,7 +31,12 @@ namespace PetConnect.DAL.Data
             services.AddScoped<IShelterPetAdpotionsRepository, ShelterPetAdpotionsRepository>();
             services.AddScoped<IShelterPhonesRepository, ShelterPhonesRepository>();
             services.AddScoped<IShelterRepository, ShelterRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
+            services.AddScoped<IOrderProductRepository, OrderProductRepository>();
             services.AddScoped<ITimeSlotsRepository, TimeSlotsRepository>();
+            services.AddScoped<IAdoptionNotificationRepository, AdoptionNotificationRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
