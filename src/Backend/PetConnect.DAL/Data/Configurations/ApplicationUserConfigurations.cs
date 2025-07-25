@@ -19,6 +19,9 @@ namespace PetConnect.DAL.Data.Configurations
             builder.Property(AU=>AU.FName).HasColumnType("varchar(20)");
             builder.Property(AU => AU.LName).HasColumnType("varchar(20)");
             builder.Property(AU => AU.ImgUrl).HasColumnType("varchar(100)");
+            builder.Property(AU => AU.IsDeleted).HasDefaultValue(false);
+
+
 
             builder.OwnsOne(u => u.Address, address =>
             {

@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-    namespace PetConnect.DAL.Data.Models
+namespace PetConnect.DAL.Data.Models
+{
+    public class PetBreed
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
@@ -14,3 +16,4 @@ using System.Threading.Tasks;
         public ICollection<ProductType> PetPreedProducts { get; set; } = new HashSet<ProductType>();
 
     }
+}

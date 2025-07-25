@@ -15,5 +15,8 @@ namespace PetConnect.DAL.Data.Models
         public PetSpecialty PetSpecialty { get; set; }
         public ICollection<TimeSlot> TimeSlots { get; set; } = new HashSet<TimeSlot>();
         public ICollection<Appointment> Appointments { get; set; } = new HashSet<Appointment>();
+        public ICollection<AdminDoctorMessage> AdminMessages { get; set; } = new HashSet<AdminDoctorMessage>();
+
     }
+
 }
