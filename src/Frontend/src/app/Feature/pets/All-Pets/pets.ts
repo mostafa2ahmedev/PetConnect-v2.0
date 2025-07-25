@@ -64,7 +64,7 @@ export class Pets implements OnInit {
   }
 
   sendAdoptionRequest(pet: Pet) {
-    const recCustomerId = this.authService.getUserId();
+    const recCustomerId = pet.customerId;
 
     if (!recCustomerId) {
       console.error('User ID is null. User might not be logged in.');
