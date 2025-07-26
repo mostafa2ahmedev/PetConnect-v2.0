@@ -17,7 +17,8 @@ namespace PetConnect.API.Controllers
         {
             productService = _ProductService;
         }
-        [HttpGet()]
+        #region GetAllProducts
+        [HttpGet]
         [ProducesResponseType(typeof(List<ProductDetailsDTO>), StatusCodes.Status200OK)]
         [EndpointSummary("Get All Products")]
         public IActionResult GetAllProducts()
@@ -25,6 +26,8 @@ namespace PetConnect.API.Controllers
             var products = productService.GetAllProducts();
             return Ok(products);
         }
+        #endregion
+        #region GetDetails
         [HttpGet("{id}")]
         [EndpointSummary("Get Product By Id")]
         public IActionResult GetProduct(int id) 
@@ -32,6 +35,8 @@ namespace PetConnect.API.Controllers
             var product = productService.GetProductDetails(id);
             return Ok(product);
         }
+        #endregion
+        #region AddProduct
         [HttpPost]
         [EndpointSummary("Add A New Product")]
         public async Task<ActionResult> AddProduct([FromForm] AddedProductDTO AddProduct)
@@ -52,6 +57,45 @@ namespace PetConnect.API.Controllers
             await productService.AddProduct(AddProduct);
             return Ok(new GeneralResponse(200, "Product added successfully"));
         }
+        #endregion
+        #region UpdateProduct
+        [HttpPut]
+        [EndpointSummary("Update Product")]
+        public async Task<ActionResult> Edit([FromForm] UpdatedProductDTO updatedProductDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState
+                    .Where(ms => ms.Value.Errors.Count > 0)
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                    );
 
+                return BadRequest(new GeneralResponse(400, errors));
+            }
+
+            var result = await productService.UpdateProduct(updatedProductDTO);
+            if (result == 0)
+                return NotFound(new GeneralResponse(404, $"No Product found with ID = {updatedProductDTO.Id}"));
+
+            return Ok(new GeneralResponse(200, "Product updated successfully"));
+
+        }
+        #endregion
+        #region DeleteProduct
+        [HttpDelete]
+        [EndpointSummary("Delete Product")]
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+                return BadRequest(new GeneralResponse(400, "Invalid Id"));
+            if (productService.DeleteProduct(id.Value) == 0)
+            {
+                return NotFound(new GeneralResponse(404, $"No Product found with ID = {id}"));
+            }
+            return Ok(new GeneralResponse(200, "Product deleted successfully"));
+        }
+        #endregion
     }
 }

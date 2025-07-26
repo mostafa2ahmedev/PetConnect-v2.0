@@ -107,11 +107,11 @@ namespace PetConnect.BLL.Services.Classes
                     product.ImgUrl = fileName;
                 }
             }
-            product.Name = updatedProductDTO.Name;
-            product.Description = updatedProductDTO.Description;
-            product.Price = updatedProductDTO.Price;
-            product.Quantity = updatedProductDTO.Quantity;
-            product.ProductTypeId = producttype.Id;
+            product.Name = updatedProductDTO.Name??product.Name;
+            product.Description = updatedProductDTO.Description??product.Description;
+            product.Price = updatedProductDTO.Price??product.Price;
+            product.Quantity = updatedProductDTO.Quantity??product.Quantity;
+            product.ProductTypeId = updatedProductDTO.ProductTypeId ?? product.ProductTypeId;
 
             unitOfWork.ProductRepository.Update(product);
             return unitOfWork.SaveChanges();

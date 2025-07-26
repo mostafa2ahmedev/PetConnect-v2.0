@@ -12,6 +12,6 @@ namespace PetConnect.BLL.Services.DTOs.ProductType
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public List<ProductDetailsDTO> Products { get; set; }
+        public List<ProductDataDTO> Products { get; set; }
     }
 }

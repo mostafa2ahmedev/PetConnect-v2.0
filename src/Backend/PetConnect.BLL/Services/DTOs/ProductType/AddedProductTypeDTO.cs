@@ -11,6 +11,8 @@ namespace PetConnect.BLL.Services.DTOs.ProductType
     {
         [Required(ErrorMessage = "Name is Required")]
         public string Name { get; set; }
+        [Required(ErrorMessage = "BreedId is Required")]
+        public int BreedId { get; set; }
         
     }
 }

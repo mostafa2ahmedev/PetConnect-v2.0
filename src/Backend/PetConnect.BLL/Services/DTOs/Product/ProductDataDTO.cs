@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetConnect.BLL.Services.DTOs.ProductType
+namespace PetConnect.BLL.Services.DTOs.Product
 {
-    public class ProductTypeDataDTO
+    public class ProductDataDTO
     {
         public string Name { get; set; } = null!;
-        public int? BreedId { get; set; }
-        public string? BreedName { get; set; }
+        public decimal Price { get; set; }
+        public int Quantity { get; set; }
     }
 }
