@@ -25,6 +25,7 @@ namespace PetConnect.DAL.Services
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<ICustomerAddedPetsService, CustomerAddedPetsService>();
+            services.AddSignalRCore();
 
             return services;
         }
