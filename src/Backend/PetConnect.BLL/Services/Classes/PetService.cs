@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using PetConnect.DAL.Data.Repositories.Interfaces;
 using PetConnect.DAL.Data.Enums;
 using PetConnect.BLL.Services.DTO.PetCategoryDto;
+using static Azure.Core.HttpHeader;
 
 namespace PetConnect.BLL.Services.Classes
 {
@@ -35,7 +36,7 @@ namespace PetConnect.BLL.Services.Classes
             var Image = await _attachmentService.UploadAsync(addedPet.ImgURL, "PetImages");
             var PetData = new Pet() {Name = addedPet.Name , ImgUrl = Image
                 , BreedId = addedPet.BreedId  , IsApproved= false , Ownership =addedPet.Ownership ,
-                Status = addedPet.Status,Age=addedPet.Age };
+                Status = addedPet.Status,Age=addedPet.Age,Notes = addedPet.Notes! };
    
             _unitOfWork.PetRepository.Add(PetData);
 
@@ -71,7 +72,13 @@ namespace PetConnect.BLL.Services.Classes
                     Age = Pet.Age,
                     CategoryName = Pet.Breed.Category.Name,
                     CustomerId = Pet.CustomerAddedPets.CustomerId,
-                    CustomerName = Pet.CustomerAddedPets.Customer.FName + " " + Pet.CustomerAddedPets.Customer.LName
+                    CustomerName = Pet.CustomerAddedPets.Customer.FName + " " + Pet.CustomerAddedPets.Customer.LName,
+                    CustomerCity = Pet.CustomerAddedPets.Customer.Address.City,
+                    CustomerCountry = Pet.CustomerAddedPets.Customer.Address.Country,
+                    CustomerStreet = Pet.CustomerAddedPets.Customer.Address.Street,
+                    Notes = Pet.Notes
+
+
 
 
                 });
@@ -89,7 +96,11 @@ namespace PetConnect.BLL.Services.Classes
                 Age = P.Age,
                 CategoryName = P!.Name,
                 CustomerId = P.CustomerAddedPets.CustomerId,
-                CustomerName = P.CustomerAddedPets.Customer.FName + " " + P.CustomerAddedPets.Customer.LName
+                CustomerName = P.CustomerAddedPets.Customer.FName + " " + P.CustomerAddedPets.Customer.LName,
+                CustomerCity = P.CustomerAddedPets.Customer.Address.City,
+                CustomerCountry = P.CustomerAddedPets.Customer.Address.Country,
+                CustomerStreet = P.CustomerAddedPets.Customer.Address.Street,
+                Notes = P.Notes
 
             }
             
@@ -110,8 +121,11 @@ namespace PetConnect.BLL.Services.Classes
                 Age = P.Age,
                 CategoryName = P!.Name,
                 CustomerId = P.CustomerAddedPets.CustomerId,
-                CustomerName = P.CustomerAddedPets.Customer.FName + " " + P.CustomerAddedPets.Customer.LName
-
+                CustomerName = P.CustomerAddedPets.Customer.FName + " " + P.CustomerAddedPets.Customer.LName,
+                CustomerCity = P.CustomerAddedPets.Customer.Address.City,
+                CustomerCountry = P.CustomerAddedPets.Customer.Address.Country,
+                CustomerStreet = P.CustomerAddedPets.Customer.Address.Street,
+                Notes = P.Notes
             }
 
             ).ToList();
@@ -130,8 +144,12 @@ namespace PetConnect.BLL.Services.Classes
             PetDetailsDto Pet = new PetDetailsDto() {Id = pet.Id, Name = pet.Name , IsApproved = pet.IsApproved ,BreadName =bread.Name  ,
             ImgUrl = $"/assets/PetImages/{pet.ImgUrl}", Ownership = pet.Ownership , Status = pet.Status , CategoryName = Category.Name,Age = pet.Age ,
                 CustomerId = pet.CustomerAddedPets.CustomerId,
-                CustomerName  = pet.CustomerAddedPets.Customer.FName+" "+pet.CustomerAddedPets.Customer.LName
-            
+                CustomerName  = pet.CustomerAddedPets.Customer.FName+" "+pet.CustomerAddedPets.Customer.LName,
+                CustomerCity = pet.CustomerAddedPets.Customer.Address.City,
+                CustomerCountry = pet.CustomerAddedPets.Customer.Address.Country,
+                CustomerStreet = pet.CustomerAddedPets.Customer.Address.Street,
+                Notes = pet.Notes
+
             };
             return Pet;
         }
@@ -157,7 +175,11 @@ namespace PetConnect.BLL.Services.Classes
                     Age = Pet.Age,
                     CategoryName = petCategory!.Name,
                     CustomerId = Pet.CustomerAddedPets.CustomerId,
-                     CustomerName = Pet.CustomerAddedPets.Customer.FName + " " + Pet.CustomerAddedPets.Customer.LName
+                    CustomerName = Pet.CustomerAddedPets.Customer.FName + " " + Pet.CustomerAddedPets.Customer.LName,
+                    CustomerCity = Pet.CustomerAddedPets.Customer.Address.City,
+                    CustomerCountry = Pet.CustomerAddedPets.Customer.Address.Country,
+                    CustomerStreet = Pet.CustomerAddedPets.Customer.Address.Street,
+                    Notes = Pet.Notes,
                 });
             }
             return petDatas;
@@ -182,12 +204,13 @@ namespace PetConnect.BLL.Services.Classes
             }
 
             
-            pet.Name = updatedPet.Name??pet.Name;
-            pet.Ownership = updatedPet.Ownership??pet.Ownership;
-            pet.Status = updatedPet.Status??pet.Status;
-            pet.BreedId = updatedPet.BreedId ==0 ? pet.BreedId: updatedPet.BreedId;
-            pet.Age = updatedPet.Age==0? pet.Age:updatedPet.Age;
+            pet.Name = updatedPet.Name;
+            pet.Ownership = updatedPet.Ownership;
+            pet.Status = updatedPet.Status;
+            pet.BreedId = updatedPet.BreedId;
+            pet.Age = updatedPet.Age;
             pet.IsApproved = false;
+            pet.Notes = updatedPet.Notes;
 
           
             _unitOfWork.PetRepository.Update(pet);
@@ -205,20 +228,7 @@ namespace PetConnect.BLL.Services.Classes
             }
             return 0;
         }
-        //public PetDataDto? GetPetDataWithCustomer(int id)
-        //{
-        //    var Pet = _unitOfWork.PetRepository.GetPetDataWithCustomer(id);
-        //    PetDataDto petData = new PetDataDto()
-        //    {
-        //        Name = Pet.Name,
-        //        ImgUrl = Pet.ImgUrl,
-        //        Status = Pet.Status,
-        //        Id = Pet.Id,
-        //        CustomerId = Pet.CustomerAddedPets.CustomerId
-
-        //    };
-        //    return petData;
-        //}
+       
 
     }
 }

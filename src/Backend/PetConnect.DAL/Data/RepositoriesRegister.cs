@@ -36,6 +36,7 @@ namespace PetConnect.DAL.Data
             services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
             services.AddScoped<IOrderProductRepository, OrderProductRepository>();
             services.AddScoped<ITimeSlotsRepository, TimeSlotsRepository>();
+            services.AddScoped<IAdoptionNotificationRepository, AdoptionNotificationRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;

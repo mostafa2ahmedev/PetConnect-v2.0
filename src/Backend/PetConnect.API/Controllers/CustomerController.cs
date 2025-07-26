@@ -29,7 +29,7 @@ namespace PetConnect.API.Controllers
         [HttpGet()]
         [ProducesResponseType(typeof(List<CustomerDataDto>), StatusCodes.Status200OK)]
         [EndpointSummary("Get All Customers")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult GetAll()
         {
             var Customers = _customerService.GetAllCustomers();
@@ -39,7 +39,7 @@ namespace PetConnect.API.Controllers
 
 
         [HttpGet("Profile")]
-        [ProducesResponseType(typeof(List<CustomerDataDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<CustomerDetailsDTO>), StatusCodes.Status200OK)]
         [EndpointSummary("Get Customer Profile")]
         [Authorize(Roles = "Customer")]
 
@@ -80,7 +80,7 @@ namespace PetConnect.API.Controllers
 
         [HttpDelete("DeleteProfile/{CustomerId}")]
         [EndpointSummary("Delete Customer Profile")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
 
         public ActionResult DeleteProfile(string CustomerId) {
 
