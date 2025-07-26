@@ -27,6 +27,6 @@ namespace PetConnect.BLL.Services.DTO.PetDto
         public IFormFile ImgURL { get; set; } = null!;
         [Required(ErrorMessage = "Breed Id can't be null")]
         public int BreedId { get; set; }
-
+        public string? Notes { get; set; }
     }
 }

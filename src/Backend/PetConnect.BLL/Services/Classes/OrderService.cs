@@ -20,7 +20,8 @@ namespace PetConnect.BLL.Services.Classes
             unitOfWork = _unitOfWork;
             attachmentService = _attachmentService;
         }
-        public async Task<int> AddOrder(AddedOrderDTO addedOrderDTO)
+
+        public Task<int> AddOrder(AddedOrderDTO addedOrderDTO)
         {
             throw new NotImplementedException();
 

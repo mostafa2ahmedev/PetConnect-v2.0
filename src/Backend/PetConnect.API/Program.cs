@@ -59,7 +59,8 @@ namespace PetConnect.API
                         builder
                             .WithOrigins("http://localhost:4200")
                             .AllowAnyMethod()
-                            .AllowAnyHeader();
+                            .AllowAnyHeader()
+                            .AllowCredentials();
                     });
             });
 
@@ -106,6 +107,18 @@ namespace PetConnect.API
                             message = "Forbidden: You are not allowed to access this resource"
                         });
                         return context.Response.WriteAsync(result);
+                    },
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chat"))
+                        {
+                            context.Token = accessToken;
+                        }
+
+                        return Task.CompletedTask;
                     }
                 };
 
@@ -119,6 +132,8 @@ namespace PetConnect.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.MapHub<ChatHub>("/Chat");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

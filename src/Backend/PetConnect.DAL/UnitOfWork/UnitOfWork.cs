@@ -53,6 +53,11 @@ namespace PetConnect.DAL.UnitofWork
 
         public ITimeSlotsRepository TimeSlotsRepository =>  new TimeSlotsRepository(context);
 
+        public IAdoptionNotificationRepository AdoptionNotificationRepository => new AdoptionNotificationRepository(context);
+        public INotificationRepository NotificationRepository => new NotificationRepository(context);
+        public IUserConnectionRepository UserConnectionRepository => new UserConnectionRepository(context);
+        public IUserMessagesRepository UserMessagesRepository => new UserMessagesRepository(context);
+
         public void Dispose()
         {
             context.Dispose();

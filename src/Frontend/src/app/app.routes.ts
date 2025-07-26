@@ -21,6 +21,7 @@ import { DoctorEditProfile } from './Feature/doctor-edit-profile/doctor-edit-pro
 import { NotFoundDoctor } from './Feature/not-found-doctor/not-found-doctor';
 import { authGuard } from './core/guards/auth-guard';
 import { CustomerProfile } from './Feature/customer-profile/customer-profile';
+import { ChatComponent } from './Feature/chat/chat/chat';
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'doctors', component: Doctors },
@@ -56,4 +57,5 @@ export const routes: Routes = [
   { path: 'register', component: Register, children: [] },
 
   { path: 'notfound/doctor', component: NotFoundDoctor },
+  { path: 'chat', component: ChatComponent },
 ];
