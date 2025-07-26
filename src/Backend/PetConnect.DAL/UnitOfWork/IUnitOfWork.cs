@@ -27,6 +27,12 @@ namespace PetConnect.DAL.UnitofWork
         public IShelterPhonesRepository ShelterPhonesRepository { get; }
         public ITimeSlotsRepository TimeSlotsRepository { get; }
         public IAppointmentsRepository AppointmentsRepository { get; }
+
+        public IProductRepository ProductRepository { get; }
+        public IProductTypeRepository ProductTypeRepository { get; }
+        public IOrderRepository OrderRepository { get; }
+
+        public IOrderProductRepository orderProductRepository { get; }
         public int SaveChanges();
         Task<int> SaveChangesAsync();
 

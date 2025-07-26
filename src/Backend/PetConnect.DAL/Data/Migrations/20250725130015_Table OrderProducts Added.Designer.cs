@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetConnect.DAL.Data;
 
@@ -11,9 +12,11 @@ using PetConnect.DAL.Data;
 namespace PetConnect.DAL.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250725130015_Table OrderProducts Added")]
+    partial class TableOrderProductsAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -292,7 +295,7 @@ namespace PetConnect.DAL.Data.Migrations
                     b.Property<string>("CustomerId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("AdditionDate")
+                    b.Property<DateTime>("AdoptionDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
@@ -680,6 +683,7 @@ namespace PetConnect.DAL.Data.Migrations
                     b.HasBaseType("PetConnect.DAL.Data.Identity.ApplicationUser");
 
                     b.Property<string>("CertificateUrl")
+                        .IsRequired()
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("PetSpecialty")
