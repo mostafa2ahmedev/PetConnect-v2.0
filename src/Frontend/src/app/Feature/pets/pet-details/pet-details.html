@@ -63,9 +63,17 @@
                   getOwnershipLabel(pet.ownership)
                 }}</span>
               </p>
-              <p class="card-text mb-4">
+              <p class="card-text mb-2">
                 <strong>Owner: </strong>
                 <span class="text-muted"> {{ pet.customerName }}</span>
+              </p>
+              <p class="card-text mb-2">
+                <strong>From: </strong>
+                <span class="text-muted"> {{ pet.customerCity }}</span>
+              </p>
+              <p class="card-text mb-4">
+                <strong>Notes: </strong>
+                <span class="text-muted"> {{ pet.notes }}</span>
               </p>
               <div class="mt-3 d-flex gap-2">
                 <a

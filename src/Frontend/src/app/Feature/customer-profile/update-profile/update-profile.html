@@ -202,6 +202,39 @@
             />
           </div>
         </div>
+        <!--Phone number-->
+        <div class="col-md-6 mb-3">
+          <label for="phoneNumber" class="form-label">Phone Number</label>
+          <input
+            type="text"
+            id="phoneNumber"
+            class="form-control"
+            name="phoneNumber"
+            [(ngModel)]="model.phoneNumber"
+            required
+            minlength="10"
+            maxlength="15"
+            pattern="^[0-9]*$"
+            #phoneRef="ngModel"
+          />
+          <span
+            *ngIf="phoneRef.invalid && phoneRef.touched"
+            class="text-danger small"
+          >
+            <span *ngIf="phoneRef.errors?.['required']">
+              Phone number is required.
+            </span>
+            <span *ngIf="phoneRef.errors?.['pattern']">
+              Only numbers are allowed.
+            </span>
+            <span *ngIf="phoneRef.errors?.['minlength']">
+              Minimum 10 digits.
+            </span>
+            <span *ngIf="phoneRef.errors?.['maxlength']">
+              Maximum 15 digits.
+            </span>
+          </span>
+        </div>
       </div>
 
       <!-- Submit Button -->

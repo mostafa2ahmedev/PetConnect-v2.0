@@ -108,7 +108,7 @@ export class CustomerProfile {
 
     const body = {
       petId: pet.petId,
-      recCustomerId: this.authService.getUserId(),
+      recCustomerId: request.recCustomerId,
       adoptionDate: this.adoptionService.padDate(
         request.adoptionDate.replace('T', ' ').replace('Z', '')
       ),

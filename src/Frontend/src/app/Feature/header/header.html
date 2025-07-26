@@ -74,7 +74,9 @@
 
       <!-- Auth Buttons (Mobile) -->
 
-      <div class="btns d-none d-xl-block ms-3">
+      <div
+        class="btns d-none d-xl-flex ms-3 align-items-center justify-content-center"
+      >
         <ng-container *ngIf="!isAuthenticated()">
           <a class="btn btn-outline-primary me-2" routerLink="/login">Login</a>
           <a class="btn btn-primary" routerLink="/register">Register</a>
@@ -88,6 +90,106 @@
             >Profile</a
           >
         </ng-container>
+
+        <!-- Notifications Icon -->
+        <div
+          class="position-relative"
+          *ngIf="isAuthenticated() && authService.isCustomer()"
+        >
+          <button
+            class="btn btn-link position-relative"
+            style="text-decoration: none"
+            class="position-relative border-0"
+            (click)="isOpen = !isOpen"
+          >
+            <i
+              class="fs-4"
+              [ngClass]="
+                isOpen
+                  ? 'bi bi-bell-fill text-primary'
+                  : 'bi bi-bell  text-dark'
+              "
+            ></i>
+            <span
+              *ngIf="unreadCount > 0"
+              class="position-absolute translate-middle badge rounded-pill bg-danger"
+              style="top: 16%; font-size: 0.65rem; right: -17px"
+            >
+              {{ unreadCount }}
+            </span>
+          </button>
+
+          <!-- Floating Dropdown Card -->
+          <div
+            [@slideToggle]="slideState"
+            class="card shadow position-absolute mt-4"
+            style="width: 300px; z-index: 1000; right: -15px"
+          >
+            <!-- Card Header -->
+            <div class="card-header py-3 text-center">
+              <h6 class="fw-semibold mb-0">Notifications</h6>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body p-0">
+              <!-- Notifications List -->
+              <style>
+                .notification-item:hover {
+                  background-color: #5d57f4;
+                  color: white;
+                }
+                .notification-item,
+                .notification-item * {
+                  transition: all 0.2s;
+                }
+                .notification-item:hover small,
+                .notification-item:hover i {
+                  color: white !important;
+                }
+              </style>
+
+              <div
+                *ngFor="let notif of notifications"
+                class="px-3 py-3 border-bottom d-flex align-items-start gap-2 notification-item"
+                style="cursor: pointer"
+                routerLink="/profile/{{ authService.getUserId() }}"
+                (click)="isOpen = !isOpen"
+              >
+                <!-- Icon or user image -->
+                <div>
+                  <!-- <img
+                  src="assets/img/default-user.png"
+                  class="rounded-circle"
+                  width="36"
+                  height="36"
+                  alt="User"
+                /> -->
+                  <i class="bi bi-bell-fill text-black-50 fs-5"></i>
+
+                  <!-- Or icon:
+    <i class="bi bi-bell-fill text-primary fs-5"></i>
+    -->
+                </div>
+
+                <!-- Message content -->
+                <div class="flex-grow-1">
+                  <small class="lh-sm d-block">{{ notif.message }}</small>
+                  <small class="text-muted" style="font-size: 0.8em">{{
+                    notif.date | date : "short"
+                  }}</small>
+                </div>
+              </div>
+
+              <!-- Empty State -->
+              <div
+                *ngIf="notifications.length === 0"
+                class="text-center text-muted py-3"
+              >
+                No notifications
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Mobile toggle -->

@@ -25,7 +25,10 @@ export class CustomerService {
       .get<any>(`${this.baseUrl}/Profile`)
       .pipe(map((response) => response.data as CustomerPofileDetails));
   }
-  updateCustomerProfile(data: UpdateCustomerProfileRequest): Observable<any> {
+  updateCustomerProfile(
+    data: CustomerPofileDetails,
+    selectedFile: File | null
+  ): Observable<any> {
     const formData = new FormData();
 
     formData.append('FName', data.fName);
@@ -34,9 +37,12 @@ export class CustomerService {
     formData.append('Street', data.street);
     formData.append('City', data.city);
     formData.append('Country', data.country);
+    formData.append('userName', data.userName);
+    formData.append('email', data.email);
+    formData.append('phoneNumber', data.phoneNumber.toString());
 
-    if (data.imageFile) {
-      formData.append('ImageFile', data.imageFile);
+    if (selectedFile) {
+      formData.append('ImageFile', selectedFile);
     }
 
     return this.http.put(`${this.baseUrl}/UpdateProfile`, formData);
