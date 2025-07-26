@@ -85,7 +85,7 @@ namespace PetConnect.BLL.Services.Classes
             Order order = unitOfWork.OrderRepository.GetByID(id);
             if (order is null)
                 return null;
-            var orderproduct = unitOfWork.orderProductRepository.GetProductsByOrderId(id);
+            var orderproduct = unitOfWork.orderProductRepository.GetProductsByOrderId(order.Id);
             var products = orderproduct.Select(d => new OrderProductDTO {
 
                 ProductName = d.product.Name,

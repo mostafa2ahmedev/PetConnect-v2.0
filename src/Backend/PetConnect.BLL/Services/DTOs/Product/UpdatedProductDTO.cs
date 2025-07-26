@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace PetConnect.BLL.Services.DTOs.Product
         public int Id { get; set; }
         public string Name { get; set; } = null!;
         public string Description { get; set; } = null!;
-        public string ImgUrl { get; set; } = null!;
+        public IFormFile ImgUrl { get; set; } = null!;
         public decimal Price { get; set; }
         public int Quantity { get; set; }
         public int ProductTypeId { get; set; }

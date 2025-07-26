@@ -24,10 +24,13 @@ namespace PetConnect.BLL.Services.Classes
         }
         public async Task<int> AddProduct(AddedProductDTO addedProductDTO)
         {
+            var image = await attachmentService.UploadAsync(addedProductDTO.ImgUrl, "ProductImages");
             var ProductData = new Product
             {
+                
                 Name = addedProductDTO.Name,
                 Description = addedProductDTO.Description,
+                ImgUrl = image,
                 Price = addedProductDTO.Price,
                 Quantity = addedProductDTO.Quantity,
                 ProductTypeId = addedProductDTO.ProductTypeId
@@ -59,6 +62,7 @@ namespace PetConnect.BLL.Services.Classes
                 {
                     Name = product.Name,
                     Description = product.Description,
+                    ImgUrl = $"/assets/ProductImages/{product.ImgUrl}",
                     Price = product.Price,
                     Quantity = product.Quantity,
                     ProductTypeName = producttype.Name
@@ -70,14 +74,16 @@ namespace PetConnect.BLL.Services.Classes
 
         public ProductDetailsDTO GetProductDetails(int id)
         {
-            var producttype = unitOfWork.ProductTypeRepository.GetByID(id);
+            
             Product productdata = unitOfWork.ProductRepository.GetByID(id);
             if (productdata is null)
                 return null;
+            var producttype = unitOfWork.ProductTypeRepository.GetByID(productdata.ProductTypeId);
             ProductDetailsDTO productDetailsDTO = new ProductDetailsDTO()
             {
                 Name = productdata.Name,
                 Description = productdata.Description,
+                ImgUrl = $"/assets/ProductImages/{productdata.ImgUrl}",
                 Price = productdata.Price,
                 Quantity = productdata.Quantity,
                 ProductTypeName = producttype.Name
@@ -88,10 +94,19 @@ namespace PetConnect.BLL.Services.Classes
 
         public async Task<int> UpdateProduct(UpdatedProductDTO updatedProductDTO)
         {
-            var producttype = unitOfWork.ProductTypeRepository.GetByID(updatedProductDTO.Id);
+            
             var product = unitOfWork.ProductRepository.GetByID(updatedProductDTO.Id);
             if (product == null)
                 return 0;
+            var producttype = unitOfWork.ProductTypeRepository.GetByID(product.Id);
+            if (updatedProductDTO.ImgUrl != null)
+            {
+                var fileName = await attachmentService.UploadAsync(updatedProductDTO.ImgUrl, "ProductImages");
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    product.ImgUrl = fileName;
+                }
+            }
             product.Name = updatedProductDTO.Name;
             product.Description = updatedProductDTO.Description;
             product.Price = updatedProductDTO.Price;
