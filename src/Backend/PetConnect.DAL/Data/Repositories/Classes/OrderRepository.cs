@@ -25,5 +25,19 @@ namespace PetConnect.DAL.Data.Repositories.Classes
                     .ThenInclude(op => op.product)
                 .ToList();
         }
+        public Order? GetOrderWithCustomerById(int id)
+        {
+            return context.Orders
+                .Include(o => o.customer)
+                .FirstOrDefault(o => o.Id == id);
+        }
+        public Order? GetOrderWithProducts(int id)
+        {
+            return context.Orders
+                .Include(o => o.OrderProducts)
+                .FirstOrDefault(o => o.Id == id);
+        }
+
+
     }
 }

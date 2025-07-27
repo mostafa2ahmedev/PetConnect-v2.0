@@ -27,7 +27,14 @@ namespace PetConnect.BLL.Services.Classes
 
         public async Task<int> AddProductType(AddedProductTypeDTO addedProductTypeDTO)
         {
-            ProductType productType = new ProductType() {Name = addedProductTypeDTO.Name };
+            var BreedId = _unitOfWork.PetBreedRepository.GetByID(addedProductTypeDTO.BreedId);
+            if (BreedId is null)
+                return 0;
+            var productType = new ProductType()
+            {
+                Name = addedProductTypeDTO.Name,
+                PetPreedId = addedProductTypeDTO.BreedId
+            };
             _unitOfWork.ProductTypeRepository.Add(productType);
             return _unitOfWork.SaveChanges();
             
@@ -48,9 +55,14 @@ namespace PetConnect.BLL.Services.Classes
             var productTypes = _unitOfWork.ProductTypeRepository.GetAll();
             foreach (var productType in productTypes) 
             {
+                var breed = _unitOfWork.PetBreedRepository.GetByID(productType.PetPreedId);
                 productTypeDataDTOs.Add(new ProductTypeDataDTO()
                 {
-                    Name = productType.Name
+                    Name = productType.Name,
+                    BreedId = productType.PetPreedId,
+                    BreedName = breed?.Name?? "Unknown"
+                    
+
                 });
             }
             return productTypeDataDTOs;
@@ -58,11 +70,11 @@ namespace PetConnect.BLL.Services.Classes
 
         public ProductTypeDetailsDTO GetProductTypeDetails(int id)
         {
-            var productType = _unitOfWork.ProductTypeRepository.GetByID(id);
+            var productType = _unitOfWork.ProductTypeRepository.GetByIDWithProducts(id);
             if (productType is null)
                 return null;
 
-            var products = productType.Products.Select(p => new ProductDetailsDTO
+            var products = productType.Products.Select(p => new ProductDataDTO
             {
                 Name = p.Name,
                 Price = p.Price,
@@ -84,7 +96,16 @@ namespace PetConnect.BLL.Services.Classes
             var producttype = _unitOfWork.ProductTypeRepository.GetByID(updatedProductTypeDTO.Id);
             if (producttype is null)
                 return 0;
-            producttype.Name = updatedProductTypeDTO.Name;
+            if (updatedProductTypeDTO.BreedId.HasValue)
+            {
+                var breed = _unitOfWork.PetBreedRepository.GetByID(updatedProductTypeDTO.BreedId.Value);
+                if (breed is null)
+                    return -1;
+
+                producttype.PetPreedId = updatedProductTypeDTO.BreedId.Value;
+            }
+            producttype.Name = updatedProductTypeDTO.Name??producttype.Name;
+            producttype.PetPreedId = updatedProductTypeDTO.BreedId??producttype.PetPreedId;
             _unitOfWork.ProductTypeRepository.Update(producttype);
             return _unitOfWork.SaveChanges();
         }

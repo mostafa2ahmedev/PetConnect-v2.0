@@ -14,5 +14,7 @@ namespace PetConnect.DAL.Data.Models
         public PetCategory Category { get; set; } = null!; // Set No Action
         public ICollection<Pet> Pets { get; set; } = new HashSet<Pet>();
         public ICollection<ProductType> PetPreedProducts { get; set; } = new HashSet<ProductType>();
+
     }
 }
+

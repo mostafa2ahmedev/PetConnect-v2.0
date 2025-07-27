@@ -24,27 +24,22 @@ namespace PetConnect.BLL.Services.Classes
         }
         public async Task<int> AddOrder(AddedOrderDTO addedOrderDTO)
         {
-            var order = new Order()
+            var order = new Order
             {
                 OrderDate = addedOrderDTO.OrderDate,
                 CustomerId = addedOrderDTO.CustomerId,
-                TotalPrice = addedOrderDTO.TotalPrice
+                TotalPrice = addedOrderDTO.TotalPrice,
+                OrderProducts = addedOrderDTO.Products.Select(product => new OrderProduct
+                {
+                    ProductId = product.ProductId, 
+                    Quantity = product.Quantity,
+                    UnitPrice = product.UnitPrice
+                }).ToList()
             };
 
             unitOfWork.OrderRepository.Add(order);
-            unitOfWork.SaveChanges();
 
-            foreach (var product in addedOrderDTO.Products)
-            {
-                var orderProduct = new OrderProduct()
-                {
-                    OrderId = order.Id,
-                    ProductId = product.ProductId,
-                    UnitPrice = product.UnitPrice,
-                    Quantity = product.Quantity
-                };
-                unitOfWork.orderProductRepository.Add(orderProduct);
-            }
+            
             return unitOfWork.SaveChanges();
         }
 
@@ -81,11 +76,11 @@ namespace PetConnect.BLL.Services.Classes
 
         public OrderDetailsDTO GetOrderDetails(int id)
         {
-           
-            Order order = unitOfWork.OrderRepository.GetByID(id);
+
+            Order order = unitOfWork.OrderRepository.GetOrderWithCustomerById(id);
             if (order is null)
                 return null;
-            var orderproduct = unitOfWork.orderProductRepository.GetProductsByOrderId(id);
+            var orderproduct = unitOfWork.orderProductRepository.GetProductsByOrderId(order.Id);
             var products = orderproduct.Select(d => new OrderProductDTO {
 
                 ProductName = d.product.Name,
@@ -101,32 +96,38 @@ namespace PetConnect.BLL.Services.Classes
             return orderDetails;
         }
 
-        public async Task<int> UpdateOrder(UpdatedOrderDTO updatedOrderDTO)
+        public async Task<int> UpdateOrder(UpdatedOrderDTO updatedOrderDto)
         {
-            var order = unitOfWork.OrderRepository.GetByID(updatedOrderDTO.ID);
-            if (order is null)
-                return 0;
-            order.Id = updatedOrderDTO.ID;
-            order.OrderDate = updatedOrderDTO.OrderDate;
-            order.CustomerId = updatedOrderDTO.CustomerId;
-            unitOfWork.OrderRepository.Update(order);
-            var orderProducts = unitOfWork.orderProductRepository.GetProductsByOrderId(order.Id).ToList();
-            foreach (var oldproduct in orderProducts)
+            var order = unitOfWork.OrderRepository.GetOrderWithProducts(updatedOrderDto.ID);
+
+            if (order == null)
+                return 0; // Not Found
+
+            order.OrderDate = updatedOrderDto.OrderDate;
+            order.CustomerId = updatedOrderDto.CustomerId;
+
+            order.OrderProducts.Clear();
+
+            foreach (var productDto in updatedOrderDto.Products)
             {
-                var updatedProduct = updatedOrderDTO.Products
-        .FirstOrDefault(p => p.ProductId == oldproduct.ProductId);
-                if (updatedProduct is null)
-                    return 0;
-                else
+                order.OrderProducts.Add(new OrderProduct
                 {
-                    oldproduct.UnitPrice = updatedProduct.Price;
-                    oldproduct.Quantity = updatedProduct.Quantity;
-                    unitOfWork.orderProductRepository.Update(oldproduct);
-                }   
+                    OrderId = updatedOrderDto.ID,
+                    ProductId = productDto.ProductId,
+                    Quantity = productDto.Quantity,
+                    UnitPrice = productDto.Price
+                });
             }
-            return unitOfWork.SaveChanges();
-        
+
+            // تحديث السعر الكلي
+            order.TotalPrice = updatedOrderDto.TotalPrice;
+
+            unitOfWork.OrderRepository.Update(order);
+            await unitOfWork.SaveChangesAsync();
+
+            return 1; // Success
         }
-        
+
+
     }
 }

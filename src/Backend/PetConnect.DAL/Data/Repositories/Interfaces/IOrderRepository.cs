@@ -11,5 +11,8 @@ namespace PetConnect.DAL.Data.Repositories.Interfaces
     public interface IOrderRepository:IGenericRepository<Order>
     {
         public IEnumerable<Order> GetAllWithOrderProduct();
+        Order? GetOrderWithCustomerById(int id);
+        Order? GetOrderWithProducts(int id);
+
     }
 }

@@ -64,7 +64,8 @@
         <a class="btn btn-outline-primary me-2" routerLink="/login">Login</a>
         <a class="btn btn-primary" routerLink="/register">Register</a>
       </div>
-      <div class="btns d-none d-xl-block ms-3">
+
+      <div class="btns d-block d-xl-none ms-3">
         <ng-container *ngIf="!isAuthenticated()">
           <a class="btn btn-outline-primary me-2" routerLink="/login">Login</a>
           <a class="btn btn-primary" routerLink="/register">Register</a>
@@ -85,7 +86,6 @@
       </button>
     </nav>
   </div>
-
   <!-- Mobile Menu -->
   <div id="mobileMenu" class="collapse bg-white border-top">
     <ul class="nav flex-column p-3">

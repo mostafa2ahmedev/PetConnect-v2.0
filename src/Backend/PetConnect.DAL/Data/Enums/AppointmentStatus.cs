@@ -10,6 +10,7 @@ namespace PetConnect.DAL.Data.Enums
     {
         Confirmed,   // Default: auto-approved and upcoming
         Completed,   // Marked when appointment has successfully happened
-        Cancelled    // Manually cancelled by customer or system
+        Cancelled,    // Manually cancelled by customer or system
+        Pending         //customer waiting for doctors confirmation
     }
 }

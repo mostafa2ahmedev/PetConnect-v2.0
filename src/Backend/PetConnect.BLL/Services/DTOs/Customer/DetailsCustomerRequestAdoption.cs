@@ -9,12 +9,13 @@ namespace PetConnect.BLL.Services.DTOs.Customer
 {
     public class DetailsCustomerRequestAdoption
     {
-        
+        public int PetId { get; set; }
         public DateTime AdoptionDate { get; set; }
-        public AdoptionStatus Status { get; set; }
-
+        public string AdoptionStatus { get; set; } = null!;
+        public string RecCustomerId { get; set; } = null!;
         public string PetName { get; set; } = null!;
         public string PetBreadName { get; set; } = null!;
         public string PetCategoryName { get; set; } = null!;
+
     }
 }

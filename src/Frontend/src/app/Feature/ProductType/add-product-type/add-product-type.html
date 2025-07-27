@@ -1,0 +1,17 @@
+<h2>Add Product Type</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <label for="name">Name:</label>
+  <input id="name" formControlName="name" />
+  <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched">Name is required.</div>
+
+  <br />
+
+  <label for="breedId">Breed ID:</label>
+  <input id="breedId" type="number" formControlName="breedId" />
+  <div *ngIf="form.get('breedId')?.invalid && form.get('breedId')?.touched">Breed ID is required.</div>
+
+  <br />
+
+  <button type="submit" [disabled]="form.invalid">Add</button>
+</form>

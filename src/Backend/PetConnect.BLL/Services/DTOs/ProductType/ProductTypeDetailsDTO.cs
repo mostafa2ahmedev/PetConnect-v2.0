@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PetConnect.BLL.Services.DTOs.Product;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,6 @@ namespace PetConnect.BLL.Services.DTOs.ProductType
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public List<ProductDTO> Products { get; set; }
+        public List<ProductDataDTO> Products { get; set; }
     }
 }

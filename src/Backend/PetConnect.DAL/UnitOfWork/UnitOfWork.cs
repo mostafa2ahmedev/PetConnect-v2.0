@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using PetConnect.DAL.Data;
 using PetConnect.DAL.Data.Repositories.Classes;
 using PetConnect.DAL.Data.Repositories.Interfaces;
@@ -23,7 +24,7 @@ namespace PetConnect.DAL.UnitofWork
 
         public ICustomerAddedPetsRepository CustomerAddedPetsRepository => new CustomerAddedPetsRepository(context);
 
-        public ICustomerPetAdoptionsRepository CustomerPetAdpotionsRepository => new CustomerPetAdpotionsRepository(context);
+        public ICustomerPetAdoptionsRepository CustomerPetAdpotionsRepository => new CustomerPetAdoptionsRepository(context);
 
         public IDoctorRepository DoctorRepository => new DoctorRepository(context);
 
@@ -47,10 +48,16 @@ namespace PetConnect.DAL.UnitofWork
 
         public IShelterPhonesRepository ShelterPhonesRepository => new ShelterPhonesRepository(context);
 
+        public ITimeSlotsRepository TimeSlotsRepository =>  new TimeSlotsRepository(context);
+        public IAppointmentsRepository AppointmentsRepository => new AppointmentsRepository(context);
+
+
+
         public IProductRepository ProductRepository => new ProductRepository(context);
         public IProductTypeRepository ProductTypeRepository => new ProductTypeRepository(context);
         public IOrderProductRepository orderProductRepository => new OrderProductRepository(context);
         public IOrderRepository OrderRepository => new OrderRepository(context);
+
         public void Dispose()
         {
             context.Dispose();
@@ -59,5 +66,10 @@ namespace PetConnect.DAL.UnitofWork
         {
             return context.SaveChanges();
         }
+        public async Task<int> SaveChangesAsync()
+        {
+            return await context.SaveChangesAsync();
+        }
+
     }
 }
