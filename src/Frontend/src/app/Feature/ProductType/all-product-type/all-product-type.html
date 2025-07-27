@@ -1,0 +1,20 @@
+<div *ngIf="loading">Loading...</div>
+<div *ngIf="error">{{ error }}</div>
+
+<table *ngIf="!loading && !error" border="1" cellpadding="10">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>BreedId</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let pt of productTypes">
+      <td>{{ pt.id }}</td>
+      <td>{{ pt.name }}</td>
+      <td>{{ pt.breedId }}</td>
+    </tr>
+  </tbody>
+</table>
+
