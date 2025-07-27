@@ -17,20 +17,16 @@
     <nav class="navmenu d-flex align-items-center">
       <ul class="nav list-unstyled mb-0 d-none d-xl-flex">
         <li class="nav-item">
-          <a class="nav-link text-dark fw-semibold pointer" routerLink="/"
-            >Home</a
-          >
+          <a class="nav-link text-dark pointer" routerLink="/">Home</a>
         </li>
         <li class="nav-item">
-          <a
-            class="nav-link text-dark fw-semibold pointer"
-            routerLink="/doctors"
+          <a class="nav-link text-dark pointer" routerLink="/doctors"
             >Doctors</a
           >
         </li>
         <li class="nav-item" *ngIf="!isAuthenticated()">
           <a
-            class="nav-link text-dark fw-semibold pointer"
+            class="nav-link text-dark pointer"
             *ngIf="!isAuthenticated()"
             routerLink="/pets"
             >Pets</a
@@ -39,7 +35,7 @@
 
         <li class="nav-item dropdown" *ngIf="isAuthenticated()">
           <a
-            class="nav-link dropdown-toggle text-dark fw-semibold pointer"
+            class="nav-link dropdown-toggle text-dark pointer"
             data-bs-toggle="dropdown"
             href="#"
             >Pets</a
@@ -51,22 +47,20 @@
             <li>
               <a class="dropdown-item pointer" routerLink="/add-pet">Add Pet</a>
             </li>
-            <li>
+            <!-- <li>
               <a class="dropdown-item pointer" routerLink="/categories"
                 >Manage Categories</a
               >
-            </li>
-            <li>
+            </li> -->
+            <!-- <li>
               <a class="dropdown-item pointer" routerLink="/breeds"
                 >Manage Breeds</a
               >
-            </li>
+            </li> -->
           </ul>
         </li>
         <li class="nav-item">
-          <a
-            class="nav-link text-dark fw-semibold pointer"
-            routerLink="/contact"
+          <a class="nav-link text-dark pointer" routerLink="/contact"
             >Contact</a
           >
         </li>
@@ -82,17 +76,23 @@
           <a class="btn btn-primary" routerLink="/register">Register</a>
         </ng-container>
         <ng-container *ngIf="isAuthenticated()">
-          <button class="btn btn-danger" (click)="logout()">Logout</button>
           <a
-            class="btn btn-primary m-2"
-            routerLink="/profile/{{ authService.getUserId() }}"
+            class="btn m-2"
+            routerLink="/profile"
             *ngIf="isAuthenticated() && authService.isCustomer()"
             >Profile</a
+          >
+          <a
+            class="btn m-2"
+            routerLink="/admin"
+            *ngIf="isAuthenticated() && authService.isAdmin()"
+            >Dashboard</a
           >
         </ng-container>
 
         <!-- Notifications Icon -->
         <div
+          #notificationPanel
           class="position-relative"
           *ngIf="isAuthenticated() && authService.isCustomer()"
         >
@@ -152,7 +152,7 @@
                 *ngFor="let notif of notifications"
                 class="px-3 py-3 border-bottom d-flex align-items-start gap-2 notification-item"
                 style="cursor: pointer"
-                routerLink="/profile/{{ authService.getUserId() }}"
+                routerLink="/profile"
                 (click)="isOpen = !isOpen"
               >
                 <!-- Icon or user image -->
@@ -191,7 +191,9 @@
           </div>
         </div>
       </div>
-
+      <button class="btn m-1" (click)="logout()" *ngIf="isAuthenticated()">
+        <i class="bi bi-box-arrow-right fs-4 ms-2"></i>
+      </button>
       <!-- Mobile toggle -->
       <button
         class="btn d-xl-none ms-3"
@@ -218,7 +220,7 @@
           >Add Pet</a
         >
       </li>
-      <li>
+      <!-- <li>
         <a
           class="nav-link pointer"
           routerLink="/categories"
@@ -228,15 +230,15 @@
         <a class="nav-link pointer" routerLink="/categories"
           >Manage Categories</a
         >
-      </li>
-      <li>
+      </li> -->
+      <!-- <li>
         <a
           class="nav-link pointer"
           routerLink="/breeds"
           *ngIf="isAuthenticated()"
           >Manage Breeds</a
         >
-      </li>
+      </li> -->
       <li><a class="nav-link pointer" routerLink="/contact">Contact</a></li>
       <li *ngIf="!isAuthenticated()">
         <a class="btn btn-outline-primary mt-2" routerLink="/login">Login</a>
@@ -244,8 +246,16 @@
       <li *ngIf="!isAuthenticated()">
         <a class="btn btn-primary mt-2" routerLink="/register">Register</a>
       </li>
+      <li>
+        <a
+          class="btn m-2"
+          routerLink="/admin"
+          *ngIf="isAuthenticated() && authService.isAdmin()"
+          >Dashboard</a
+        >
+      </li>
       <li *ngIf="isAuthenticated()">
-        <button class="btn btn-danger" (click)="logout()">Logout</button>
+        <button class="btn" (click)="logout()">Logout</button>
       </li>
     </ul>
   </div>

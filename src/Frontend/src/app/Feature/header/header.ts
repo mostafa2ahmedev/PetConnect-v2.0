@@ -1,6 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { AccountService } from '../../core/services/account-service';
 import { AuthService } from '../../core/services/auth-service';
 import { AdoptionService } from '../../core/services/adoption-service';
@@ -13,6 +19,7 @@ import {
   animate,
   transition,
 } from '@angular/animations';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-header',
   imports: [RouterLink, CommonModule],
@@ -20,16 +27,19 @@ import {
   styleUrl: './header.css',
   animations: [
     trigger('slideToggle', [
-      state('open', style({ height: '*', opacity: 1 })),
-      state('closed', style({ height: '0px', opacity: 0 })),
+      state('open', style({ height: '*', opacity: 1, zIndex: 999 })),
+      state('closed', style({ height: '0px', opacity: 0, zIndex: 0 })),
       transition('open <=> closed', [animate('300ms ease-in-out')]),
     ]),
   ],
 })
 export class Header implements OnInit {
+  @ViewChild('notificationPanel') notificationPanel!: ElementRef;
+
   notifications: NotificationModel[] = [];
   unreadCount = 0;
   isOpen = false;
+  routerEventsSub!: Subscription;
 
   constructor(
     private accontService: AccountService,
@@ -38,7 +48,22 @@ export class Header implements OnInit {
     private adoptionService: AdoptionService
   ) {}
   ngOnInit(): void {
-    this.loadNotifications();
+    if (this.authService.isAuthenticated()) this.loadNotifications();
+    this.routerEventsSub = this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.loadNotifications();
+      }
+    });
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const clickedInside = this.notificationPanel?.nativeElement.contains(
+      event.target
+    );
+    if (!clickedInside && this.isOpen) {
+      this.isOpen = !this.isOpen;
+    }
   }
   isAuthenticated(): boolean {
     return this.accontService.isAuthenticated();

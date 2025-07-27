@@ -24,6 +24,7 @@ export class Pets implements OnInit {
   pets: Pet[] = [];
   statusMap: { [key: number]: string } = {};
   loading = true;
+  failedLoad = false;
   error = '';
   isDataReady: boolean = false;
   categories: Category[] = [];
@@ -58,11 +59,13 @@ export class Pets implements OnInit {
         this.pets = pets;
         this.filteredPets = pets;
         this.loading = false;
+        console.log('petssss', this.pets);
       },
       error: (err) => {
         console.error('Error loading pets:', err);
         this.error = 'Failed to load pets. Please try again later.';
         this.loading = false;
+        this.failedLoad = true;
       },
     });
   }

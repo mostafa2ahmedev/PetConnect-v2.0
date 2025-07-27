@@ -1,0 +1,162 @@
+<div class="row container">
+  <h5 class="mb-4 ps-0">Pending Doctors</h5>
+  <table class="table table-hover align-middle table-bordered custom-header">
+    <thead class="table-light">
+      <tr>
+        <th scope="col" class="fw-semibold text-dark p-2">Doctor</th>
+        <th scope="col" class="fw-semibold text-dark p-2">Location</th>
+        <th scope="col" class="fw-semibold text-dark p-2">Speciality</th>
+        <th scope="col" class="fw-semibold text-dark p-2">Phone</th>
+        <th scope="col" class="fw-semibold text-dark p-2">Price/hr</th>
+        <th scope="col" class="fw-semibold text-dark p-2">Certificate</th>
+        <th scope="col" class="fw-semibold text-dark p-2 text-center">
+          Actions
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let doctor of doctors">
+        <!-- Image + Name -->
+        <td>
+          <div class="d-flex align-items-center p-2">
+            <img
+              [src]="
+                doctor.imgUrl
+                  ? 'https://localhost:7102' + doctor.imgUrl
+                  : 'assets/default-doctor.jpg'
+              "
+              class="rounded-circle me-2"
+              style="width: 33px; height: 33px; object-fit: cover"
+              [alt]="getDoctorFullName(doctor)"
+            />
+            <div>
+              <div>
+                {{ getDoctorFullName(doctor) }}
+              </div>
+              <small class="text-muted">{{ doctor.email }}</small>
+            </div>
+          </div>
+        </td>
+
+        <!-- Other Columns -->
+        <td>{{ doctor.petSpecialty }}</td>
+        <td>
+          <i class="fas fa-map-marker-alt me-1 text-muted"></i>{{ doctor.city }}
+        </td>
+        <td>{{ doctor.phoneNumber }}</td>
+        <td>${{ doctor.pricePerHour }}</td>
+
+        <!-- Certificate Button -->
+        <td>
+          <button
+            *ngIf="doctor.certificateUrl"
+            class="btn btn-sm text-primary"
+            (click)="
+              openImageModal(
+                imageModal,
+                'https://localhost:7102' + doctor.certificateUrl
+              )
+            "
+          >
+            <!-- <i class="bi bi-file-earmark-break-fill"></i>-->Certificate
+          </button>
+        </td>
+
+        <!-- Actions: Icons Only -->
+        <td class="text-center">
+          <button
+            class="btn btn-sm btn-primary me-1"
+            (click)="approveDoctor(doctor.id)"
+            title="Approve"
+          >
+            <i class="bi bi-check-lg"></i>
+          </button>
+          <button
+            class="btn btn-sm btn-outline-danger"
+            (click)="openRejectionModal(rejectionModal, doctor.id, 'doctor')"
+            title="Reject"
+          >
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="text-center py-4" *ngIf="doctors.length === 0">
+    <i
+      class="fas fa-user-md text-muted mb-2"
+      style="font-size: 2.5rem; opacity: 0.3"
+    ></i>
+    <h6 class="text-muted">No pending doctor approvals</h6>
+  </div>
+</div>
+
+<div>
+  <!-- Rejection Modal -->
+  <ng-template #rejectionModal let-modal>
+    <div class="modal-header border-0 pb-2">
+      <h5 class="modal-title text-danger">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        Reject Request
+      </h5>
+      <button
+        type="button"
+        class="btn-close"
+        (click)="modal.dismiss()"
+      ></button>
+    </div>
+    <div class="modal-body pt-0">
+      <p class="text-muted small mb-3">
+        Please provide a reason for rejection:
+      </p>
+      <div class="mb-3">
+        <textarea
+          id="rejectionMessage"
+          class="form-control"
+          [(ngModel)]="rejectionMessage"
+          name="rejectionMessage"
+          rows="3"
+          placeholder="Enter rejection reason..."
+          required
+        ></textarea>
+      </div>
+    </div>
+    <div class="modal-footer border-0 pt-0">
+      <button class="btn btn-light btn-sm" (click)="modal.dismiss()">
+        Cancel
+      </button>
+      <button class="btn btn-danger btn-sm" (click)="confirmRejection(modal)">
+        <i class="fas fa-ban me-1"></i>
+        Confirm Rejection
+      </button>
+    </div>
+  </ng-template>
+
+  <!-- Image Modal -->
+  <ng-template #imageModal let-modal>
+    <div class="modal-header border-0">
+      <h5 class="modal-title">
+        <i class="fas fa-certificate text-primary me-2"></i>
+        Certificate
+      </h5>
+      <button
+        type="button"
+        class="btn-close"
+        (click)="modal.dismiss()"
+      ></button>
+    </div>
+    <div class="modal-body text-center p-2">
+      <img
+        [src]="currentImageUrl"
+        alt="Certificate"
+        class="img-fluid rounded"
+        style="max-height: 70vh"
+      />
+    </div>
+    <div class="modal-footer border-0">
+      <button class="btn btn-secondary btn-sm" (click)="modal.close()">
+        Close
+      </button>
+    </div>
+  </ng-template>
+</div>

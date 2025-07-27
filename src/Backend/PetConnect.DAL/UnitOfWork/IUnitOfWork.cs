@@ -31,6 +31,9 @@ namespace PetConnect.DAL.UnitofWork
         public ITimeSlotsRepository TimeSlotsRepository { get; }
         public IAdoptionNotificationRepository AdoptionNotificationRepository { get; }
         public INotificationRepository NotificationRepository { get; }
+        public IAdminDoctorMessageRepository AdminDoctorMessageRepository { get;  }
+        public IAdminPetMessageRepository AdminPetMessageRepository { get;  }
+        public IApplicationUserRepository ApplicationUserRepository{ get;  }
         public int SaveChanges();
     }
 

@@ -52,6 +52,10 @@ namespace PetConnect.DAL.UnitofWork
         public IOrderRepository OrderRepository => new OrderRepository(context);
 
         public ITimeSlotsRepository TimeSlotsRepository =>  new TimeSlotsRepository(context);
+        public IAdminDoctorMessageRepository AdminDoctorMessageRepository => new AdminDoctorMessageRepository(context);
+        public IAdminPetMessageRepository AdminPetMessageRepository => new AdminPetMessageRepository(context);
+        public IApplicationUserRepository ApplicationUserRepository=> new ApplicationUserRepository(context);
+
 
         public IAdoptionNotificationRepository AdoptionNotificationRepository => new AdoptionNotificationRepository(context);
         public INotificationRepository NotificationRepository => new NotificationRepository(context);
