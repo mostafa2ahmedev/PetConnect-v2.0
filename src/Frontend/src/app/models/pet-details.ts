@@ -10,4 +10,8 @@ export interface PetDetailsModel {
   categoryName: string;
   customerId: string;
   customerName?: string;
+  customerStreet: string;
+  customerCity: string;
+  customerCountry: string;
+  notes: string;
 }

@@ -51,8 +51,8 @@
           <div
             class="p-2 rounded"
             [ngClass]="{
-              'bg-primary text-white': msg.receiverId === receiverId,
-              'bg-light text-dark': msg.receiverId !== receiverId
+              'text-white bg-primary ': msg.receiverId === receiverId,
+              'text-white bg-dark ': msg.receiverId !== receiverId
             }"
             style="max-width: 75%; white-space: pre-wrap"
           >
@@ -67,13 +67,13 @@
 
       <!-- Input Area -->
       <div class="p-3 border-top bg-white">
-        <div class="mb-2">
+        <!-- <div class="mb-2">
           <input
             [(ngModel)]="receiverId"
             class="form-control"
             placeholder="Receiver ID (user ID)"
           />
-        </div>
+        </div> -->
         <div class="input-group">
           <input
             [(ngModel)]="message"

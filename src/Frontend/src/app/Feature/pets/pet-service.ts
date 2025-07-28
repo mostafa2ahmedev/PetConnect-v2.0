@@ -43,6 +43,7 @@ export class PetService {
     formData.append('Name', pet.Name);
     formData.append('Status', pet.Status.toString());
     formData.append('Ownership', pet.Ownership.toString());
+    formData.append('Notes', pet.Notes);
 
     formData.append('BreedId', pet.BreedId.toString());
     formData.append('ImgURL', pet.ImgURL); // adjust key if backend expects a different one
@@ -59,7 +60,7 @@ export class PetService {
     formData.append('Ownership', '0'); // backend sets it anyway
     formData.append('BreedId', pet.BreedId.toString());
     formData.append('Age', pet.Age.toString());
-
+    formData.append('Notes', pet.Notes);
     if (pet.ImgURL) {
       formData.append('ImgURL', pet.ImgURL);
     }

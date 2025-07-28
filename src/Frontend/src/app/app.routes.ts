@@ -19,11 +19,19 @@ import { BreedDetails } from './Feature/breeds/breed-details/breed-details';
 import { DoctorProfile } from './Feature/doctor-profile/doctor-profile';
 import { DoctorEditProfile } from './Feature/doctor-edit-profile/doctor-edit-profile';
 import { NotFoundDoctor } from './Feature/not-found-doctor/not-found-doctor';
+import { AdminDashboardComponent } from './Feature/admin-dashboard/admin-dashboard/admin-dashboard';
 import { authGuard } from './core/guards/auth-guard';
-import { CustomerProfile } from './Feature/customer-profile/customer-profile';
+import { CustomerProfile } from './Feature/customer-profile/Profile/customer-profile';
+import { UpdateProfile } from './Feature/customer-profile/update-profile/update-profile';
+import { AdminGuard } from './core/guards/admin-guard';
+import { UnauthComponent } from './Feature/unauthorized/unauth-component/unauth-component';
+import { AdminDoctors } from './Feature/admin-dashboard/admin-dashboard/admin-doctors/admin-doctors';
+import { AdminPets } from './Feature/admin-dashboard/admin-dashboard/admin-pets/admin-pets';
+import { AdminInsights } from './Feature/admin-dashboard/admin-dashboard/admin-insights/admin-insights';
 import { ChatComponent } from './Feature/chat/chat/chat';
 export const routes: Routes = [
   { path: '', component: Home },
+  { path: 'home', component: Home },
   { path: 'doctors', component: Doctors },
   { path: 'doctors/:id', component: DoctorProfile },
   {
@@ -35,27 +43,77 @@ export const routes: Routes = [
   { path: 'pet-details/:id', component: PetDetails },
   { path: 'add-pet', component: AddPets, canActivate: [authGuard] },
   { path: 'pets/update/:id', component: UpdatePet, canActivate: [authGuard] },
-  { path: 'categories', component: Categories, canActivate: [authGuard] },
+  {
+    path: 'categories',
+    component: Categories,
+    canActivate: [authGuard, AdminGuard],
+  },
   {
     path: 'category/:id',
     component: CategoryDetails,
-    canActivate: [authGuard],
+    canActivate: [authGuard, AdminGuard],
   },
-  { path: 'add-category', component: AddCategory, canActivate: [authGuard] },
+  {
+    path: 'add-category',
+    component: AddCategory,
+    canActivate: [authGuard, AdminGuard],
+  },
 
-  { path: 'breeds', component: AllBreeds, canActivate: [authGuard] },
-  { path: 'breed/:id', component: BreedDetails, canActivate: [authGuard] },
+  {
+    path: 'breeds',
+    component: AllBreeds,
+    canActivate: [authGuard, AdminGuard],
+  },
+  {
+    path: 'breed/:id',
+    component: BreedDetails,
+    canActivate: [authGuard, AdminGuard],
+  },
 
-  { path: 'add-breed', component: AddBreed, canActivate: [authGuard] },
+  {
+    path: 'add-breed',
+    component: AddBreed,
+    canActivate: [authGuard, AdminGuard],
+  },
   { path: 'contact', component: Contact },
   { path: 'login', component: Login },
-  { path: 'profile/:id', component: CustomerProfile, canActivate: [authGuard] },
+  {
+    path: 'profile/update',
+    component: UpdateProfile,
+    canActivate: [authGuard],
+  },
+
+  {
+    path: 'profile',
+    component: CustomerProfile,
+    canActivate: [authGuard],
+  },
 
   { path: 'register', component: Register, children: [] },
   { path: 'register/doctor', component: DoctorRegisterForm },
   { path: 'register/customer', component: CustomerRegisterForm },
   { path: 'register', component: Register, children: [] },
+  { path: 'register/doctor', component: DoctorRegisterForm },
+  { path: 'register/customer', component: CustomerRegisterForm },
+  { path: 'notfound/doctor', component: NotFoundDoctor },
+  {
+    path: 'admin',
+    component: AdminDashboardComponent,
+    canActivate: [authGuard, AdminGuard],
+    children: [
+      { path: '', component: AdminInsights },
+
+      { path: 'cats', component: Categories },
+      { path: 'breeds', component: AllBreeds },
+      { path: 'doctors', component: AdminDoctors },
+      { path: 'pets', component: AdminPets },
+
+      { path: '', redirectTo: 'insights', pathMatch: 'full' }, // default child
+    ],
+  },
+  { path: 'unauthorized', component: UnauthComponent },
+  { path: 'register', component: Register, children: [] },
 
   { path: 'notfound/doctor', component: NotFoundDoctor },
-  { path: 'chat', component: ChatComponent },
+  { path: 'chat/:id', component: ChatComponent },
 ];

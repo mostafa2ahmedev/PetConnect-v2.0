@@ -133,7 +133,7 @@ export class PetDetails implements OnInit {
 
     const body = {
       petId: pet.id,
-      recCustomerId: this.authService.getUserId(),
+      recCustomerId: pet.customerId,
       adoptionDate: this.adoptionService.padDate(
         request.adoptionDate.replace('T', ' ').replace('Z', '')
       ),

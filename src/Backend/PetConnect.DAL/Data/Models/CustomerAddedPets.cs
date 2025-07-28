@@ -16,8 +16,5 @@ namespace PetConnect.DAL.Data.Models
 
         public Pet Pet { get; set; } = null!;
         public Customer Customer { get; set; } = null!;
-
-
-
     }
 }

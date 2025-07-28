@@ -23,6 +23,11 @@ namespace PetConnect.BLL.Services.DTO.Doctor
         [StringLength(20, ErrorMessage = "Last name cannot exceed 20 characters.")]
         public string LName { get; set; } = null!;
 
+        [Display(Name = "Phone Number")]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "Phone Number Can Only Have Digits")]
+        [Phone(ErrorMessage = "Invalid Phone Number Format")]
+        public string PhoneNumber { get; set; } = null!;
+
         [Display(Name = "Profile Image URL")]
         [StringLength(100, ErrorMessage = "Image URL cannot exceed 100 characters.")]
 
@@ -61,6 +66,7 @@ namespace PetConnect.BLL.Services.DTO.Doctor
         public string City { get; set; } = null!;
 
         public bool IsApproved { get; set; }
+        public bool IsDeleted { get; set; }
 
 
 

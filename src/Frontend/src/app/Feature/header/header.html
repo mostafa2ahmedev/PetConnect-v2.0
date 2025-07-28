@@ -17,20 +17,16 @@
     <nav class="navmenu d-flex align-items-center">
       <ul class="nav list-unstyled mb-0 d-none d-xl-flex">
         <li class="nav-item">
-          <a class="nav-link text-dark fw-semibold pointer" routerLink="/"
-            >Home</a
-          >
+          <a class="nav-link text-dark pointer" routerLink="/">Home</a>
         </li>
         <li class="nav-item">
-          <a
-            class="nav-link text-dark fw-semibold pointer"
-            routerLink="/doctors"
+          <a class="nav-link text-dark pointer" routerLink="/doctors"
             >Doctors</a
           >
         </li>
         <li class="nav-item" *ngIf="!isAuthenticated()">
           <a
-            class="nav-link text-dark fw-semibold pointer"
+            class="nav-link text-dark pointer"
             *ngIf="!isAuthenticated()"
             routerLink="/pets"
             >Pets</a
@@ -39,7 +35,7 @@
 
         <li class="nav-item dropdown" *ngIf="isAuthenticated()">
           <a
-            class="nav-link dropdown-toggle text-dark fw-semibold pointer"
+            class="nav-link dropdown-toggle text-dark pointer"
             data-bs-toggle="dropdown"
             href="#"
             >Pets</a
@@ -51,22 +47,20 @@
             <li>
               <a class="dropdown-item pointer" routerLink="/add-pet">Add Pet</a>
             </li>
-            <li>
+            <!-- <li>
               <a class="dropdown-item pointer" routerLink="/categories"
                 >Manage Categories</a
               >
-            </li>
-            <li>
+            </li> -->
+            <!-- <li>
               <a class="dropdown-item pointer" routerLink="/breeds"
                 >Manage Breeds</a
               >
-            </li>
+            </li> -->
           </ul>
         </li>
         <li class="nav-item">
-          <a
-            class="nav-link text-dark fw-semibold pointer"
-            routerLink="/contact"
+          <a class="nav-link text-dark pointer" routerLink="/contact"
             >Contact</a
           >
         </li>
@@ -74,22 +68,132 @@
 
       <!-- Auth Buttons (Mobile) -->
 
-      <div class="btns d-none d-xl-block ms-3">
+      <div
+        class="btns d-none d-xl-flex ms-3 align-items-center justify-content-center"
+      >
         <ng-container *ngIf="!isAuthenticated()">
           <a class="btn btn-outline-primary me-2" routerLink="/login">Login</a>
           <a class="btn btn-primary" routerLink="/register">Register</a>
         </ng-container>
         <ng-container *ngIf="isAuthenticated()">
-          <button class="btn btn-danger" (click)="logout()">Logout</button>
           <a
-            class="btn btn-primary m-2"
-            routerLink="/profile/{{ authService.getUserId() }}"
+            class="btn m-2"
+            routerLink="/profile"
             *ngIf="isAuthenticated() && authService.isCustomer()"
             >Profile</a
           >
+          <a
+            class="btn m-2"
+            routerLink="/admin"
+            *ngIf="isAuthenticated() && authService.isAdmin()"
+            >Dashboard</a
+          >
         </ng-container>
-      </div>
 
+        <!-- Notifications Icon -->
+        <div
+          #notificationPanel
+          class="position-relative"
+          *ngIf="isAuthenticated() && authService.isCustomer()"
+        >
+          <button
+            class="btn btn-link position-relative"
+            style="text-decoration: none"
+            class="position-relative border-0"
+            (click)="isOpen = !isOpen"
+          >
+            <i
+              class="fs-4"
+              [ngClass]="
+                isOpen
+                  ? 'bi bi-bell-fill text-primary'
+                  : 'bi bi-bell  text-dark'
+              "
+            ></i>
+            <span
+              *ngIf="unreadCount > 0"
+              class="position-absolute translate-middle badge rounded-pill bg-danger"
+              style="top: 16%; font-size: 0.65rem; right: -17px"
+            >
+              {{ unreadCount }}
+            </span>
+          </button>
+
+          <!-- Floating Dropdown Card -->
+          <div
+            [@slideToggle]="slideState"
+            class="card shadow position-absolute mt-4"
+            style="width: 300px; z-index: 1000; right: -15px"
+          >
+            <!-- Card Header -->
+            <div class="card-header py-3 text-center">
+              <h6 class="fw-semibold mb-0">Notifications</h6>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body p-0">
+              <!-- Notifications List -->
+              <style>
+                .notification-item:hover {
+                  background-color: #5d57f4;
+                  color: white;
+                }
+                .notification-item,
+                .notification-item * {
+                  transition: all 0.2s;
+                }
+                .notification-item:hover small,
+                .notification-item:hover i {
+                  color: white !important;
+                }
+              </style>
+
+              <div
+                *ngFor="let notif of notifications"
+                class="px-3 py-3 border-bottom d-flex align-items-start gap-2 notification-item"
+                style="cursor: pointer"
+                routerLink="/profile"
+                (click)="isOpen = !isOpen"
+              >
+                <!-- Icon or user image -->
+                <div>
+                  <!-- <img
+                  src="assets/img/default-user.png"
+                  class="rounded-circle"
+                  width="36"
+                  height="36"
+                  alt="User"
+                /> -->
+                  <i class="bi bi-bell-fill text-black-50 fs-5"></i>
+
+                  <!-- Or icon:
+    <i class="bi bi-bell-fill text-primary fs-5"></i>
+    -->
+                </div>
+
+                <!-- Message content -->
+                <div class="flex-grow-1">
+                  <small class="lh-sm d-block">{{ notif.message }}</small>
+                  <small class="text-muted" style="font-size: 0.8em">{{
+                    notif.date | date : "short"
+                  }}</small>
+                </div>
+              </div>
+
+              <!-- Empty State -->
+              <div
+                *ngIf="notifications.length === 0"
+                class="text-center text-muted py-3"
+              >
+                No notifications
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn m-1" (click)="logout()" *ngIf="isAuthenticated()">
+        <i class="bi bi-box-arrow-right fs-4 ms-2"></i>
+      </button>
       <!-- Mobile toggle -->
       <button
         class="btn d-xl-none ms-3"
@@ -116,7 +220,7 @@
           >Add Pet</a
         >
       </li>
-      <li>
+      <!-- <li>
         <a
           class="nav-link pointer"
           routerLink="/categories"
@@ -126,15 +230,15 @@
         <a class="nav-link pointer" routerLink="/categories"
           >Manage Categories</a
         >
-      </li>
-      <li>
+      </li> -->
+      <!-- <li>
         <a
           class="nav-link pointer"
           routerLink="/breeds"
           *ngIf="isAuthenticated()"
           >Manage Breeds</a
         >
-      </li>
+      </li> -->
       <li><a class="nav-link pointer" routerLink="/contact">Contact</a></li>
       <li *ngIf="!isAuthenticated()">
         <a class="btn btn-outline-primary mt-2" routerLink="/login">Login</a>
@@ -142,8 +246,16 @@
       <li *ngIf="!isAuthenticated()">
         <a class="btn btn-primary mt-2" routerLink="/register">Register</a>
       </li>
+      <li>
+        <a
+          class="btn m-2"
+          routerLink="/admin"
+          *ngIf="isAuthenticated() && authService.isAdmin()"
+          >Dashboard</a
+        >
+      </li>
       <li *ngIf="isAuthenticated()">
-        <button class="btn btn-danger" (click)="logout()">Logout</button>
+        <button class="btn" (click)="logout()">Logout</button>
       </li>
     </ul>
   </div>
