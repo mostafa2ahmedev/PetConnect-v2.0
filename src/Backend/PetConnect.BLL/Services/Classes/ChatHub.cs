@@ -65,7 +65,7 @@ namespace PetConnect.BLL.Services.Classes
         {
             var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var connectionId = Context.ConnectionId;
-
+            Console.WriteLine($"[Connected] ConnectionId: {connectionId}, UserId: {userId}");
             var userConnection = new UserConnection()
             {
                 ConnectionId = connectionId,

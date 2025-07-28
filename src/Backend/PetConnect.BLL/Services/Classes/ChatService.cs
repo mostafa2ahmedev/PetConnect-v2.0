@@ -62,7 +62,7 @@ namespace PetConnect.BLL.Services.Classes
                  (from m in _unitOfWork.UserMessagesRepository.GetAllQueryable()
                  where m.SenderId == SenderId
                  select m)
-                .AsEnumerable()
+                .AsEnumerable() 
                 .GroupBy(m => new { m.SenderId, m.RecieverId })
                 .Select(group =>
                 {
