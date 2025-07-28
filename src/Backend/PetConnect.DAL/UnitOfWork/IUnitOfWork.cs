@@ -10,6 +10,7 @@ namespace PetConnect.DAL.UnitofWork
 {
     public interface IUnitOfWork : IDisposable
     {
+        public IUserRepository UserRepository { get; }
         public IAdminRepository AdminRepository { get; }
         public ICustomerRepository CustomerRepository { get; }
         public ICustomerAddedPetsRepository CustomerAddedPetsRepository { get; }

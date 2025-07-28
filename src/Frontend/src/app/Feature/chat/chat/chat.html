@@ -1,37 +1,34 @@
-<div class="container-fluid p-3" style="height: 100vh">
+<div class="container-fluid px-3 py-0" style="height: 100vh">
   <div class="row h-100 border rounded shadow-sm">
     <!-- Left Sidebar: Chat Contacts -->
     <div class="col-md-3 border-end overflow-auto" style="height: 100%">
       <h5 class="text-uppercase fw-bold p-3 border-bottom">Messages</h5>
       <div class="list-group list-group-flush">
-        <div class="list-group-item d-flex align-items-start">
+        <div
+          class="list-group-item d-flex align-items-start"
+          (click)="activateContact(contact)"
+          *ngFor="let contact of contacts"
+        >
           <img
-            src="https://via.placeholder.com/40"
+            [src]="getFullImageUrl(contact.imageURL)"
             class="rounded-circle me-2"
+            width="40"
+            height="40"
           />
           <div>
-            <div class="fw-semibold">John Doe</div>
-            <small class="text-muted">Hey, did you check...</small>
+            <div class="fw-semibold">
+              {{ contact.receiverName }}
+            </div>
+            <small class="text-muted">{{ contact.lastMessage }}</small>
           </div>
         </div>
-        <div class="list-group-item d-flex align-items-start">
-          <img
-            src="https://via.placeholder.com/40"
-            class="rounded-circle me-2"
-          />
-          <div>
-            <div class="fw-semibold">Jane Smith</div>
-            <small class="text-muted">Sure! Let's do it...</small>
-          </div>
-        </div>
-        <!-- Add more contacts as needed -->
       </div>
     </div>
 
     <!-- Middle Content: Chat Window -->
     <div class="col-md-6 d-flex flex-column p-0" style="height: 100%">
       <div class="border-bottom p-3 bg-light">
-        <h5 class="mb-0">John Doe</h5>
+        <h5 class="mb-0">{{ activeContact?.receiverName }}</h5>
       </div>
 
       <!-- Message History -->
@@ -90,13 +87,19 @@
     <div class="col-md-3 border-start p-3 d-none d-md-block">
       <div class="text-center">
         <img
-          src="https://via.placeholder.com/80"
+          [src]="getFullImageUrl(activeContact?.imageURL || '')"
           class="rounded-circle mb-2"
+          style="max-width: 60px"
           alt="User"
         />
-        <h6 class="fw-bold">John Doe</h6>
-        <p class="text-muted mb-1">Riyadh, Saudi Arabia</p>
-        <span class="badge bg-success">Online</span>
+        <h6 class="fw-bold">{{ activeContact?.receiverName }}</h6>
+        <p class="text-muted mb-1">{{ activeContact?.receiverName }}</p>
+        <span
+          class="badge"
+          [ngClass]="activeContact?.isOnline ? 'bg-success' : 'bg-secondary'"
+        >
+          {{ activeContact?.isOnline ? "Online" : "Offline" }}
+        </span>
       </div>
       <hr />
       <p class="small text-muted">

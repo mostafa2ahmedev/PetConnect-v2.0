@@ -15,8 +15,8 @@ namespace PetConnect.DAL.Data.Configurations
         {
             builder.HasKey(C => C.ConnectionId);
             builder.HasOne(C => C.ApplicationUser)
-                .WithOne(U => U.UserConnection)
-                .HasForeignKey<UserConnection>(U => U.UserId)
+                .WithMany(U => U.UserConnections)
+                .HasForeignKey(U => U.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

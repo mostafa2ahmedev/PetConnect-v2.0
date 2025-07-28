@@ -28,7 +28,7 @@ namespace PetConnect.DAL.Services
             services.AddScoped<IAdoptionNotificationService, AdoptionNotificationService>();
             services.AddScoped<IChatHub, ChatHub>();
             services.AddSignalR();
-
+            services.AddScoped<IChatService, ChatService>();
             return services;
         }
     }

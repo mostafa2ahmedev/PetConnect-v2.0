@@ -17,7 +17,7 @@ namespace PetConnect.BLL.Services.Classes
         {
             unitOfWork = _unitOfWork;
         }
-        public async Task SendMessage(string message , string recieverId , string? attachmentUrl) 
+        public async Task SendMessage(string message, string receiverId, string? attachmentUrl)
         {
             //save in DB 
             var userMessages = new UsersMessages()
@@ -28,25 +28,33 @@ namespace PetConnect.BLL.Services.Classes
                 Message = message,
                 MessageType = attachmentUrl == null ? UserMessageType.Text : UserMessageType.File,
                 SenderId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value,
-                RecieverId = recieverId,
+                RecieverId = receiverId,
             };
             unitOfWork.UserMessagesRepository.Add(userMessages);
             unitOfWork.SaveChanges();
 
-            await Clients.User(recieverId).SendAsync("ReceiveMessage", new
+            await Clients.User(receiverId).SendAsync("ReceiveMessage", new
             {
                 SenderId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value,
-                ReceiverId = recieverId,
+                ReceiverId = receiverId,
+                Message = message,
+                SentDate = userMessages.SentDate,
+                AttachmentUrl = attachmentUrl,
+                MessageType = userMessages.MessageType.ToString()
+            });
+            await Clients.Caller.SendAsync("ReceiveMessage", new
+            {
+                SenderId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value,
+                ReceiverId = receiverId,
                 Message = message,
                 SentDate = userMessages.SentDate,
                 AttachmentUrl = attachmentUrl,
                 MessageType = userMessages.MessageType.ToString()
             });
 
-            // اختياري: ابعت لنفسك تأكيد (مثلاً لو في طرفين مفتوحين)
             await Clients.Caller.SendAsync("MessageSentConfirmation", new
             {
-                ReceiverId = recieverId,
+                ReceiverId = receiverId,
                 Message = message,
                 SentDate = userMessages.SentDate
             });
@@ -57,7 +65,7 @@ namespace PetConnect.BLL.Services.Classes
         {
             var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var connectionId = Context.ConnectionId;
-
+            Console.WriteLine($"[Connected] ConnectionId: {connectionId}, UserId: {userId}");
             var userConnection = new UserConnection()
             {
                 ConnectionId = connectionId,

@@ -66,7 +66,7 @@ export class Header implements OnInit {
     }
   }
   isAuthenticated(): boolean {
-    console.log('isAuthenticated called', this.authService.getUserId());
+    // console.log('isAuthenticated called', this.authService.getUserId());
     return this.accontService.isAuthenticated();
   }
   logout(): void {

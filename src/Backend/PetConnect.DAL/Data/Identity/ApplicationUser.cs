@@ -17,6 +17,6 @@ namespace PetConnect.DAL.Data.Identity
         public bool IsDeleted { get; set; }
         public ICollection<UsersMessages> SentMessages { get; set; } = new HashSet<UsersMessages>();
         public ICollection<UsersMessages> ReceivedMessages { get; set; } = new HashSet<UsersMessages>();
-        public UserConnection? UserConnection { get; set; }
+        public ICollection<UserConnection> UserConnections { get; set; } = new HashSet<UserConnection>();
     }
 }

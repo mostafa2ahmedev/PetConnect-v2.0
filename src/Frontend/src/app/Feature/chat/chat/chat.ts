@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ChatSignalrService } from '../../../core/services/chat-service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../core/services/auth-service';
+import { MessengerContact } from '../../../models/messenger-contact';
 
 @Component({
   selector: 'app-chat',
@@ -17,6 +18,9 @@ export class ChatComponent implements OnInit {
   senderId = '';
   messages: any[] = [];
   connectionStatus = '';
+  contacts: MessengerContact[] = [];
+  activeContact: MessengerContact | null = null;
+  // chatMessages: ChatMessage[] = [];
 
   constructor(
     private chatService: ChatSignalrService,
@@ -42,18 +46,21 @@ export class ChatComponent implements OnInit {
       });
 
       this.chatService.messages$.subscribe((msgs) => {
-        console.log('📬 big Messages received:', msgs);
-        this.messages = msgs.filter(
-          (msg) =>
-            msg.receiverId === this.receiverId ||
-            (msg.senderId && msg.senderId === this.receiverId)
-        );
-        console.log('📬 Messages received:', msgs);
-        console.log('my id', this.senderId);
+        this.messages = msgs;
       });
     } else {
       alert('🚫 No token found in localStorage!');
     }
+
+    this.chatService.getMessengerContacts().subscribe({
+      next: (data) => {
+        console.log('📨 Messenger contacts:', data);
+        this.contacts = data;
+      },
+      error: (err) => {
+        console.error('❌ Failed to fetch messenger contacts:', err);
+      },
+    });
   }
 
   async sendMessage() {
@@ -71,11 +78,33 @@ export class ChatComponent implements OnInit {
 
     try {
       await this.chatService.sendMessage(this.receiverId, this.message);
-      this.messages.push(outgoingMsg); // Add to UI immediately
+      // this.messages.push(outgoingMsg); // Add to UI immediately
 
       this.message = '';
     } catch (error) {
       console.error('❌ Send failed:', error);
     }
+  }
+
+  loadMessages(receiverId: string) {
+    console.log('📥 Loading messages for:', receiverId);
+    this.chatService.getChatMessages(receiverId).subscribe({
+      next: (res) => {
+        console.log('📩 Loaded chat messages:', res);
+        this.messages = res;
+      },
+      error: (err) => {
+        console.error('❌ Failed to load chat messages:', err);
+      },
+    });
+  }
+
+  getFullImageUrl(relativePath: string): string {
+    return `https://localhost:7102${relativePath}`;
+  }
+  activateContact(contact: MessengerContact) {
+    this.activeContact = contact;
+    this.receiverId = contact.userId;
+    this.loadMessages(this.receiverId);
   }
 }
