@@ -1,29 +1,107 @@
-<div class="p-4 max-w-xl mx-auto">
-  <h2 class="text-xl font-bold mb-4">🟢 Connection: {{ connectionStatus }}</h2>
+<div class="container-fluid p-3" style="height: 100vh">
+  <div class="row h-100 border rounded shadow-sm">
+    <!-- Left Sidebar: Chat Contacts -->
+    <div class="col-md-3 border-end overflow-auto" style="height: 100%">
+      <h5 class="text-uppercase fw-bold p-3 border-bottom">Messages</h5>
+      <div class="list-group list-group-flush">
+        <div class="list-group-item d-flex align-items-start">
+          <img
+            src="https://via.placeholder.com/40"
+            class="rounded-circle me-2"
+          />
+          <div>
+            <div class="fw-semibold">John Doe</div>
+            <small class="text-muted">Hey, did you check...</small>
+          </div>
+        </div>
+        <div class="list-group-item d-flex align-items-start">
+          <img
+            src="https://via.placeholder.com/40"
+            class="rounded-circle me-2"
+          />
+          <div>
+            <div class="fw-semibold">Jane Smith</div>
+            <small class="text-muted">Sure! Let's do it...</small>
+          </div>
+        </div>
+        <!-- Add more contacts as needed -->
+      </div>
+    </div>
 
-  <input
-    [(ngModel)]="receiverId"
-    class="w-full mb-2 px-3 py-2 border rounded"
-    placeholder="Receiver ID (UserId from token)"
-  />
+    <!-- Middle Content: Chat Window -->
+    <div class="col-md-6 d-flex flex-column p-0" style="height: 100%">
+      <div class="border-bottom p-3 bg-light">
+        <h5 class="mb-0">John Doe</h5>
+      </div>
 
-  <input
-    [(ngModel)]="message"
-    class="w-full mb-2 px-3 py-2 border rounded"
-    placeholder="Enter message"
-  />
+      <!-- Message History -->
+      <div
+        class="flex-grow-1 overflow-auto p-3"
+        style="background-color: #f9f9f9"
+      >
+        <!-- Repeat messages -->
+        <div
+          *ngFor="let msg of messages"
+          class="mb-2 d-flex"
+          [ngClass]="{
+            'justify-content-end': msg.receiverId === receiverId,
+            'justify-content-start': msg.receiverId !== receiverId
+          }"
+        >
+          <div
+            class="p-2 rounded"
+            [ngClass]="{
+              'bg-primary text-white': msg.receiverId === receiverId,
+              'bg-light text-dark': msg.receiverId !== receiverId
+            }"
+            style="max-width: 75%; white-space: pre-wrap"
+          >
+            <div class="fw-semibold mb-1">
+              {{ msg.receiverId === receiverId ? "You" : msg.senderId }}
+            </div>
+            <div>{{ msg.message }}</div>
+            <div class="text-end small text-muted mt-1">Just now</div>
+          </div>
+        </div>
+      </div>
 
-  <button
-    (click)="sendMessage()"
-    class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-  >
-    Send
-  </button>
+      <!-- Input Area -->
+      <div class="p-3 border-top bg-white">
+        <div class="mb-2">
+          <input
+            [(ngModel)]="receiverId"
+            class="form-control"
+            placeholder="Receiver ID (user ID)"
+          />
+        </div>
+        <div class="input-group">
+          <input
+            [(ngModel)]="message"
+            class="form-control"
+            placeholder="Type a message..."
+          />
+          <button class="btn btn-outline-secondary" type="button">📎</button>
+          <button class="btn btn-primary" (click)="sendMessage()">Send</button>
+        </div>
+      </div>
+    </div>
 
-  <div class="mt-6">
-    <h3 class="font-semibold">📨 Messages:</h3>
-    <div *ngFor="let msg of messages" class="border-b py-2">
-      <strong>{{ msg.from }}</strong>: {{ msg.text }}
+    <!-- Right Sidebar: Customer Info -->
+    <div class="col-md-3 border-start p-3 d-none d-md-block">
+      <div class="text-center">
+        <img
+          src="https://via.placeholder.com/80"
+          class="rounded-circle mb-2"
+          alt="User"
+        />
+        <h6 class="fw-bold">John Doe</h6>
+        <p class="text-muted mb-1">Riyadh, Saudi Arabia</p>
+        <span class="badge bg-success">Online</span>
+      </div>
+      <hr />
+      <p class="small text-muted">
+        John's info will go here like bio, recent activity, etc.
+      </p>
     </div>
   </div>
 </div>

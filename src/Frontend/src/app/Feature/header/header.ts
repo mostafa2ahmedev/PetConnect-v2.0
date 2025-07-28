@@ -17,6 +17,7 @@ export class Header {
     public authService: AuthService
   ) {}
   isAuthenticated(): boolean {
+    console.log('isAuthenticated called', this.authService.getUserId());
     return this.accontService.isAuthenticated();
   }
   logout(): void {

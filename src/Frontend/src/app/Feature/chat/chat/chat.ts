@@ -18,7 +18,8 @@ export class ChatComponent implements OnInit {
   constructor(private chatService: ChatSignalrService) {}
 
   ngOnInit(): void {
-    const token = localStorage.getItem('token');
+    const token =
+      localStorage.getItem('token') || sessionStorage.getItem('token');
 
     if (token) {
       this.chatService.connect(token);
@@ -28,6 +29,7 @@ export class ChatComponent implements OnInit {
       });
 
       this.chatService.messages$.subscribe((msgs) => {
+        console.log('📬 Messages received:', msgs);
         this.messages = msgs;
       });
     } else {
@@ -36,10 +38,21 @@ export class ChatComponent implements OnInit {
   }
 
   async sendMessage() {
-    if (!this.message || !this.receiverId || this.connectionStatus !== 'Connected') return;
+    if (
+      !this.message.trim() ||
+      !this.receiverId.trim() ||
+      this.connectionStatus !== 'Connected'
+    )
+      return;
+
+    const outgoingMsg = {
+      receiverId: this.receiverId,
+      message: this.message,
+    };
 
     try {
       await this.chatService.sendMessage(this.receiverId, this.message);
+      this.messages.push(outgoingMsg); // Add to UI immediately
       this.message = '';
     } catch (error) {
       console.error('❌ Send failed:', error);
