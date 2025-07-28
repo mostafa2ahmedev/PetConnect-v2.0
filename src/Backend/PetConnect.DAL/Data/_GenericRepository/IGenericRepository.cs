@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using PetConnect.DAL.Data.Repositories;
@@ -20,6 +21,7 @@ namespace PetConnect.DAL.Data.GenericRepository
         public void Update(T entity); // update entity data from existing DbSet
 
         public void Delete(T entity); // delete entity data from existing DbSet
+
 
     }
 }

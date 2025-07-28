@@ -12,32 +12,38 @@ namespace PetConnect.DAL.Data.Repositories.Classes
 {
     public class OrderRepository : GenericRepository<Order> , IOrderRepository
     {
-        private readonly AppDbContext context;
-        public OrderRepository(AppDbContext _context) :base(_context)
+        private readonly AppDbContext _context;
+
+        public OrderRepository(AppDbContext context) : base(context)
         {
-            context = _context;
+            _context = context;
         }
-        public IEnumerable<Order> GetAllWithOrderProduct()
+
+        public List<Order> GetOrdersWithDetails()
         {
-            return context.Orders
+            return _context.Orders
                 .Include(o => o.customer)
                 .Include(o => o.OrderProducts)
                     .ThenInclude(op => op.product)
                 .ToList();
         }
-        public Order? GetOrderWithCustomerById(int id)
-        {
-            return context.Orders
-                .Include(o => o.customer)
-                .FirstOrDefault(o => o.Id == id);
-        }
-        public Order? GetOrderWithProducts(int id)
-        {
-            return context.Orders
-                .Include(o => o.OrderProducts)
-                .FirstOrDefault(o => o.Id == id);
-        }
 
+        public Order? GetOrderWithDetails(int id)
+        {
+            return _context.Orders
+                .Include(o => o.customer)
+                .Include(o => o.OrderProducts)
+                    .ThenInclude(op => op.product)
+                .FirstOrDefault(o => o.Id == id);
+        }
+        public List<Order> GetOrdersByCustomerId(string customerId)
+        {
+            return _context.Orders
+                .Where(o => o.CustomerId == customerId)
+                .Include(o => o.OrderProducts)
+                    .ThenInclude(op => op.product)
+                .ToList();
+        }
 
     }
 }

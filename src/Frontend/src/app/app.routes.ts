@@ -19,6 +19,8 @@ import { BreedDetails } from './Feature/breeds/breed-details/breed-details';
 import { DoctorProfile } from './Feature/doctor-profile/doctor-profile';
 import { DoctorEditProfile } from './Feature/doctor-edit-profile/doctor-edit-profile';
 import { NotFoundDoctor } from './Feature/not-found-doctor/not-found-doctor';
+import { OrdersComponent } from './Feature/orders/orders';
+
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'doctors', component: Doctors },
@@ -44,5 +46,7 @@ export const routes: Routes = [
   { path: 'register', component: Register ,children: []},
   {path:"register/doctor", component:DoctorRegisterForm},
   {path:"register/customer", component:CustomerRegisterForm},
-  {path:"notfound/doctor",component:NotFoundDoctor}
+  {path:"notfound/doctor",component:NotFoundDoctor},
+ { path: 'orders', component: OrdersComponent },
+
 ];
