@@ -31,7 +31,7 @@ namespace PetConnect.API.Controllers
             if (ReceiverId == null)
                 return BadRequest();
             var senderId = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var result = _chatService.LoadChat(senderId!, ReceiverId, 1);
+            var result = _chatService.LoadChat(senderId!, ReceiverId);
 
             return Ok(result);
         }
