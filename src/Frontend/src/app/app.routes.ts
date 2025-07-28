@@ -23,7 +23,6 @@ import { AdminDashboardComponent } from './Feature/admin-dashboard/admin-dashboa
 import { authGuard } from './core/guards/auth-guard';
 import { CustomerProfile } from './Feature/customer-profile/Profile/customer-profile';
 import { UpdateProfile } from './Feature/customer-profile/update-profile/update-profile';
-import { Chat } from './Feature/chat/chat';
 import { AdminGuard } from './core/guards/admin-guard';
 import { UnauthComponent } from './Feature/unauthorized/unauth-component/unauth-component';
 import { AdminDoctors } from './Feature/admin-dashboard/admin-dashboard/admin-doctors/admin-doctors';
@@ -82,11 +81,7 @@ export const routes: Routes = [
     component: UpdateProfile,
     canActivate: [authGuard],
   },
-  {
-    path: 'chat',
-    component: Chat,
-    canActivate: [authGuard],
-  },
+
   {
     path: 'profile',
     component: CustomerProfile,

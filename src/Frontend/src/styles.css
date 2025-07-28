@@ -67,6 +67,7 @@ body {
   color: var(--default-color);
   background-color: var(--background-color);
   font-family: var(--default-font);
+  font-family: "Nunito Sans", sans-serif;
 }
 
 a {

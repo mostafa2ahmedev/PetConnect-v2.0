@@ -18,7 +18,7 @@
     align-items: center;
     justify-content: center;
 
-    &-lg {
+    /* &-lg {
       width: 60px;
       height: 60px;
       font-size: 1.5rem;
@@ -28,7 +28,7 @@
       width: 80px;
       height: 80px;
       font-size: 2rem;
-    }
+    } */
   }
 
   .certificate-preview {

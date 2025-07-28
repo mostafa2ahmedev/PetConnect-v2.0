@@ -407,6 +407,7 @@ export class AdminDashboardComponent implements OnInit {
   getFullImageUrl(relativePath: string): string {
     return `https://localhost:7102${relativePath}`;
   }
+
   toggleSidebar() {
     this.sidebarVisible = !this.sidebarVisible;
   }
