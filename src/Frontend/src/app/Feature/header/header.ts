@@ -5,13 +5,12 @@ import { AccountService } from '../../core/services/account-service';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink,CommonModule],
+  imports: [RouterLink, CommonModule],
   templateUrl: './header.html',
-  styleUrl: './header.css'
+  styleUrl: './header.css',
 })
 export class Header {
-
-  constructor(private accontService : AccountService,private router : Router) {}
+  constructor(private accontService: AccountService, private router: Router) {}
 
   isAuthenticated(): boolean {
     return this.accontService.isAuthenticated();

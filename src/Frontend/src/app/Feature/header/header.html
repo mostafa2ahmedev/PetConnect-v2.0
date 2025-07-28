@@ -1,8 +1,10 @@
 <header class="header bg-light border-bottom py-2">
   <div class="container d-flex justify-content-between align-items-center">
-
     <!-- Logo -->
-    <a routerLink="/" class="logo text-decoration-none d-flex align-items-center">
+    <a
+      routerLink="/"
+      class="logo text-decoration-none d-flex align-items-center"
+    >
       <h1 class="sitename mb-0 fw-bold text-primary pointer">PetConnect</h1>
       <span class="text-danger fs-4 ms-1">.</span>
     </a>
@@ -11,13 +13,24 @@
     <nav class="navmenu d-flex align-items-center">
       <ul class="nav list-unstyled mb-0 d-none d-xl-flex">
         <li class="nav-item">
-          <a class="nav-link text-dark fw-semibold pointer" routerLink="/">Home</a>
+          <a class="nav-link text-dark fw-semibold pointer" routerLink="/"
+            >Home</a
+          >
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark fw-semibold pointer" routerLink="/doctors">Doctors</a>
+          <a
+            class="nav-link text-dark fw-semibold pointer"
+            routerLink="/doctors"
+            >Doctors</a
+          >
         </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle text-dark fw-semibold pointer" data-bs-toggle="dropdown" href="#">Pets</a>
+          <a
+            class="nav-link dropdown-toggle text-dark fw-semibold pointer"
+            data-bs-toggle="dropdown"
+            href="#"
+            >Pets</a
+          >
           <ul class="dropdown-menu shadow">
             <li>
               <a class="dropdown-item pointer" routerLink="/pets">All Pets</a>
@@ -26,15 +39,23 @@
               <a class="dropdown-item pointer" routerLink="/add-pet">Add Pet</a>
             </li>
             <li>
-              <a class="dropdown-item pointer" routerLink="/categories">Manage Categories</a>
+              <a class="dropdown-item pointer" routerLink="/categories"
+                >Manage Categories</a
+              >
             </li>
             <li>
-              <a class="dropdown-item pointer" routerLink="/breeds">Manage Breeds</a>
+              <a class="dropdown-item pointer" routerLink="/breeds"
+                >Manage Breeds</a
+              >
             </li>
           </ul>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark fw-semibold pointer" routerLink="/contact">Contact</a>
+          <a
+            class="nav-link text-dark fw-semibold pointer"
+            routerLink="/contact"
+            >Contact</a
+          >
         </li>
       </ul>
 
@@ -42,6 +63,7 @@
       <div class="btns d-none d-xl-block ms-3">
         <a class="btn btn-outline-primary me-2" routerLink="/login">Login</a>
         <a class="btn btn-primary" routerLink="/register">Register</a>
+      </div>
 
       <div class="btns d-block d-xl-none ms-3">
         <ng-container *ngIf="!isAuthenticated()">
@@ -62,9 +84,8 @@
       >
         <i class="bi bi-list fs-4 text-dark"></i>
       </button>
-
+    </nav>
   </div>
-
   <!-- Mobile Menu -->
   <div id="mobileMenu" class="collapse bg-white border-top">
     <ul class="nav flex-column p-3">
@@ -73,7 +94,9 @@
       <li><a class="nav-link pointer" routerLink="/pets">All Pets</a></li>
       <li><a class="nav-link pointer" routerLink="/add-pet">Add Pet</a></li>
       <li>
-        <a class="nav-link pointer" routerLink="/categories">Manage Categories</a>
+        <a class="nav-link pointer" routerLink="/categories"
+          >Manage Categories</a
+        >
       </li>
       <li>
         <a class="nav-link pointer" routerLink="/breeds">Manage Breeds</a>
@@ -87,3 +110,4 @@
       </li>
     </ul>
   </div>
+</header>
