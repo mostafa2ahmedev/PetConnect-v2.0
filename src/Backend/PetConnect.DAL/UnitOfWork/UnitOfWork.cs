@@ -17,6 +17,7 @@ namespace PetConnect.DAL.UnitofWork
         {
             context = _context;
         }
+        public IUserRepository UserRepository => new UserRepository(context);
         public IAdminRepository AdminRepository => new AdminRepository(context);
 
         public ICustomerRepository CustomerRepository => new CustomerRepository(context);
@@ -57,6 +58,8 @@ namespace PetConnect.DAL.UnitofWork
         public INotificationRepository NotificationRepository => new NotificationRepository(context);
         public IUserConnectionRepository UserConnectionRepository => new UserConnectionRepository(context);
         public IUserMessagesRepository UserMessagesRepository => new UserMessagesRepository(context);
+
+       
 
         public void Dispose()
         {

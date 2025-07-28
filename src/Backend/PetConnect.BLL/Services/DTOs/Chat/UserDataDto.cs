@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace PetConnect.BLL.Services.DTOs.Chat
 {
-    public class RecievedMessageDTO
+    public class UserDataDto
     {
-        public string SenderId { get; set; } = null!;
-        public string Message { get; set; } = null!;
+        public string FullName { get; set; } = null!;
+
+        public string ImgUrl { get; set; } = null!;
+
     }
 }

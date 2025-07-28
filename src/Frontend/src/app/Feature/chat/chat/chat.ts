@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatSignalrService } from '../../../core/services/chat-service';
+import { IMessage } from '../IMessage';
 
 @Component({
   selector: 'app-chat',
@@ -12,7 +13,7 @@ import { ChatSignalrService } from '../../../core/services/chat-service';
 export class ChatComponent implements OnInit {
   message = '';
   receiverId = '';
-  messages: any[] = [];
+  messages: IMessage[] = [];
   connectionStatus = '';
 
   constructor(private chatService: ChatSignalrService) {}
@@ -27,8 +28,18 @@ export class ChatComponent implements OnInit {
         this.connectionStatus = status;
       });
 
-      this.chatService.messages$.subscribe((msgs) => {
-        this.messages = msgs;
+      this.chatService.messages$.subscribe((incoming: any) => {
+        console.log('📥 Incoming:', incoming);
+
+        if (Array.isArray(incoming)) {
+          this.messages = incoming; // ❗ استبدال مش تراكم
+        } else if (
+          incoming &&
+          typeof incoming === 'object' &&
+          'message' in incoming
+        ) {
+          this.messages = [...this.messages, incoming]; // ❗ ضيف الجديد بس
+        }
       });
     } else {
       alert('🚫 No token found in localStorage!');
@@ -36,7 +47,12 @@ export class ChatComponent implements OnInit {
   }
 
   async sendMessage() {
-    if (!this.message || !this.receiverId || this.connectionStatus !== 'Connected') return;
+    if (
+      !this.message ||
+      !this.receiverId ||
+      this.connectionStatus !== 'Connected'
+    )
+      return;
 
     try {
       await this.chatService.sendMessage(this.receiverId, this.message);

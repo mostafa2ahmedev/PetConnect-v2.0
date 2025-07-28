@@ -17,7 +17,7 @@ namespace PetConnect.BLL.Services.Classes
         {
             unitOfWork = _unitOfWork;
         }
-        public async Task SendMessage(string message , string recieverId , string? attachmentUrl) 
+        public async Task SendMessage(string message, string recieverId, string? attachmentUrl)
         {
             //save in DB 
             var userMessages = new UsersMessages()
@@ -42,8 +42,16 @@ namespace PetConnect.BLL.Services.Classes
                 AttachmentUrl = attachmentUrl,
                 MessageType = userMessages.MessageType.ToString()
             });
+            await Clients.Caller.SendAsync("ReceiveMessage", new
+            {
+                SenderId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value,
+                ReceiverId = recieverId,
+                Message = message,
+                SentDate = userMessages.SentDate,
+                AttachmentUrl = attachmentUrl,
+                MessageType = userMessages.MessageType.ToString()
+            });
 
-            // اختياري: ابعت لنفسك تأكيد (مثلاً لو في طرفين مفتوحين)
             await Clients.Caller.SendAsync("MessageSentConfirmation", new
             {
                 ReceiverId = recieverId,

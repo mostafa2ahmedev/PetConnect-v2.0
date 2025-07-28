@@ -1,29 +1,20 @@
 <div class="p-4 max-w-xl mx-auto">
   <h2 class="text-xl font-bold mb-4">🟢 Connection: {{ connectionStatus }}</h2>
 
-  <input
-    [(ngModel)]="receiverId"
-    class="w-full mb-2 px-3 py-2 border rounded"
-    placeholder="Receiver ID (UserId from token)"
-  />
+  <input [(ngModel)]="receiverId" class="w-full mb-2 px-3 py-2 border rounded"
+    placeholder="Receiver ID (UserId from token)" />
 
-  <input
-    [(ngModel)]="message"
-    class="w-full mb-2 px-3 py-2 border rounded"
-    placeholder="Enter message"
-  />
+  <input [(ngModel)]="message" class="w-full mb-2 px-3 py-2 border rounded" placeholder="Enter message" />
 
-  <button
-    (click)="sendMessage()"
-    class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-  >
+  <button (click)="sendMessage()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
     Send
   </button>
 
   <div class="mt-6">
-    <h3 class="font-semibold">📨 Messages:</h3>
+    <h3 class="font-semibold mb-2">📨 Messages:</h3>
+
     <div *ngFor="let msg of messages" class="border-b py-2">
-      <strong>{{ msg.from }}</strong>: {{ msg.text }}
+      {{ msg.message }}
     </div>
   </div>
 </div>
