@@ -19,7 +19,10 @@ import { BreedDetails } from './Feature/breeds/breed-details/breed-details';
 import { DoctorProfile } from './Feature/doctor-profile/doctor-profile';
 import { DoctorEditProfile } from './Feature/doctor-edit-profile/doctor-edit-profile';
 import { NotFoundDoctor } from './Feature/not-found-doctor/not-found-doctor';
-import { OrdersComponent } from './Feature/orders/orders';
+import { OrdersComponent} from './Feature/orders/orders';
+import { ProductsComponent} from './Feature/Products/all-products/all-products';
+import { ProductDetailsComponent } from './Feature/Products/product-details/product-details';
+
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -48,5 +51,8 @@ export const routes: Routes = [
   {path:"register/customer", component:CustomerRegisterForm},
   {path:"notfound/doctor",component:NotFoundDoctor},
  { path: 'orders', component: OrdersComponent },
+ { path: 'all-products', component: ProductsComponent },
+ { path: 'products/:id', component: ProductDetailsComponent },
+
 
 ];
