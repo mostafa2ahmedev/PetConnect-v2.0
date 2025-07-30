@@ -8,6 +8,8 @@ namespace PetConnect.DAL.Data.Enums
 {
     public enum NotificationType
     {
-        Adoption,
+        Approval,
+        Rejection, 
+        Info,
     }
 }

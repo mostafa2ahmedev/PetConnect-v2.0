@@ -134,6 +134,7 @@ namespace PetConnect.API
             }
 
             app.MapHub<ChatHub>("/Chat");
+            app.MapHub<NotificationHub>("/NotificationHub");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

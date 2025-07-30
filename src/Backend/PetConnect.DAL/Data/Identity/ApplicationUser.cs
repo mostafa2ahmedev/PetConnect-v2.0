@@ -18,5 +18,6 @@ namespace PetConnect.DAL.Data.Identity
         public ICollection<UsersMessages> SentMessages { get; set; } = new HashSet<UsersMessages>();
         public ICollection<UsersMessages> ReceivedMessages { get; set; } = new HashSet<UsersMessages>();
         public ICollection<UserConnection> UserConnections { get; set; } = new HashSet<UserConnection>();
+        public ICollection<Notification> Notifications{ get; set; } = new HashSet<Notification>();
     }
 }

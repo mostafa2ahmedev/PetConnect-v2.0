@@ -1,6 +1,7 @@
 ﻿using PetConnect.DAL.Data.GenericRepository;
 using PetConnect.DAL.Data.Models;
 using PetConnect.DAL.Data.Repositories.Interfaces;
+using PetConnect.DAL.UnitofWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,15 @@ namespace PetConnect.DAL.Data.Repositories.Classes
 {
     public class NotificationRepository : GenericRepository<Notification>, INotificationRepository
     {
-        public NotificationRepository(AppDbContext _context) : base(_context)
+        private readonly AppDbContext context;
+
+        public NotificationRepository(AppDbContext _context ) : base(_context)
         {
+            context = _context;
+        }
+        public Notification? GetById(Guid id) 
+        {
+            return context.Notifications.Find(id);
         }
     }
 }

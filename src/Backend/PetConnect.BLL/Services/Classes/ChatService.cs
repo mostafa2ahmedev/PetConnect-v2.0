@@ -107,6 +107,8 @@ namespace PetConnect.BLL.Services.Classes
             return false;
         }
 
+        //public string UploadImage()
+
 
     }
 }

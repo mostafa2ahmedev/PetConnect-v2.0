@@ -10,5 +10,6 @@ namespace PetConnect.DAL.Data.Repositories.Interfaces
 {
     public interface INotificationRepository : IGenericRepository<Notification>
     {
+        public Notification? GetById(Guid id);
     }
 }

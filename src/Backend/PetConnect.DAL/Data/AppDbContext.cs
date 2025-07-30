@@ -45,7 +45,6 @@ namespace PetConnect.DAL.Data
             builder.Entity<Doctor>().ToTable("Doctors");
             builder.Entity<ShelterOwner>().ToTable("ShelterOwners");
             builder.Entity<Admin>().ToTable("Admins");
-            builder.Entity<AdoptionNotification>().ToTable("AdoptionNotification");
         }
 
     }

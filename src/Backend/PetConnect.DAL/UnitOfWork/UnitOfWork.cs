@@ -58,7 +58,6 @@ namespace PetConnect.DAL.UnitofWork
         public IApplicationUserRepository ApplicationUserRepository=> new ApplicationUserRepository(context);
 
 
-        public IAdoptionNotificationRepository AdoptionNotificationRepository => new AdoptionNotificationRepository(context);
         public INotificationRepository NotificationRepository => new NotificationRepository(context);
         public IUserConnectionRepository UserConnectionRepository => new UserConnectionRepository(context);
         public IUserMessagesRepository UserMessagesRepository => new UserMessagesRepository(context);

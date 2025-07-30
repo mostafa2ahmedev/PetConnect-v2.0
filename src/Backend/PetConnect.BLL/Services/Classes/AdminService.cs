@@ -8,6 +8,7 @@ using PetConnect.BLL.Services.DTO.Doctor;
 using PetConnect.BLL.Services.DTO.PetDto;
 using PetConnect.BLL.Services.DTOs.Admin;
 using PetConnect.BLL.Services.DTOs.Customer;
+using PetConnect.BLL.Services.DTOs.Notification;
 using PetConnect.BLL.Services.Interfaces;
 using PetConnect.DAL.Data.Enums;
 using PetConnect.DAL.Data.Models;
@@ -18,10 +19,12 @@ namespace PetConnect.BLL.Services.Classes
     public class AdminService : IAdminService
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly INotificationService notificationService;
 
-        public AdminService(IUnitOfWork _unitOfWork)
+        public AdminService(IUnitOfWork _unitOfWork, INotificationService _notificationService)
         {
             unitOfWork = _unitOfWork;
+            notificationService = _notificationService;
         }
 
         public AdminDashboardDTO GetPendingDoctorsAndPets()
@@ -89,6 +92,11 @@ namespace PetConnect.BLL.Services.Classes
                     Street = doctor.Address.Street,
                     PricePerHour = doctor.PricePerHour
                 };
+                notificationService.CreateAndSendNotification(id, new NotificationDTO
+                {
+                    Message = "You Account Has Been Approved.",
+                    Type = NotificationType.Approval,
+                });
                 return dto;
             }
             return null;
@@ -97,6 +105,7 @@ namespace PetConnect.BLL.Services.Classes
         public PetDetailsDto? ApprovePet(int id)
         {
             Pet? pet = unitOfWork.PetRepository.GetByID(id);
+            var userId = unitOfWork.CustomerAddedPetsRepository.GetAllQueryable().FirstOrDefault(C => C.PetId == id)?.CustomerId;
             if (pet is not null)
             {
                 pet.IsApproved = true;
@@ -111,6 +120,11 @@ namespace PetConnect.BLL.Services.Classes
                     Status = pet.Status,
                     IsApproved = pet.IsApproved
                 };
+                notificationService.CreateAndSendNotification(userId, new NotificationDTO()
+                {
+                    Message = $"Your Pet {pet.Name} With Id {pet.Id} Has Been Approved.",
+                    Type = NotificationType.Approval
+                });
                 return dto;
             }
             return null;
@@ -147,6 +161,11 @@ namespace PetConnect.BLL.Services.Classes
                     PricePerHour = doctor.PricePerHour,
                     IsDeleted = doctor.IsDeleted
                 };
+                notificationService.CreateAndSendNotification(id, new NotificationDTO
+                {
+                    Message = "You Account Has Been Rejected.",
+                    Type = NotificationType.Rejection,
+                });
                 return dto;
 
             }
@@ -156,6 +175,8 @@ namespace PetConnect.BLL.Services.Classes
         public PetDetailsDto? RejectPet(int id, string message)
         {
             var pet = unitOfWork.PetRepository.GetByID(id);
+            var userId = unitOfWork.CustomerAddedPetsRepository.GetAllQueryable().Where(C => C.PetId == id).Select(C => C.CustomerId).FirstOrDefault();
+
             if (pet is not null)
             {
                 //udate pet
@@ -180,6 +201,11 @@ namespace PetConnect.BLL.Services.Classes
                     IsApproved = pet.IsApproved,
                     IsDeleted = pet.IsDeleted
                 };
+                notificationService.CreateAndSendNotification(userId, new NotificationDTO()
+                {
+                    Message = $"Your Pet {pet.Name} With Id {pet.Id} Has Been Approved.",
+                    Type = NotificationType.Approval
+                });
                 return dto;
 
             }
@@ -209,9 +235,6 @@ namespace PetConnect.BLL.Services.Classes
             return stats;
         }
 
-
-
-
         public CustomerDetailsDTO? GetProfile(string id)
         {
             var admin = unitOfWork.AdminRepository.GetByID(id);
@@ -238,4 +261,4 @@ namespace PetConnect.BLL.Services.Classes
         }
 
     }
-    }
+}

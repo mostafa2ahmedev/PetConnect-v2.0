@@ -20,16 +20,15 @@ namespace PetConnect.BLL.Services.Classes
         private readonly IPetService _petService;
         private readonly IAttachmentService attachmentSetvice;
         private readonly ICustomerAddedPetsService _customerAddedPetsService;
-        private readonly IAdoptionNotificationService _adoptionNotificationService;
+        
 
         public CustomerService(IUnitOfWork unitOfWork, IPetService petService,
-            IAttachmentService attachmentSetvice,ICustomerAddedPetsService customerAddedPetsService,IAdoptionNotificationService adoptionNotificationService)
+            IAttachmentService attachmentSetvice,ICustomerAddedPetsService customerAddedPetsService)
         {
             _unitOfWork = unitOfWork;
             _petService = petService;
             this.attachmentSetvice = attachmentSetvice;
             _customerAddedPetsService = customerAddedPetsService;
-            _adoptionNotificationService = adoptionNotificationService;
         }
 
 
@@ -130,7 +129,6 @@ namespace PetConnect.BLL.Services.Classes
 
                 var pet = _petService.GetPet(approveORCancelCustomerRequestDto.PetId);
 
-                _adoptionNotificationService.AddAdoptionNotification($"Adoption Completed Successfully, You own {pet!.Name} Now 🎉", RecuserId);
 
             }
 

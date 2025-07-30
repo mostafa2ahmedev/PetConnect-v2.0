@@ -24,6 +24,11 @@ namespace PetConnect.DAL.Data.Configurations
                NotificationType => NotificationType.ToString(),
                returnNotificationType => (NotificationType)Enum.Parse(typeof(NotificationType), returnNotificationType)
                );
+
+            builder.HasOne(N => N.User)
+                .WithMany(U => U.Notifications)
+                .HasForeignKey(N => N.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
