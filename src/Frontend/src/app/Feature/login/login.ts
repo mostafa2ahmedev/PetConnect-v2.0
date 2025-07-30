@@ -12,22 +12,20 @@ import { AuthService } from '../../core/services/auth-service';
   templateUrl: './login.html',
   styleUrls: ['./login.css'],
 })
-export class Login implements OnInit{
+export class Login implements OnInit {
   Email: string = '';
   Password: string = '';
   remembered: boolean = false;
   errorMessage: string | null = null;
-
-//   constructor(private accountService: AccountService, private router: Router) {}
-//   ngOnInit(): void {
-//     this.accountService.logout();
-//   }
 
   constructor(
     private accountService: AccountService,
     private router: Router,
     public authService: AuthService
   ) {}
+  ngOnInit(): void {
+    this.accountService.logout();
+  }
 
   onLogin() {
     this.errorMessage = null;

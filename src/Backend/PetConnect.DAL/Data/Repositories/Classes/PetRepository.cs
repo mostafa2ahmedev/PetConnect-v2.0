@@ -42,5 +42,10 @@ namespace PetConnect.DAL.Data.Repositories.Classes
                 .FirstOrDefault(p => p.Id == id);
         }
 
+        public IQueryable<Pet> GetPetDataWithCustomer()
+        {
+            return context.Pets.Include(P => P.CustomerAddedPets).ThenInclude(d => d.Customer);
+        }
+
     }
 }

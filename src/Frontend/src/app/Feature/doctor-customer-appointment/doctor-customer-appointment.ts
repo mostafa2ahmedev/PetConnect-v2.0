@@ -1,6 +1,6 @@
 import { Component, OnInit,inject } from '@angular/core';
 import { DoctorCustomerAppointmentService } from './doctor-customer-appointment-service';
-import { PetDetailsModel } from '../../models/pet-details';
+import { PetDetailsModel, PetDetailsModel2 } from '../../models/pet-details';
 import { IDoctor } from '../doctors/idoctor';
 import { DataTimeSlotsDto } from '../doctor-profile/data-time-slot-dto';
 import { FormBuilder, FormGroup, FormsModule,Validators , ReactiveFormsModule} from '@angular/forms';
@@ -20,7 +20,7 @@ export class DoctorCustomerAppointment implements OnInit {
   doctorCustomerAppService = inject(DoctorCustomerAppointmentService);
   formBuilder = inject(FormBuilder);
   accountService = inject(AccountService);
-  pets:PetDetailsModel[]=[];
+  pets:PetDetailsModel2[]=[];
   doctor:IDoctor|string={}as IDoctor;
   doctorObj:IDoctor = {} as IDoctor;
   slot:DataTimeSlotsDto= {} as DataTimeSlotsDto;

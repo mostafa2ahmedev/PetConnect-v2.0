@@ -81,7 +81,7 @@ export const routes: Routes = [
     ]},
   {path:"register/doctor", component:DoctorRegisterForm},
   {path:"register/customer", component:CustomerRegisterForm},
-  {path:"notfound/doctor",component:NotFoundDoctor}
+  {path:"notfound/doctor",component:NotFoundDoctor},
   { path: 'notfound/doctor', component: NotFoundDoctor },
   {
     path: 'admin',
