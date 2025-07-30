@@ -21,12 +21,17 @@ namespace PetConnect.DAL.Services
 
             services.AddScoped<IPetCategoryService, PetCategoryService>();
             services.AddScoped<IPetService, PetService>();
-            services.AddScoped<IPetBreadService,PetBreadService>();
+            services.AddScoped<IPetBreedService,PetBreadService>();
             services.AddScoped<IAdminService, AdminService>();
-            services.AddScoped<ICustomerAddedPetsService, CustomerAddedPetsService>();
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<ITimeSlotService, TimeSlotService>();
+            services.AddScoped<ICustomerAddedPetsService, CustomerAddedPetsService>();
+            services.AddScoped<IChatHub, ChatHub>();
+            services.AddScoped<INotificationHub, NotificationHub>();
+            services.AddScoped<INotificationService, NotificationService>();
+            services.AddSignalR();
+            services.AddScoped<IChatService, ChatService>();
             return services;
-        }
+        } 
     }
 }

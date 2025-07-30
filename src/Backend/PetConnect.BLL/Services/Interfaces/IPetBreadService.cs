@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace PetConnect.BLL.Services.Interfaces
 {
-    public interface IPetBreadService
+    public interface IPetBreedService
     {
-        public List<GPetBreadDto> GetAllBreads();
-        public GPetBreadDto? GetBreadById(int Id);
-        public int AddPetBread(AddedPetBreadDto AddedPetBread);
-        public int UpdatePetBread(UPetBreadDto UPetBread);
-        public int DeletePetBread(int Id);
+        public List<GPetBreedDto> GetAllBreeds();
+        public GPetBreedDto? GetBreedById(int Id);
+        public int AddPetBread(AddedPetBreedDto AddedPetBread);
+        public int UpdatePetBread(UPetBreedDto UPetBread);
+        public int DeletePetBreed(int Id);
 
-        public List<GPetBreadDto>? GetBreadsByCategoryId(int CategoryId);
+        public List<GPetBreedDto>? GetBreedsByCategoryId(int CategoryId);
     }
 }

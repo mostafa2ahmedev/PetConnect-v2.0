@@ -76,4 +76,23 @@ export class AccountService {
       return this.doctorService.getById(user.userId);
 
   }
+  isAdmin(): boolean {
+    // Get roles from storage (localStorage or sessionStorage)
+    const rolesString = localStorage.getItem('userRoles') || sessionStorage.getItem('userRoles');
+
+    if (!rolesString) return false; // No roles found
+
+    try {
+      // Parse roles array (assuming it's stored as JSON string)
+      const roles: string[] = JSON.parse(rolesString); 
+      return roles.includes('Admin'); // Check if 'Admin' exists in the array
+    } catch {
+      return false; // Failed to parse roles
+    }
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('token') || sessionStorage.getItem('token');
+  }
+
 }

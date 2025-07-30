@@ -3,11 +3,12 @@ import { FormsModule } from '@angular/forms';
 import { AccountService } from '../../core/services/account-service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../core/services/auth-service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule,CommonModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './login.html',
   styleUrls: ['./login.css'],
 })
@@ -17,13 +18,19 @@ export class Login implements OnInit{
   remembered: boolean = false;
   errorMessage: string | null = null;
 
-  constructor(private accountService: AccountService, private router: Router) {}
-  ngOnInit(): void {
-    this.accountService.logout();
-  }
+//   constructor(private accountService: AccountService, private router: Router) {}
+//   ngOnInit(): void {
+//     this.accountService.logout();
+//   }
+
+  constructor(
+    private accountService: AccountService,
+    private router: Router,
+    public authService: AuthService
+  ) {}
 
   onLogin() {
-    this.errorMessage = null; 
+    this.errorMessage = null;
 
     const loginData = {
       email: this.Email,
@@ -31,7 +38,7 @@ export class Login implements OnInit{
       rememberMe: this.remembered,
     };
 
- this.accountService.PostLogin(loginData).subscribe({
+    this.accountService.PostLogin(loginData).subscribe({
       next: (res) => {
         // Store token (use sessionStorage if rememberMe is false)
         const storage = this.remembered ? localStorage : sessionStorage;
@@ -45,12 +52,19 @@ export class Login implements OnInit{
         }
 
         // Redirect to dashboard or another secure route
-        this.router.navigate(['/doctors']);
+        if (this.authService.isAdmin()) {
+          this.router.navigate(['/admin']);
+        } else if (this.authService.isCustomer()) {
+          this.router.navigate([`/profile`]);
+        } else {
+          this.router.navigate(['/doctors']);
+        }
       },
       error: (err) => {
         console.error('Login failed', err);
-        this.errorMessage = err.error?.message || 'Login failed. Please try again.';
-      }
+        this.errorMessage =
+          err.error?.message || 'Login failed. Please try again.';
+      },
     });
   }
 }

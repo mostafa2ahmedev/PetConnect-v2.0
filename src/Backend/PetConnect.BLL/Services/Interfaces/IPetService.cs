@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Http;
 using PetConnect.BLL.Services.DTO.PetDto;
+using PetConnect.BLL.Services.DTOs.Customer;
 using PetConnect.DAL.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,8 @@ namespace PetConnect.BLL.Services.Interfaces
 
         IEnumerable<PetDetailsDto> GetPetsForCustomer(string CustomerId);
 
-
+        public IEnumerable<PetDataDto> GetAllForAdoptionPetsWithCustomerData();
+        public IEnumerable<PetDataDto> GetAllForRescuePetsWithCustomerData();
 
     }
 }

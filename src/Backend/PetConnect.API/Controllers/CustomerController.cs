@@ -29,11 +29,11 @@ namespace PetConnect.API.Controllers
         [HttpGet()]
         [ProducesResponseType(typeof(List<CustomerDataDto>), StatusCodes.Status200OK)]
         [EndpointSummary("Get All Customers")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult GetAll()
         {
-            var pets = _customerService.GetAllCustomers();
-            return Ok(new GeneralResponse(200, pets));
+            var Customers = _customerService.GetAllCustomers();
+            return Ok(new GeneralResponse(200, Customers));
         }
 
         [HttpGet("{id}")]
@@ -50,10 +50,25 @@ namespace PetConnect.API.Controllers
 
 
 
+        [HttpGet("Profile")]
+        [ProducesResponseType(typeof(List<CustomerDetailsDTO>), StatusCodes.Status200OK)]
+        [EndpointSummary("Get Customer Profile")]
+        [Authorize(Roles = "Customer")]
+
+        public ActionResult GetCustomerProfile()
+        {
+            var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var Customer = _customerService.GetProfile(customerId!);
+            return Ok(new GeneralResponse(200, Customer));
+        }
+
+
+
+
         [HttpPut("UpdateProfile")]
         [EndpointSummary("Update Customer Profile")]
         [Authorize(Roles = "Customer")]
-        public  async Task<ActionResult> UpdateCustomerProfile([FromBody] UpdateCustomerProfileDTO CustomerProfileDTO)
+        public  async Task<ActionResult> UpdateCustomerProfile([FromForm] UpdateCustomerProfileDTO CustomerProfileDTO)
         {
             if (!ModelState.IsValid) {
                     var errors = ModelState
@@ -77,7 +92,7 @@ namespace PetConnect.API.Controllers
 
         [HttpDelete("DeleteProfile/{CustomerId}")]
         [EndpointSummary("Delete Customer Profile")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
 
         public ActionResult DeleteProfile(string CustomerId) {
 
@@ -118,16 +133,50 @@ namespace PetConnect.API.Controllers
 
             return Ok(new GeneralResponse(200, "Request Registered Successfully"));
         }
-
-        
-        [HttpGet("CusReqAdoptions")]
-        [EndpointSummary("Get Customer Adoption Requests")]
+        [HttpDelete]
+        [EndpointSummary("Delete An Adoption Request")]
         [Authorize(Roles = "Customer")]
-        public ActionResult GetCustomerAdoptionRequests()
+        public ActionResult DeleteRequestAdoption([FromBody] DelCusRequestAdoptionDto delCusRequestAdoptionDto)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState
+                .Where(ms => ms.Value.Errors.Count > 0)
+                .ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                );
+
+                return BadRequest(new GeneralResponse(400, errors));
+            }
+            var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result=  _customerService.DeleteRequestAdoption(delCusRequestAdoptionDto, customerId!);
+            if(result==0)
+                return NotFound(new GeneralResponse(404, $"No Data found"));
+
+            return Ok(new GeneralResponse(200, "Request Deleted Successfully"));
+        }
+
+        [HttpGet("CusReqAdoptions")]
+        [EndpointSummary("Get Sent Adoption Requests")]
+        [Authorize(Roles = "Customer")]
+        public ActionResult GetSentAdoptionRequests()
         {
 
             var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result=    _customerService.GetCustomerReqAdoptionsPendingData(customerId!);
+
+            return Ok(new GeneralResponse(200, result));
+        }
+        [HttpGet("CusRecAdoptions")]
+        [EndpointSummary("Get Received Adoption Requests")]
+        [Authorize(Roles = "Customer")]
+        public ActionResult GetReceivedAdoptionRequests()
+        {
+
+            var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = _customerService.GetCustomerRecAdoptionsPendingData(customerId!);
 
             return Ok(new GeneralResponse(200, result));
         }
@@ -136,10 +185,20 @@ namespace PetConnect.API.Controllers
 
 
         [HttpPut("ApproveORCancel")]
-        [EndpointSummary("Approve OR Cancel Request For Customer")]
+        [EndpointSummary("Approve OR Cancel Received Requests For Customer")]
         [Authorize(Roles = "Customer")]
-        public ActionResult ApproveORCancelCustomerRequest([FromBody]ApproveORCancelCustomerRequest approveORCancelCustomerRequestDTO)
+        public ActionResult ApproveORCancelCustomerReceivedRequest([FromBody] ApproveORCancelReceivedCustomerRequest approveORCancelCustomerRequestDTO)
         {
+            if (!ModelState.IsValid) {
+                var errors = ModelState
+                   .Where(ms => ms.Value.Errors.Count > 0)
+                   .ToDictionary(
+                       kvp => kvp.Key,
+                       kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                   );
+
+                return BadRequest(new GeneralResponse(400, errors));
+            }
 
             var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result=  _customerService.ApproveOrCancelCustomerAdoptionRequest(approveORCancelCustomerRequestDTO,customerId!);
@@ -159,7 +218,7 @@ namespace PetConnect.API.Controllers
         {
 
             var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = _customerService.GetCustomerOwnedPetsForCustomer(customerId!);
+            var result = _customerService.GetCustomerOwnedPets(customerId!);
 
             return Ok(new GeneralResponse(statusCode: 200, result));
 

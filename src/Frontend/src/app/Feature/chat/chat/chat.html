@@ -1,0 +1,186 @@
+<div class="container-fluid px-3 py-0 chat-container" style="height: 100vh">
+  <button
+    class="btn btn-primary d-md-none m-2"
+    (click)="toggleContactsSidebar()"
+    [class.d-none]="isSidebarVisible"
+  >
+    <i class="bi bi-toggle-off"></i>
+    Contacts
+  </button>
+  <div class="row h-100 border rounded shadow-sm">
+    <!-- Left Sidebar: Chat Contacts -->
+    <div
+      class="col-md-3 border-end overflow-auto contacts-bar"
+      style="height: 100%"
+      [class.active]="isSidebarVisible"
+    >
+      <h5
+        class="text-uppercase fw-bold p-3 border-bottom d-flex justify-content-between align-items-center"
+      >
+        Messages
+        <button
+          class="btn btn-primary d-md-none m-2"
+          (click)="toggleContactsSidebar()"
+        >
+          <i class="bi bi-toggle-on"></i>
+
+          Close
+        </button>
+      </h5>
+
+      <div class="list-group list-group-flush">
+        <div
+          class="list-group-item d-flex align-items-start cursor-pointer"
+          (click)="activateContact(contact)"
+          *ngFor="let contact of contacts"
+          [ngClass]="{ active: contact.userId === receiverId }"
+        >
+          <img
+            [src]="getFullImageUrl(contact.imageURL)"
+            class="rounded-circle me-2"
+            width="40"
+            height="40"
+          />
+          <div>
+            <div class="fw-semibold">
+              {{ contact.receiverName }}
+            </div>
+            <small class="text-muted">{{ contact.lastMessage }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Middle Content: Chat Window -->
+    <div class="col-md-6 d-flex flex-column p-0" style="height: 100%">
+      <div class="border-bottom p-3 bg-light">
+        <h5 class="mb-0">{{ activeContact?.receiverName }}</h5>
+      </div>
+
+      <!-- Message History -->
+      <div
+        class="flex-grow-1 overflow-auto p-3"
+        style="background-color: #f9f9f9"
+        #messagesContainer
+      >
+        <!-- Repeat messages -->
+        <div
+          *ngFor="let msg of messagesHistory"
+          class="d-flex align-items-start mb-md-3 msg-block p-1"
+        >
+          <!-- Avatar -->
+          <img
+            [src]="
+              msg.receiverId === receiverId
+                ? getFullImageUrl(profileData?.imgUrl || '')
+                : getFullImageUrl(activeContact?.imageURL || '')
+            "
+            alt="avatar"
+            class="rounded-circle me-2"
+            style="width: 40px; height: 40px; object-fit: cover"
+          />
+
+          <!-- Message Content -->
+          <div class="p-2 rounded" style="max-width: 75%">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <div class="fw-semibold">
+                {{
+                  msg.receiverId === receiverId
+                    ? "You"
+                    : activeContact?.receiverName
+                }}
+              </div>
+              <div class="small text-muted ms-2">
+                {{ formatMessageDate(msg.sentDate) }}
+              </div>
+            </div>
+            <div class="text-break">
+              {{ msg.message }}
+            </div>
+          </div>
+        </div>
+        <div
+          *ngFor="let msg of messages"
+          class="d-flex align-items-start mb-md-3 msg-block p-1"
+        >
+          <!-- Avatar -->
+          <img
+            [src]="
+              msg.receiverId === receiverId
+                ? getFullImageUrl(profileData?.imgUrl || '')
+                : getFullImageUrl(activeContact?.imageURL || '')
+            "
+            alt="avatar"
+            class="rounded-circle me-2"
+            style="width: 40px; height: 40px; object-fit: cover"
+          />
+
+          <!-- Message Content -->
+          <div class="p-2 rounded" style="max-width: 75%">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <div class="fw-semibold">
+                {{
+                  msg.receiverId === receiverId
+                    ? "You"
+                    : activeContact?.receiverName
+                }}
+              </div>
+              <div class="small text-muted ms-2">
+                {{ formatMessageDate(msg.sentDate) }}
+              </div>
+            </div>
+            <div class="text-break">
+              {{ msg.message }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input Area -->
+      <div class="p-3 border-top bg-white">
+        <!-- <div class="mb-2">
+          <input
+            [(ngModel)]="receiverId"
+            class="form-control"
+            placeholder="Receiver ID (user ID)"
+          />
+        </div> -->
+        <div class="input-group">
+          <input
+            [(ngModel)]="message"
+            class="form-control"
+            placeholder="Type a message..."
+          />
+          <!-- <button class="btn btn-outline-secondary" type="file">📎</button> -->
+          <button class="btn btn-primary" (click)="sendMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Sidebar: Customer Info -->
+    <div class="col-md-3 border-start px-3 d-none d-md-block pt-5">
+      <div class="text-center pt-3">
+        <img
+          [src]="getFullImageUrl(activeContact?.imageURL || '')"
+          class="rounded-circle mb-3"
+          width="55"
+          height="55"
+          style="display: block; margin: auto"
+          alt="User"
+        />
+        <h6 class="fw-bold">{{ activeContact?.receiverName }}</h6>
+        <p class="text-muted mb-1">{{ activeContact?.receiverName }}</p>
+        <span
+          class="badge"
+          [ngClass]="activeContact?.isOnline ? 'bg-success' : 'bg-secondary'"
+        >
+          {{ activeContact?.isOnline ? "Online" : "Offline" }}
+        </span>
+      </div>
+      <hr />
+      <p class="small text-muted">
+        More info will go here like bio, recent activity, etc.
+      </p>
+    </div>
+  </div>
+</div>

@@ -67,6 +67,7 @@ body {
   color: var(--default-color);
   background-color: var(--background-color);
   font-family: var(--default-font);
+  font-family: "Nunito Sans", sans-serif;
 }
 
 a {
@@ -2597,5 +2598,15 @@ section,
   border-color: #222;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/*table*/
+.custom-header th {
+  background-color: #f8f9fc; /* Light gray-blue background */
+  text-transform: uppercase;
+  font-size: 0.75rem; /* Smaller text */
+  letter-spacing: 0.03em;
+  font-weight: 600;
+  padding: 1rem 0.75rem; /* Bigger padding */
+  line-height: 2.5;
+  color: #495057;
+  border-bottom: 2px solid #dee2e6;
+}

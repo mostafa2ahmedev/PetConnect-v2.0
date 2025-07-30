@@ -4,7 +4,7 @@
     class="container section-title aos-init aos-animate pb-0"
     data-aos="fade-up"
   >
-    <h2>Add New Pet</h2>
+    <h2>Pet Details</h2>
     <p>Add a new pet for adoption or rescue</p>
 
     <div class="my-3 d-flex justify-content-center gap-3">
@@ -57,33 +57,80 @@
                 <strong>Category: </strong>
                 <span class="text-muted">{{ pet.categoryName }}</span>
               </p>
-              <p class="card-text mb-4">
+              <p class="card-text mb-2">
                 <strong>Ownership: </strong>
                 <span class="text-muted">{{
                   getOwnershipLabel(pet.ownership)
                 }}</span>
               </p>
-
+              <p class="card-text mb-2">
+                <strong>Owner: </strong>
+                <span class="text-muted"> {{ pet.customerName }}</span>
+              </p>
+              <p class="card-text mb-2">
+                <strong>From: </strong>
+                <span class="text-muted"> {{ pet.customerCity }}</span>
+              </p>
+              <p class="card-text mb-4">
+                <strong>Notes: </strong>
+                <span class="text-muted"> {{ pet.notes }}</span>
+              </p>
               <div class="mt-3 d-flex gap-2">
                 <a
                   [routerLink]="['/pets/update', UrlId]"
                   class="btn btn-warning btn-sm"
+                  *ngIf="
+                    isDataReady &&
+                    authService.isAuthenticated() &&
+                    authService.getUserId() === pet.customerId
+                  "
                 >
                   Update
                 </a>
                 <a
                   class="btn btn-danger btn-sm"
                   (click)="deletePetById(pet.id)"
+                  *ngIf="
+                    isDataReady &&
+                    authService.isAuthenticated() &&
+                    authService.getUserId() === pet.customerId
+                  "
                 >
                   Delete
                 </a>
-
-                <a
-                  [routerLink]="['/adoption/request', pet.id]"
-                  class="btn btn-success btn-sm"
+                <button
+                  class="btn btn-primary btn-sm"
+                  [disabled]="!isDataReady"
+                  *ngIf="
+                    !isDataReady &&
+                    authService.isAuthenticated() &&
+                    authService.isCustomer()
+                  "
                 >
-                  Adopt
-                </a>
+                  loading
+                </button>
+                <button
+                  class="btn btn-primary btn-sm"
+                  *ngIf="
+                    isDataReady &&
+                    authService.isAuthenticated() &&
+                    authService.getUserId() !== pet.customerId &&
+                    !requestedPetIds.includes(pet.id)
+                  "
+                  (click)="sendAdoptionRequest(pet)"
+                >
+                  Adopt Now
+                </button>
+                <button
+                  *ngIf="requestedPetIds.includes(pet.id)"
+                  class="btn btn-danger btn-sm"
+                  (click)="cancelAdoptionRequest(pet)"
+                >
+                  Cancel Request
+                </button>
+                <p *ngIf="!authService.isAuthenticated()">
+                  <a routerLink="/login">Login</a> , to adopt or add a new pet
+                </p>
               </div>
             </div>
           </div>

@@ -19,4 +19,8 @@
     <ProjectReference Include="..\PetConnect.BLL\PetConnect.BLL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\assets\chatimages\" />
+  </ItemGroup>
+
 </Project>

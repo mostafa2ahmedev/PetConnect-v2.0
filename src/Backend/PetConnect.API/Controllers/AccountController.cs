@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PetConnect.BLL.Services.DTO.Account;
+using PetConnect.BLL.Services.DTOs.Account;
 using PetConnect.BLL.Services.Interfaces;
 using PetConnect.BLL.Services.Models;
 using PetConnect.DAL.Data.Identity;
@@ -32,7 +33,10 @@ namespace PetConnect.API.Controllers
             jwtService = _jwtService;
         }
 
-        [HttpPost(template: "register/customer")]
+        [HttpPost("register/customer")]
+        [EndpointSummary("Register a new customer.")]
+        [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> PostCustomerRegister([FromForm] CustomerRegisterDTO registerDTO)
         {
             if (!ModelState.IsValid)
@@ -68,6 +72,9 @@ namespace PetConnect.API.Controllers
             });
         }
         [HttpPost("register/doctor")]
+        [EndpointSummary("Register a new doctor.")]
+        [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> PostDoctorRegister([FromForm] DoctorRegisterDTO registerDTO)
         {
             if (!ModelState.IsValid)
@@ -106,6 +113,9 @@ namespace PetConnect.API.Controllers
         }
 
         [HttpPost("login")]
+        [EndpointSummary("Login with email and password.")]
+        [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> PostLogin(SignInDTO signInDTO)
         {
             if (!ModelState.IsValid)

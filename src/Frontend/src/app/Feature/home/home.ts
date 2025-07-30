@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './home.html',
-  styleUrl: './home.css'
+  styleUrl: './home.css',
 })
 export class Home {
- doctors = [{fName:"h", id:1 ,lName:"e",petSpecialty:"cat"}]
+  doctors = [{ fName: 'h', id: 1, lName: 'e', petSpecialty: 'cat' }];
 }

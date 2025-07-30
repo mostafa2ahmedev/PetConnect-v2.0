@@ -1,0 +1,23 @@
+.unauthorized-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 20px;
+
+  .card {
+    max-width: 500px;
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+  }
+
+  button {
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+}

@@ -28,7 +28,7 @@ export class BreedDetails {
     private router: Router,
     private breedService: BreedService,
     private categoryService: CategoryService,
-    private alert: AlertService
+    public alert: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -81,7 +81,7 @@ export class BreedDetails {
     this.breedService.updateBreed(this.breed).subscribe({
       next: () => {
         this.alert.success('Breed updated successfully');
-        this.router.navigate(['/breeds']);
+        this.router.navigate(['/admin/breeds']);
       },
       error: (err) => {
         console.error('Update failed:', err);
@@ -109,7 +109,7 @@ export class BreedDetails {
     this.breedService.deleteBreed(this.breed.id).subscribe({
       next: () => {
         this.alert.success('Breed deleted successfully');
-        this.router.navigate(['/breeds']);
+        this.router.navigate(['/admin/breeds']);
       },
       error: (err) => {
         console.error('Delete failed:', err);

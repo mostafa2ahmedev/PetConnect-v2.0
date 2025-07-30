@@ -5,4 +5,5 @@ export interface AddPetRequest {
   BreedId: number;
   ImgURL: File;
   Age: number;
+  Notes: string;
 }

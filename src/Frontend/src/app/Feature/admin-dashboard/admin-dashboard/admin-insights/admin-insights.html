@@ -1,0 +1,55 @@
+<div class="row">
+  <h5 class="mb-4">Insights</h5>
+  <div class="px-2 col-md-4">
+    <div class="card shadow-sm px-2 py-4">
+      <h6 class="mb-3 text-center fw-semibold text-black-50">Pet Overview</h6>
+      <apx-chart
+        [series]="PetChartOptions.series"
+        [chart]="PetChartOptions.chart"
+        [labels]="PetChartOptions.labels"
+        [responsive]="PetChartOptions.responsive"
+        [legend]="PetChartOptions.legend"
+        [colors]="PetChartOptions.colors"
+        [plotOptions]="PetChartOptions.plotOptions"
+        [dataLabels]="PetChartOptions.dataLabels"
+        *ngIf="chartReady"
+      ></apx-chart>
+    </div>
+  </div>
+  <div class="px-2 col-md-4">
+    <div class="card shadow-sm px-2 py-4">
+      <h6 class="mb-3 text-center fw-semibold text-black-50">
+        Doctors Overview
+      </h6>
+      <apx-chart
+        [series]="DocChartOptions.series"
+        [chart]="DocChartOptions.chart"
+        [labels]="DocChartOptions.labels"
+        [responsive]="DocChartOptions.responsive"
+        [legend]="DocChartOptions.legend"
+        [colors]="DocChartOptions.colors"
+        [plotOptions]="DocChartOptions.plotOptions"
+        [dataLabels]="PetChartOptions.dataLabels"
+        *ngIf="chartReady"
+      ></apx-chart>
+    </div>
+  </div>
+  <div class="px-2 col-md-4">
+    <div class="card shadow-sm px-2 py-4">
+      <h6 class="mb-3 text-center fw-semibold text-black-50">
+        Client Overview
+      </h6>
+      <apx-chart
+        [series]="UserChartOptions.series"
+        [chart]="UserChartOptions.chart"
+        [labels]="UserChartOptions.labels"
+        [responsive]="UserChartOptions.responsive"
+        [legend]="UserChartOptions.legend"
+        [colors]="UserChartOptions.colors"
+        [plotOptions]="UserChartOptions.plotOptions"
+        [dataLabels]="UserChartOptions.dataLabels"
+        *ngIf="chartReady"
+      ></apx-chart>
+    </div>
+  </div>
+</div>
