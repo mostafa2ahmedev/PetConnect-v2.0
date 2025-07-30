@@ -12,11 +12,15 @@ namespace PetConnect.BLL.Services.Interfaces
     {
         Task<int> AddTimeSlot(AddedTimeSlotDto addedTimeSlot);
         Task<int> UpdateTimeSlot(UpdatedTimeSlotDto UpdatedTimeSlot);
+        Task<int> ChangeTimeSlotState(ChangeActiveTimeSlotStateDTO timeSlot);
+
         int DeleteTimeSlot(int id);
 
         IEnumerable<DataTimeSlotsDto> GetAllTimeSlots(string doctorId);
+        IEnumerable<TimeSlotsViewDTOcs> GetAllTimeSlotsIncludingStatus(string doctorId);
         DataTimeSlotsDto? GetTimeSlot(int id);
         IEnumerable<DataTimeSlotsDto> GetAllActiveTimeSlots(string doctorId);
+        Task<bool> IsBookable(CheckTimeSlotsForCustomerDoctorDTO timeSlot);
 
     }
 }

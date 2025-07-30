@@ -17,8 +17,9 @@ namespace PetConnect.BLL.Services.DTOs.AppointmentDto
 
         public int? PetId { get; set; }
 
-        public AppointmentStatus Status { get; set; }
+        public string Status { get; set; }
 
         public DateTime CreatedAt { get; set; }
+        public string? Notes { get; set; }
     }
 }

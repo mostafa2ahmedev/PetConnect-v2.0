@@ -1,0 +1,36 @@
+<div class="table-responsive">
+  <table class="table table-bordered table-hover">
+    <thead class="table-light">
+      <tr>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>Max Capacity</th>
+        <th>Booked Count</th>
+        <th>Active</th>
+        <th>ID</th>
+      </tr>
+    </thead>
+    <tbody>
+        @for(slot of allTimeSlots;track slot){
+      <tr >
+        <td>{{ slot.startTime | date:'medium'}}</td>
+        <td>{{ slot.endTime | date:'medium'}}</td>
+        <td>{{ slot.maxCapacity }}</td>
+        <td>{{ slot.bookedCount }}</td>
+        <td>
+          <span [class]="slot.isActive ? 'text-success' : 'text-danger'">
+            {{ slot.isActive ? 'Active' : 'Inactive' }}
+          </span>
+        </td>
+        <td>{{ slot.id }}</td>
+        @if(slot.isActive){
+        <td >
+          <button (click)="changeStatusToActive(slot)">Change Active State</button>
+        </td>
+      }
+      </tr>
+    }
+    </tbody>
+  </table>
+  
+</div>

@@ -116,11 +116,14 @@
   <div *ngIf="certificateError" class="text-danger">{{ certificateError }}</div>
 </div>
 
+<div class="col-md-6">
+  <button [routerLink]="['/doctors','timeslot',editedDoctor.id]" class="btn btn-primary">Update Time Slot</button>
+</div>
 
   <!-- Actions -->
   <div class="col-12 mt-4">
     <button type="submit" [disabled]="formRef.invalid" class="btn btn-primary mx-2">Save Changes</button>
-    <a class="btn btn-outline-danger" [routerLink]="['/doctors', editedDoctor.id]">Cancel</a>
+    <a class="btn btn-outline-danger" (click)="goBack()">Cancel</a>
   </div>
 
 </form>

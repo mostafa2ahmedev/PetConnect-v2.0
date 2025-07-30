@@ -181,5 +181,37 @@ namespace PetConnect.BLL.Services.Classes
         //    return petData;
         //}
 
+
+        public IEnumerable<PetDetailsDto> GetPetsForCustomer(string CustomerId)
+        {
+            ICollection<PetDetailsDto> customerPets = new List<PetDetailsDto>();
+            var pets = _unitOfWork.PetRepository.GetPetDataWithCustomer().Where(e=>e.CustomerAddedPets.CustomerId == CustomerId);
+            if (pets == null || pets.Count() == 0)
+                return [];
+            foreach (var pet in pets)
+            {
+                var bread = _unitOfWork.PetBreedRepository.GetByID(pet.BreedId);
+                var Category = _unitOfWork.PetCategoryRepository.GetByID(bread.CategoryId);
+
+
+                PetDetailsDto Pet = new PetDetailsDto()
+                {
+                    Id = pet.Id,
+                    Name = pet.Name,
+                    IsApproved = pet.IsApproved,
+                    BreadName = bread.Name,
+                    ImgUrl = $"/assets/PetImages/{pet.ImgUrl}",
+                    Ownership = pet.Ownership,
+                    Status = pet.Status,
+                    CategoryName = Category.Name,
+                    Age = pet.Age,
+                    CustomerId = pet.CustomerAddedPets.CustomerId,
+                    CustomerName = pet.CustomerAddedPets.Customer.FName + " " + pet.CustomerAddedPets.Customer.LName
+
+                };
+                customerPets.Add(Pet);
+            }
+            return customerPets;
+        }
     }
 }

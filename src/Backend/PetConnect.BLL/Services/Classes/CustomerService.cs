@@ -209,6 +209,19 @@ namespace PetConnect.BLL.Services.Classes
            return _unitOfWork.SaveChanges();
         }
 
-     
+        public CustomerDataDto? GetCustomerById(string id)
+        {
+            Customer c = _unitOfWork.CustomerRepository.GetAll().FirstOrDefault(e => e.Id == id);
+            CustomerDataDto customerData = new CustomerDataDto()
+            {
+                CustomerId = c.Id,
+                FName = c.FName,
+                LName = c.LName,
+                ImgUrl = c.ImgUrl,
+                City = c.Address.City
+            };
+            return customerData;
+
+        }
     }
 }

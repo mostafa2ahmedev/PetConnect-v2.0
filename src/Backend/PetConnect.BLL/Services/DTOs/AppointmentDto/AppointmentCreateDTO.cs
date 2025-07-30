@@ -17,7 +17,8 @@ namespace PetConnect.BLL.Services.DTOs.AppointmentDto
 
         [Required(ErrorMessage = "TimeSlot Id is required")]
         public Guid SlotId { get; set; }
-
-        public int? PetId { get; set; }
+        [Required(ErrorMessage = "Pet is required")]
+        public int PetId { get; set; }
+        public string? Notes { get; set; }
     }
 }

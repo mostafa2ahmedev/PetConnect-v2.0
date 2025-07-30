@@ -1,5 +1,7 @@
-﻿using PetConnect.BLL.Services.DTOs.TimeSlotDto;
+﻿using Microsoft.EntityFrameworkCore;
+using PetConnect.BLL.Services.DTOs.TimeSlotDto;
 using PetConnect.BLL.Services.Interfaces;
+using PetConnect.DAL.Data.Enums;
 using PetConnect.DAL.Data.Models;
 using PetConnect.DAL.UnitofWork;
 using System;
@@ -27,7 +29,7 @@ namespace PetConnect.BLL.Services.Classes
             };
 
             _unitOfWork.TimeSlotsRepository.Add(ts);
-                return _unitOfWork.SaveChanges();
+                return  _unitOfWork.SaveChanges();
         }
 
         public int DeleteTimeSlot(int id)
@@ -51,8 +53,33 @@ namespace PetConnect.BLL.Services.Classes
                     EndTime = ts.EndTime,
                     StartTime = ts.StartTime,
                     IsActive = ts.IsActive,
-                    MaxCapacity = ts.MaxCapacity
-            });
+                    MaxCapacity = ts.MaxCapacity,
+                    Id = ts.Id
+                });
+        }
+
+        public IEnumerable<TimeSlotsViewDTOcs> GetAllTimeSlotsIncludingStatus(string doctorId)
+        {
+            IEnumerable<TimeSlot> activeTimeSlots = _unitOfWork.TimeSlotsRepository.GetAllQueryable().Include(e => e.Appointments).Where(e=>e.DoctorId==doctorId && e.IsActive==true);
+            ICollection<TimeSlotsViewDTOcs> newReturnedTS = new List<TimeSlotsViewDTOcs>();
+            foreach(var ts in activeTimeSlots)
+            {
+
+                newReturnedTS.Add(new TimeSlotsViewDTOcs
+                {
+                  
+                    BookedCount = ts.BookedCount,
+                    EndTime = ts.EndTime,
+                    StartTime = ts.StartTime,
+                    IsActive = ts.IsActive,
+                    MaxCapacity = ts.MaxCapacity,
+                    Id = ts.Id,
+                    DoctorId = ts.DoctorId,
+                    Status = ts.Appointments.FirstOrDefault(e => e.SlotId == ts.Id)?.Status.ToString() ?? "Available"
+
+                });
+            }
+            return newReturnedTS;
         }
 
         public IEnumerable<DataTimeSlotsDto> GetAllTimeSlots(string doctorId)
@@ -65,8 +92,10 @@ namespace PetConnect.BLL.Services.Classes
                 BookedCount = ts.BookedCount,
                 EndTime = ts.EndTime,
                 StartTime = ts.StartTime,
-                IsActive = ts.IsActive,
-                MaxCapacity = ts.MaxCapacity
+                IsActive = ts.EndTime.Date<DateTime.Today? false:ts.IsActive,
+                MaxCapacity = ts.MaxCapacity,
+                Id = ts.Id,
+                
             });
         }
 
@@ -101,5 +130,48 @@ namespace PetConnect.BLL.Services.Classes
             _unitOfWork.TimeSlotsRepository.Update(ts);
             return _unitOfWork.SaveChanges();
         }
+
+        public Task<bool> IsBookable(CheckTimeSlotsForCustomerDoctorDTO timeSlot)
+        {
+            var activeTimeSlotsWithCustomerAndStatus = _unitOfWork.TimeSlotsRepository.GetAllQueryable().Include(e => e.Appointments)
+                .Where(e => e.IsActive == true && e.DoctorId == timeSlot.DoctorId).Select(e => new
+                {
+                    Id = e.Id,
+                    CustomerId = e.Appointments.FirstOrDefault(e => e.CustomerId == timeSlot.CustomerId).CustomerId,
+                    DoctorId = e.DoctorId,
+                    StartTime = e.StartTime,
+                    EndTime = e.EndTime,
+                    Status = e.Appointments.FirstOrDefault(e => e.SlotId == timeSlot.Id).Status.ToString(),
+                    MaxCapacity = e.MaxCapacity,
+                    BookedCount = e.BookedCount,
+                    IsFull = e.IsFull,
+                    IsActive = e.IsActive,
+    });
+
+            bool isAnyDateBookedAlready = activeTimeSlotsWithCustomerAndStatus
+                .Any(e => e.StartTime.Date == timeSlot.StartTime.Date &&
+                !timeSlot.IsFull &&
+                timeSlot.CustomerId == e.CustomerId &&
+                timeSlot.Status == AppointmentStatus.Available.ToString());
+
+            return Task.FromResult(!isAnyDateBookedAlready);
+
+
+        }
+
+        public async Task<int> ChangeTimeSlotState(ChangeActiveTimeSlotStateDTO timeSlot)
+        {
+            TimeSlot foundedTs = _unitOfWork.TimeSlotsRepository.GetAll()
+                .SingleOrDefault(e=>e.Id== timeSlot.Id);
+
+            if (foundedTs == null )
+                return 0;
+            foundedTs.IsActive = !foundedTs.IsActive;
+            _unitOfWork.TimeSlotsRepository.Update(foundedTs);
+            return  await _unitOfWork.SaveChangesAsync();
+            
+        }
+
+
     }
 }

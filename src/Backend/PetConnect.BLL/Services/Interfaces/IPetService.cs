@@ -23,7 +23,9 @@ namespace PetConnect.BLL.Services.Interfaces
         PetDetailsDto? GetPet(int id);
         IEnumerable<PetDataDto> GetAllPetsByCountForAdoption(int count);
 
-   
+        IEnumerable<PetDetailsDto> GetPetsForCustomer(string CustomerId);
+
+
 
     }
 }

@@ -19,6 +19,7 @@ namespace PetConnect.BLL.Services.Interfaces
         public IEnumerable<PetDataDto> GetCustomerOwnedPetsForCustomer(string UserId);
         public CustomerDetailsDTO? GetProfile(string id);
         public IEnumerable<CustomerDataDto> GetAllCustomers();
+        public CustomerDataDto? GetCustomerById(string id);
         public int Delete(string id);
         Task<int> UpdateProfile(UpdateCustomerProfileDTO model,string CustomerId);
 

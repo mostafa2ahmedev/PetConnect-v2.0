@@ -1,0 +1,291 @@
+
+
+<!-- This section assumes profileData() returns an object conforming to or extending IDoctor. -->
+@if(typeof profileData() != 'undefined'){
+<section
+    class="w-100 p-4"
+    style="background-color: #eee; border-radius: 0.5rem 0.5rem 0 0"
+>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <!-- Loading Spinner -->
+                <div *ngIf="loadingProfile" class="text-center p-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-3">Loading profile...</p>
+                </div>
+
+                <!-- No profile fallback -->
+                <div
+                    *ngIf="!loadingProfile && !profileData()"
+                    class="alert alert-warning text-center"
+                >
+                    Unable to load profile information.
+                </div>
+
+                <!-- Profile Card - Doctor's basic info -->
+                <div class="card-body text-center" *ngIf="!loadingProfile && profileData()">
+                    <img
+                        [src]="getFullImageUrl(profileData().imgUrl) || 'assets/img/default-user.png'"
+                        alt="Doctor Avatar"
+                        class="rounded-circle img-fluid"
+                        style="width: 150px"
+                    />
+                    <h5 class="my-3">
+                        {{ profileData().fName }} {{ profileData().lName }}
+                    </h5>
+                    <p class="text-muted mb-1">{{ profileData().city }}</p>
+                    <p class="text-muted mb-4">
+                        <strong>{{ profileData().pricePerHour }}</strong> EGP/Hour
+                    </p>
+                    <div class="d-flex justify-content-center mb-2">
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            [routerLink]="['/doctors','update',profileData().id]"
+                        >
+                            Update Profile
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-outline-primary ms-1"
+                            [routerLink]="['/doctors','timeslot',profileData().id]"
+                        >
+                            Add Timeslot
+                        </button>
+
+                         <button
+                            type="button"
+                            class="btn btn-outline-primary ms-1"
+                            [routerLink]="['/doctors','timeslots']"
+                        >
+                            Show Timeslots
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Doctor's Detailed Information -->
+            <div class="card mb-4 mt-3">
+                <div class="card-body" *ngIf="!loadingProfile && profileData()">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Full Name</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">
+                                {{ profileData().fName }} {{ profileData().lName }}
+                            </p>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Gender</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{ profileData().gender }}</p>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Specialty</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{ profileData().petSpecialty }}</p>
+                        </div>
+                    </div>
+
+                    <hr />
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Address</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">
+                                {{ profileData().street }}, {{ profileData().city }}
+                            </p>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Certificate</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">
+                                <a [href]="profileData().certificateUrl" target="_blank" class="text-decoration-underline">View Certificate</a>
+                            </p>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Approved</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="mb-0">
+                                <span
+                                    class="badge"
+                                    [ngClass]="profileData().isApproved ? 'bg-success' : 'bg-danger'"
+                                >
+                                    {{ profileData().isApproved ? 'Yes' : 'No' }}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 ">
+            <div class="row">
+                <!-- Sent Appointment Requests Section -->
+                <div class="sent-requests mb-5 mt-3">
+                    <h5 class="mb-4">Appointment requests</h5>
+                    <!-- Loading Spinner -->
+                    <div *ngIf="loadingAppointments" class="text-center p-5">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-3">Loading Appointment requests...</p>
+                    </div>
+                    <div
+                        *ngIf="!loadingAppointments && appointmentRequests.length === 0"
+                        class="alert alert-info text-center"
+                    >
+                        You have no appointments
+                    </div>
+
+                        <div class="row mb-3"  *ngIf="appointmentRequests.length > 0" >
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label fw-semibold">Filter by Appointment Status you have:</label>
+                                <select class="form-select" [(ngModel)]="selectedStatusFilter">
+                                    <option value=""  selected>Show All</option>
+                                     <option *ngFor="let stat of statusArr" [value]="stat"> 
+                                         {{ stat }}
+                                    </option> 
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label fw-semibold">Sort by Date:</label>
+                                <select class="form-select" [(ngModel)]="sortOrder">
+                                    <option value="desc">Newest First</option>
+                                    <option value="asc">Oldest First</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+<div class="card shadow-sm" *ngIf="appointmentRequests.length > 0">
+                    <!---->
+
+  <div class="card-body p-4 request-section ">
+    <!-- @for(req of appointmentRequests;track req.id;let i = $index){ -->
+    @for(req of filteredAndSortedRequests;track req.id;let i = $index){
+    <div class="mb-4 border-bottom pb-4">
+      <div class="row g-3 align-items-center">
+        
+        <!-- Appointment Header -->
+        <div class="col-12">
+          <h5 class="text-primary">Appointment #{{ i+1 }}</h5>
+          <small class="text-muted">Created at: {{ req.createdAt | date: 'medium' }}</small>
+        </div>
+
+        <!-- Doctor & Customer Info -->
+        <div class="col-md-6">
+          <p class="mb-1">
+            <img src="{{server}}/assets/PetImages/{{req.petImg}}" alt="{{ req.petName }}" class="img-fluid rounded-circle" width="30" height="30">
+            <strong>Pet Name:</strong> {{ req.petName }}
+          </p>
+          <p class="mb-1">
+            <img src="{{server}}/{{req.customerImg}}" alt="{{ req.customerName }}" class="img-fluid rounded-circle" width="30" height="30">
+            <strong>Customer:</strong> {{ req.customerName }}
+          </p>
+        </div>
+
+        <!-- Pet & Time Slot Info -->
+        <div class="col-md-6">
+          <p class="mb-1">
+            <strong>Max Capacity:</strong> {{ req.maxCapacity }}
+          </p>
+          <p class="mb-3">
+            <strong>Booked Count:</strong> {{ req.bookedCount }}
+          </p>
+          <p class="mb-1">
+            <strong>Time Slot:</strong> {{ req.slotStartTime |date: "medium" }} - {{ req.slotEndTime | date : "medium" }}
+          </p>
+        </div>
+
+        <!-- Capacity Info -->
+        <!-- <div class="col-md-6">
+
+        </div> -->
+
+        <!-- Appointment Notes -->
+        <div class="col-md-6">
+          <p class="mb-1">
+            <strong>Notes:</strong> {{ req.notes || 'None' }}
+          </p>
+        </div>
+
+        <!-- Status Badge -->
+        <div class="col-md-3 text-md-center text-start">
+          <span
+            class="badge rounded-pill px-3 py-1"
+            [ngClass]="{
+              'bg-warning text-dark': req.status === 'Pending',
+              'bg-success': req.status === 'Completed',
+              'bg-primary': req.status === 'Confirmed',
+              'bg-danger': req.status === 'Cancelled'
+            }"
+            style="font-size: 0.75rem"
+          >
+            {{ req.status }}
+          </span>
+        </div>
+
+        <!-- Cancel Button -->
+        <div class="col-md-3 text-md-end text-start">
+          <button
+            
+            *ngIf="  req.status === 'Pending'"
+            class="btn btn-danger btn-sm"
+            (click)="cancelRequest(req.id)"
+          >
+            Cancel Request
+          </button>
+
+                    <button
+            
+            *ngIf="  req.status === 'Pending'"
+            class="btn btn-primary btn-sm ms-2"
+            (click)="confirmRequest(req.id)"
+          >
+            Confirm Request
+          </button>
+
+          
+                    <button
+            
+            *ngIf="  req.status === 'Confirmed'"
+            class="btn btn-success btn-sm ms-2"
+            (click)="completeRequest(req.id)"
+          >
+            Mark as Completed 
+          </button>
+        </div>
+
+      </div>
+    </div>
+    }
+
+  </div>
+
+</div>
+            </div>
+        </div>
+
+
+</div>
+</div>
+</section>
+}

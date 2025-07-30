@@ -1,10 +1,11 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { AfterViewInit, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { DoctorsService } from './doctors-service';
 import { FormsModule } from '@angular/forms';
 import { IDoctor } from './idoctor';
 import { CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ISpeciality } from './ispeciality';
+import { AccountService } from '../../core/services/account-service';
 
 @Component({
   selector: 'app-doctors',
@@ -12,9 +13,10 @@ import { ISpeciality } from './ispeciality';
   templateUrl: './doctors.html',
   styleUrl: './doctors.css'
 })
-export class Doctors implements OnInit{
+export class Doctors implements OnInit {
   server = "https://localhost:7102";
 doctorService = inject(DoctorsService);
+accounterService = inject(AccountService);
 name:string = "";
 maxPrice:number|null=null;
 allDoctors:string|IDoctor[] = [];
@@ -24,10 +26,12 @@ specialities:ISpeciality[]=
     {specialityName:"Cat",value:1},
 
   ];
+isCustomerLogginIn = false;
 errorFound:boolean=false;
 errorMesseage:string ="";
 ngOnInit() {
-  this.search()
+  this.search();
+  this.isCustomerLogginIn = this.accounterService.isCustomer();
 }
 
 search(){

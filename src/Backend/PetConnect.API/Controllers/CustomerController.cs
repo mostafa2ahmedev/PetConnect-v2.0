@@ -36,6 +36,18 @@ namespace PetConnect.API.Controllers
             return Ok(new GeneralResponse(200, pets));
         }
 
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(List<CustomerDataDto>), StatusCodes.Status200OK)]
+        [EndpointSummary("Get by Customer Id")]
+        //[Authorize(Roles = "Admin")]
+        public ActionResult GetById(string id)
+        {
+            var customer = _customerService.GetCustomerById(id);
+            if (customer == null)
+                return NotFound(new GeneralResponse(404));
+            return Ok(new GeneralResponse(200, customer));
+        }
+
 
 
         [HttpPut("UpdateProfile")]

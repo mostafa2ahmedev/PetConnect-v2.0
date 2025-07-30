@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from '../../core/services/account-service';
 import { Router } from '@angular/router';
@@ -11,13 +11,16 @@ import { CommonModule } from '@angular/common';
   templateUrl: './login.html',
   styleUrls: ['./login.css'],
 })
-export class Login {
+export class Login implements OnInit{
   Email: string = '';
   Password: string = '';
   remembered: boolean = false;
   errorMessage: string | null = null;
 
   constructor(private accountService: AccountService, private router: Router) {}
+  ngOnInit(): void {
+    this.accountService.logout();
+  }
 
   onLogin() {
     this.errorMessage = null; 

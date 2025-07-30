@@ -38,30 +38,78 @@
         </li>
       </ul>
 
-      <!-- Auth Buttons (Mobile) -->
-      <div class="btns d-none d-xl-block ms-3">
-        <a class="btn btn-outline-primary me-2" routerLink="/login">Login</a>
-        <a class="btn btn-primary" routerLink="/register">Register</a>
-
+      <!-- Auth Buttons (Mobile)
+      <div class="">
       <div class="btns d-block d-xl-none ms-3">
         <ng-container *ngIf="!isAuthenticated()">
           <a class="btn btn-outline-primary me-2" routerLink="/login">Login</a>
           <a class="btn btn-primary" routerLink="/register">Register</a>
         </ng-container>
         <ng-container *ngIf="isAuthenticated()">
+          <h3>Welcome {{caller}} {{userFullname}}</h3>
           <button class="btn btn-danger" (click)="logout()">Logout</button>
         </ng-container>
       </div>
+         <a class="btn btn-outline-primary me-2 " routerLink="/login">Login</a>
+        <a class="btn btn-primary" routerLink="/register">Register</a> -->
+
+      <!-- <div class="btns d-none d-xl-block ms-3">
+        <ng-container *ngIf="!isAuthenticated()">
+          <a class="btn btn-outline-primary me-2" routerLink="/login">Login</a>
+          <a class="btn btn-primary" routerLink="/register">Register</a>
+        </ng-container>
+        <ng-container *ngIf="isAuthenticated()">
+          <h3>Welcome {{caller}} {{userFullname}}</h3>
+          <button class="btn btn-danger" (click)="logout()">Logout</button>
+        </ng-container>
+      </div> --> 
+<!-- Mobile view -->
+<div class="btns d-block d-xl-none ms-3">
+  <!-- Collapse Toggle Button (always at top) -->
+  <div class="text-center mb-3">
+    <button
+      class="btn"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#mobileMenu"
+    >
+      <i class="bi bi-list fs-4 text-dark"></i>
+    </button>
+  </div>
+
+  <!-- Authentication Buttons -->
+  <ng-container *ngIf="!isAuthenticated()">
+    <div class="d-flex flex-column align-items-center gap-2">
+      <a class="btn btn-outline-primary" routerLink="/login">Login</a>
+      <a class="btn btn-primary" routerLink="/register">Register</a>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="isAuthenticated()">
+    <div class="d-flex flex-column align-items-center gap-2">
+      <a class="mb-0 fs-6 pointer"  (click)="goToProfile()">Welcome {{caller }} {{userFullname }}</a>
+      <button class="btn btn-danger" (click)="logout()">Logout</button>
+    </div>
+  </ng-container>
+</div>
+
+
+<!-- Desktop view -->
+<div class="btns d-none d-xl-block ms-3">
+  <ng-container *ngIf="!isAuthenticated()">
+    <a class="btn btn-outline-primary me-2" routerLink="/login">Login</a>
+    <a class="btn btn-primary" routerLink="/register">Register</a>
+  </ng-container>
+  <ng-container *ngIf="isAuthenticated()">
+    <div class="d-flex align-items-center gap-3">
+      <a class="mb-0 fs-6 pointer" (click)="goToProfile()">Welcome {{caller}} {{userFullname}}</a>
+      <button class="btn btn-danger" (click)="logout()">Logout</button>
+    </div>
+  </ng-container>
+
 
       <!-- Mobile toggle -->
-      <button
-        class="btn d-xl-none ms-3"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#mobileMenu"
-      >
-        <i class="bi bi-list fs-4 text-dark"></i>
-      </button>
+
 
   </div>
 
@@ -79,11 +127,11 @@
         <a class="nav-link pointer" routerLink="/breeds">Manage Breeds</a>
       </li>
       <li><a class="nav-link pointer" routerLink="/contact">Contact</a></li>
-      <li>
+      <!-- <li>
         <a class="btn btn-outline-primary mt-2" routerLink="/login">Login</a>
       </li>
       <li>
         <a class="btn btn-primary mt-2" routerLink="/register">Register</a>
-      </li>
+      </li> -->
     </ul>
   </div>
