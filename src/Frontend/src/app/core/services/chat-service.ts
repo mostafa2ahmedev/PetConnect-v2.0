@@ -72,4 +72,21 @@ export class ChatSignalrService {
       `${environment.apiBaseUrl}/Chat/Load/${receiverId}`
     );
   }
+
+  disconnect(): void {
+  if (!this.connectionEstablished || !this.hubConnection) return;
+
+  this.hubConnection
+    .stop()
+    .then(() => {
+      this.connectionStatus$.next('Disconnected');
+      this.connectionEstablished = false;
+      console.log('❌ SignalR Disconnected');
+    })
+    .catch((err) => {
+      console.error('❌ Error during SignalR disconnection:', err);
+    });
+}
+
+
 }

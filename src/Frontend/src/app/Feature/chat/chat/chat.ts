@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -21,7 +22,7 @@ import { CustomerPofileDetails } from '../../../models/customer-pofile-details';
   templateUrl: './chat.html',
   styleUrls: ['./chat.css'],
 })
-export class ChatComponent implements OnInit, AfterViewInit {
+export class ChatComponent implements OnInit, AfterViewInit,OnDestroy {
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
 
   message = '';
@@ -45,6 +46,9 @@ export class ChatComponent implements OnInit, AfterViewInit {
     private router: Router,
     private customerService: CustomerService
   ) {}
+  ngOnDestroy(): void {
+    this.chatService.disconnect();
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {

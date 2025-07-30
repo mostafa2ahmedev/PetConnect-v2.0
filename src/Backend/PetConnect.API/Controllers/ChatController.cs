@@ -47,6 +47,7 @@ namespace PetConnect.API.Controllers
         [ProducesResponseType(typeof(List<UserBannerDto>), StatusCodes.Status200OK)]
         [EndpointSummary("Get All Users you contact with before (like Messenger) ya KING")]
         public ActionResult GetMessenger()
+        
         {
 
             var senderId = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;

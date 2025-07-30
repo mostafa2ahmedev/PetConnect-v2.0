@@ -24,9 +24,10 @@ namespace PetConnect.BLL.Services.Classes
         {
             var NumberOfMessages = 10;
             List<UsersMessages> Messages = new List<UsersMessages>();
-            if (PageId ==-1)
+            if (PageId == -1)
                 Messages = _unitOfWork.UserMessagesRepository.GetAllQueryable()
-                .Where(UM => (UM.SenderId == SenderId || UM.RecieverId == SenderId) && (UM.RecieverId == ReceiverId || UM.RecieverId == SenderId)).ToList();
+                //.Where(UM => (UM.SenderId == SenderId || UM.RecieverId == SenderId) && (UM.RecieverId == ReceiverId || UM.RecieverId == SenderId)).ToList();
+            .Where(UM => (UM.SenderId == SenderId && UM.RecieverId == ReceiverId) || (UM.RecieverId == SenderId && UM.SenderId == ReceiverId)).ToList();
             else
                 Messages = _unitOfWork.UserMessagesRepository.GetAllQueryable()
                .Where(UM => (UM.SenderId == SenderId || UM.RecieverId == SenderId) && (UM.RecieverId == ReceiverId || UM.RecieverId == SenderId)).Skip((PageId * NumberOfMessages)).Take(NumberOfMessages).ToList();
@@ -101,8 +102,8 @@ namespace PetConnect.BLL.Services.Classes
 
         public bool IsOnline(string UserId)
         {
-            var userConnection = _unitOfWork.UserConnectionRepository.GetByID(UserId);
-            if (userConnection is { })
+            var userConnection = _unitOfWork.UserConnectionRepository.GetAllQueryable().FirstOrDefault(C => C.UserId == UserId);
+            if (userConnection is not null )
                 return true;
             return false;
         }
