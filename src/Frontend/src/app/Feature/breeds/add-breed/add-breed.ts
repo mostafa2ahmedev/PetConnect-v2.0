@@ -51,7 +51,7 @@ export class AddBreed {
         next: () => {
           this.success = 'Breed added successfully!';
 
-          this.router.navigate(['/breeds']);
+          this.router.navigate(['/admin/breeds']);
         },
         error: (err) => {
           this.error = 'Failed to add breed.';

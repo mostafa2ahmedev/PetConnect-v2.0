@@ -43,38 +43,7 @@ export const routes: Routes = [
   { path: 'pet-details/:id', component: PetDetails },
   { path: 'add-pet', component: AddPets, canActivate: [authGuard] },
   { path: 'pets/update/:id', component: UpdatePet, canActivate: [authGuard] },
-  {
-    path: 'categories',
-    component: Categories,
-    canActivate: [authGuard, AdminGuard],
-  },
-  {
-    path: 'category/:id',
-    component: CategoryDetails,
-    canActivate: [authGuard, AdminGuard],
-  },
-  {
-    path: 'add-category',
-    component: AddCategory,
-    canActivate: [authGuard, AdminGuard],
-  },
 
-  {
-    path: 'breeds',
-    component: AllBreeds,
-    canActivate: [authGuard, AdminGuard],
-  },
-  {
-    path: 'breed/:id',
-    component: BreedDetails,
-    canActivate: [authGuard, AdminGuard],
-  },
-
-  {
-    path: 'add-breed',
-    component: AddBreed,
-    canActivate: [authGuard, AdminGuard],
-  },
   { path: 'contact', component: Contact },
   { path: 'login', component: Login },
   {
@@ -103,10 +72,31 @@ export const routes: Routes = [
     children: [
       { path: '', component: AdminInsights },
 
-      { path: 'cats', component: Categories },
+      { path: 'categories', component: Categories },
+      {
+        path: 'category/:id',
+        component: CategoryDetails,
+        canActivate: [authGuard, AdminGuard],
+      },
+      {
+        path: 'add-category',
+        component: AddCategory,
+        canActivate: [authGuard, AdminGuard],
+      },
       { path: 'breeds', component: AllBreeds },
       { path: 'doctors', component: AdminDoctors },
       { path: 'pets', component: AdminPets },
+      {
+        path: 'breed/:id',
+        component: BreedDetails,
+        canActivate: [authGuard, AdminGuard],
+      },
+
+      {
+        path: 'add-breed',
+        component: AddBreed,
+        canActivate: [authGuard, AdminGuard],
+      },
 
       { path: '', redirectTo: 'insights', pathMatch: 'full' }, // default child
     ],
@@ -115,5 +105,6 @@ export const routes: Routes = [
   { path: 'register', component: Register, children: [] },
 
   { path: 'notfound/doctor', component: NotFoundDoctor },
+  { path: 'chat', component: ChatComponent },
   { path: 'chat/:id', component: ChatComponent },
 ];

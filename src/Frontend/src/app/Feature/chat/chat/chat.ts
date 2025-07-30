@@ -1,31 +1,49 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatSignalrService } from '../../../core/services/chat-service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth-service';
 import { MessengerContact } from '../../../models/messenger-contact';
+import { CustomerService } from '../../customer-profile/customer-service';
+import { CustomerPofileDetails } from '../../../models/customer-pofile-details';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './chat.html',
+  styleUrls: ['./chat.css'],
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, AfterViewInit {
+  @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
+
   message = '';
   receiverId = '';
   senderId = '';
+  messagesHistory: any[] = [];
+
   messages: any[] = [];
   connectionStatus = '';
   contacts: MessengerContact[] = [];
   activeContact: MessengerContact | null = null;
+  profileData: CustomerPofileDetails | null = null;
+  isSidebarVisible = false;
+
   // chatMessages: ChatMessage[] = [];
 
   constructor(
     private chatService: ChatSignalrService,
     private route: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router,
+    private customerService: CustomerService
   ) {}
 
   ngOnInit(): void {
@@ -56,13 +74,43 @@ export class ChatComponent implements OnInit {
       next: (data) => {
         console.log('📨 Messenger contacts:', data);
         this.contacts = data;
+        this.activeContact =
+          this.contacts.find((contact) => contact.userId === this.receiverId) ||
+          null;
+        console.log('📬 Active contact:', this.activeContact);
+        if (!this.receiverId && this.contacts.length > 0) {
+          this.receiverId = this.contacts[0].userId;
+          this.activeContact = this.contacts[0];
+          this.loadMessages(this.receiverId);
+
+          console.log('📬 Default active contact:', this.activeContact);
+        }
       },
       error: (err) => {
         console.error('❌ Failed to fetch messenger contacts:', err);
       },
     });
-  }
+    this.loadMessages(this.receiverId);
 
+    this.customerService.getCustomerProfile().subscribe((data) => {
+      console.log('Profile Data:', data);
+      this.profileData = data;
+    });
+  }
+  ngAfterViewInit(): void {
+    this.scrollToBottom();
+  }
+  private scrollToBottom(): void {
+    console.log('📜 Scrolling to bottom of messages container');
+    setTimeout(() => {
+      try {
+        this.messagesContainer.nativeElement.scrollTop =
+          this.messagesContainer.nativeElement.scrollHeight;
+      } catch (err) {
+        console.warn('Scroll failed:', err);
+      }
+    });
+  }
   async sendMessage() {
     if (
       !this.message.trim() ||
@@ -91,7 +139,8 @@ export class ChatComponent implements OnInit {
     this.chatService.getChatMessages(receiverId).subscribe({
       next: (res) => {
         console.log('📩 Loaded chat messages:', res);
-        this.messages = res;
+        this.messagesHistory = res;
+        this.scrollToBottom();
       },
       error: (err) => {
         console.error('❌ Failed to load chat messages:', err);
@@ -105,6 +154,28 @@ export class ChatComponent implements OnInit {
   activateContact(contact: MessengerContact) {
     this.activeContact = contact;
     this.receiverId = contact.userId;
+    this.router.navigate(['../', contact.userId], {
+      relativeTo: this.route,
+      replaceUrl: true, // Optional: prevents adding to history stack
+    });
     this.loadMessages(this.receiverId);
+    this.toggleContactsSidebar();
+  }
+
+  formatMessageDate(isoDate: string): string {
+    const date = new Date(isoDate);
+    const now = new Date();
+
+    const isToday =
+      date.getDate() === now.getDate() &&
+      date.getMonth() === now.getMonth() &&
+      date.getFullYear() === now.getFullYear();
+
+    return isToday
+      ? date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      : date.toLocaleDateString([], { day: '2-digit', month: '2-digit' });
+  }
+  toggleContactsSidebar() {
+    this.isSidebarVisible = !this.isSidebarVisible;
   }
 }
