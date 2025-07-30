@@ -65,7 +65,7 @@ export class Pets implements OnInit {
         console.error('Error loading pets:', err);
         this.error = 'Failed to load pets. Please try again later.';
         this.loading = false;
-        this.failedLoad = true;
+        // this.failedLoad = true;
       },
     });
   }
@@ -177,6 +177,11 @@ export class Pets implements OnInit {
     }
 
     this.filteredPets = result;
+    if (this.filteredPets.length === 0) {
+      this.failedLoad = true;
+    } else {
+      this.failedLoad = false;
+    }
   }
 
   getCategoryNameById(id: number): string {

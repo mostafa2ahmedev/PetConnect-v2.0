@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { Category } from '../../../models/category';
 import { CategoryService } from '../category-service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AlertService } from '../../../core/services/alert-service';
 
 @Component({
   selector: 'app-add-category',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterModule],
   templateUrl: './add-category.html',
   styleUrl: './add-category.css',
 })
@@ -40,7 +40,7 @@ export class AddCategory {
     this.categoryService.addCategory(this.category.name).subscribe({
       next: () => {
         this.alert.success('Category added successfully!');
-        this.router.navigate(['/categories']);
+        this.router.navigate(['/admin/categories']);
       },
       error: (err) => {
         this.saving = false;

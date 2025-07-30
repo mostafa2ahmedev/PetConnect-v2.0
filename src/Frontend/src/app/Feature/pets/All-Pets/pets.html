@@ -30,7 +30,7 @@
     data-aos="fade-up"
     data-aos-delay="100"
   >
-    <form class="row g-3 mb-2" *ngIf="!failedLoad && !loading">
+    <form class="row g-3 mb-2" *ngIf="!loading">
       <!-- Category Filter -->
       <div class="col-md-4">
         <label for="categorySelect" class="form-label">Select Category</label>
@@ -87,10 +87,7 @@
     data-aos-delay="100"
   >
     <div class="row g-5">
-      <div
-        class="alert alert-danger mt-3"
-        *ngIf="filteredPets.length === 0 && !failedLoad"
-      >
+      <div class="alert alert-danger mt-3" *ngIf="failedLoad">
         No pets found matching your filters.
       </div>
       <div

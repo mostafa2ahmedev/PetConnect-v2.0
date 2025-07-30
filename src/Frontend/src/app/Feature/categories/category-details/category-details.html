@@ -1,9 +1,9 @@
-<section class="container my-5">
-  <div class="section-title text-center mb-4">
+<section class="container mb-5 pt-0">
+  <!-- <div class="section-title text-center mb-4">
     <h2>Category Details</h2>
     <p>Update or delete this category</p>
-  </div>
-
+  </div> -->
+  <h5>Category Details</h5>
   <div *ngIf="loading" class="text-center text-muted">Loading...</div>
   <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 
@@ -38,7 +38,7 @@
           >
             {{ deleting ? "Deleting..." : "Delete" }}
           </button>
-          <a routerLink="/categories" class="btn btn-secondary">Cancel</a>
+          <a routerLink="/admin/categories" class="btn btn-secondary">Cancel</a>
         </div>
       </div>
     </form>

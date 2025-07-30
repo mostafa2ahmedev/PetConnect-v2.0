@@ -1,4 +1,4 @@
-<section id="hero" class="hero section pb-1 mb-1">
+<!-- <section id="hero" class="hero section pb-1 mb-1">
   <div
     class="container section-title aos-init aos-animate pb-0"
     data-aos="fade-up"
@@ -6,11 +6,13 @@
     <h2>Add New Breed</h2>
     <p></p>
   </div>
-</section>
+</section> -->
 
-<section class="section">
+<section class="section pt-0">
   <div class="container">
-    <div class="card shadow rounded-4 p-4 col-md-8 mx-auto">
+    <h5>Manage Breeds</h5>
+
+    <div class="card shadow rounded-4 p-4 col-md-8">
       <form (ngSubmit)="onSubmit()">
         <!-- Breed Name -->
         <div class="mb-3">
@@ -48,7 +50,7 @@
         <!-- Buttons -->
         <div class="d-flex gap-2">
           <button type="submit" class="btn btn-primary">Save</button>
-          <a routerLink="/breeds" class="btn btn-secondary">Cancel</a>
+          <a routerLink="/admin/breeds" class="btn btn-secondary">Cancel</a>
         </div>
       </form>
     </div>
