@@ -1,3 +1,6 @@
+import { JwtUser } from '../../core/models/jwt-user';
+import { IDoctor } from '../doctors/idoctor';
+import { CustomerDto } from '../profile/customer-dto';
 import { CommonModule } from '@angular/common';
 import {
   Component,
@@ -5,6 +8,7 @@ import {
   HostListener,
   OnInit,
   ViewChild,
+  DoCheck
 } from '@angular/core';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { AccountService } from '../../core/services/account-service';
@@ -25,6 +29,15 @@ import { Subscription } from 'rxjs';
   imports: [RouterLink, CommonModule],
   templateUrl: './header.html',
   styleUrl: './header.css',
+})
+export class Header implements OnInit  {
+  userFullname: string = "";
+  user: JwtUser = {} as JwtUser;
+  userId: string = "";
+  caller: string = "";
+  doctor: IDoctor = {} as IDoctor;
+  customer: CustomerDto = {} as CustomerDto;
+    @ViewChild('notificationPanel') notificationPanel!: ElementRef;
   animations: [
     trigger('slideToggle', [
       state('open', style({ height: '*', opacity: 1, zIndex: 999 })),
@@ -33,28 +46,52 @@ import { Subscription } from 'rxjs';
     ]),
   ],
 })
-export class Header implements OnInit {
-  @ViewChild('notificationPanel') notificationPanel!: ElementRef;
 
   notifications: NotificationModel[] = [];
   unreadCount = 0;
   isOpen = false;
   routerEventsSub!: Subscription;
 
+  
+  ngOnInit(): void {
+    //eslam
+        if (this.authService.isAuthenticated()) this.loadNotifications();
+    this.routerEventsSub = this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.loadNotifications();
+      }
+    });
+//eslam
+        // Check if the user is authenticated and set the userFullname accordingly
+     if(this.accontService.isCustomer())
+    this.accontService.getCustomerData()?.subscribe({
+  
+      next:resp=>{
+      this.user = this.accontService.jwtTokenDecoder();
+      this.userId = this.user.userId;
+      if(resp){
+        this.userFullname= `${resp.data.fName} ${resp.data.lName}`;
+        resp
+        this.caller="";
+        this.customer = resp.data;
+      }
+    }})
+    else if (this.accontService.isDoctor())
+          this.accontService.getDoctorData()?.subscribe({
+      next:resp=>{
+      if(resp && typeof resp != 'string'){
+        this.userFullname= `${resp.fName} ${resp.lName}`;
+        this.caller= "Dr ";
+        this.doctor= resp ;
+      }
+  }})
   constructor(
     private accontService: AccountService,
     private router: Router,
     public authService: AuthService,
     private adoptionService: AdoptionService
   ) {}
-  ngOnInit(): void {
-    if (this.authService.isAuthenticated()) this.loadNotifications();
-    this.routerEventsSub = this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.loadNotifications();
-      }
-    });
-  }
+
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
@@ -73,6 +110,13 @@ export class Header implements OnInit {
     this.accontService.logout();
     this.router.navigate(['/login']);
   }
+  goToProfile(){
+    console.log("entered")
+    if(this.accontService.isCustomer())
+    this.router.navigateByUrl(`/profile/${this.userId}`,{state:{customer:this.customer ,role:"customer"}})
+    if(this.accontService.isDoctor())
+    this.router.navigateByUrl(`/profile/${this.userId}`,{state:{doctor:this.doctor, role:"doctor"}})
+    
 
   loadNotifications(): void {
     this.adoptionService.GetAdoptionNotifications().subscribe({

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using PetConnect.DAL.Data;
 using PetConnect.DAL.Data.Repositories.Classes;
 using PetConnect.DAL.Data.Repositories.Interfaces;
@@ -53,6 +54,9 @@ namespace PetConnect.DAL.UnitofWork
         public IOrderRepository OrderRepository => new OrderRepository(context);
 
         public ITimeSlotsRepository TimeSlotsRepository =>  new TimeSlotsRepository(context);
+        public IAppointmentsRepository AppointmentsRepository => new AppointmentsRepository(context);
+
+
         public IAdminDoctorMessageRepository AdminDoctorMessageRepository => new AdminDoctorMessageRepository(context);
         public IAdminPetMessageRepository AdminPetMessageRepository => new AdminPetMessageRepository(context);
         public IApplicationUserRepository ApplicationUserRepository=> new ApplicationUserRepository(context);
@@ -72,5 +76,10 @@ namespace PetConnect.DAL.UnitofWork
         {
             return context.SaveChanges();
         }
+        public async Task<int> SaveChangesAsync()
+        {
+            return await context.SaveChangesAsync();
+        }
+
     }
 }

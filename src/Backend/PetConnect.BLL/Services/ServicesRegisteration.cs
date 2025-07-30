@@ -24,6 +24,7 @@ namespace PetConnect.DAL.Services
             services.AddScoped<IPetBreedService,PetBreadService>();
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<ITimeSlotService, TimeSlotService>();
             services.AddScoped<ICustomerAddedPetsService, CustomerAddedPetsService>();
             services.AddScoped<IChatHub, ChatHub>();
             services.AddScoped<INotificationHub, NotificationHub>();

@@ -1,4 +1,6 @@
-﻿using PetConnect.BLL.Services.DTO.Doctor;
+﻿using Microsoft.EntityFrameworkCore;
+using PetConnect.BLL.Services.DTO.Doctor;
+using PetConnect.BLL.Services.DTOs.Doctor;
 using PetConnect.BLL.Services.Interfaces;
 using PetConnect.DAL.Data.Enums;
 using PetConnect.DAL.Data.Models;
@@ -109,5 +111,7 @@ namespace PetConnect.BLL.Services.Classes
             }
 
         }
+
+
     }
 }

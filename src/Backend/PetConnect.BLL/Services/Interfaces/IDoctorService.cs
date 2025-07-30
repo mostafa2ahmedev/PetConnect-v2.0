@@ -1,4 +1,5 @@
 ﻿using PetConnect.BLL.Services.DTO.Doctor;
+using PetConnect.BLL.Services.DTOs.Doctor;
 using PetConnect.DAL.Data.GenericRepository;
 using PetConnect.DAL.Data.Models;
 using System;

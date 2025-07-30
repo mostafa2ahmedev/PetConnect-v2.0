@@ -19,6 +19,13 @@ import { BreedDetails } from './Feature/breeds/breed-details/breed-details';
 import { DoctorProfile } from './Feature/doctor-profile/doctor-profile';
 import { DoctorEditProfile } from './Feature/doctor-edit-profile/doctor-edit-profile';
 import { NotFoundDoctor } from './Feature/not-found-doctor/not-found-doctor';
+import { DoctorAddTimeslot } from './Feature/doctor-add-timeslot/doctor-add-timeslot';
+import { DoctorCustomerAppointment } from './Feature/doctor-customer-appointment/doctor-customer-appointment';
+import { Profile } from './Feature/profile/profile';
+import { Customer } from './Feature/profile/customer/customer';
+import { Doctor } from './Feature/profile/doctor/doctor';
+import { ShowAllDoctorTimeslots } from './Feature/Doctor/show-all-doctor-timeslots/show-all-doctor-timeslots';
+
 import { AdminDashboardComponent } from './Feature/admin-dashboard/admin-dashboard/admin-dashboard';
 import { authGuard } from './core/guards/auth-guard';
 import { CustomerProfile } from './Feature/customer-profile/Profile/customer-profile';
@@ -33,6 +40,9 @@ export const routes: Routes = [
   { path: '', component: Home },
   { path: 'home', component: Home },
   { path: 'doctors', component: Doctors },
+  {path:'doctors/appointment',component:DoctorCustomerAppointment},
+  {path:'doctors/timeslots', component:ShowAllDoctorTimeslots},
+  {path:'doctors/timeslot/:id', component:DoctorAddTimeslot},
   { path: 'doctors/:id', component: DoctorProfile },
   {
     path: 'doctors/update/:id',
@@ -64,6 +74,14 @@ export const routes: Routes = [
   { path: 'register', component: Register, children: [] },
   { path: 'register/doctor', component: DoctorRegisterForm },
   { path: 'register/customer', component: CustomerRegisterForm },
+  { path: 'register', component: Register ,children: []},
+  { path:'profile/:id',component:Profile , children:[
+    // {path:'doctor',component: Doctor},
+    // {path:'customer', component:Customer}
+    ]},
+  {path:"register/doctor", component:DoctorRegisterForm},
+  {path:"register/customer", component:CustomerRegisterForm},
+  {path:"notfound/doctor",component:NotFoundDoctor}
   { path: 'notfound/doctor', component: NotFoundDoctor },
   {
     path: 'admin',

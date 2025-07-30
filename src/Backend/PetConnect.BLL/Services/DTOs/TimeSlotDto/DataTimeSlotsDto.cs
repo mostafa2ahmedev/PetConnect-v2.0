@@ -14,10 +14,12 @@ namespace PetConnect.BLL.Services.DTOs.TimeSlotDto
 
         public DateTime EndTime { get; set; }
 
+        public string Status { get; set; } = "Available";
         public int MaxCapacity { get; set; }
 
         public int BookedCount { get; set; }
 
         public bool IsActive { get; set; }
+        public Guid Id { get; set; }
     }
 }
