@@ -181,7 +181,10 @@
   <div class="card-body p-4 request-section ">
     <!-- @for(req of appointmentRequests;track req.id;let i = $index){ -->
     @for(req of filteredAndSortedRequests;track req.id;let i = $index){
-    <div class="mb-4 border-bottom pb-4">
+    <!-- <div class="mb-4  pb-4"> -->
+
+    <div  [ngClass]=" (i+1)%2==0 ? ['mb-4','border-bottom','p-3','bg-muted','scaler'] : ['mb-4','border-bottom','p-3','scaler']  ">
+
       <div class="row g-3 align-items-center">
         
         <!-- Appointment Header -->
@@ -276,6 +279,8 @@
 
       </div>
     </div>
+ <!-- </div> -->
+
     }
 
   </div>

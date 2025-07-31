@@ -88,6 +88,13 @@
             *ngIf="isAuthenticated() && authService.isAdmin()"
             >Dashboard</a
           >
+
+          <a
+            class="btn m-2"
+            routerLink="/doc-profile"
+            *ngIf="isAuthenticated() && authService.isCusDoctor()"
+            >Profile</a
+          >
         </ng-container>
 
         <!-- Notifications Icon -->

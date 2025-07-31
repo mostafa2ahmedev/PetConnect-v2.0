@@ -15,6 +15,7 @@ import { AccountService } from '../../core/services/account-service';
 })
 export class Doctors implements OnInit {
   server = "https://localhost:7102";
+  doctorsAreLoading = signal(true);
 doctorService = inject(DoctorsService);
 accounterService = inject(AccountService);
 name:string = "";
@@ -38,7 +39,8 @@ search(){
   this.doctorService.getAll(this.name,this.maxPrice,this.specialty).subscribe({
     next:e=>{
       this.errorFound=false;
-      this.allDoctors= e;},
+      this.allDoctors= e;
+      this.doctorsAreLoading.set(false);},
     error:err=>{
       this.errorFound=true;
       this.errorMesseage=err?.error

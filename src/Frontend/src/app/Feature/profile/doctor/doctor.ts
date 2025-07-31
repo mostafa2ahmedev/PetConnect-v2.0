@@ -1,4 +1,4 @@
-import { Component, input, OnInit ,ChangeDetectorRef, inject, Signal, computed} from '@angular/core';
+import { Component, input, OnInit ,ChangeDetectorRef, inject, Signal, computed, signal} from '@angular/core';
 import { IDoctor } from '../../doctors/idoctor';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -11,6 +11,7 @@ import { DoctorCustomerAppointmentService } from '../../doctor-customer-appointm
 import { DoctorCustomerAppointmentView } from '../../doctor-customer-appointment/doctor-customer-appointment-view';
 import { DoctorProfileAppointmentView } from '../../doctor-customer-appointment/doctor-profile-appointment-view';
 import { AppointmentService } from '../../doctor-profile/appointment-service';
+import { DoctorsService } from '../../doctors/doctors-service';
 @Component({
   selector: 'app-doctor',
   imports: [CurrencyPipe,RouterLink,DatePipe, CommonModule,FormsModule,ReactiveFormsModule],
@@ -31,13 +32,22 @@ export class Doctor implements OnInit {
   appointmentRequests:DoctorProfileAppointmentView[]=[]
   statusArr:string[] = [] ;
   server = "https://localhost:7102";
-  doctor = input<IDoctor>({}as IDoctor);
+  doctor = signal<IDoctor>({}as IDoctor);
     // private accountService: AccountService=inject(AccountService);
     private alert: AlertService=inject(AlertService)
     private appointmentService : AppointmentService = inject(AppointmentService);
     private doctorAppointmentService : DoctorCustomerAppointmentService=inject(DoctorCustomerAppointmentService);
+    private doctorService = inject(DoctorsService)
+    private accountService= inject(AccountService);
     // private changeDetector: ChangeDetectorRef=inject(ChangeDetectorRef)
 ngOnInit(): void {
+  const user = this.accountService.jwtTokenDecoder();
+      this.doctorService.getById(user.userId).subscribe({
+        next: resp=>{
+          if(typeof resp!== 'string')
+            this.doctor.set(resp) ;
+        }
+      })
   console.log(this.doctor().id)
 this.profileData=computed(() => this.doctor()? this.doctor() : {} as IDoctor);
 this.loadingProfile = false;

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { IDoctor } from '../doctors/idoctor';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DoctorsService } from '../doctors/doctors-service';
@@ -23,6 +23,7 @@ import { TimeSlotsWithCustomerIdStatusBookingDTO } from './time-slots-with-custo
   styleUrl: './doctor-profile.css'
 })
 export class DoctorProfile implements OnInit{
+  profileLoading = signal(true);
   activeRoute = inject(ActivatedRoute);
   doctorsService = inject(DoctorsService);
   accountService = inject(AccountService);
@@ -78,6 +79,7 @@ ngOnInit(): void {
         next:(response) => {
           this.errorFound=false;
           this.doctor = response
+          this.profileLoading.set(false);
         },
       
         error: err=>{

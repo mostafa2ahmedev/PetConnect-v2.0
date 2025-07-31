@@ -36,19 +36,18 @@ import { AdminDoctors } from './Feature/admin-dashboard/admin-dashboard/admin-do
 import { AdminPets } from './Feature/admin-dashboard/admin-dashboard/admin-pets/admin-pets';
 import { AdminInsights } from './Feature/admin-dashboard/admin-dashboard/admin-insights/admin-insights';
 import { ChatComponent } from './Feature/chat/chat/chat';
+import { DoctorLearnMore } from './Feature/doctor-learn-more/doctor-learn-more';
+import { doctorGuardGuard } from './core/guards/doctor-guard-guard';
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'home', component: Home },
   { path: 'doctors', component: Doctors },
-  {path:'doctors/appointment',component:DoctorCustomerAppointment},
-  {path:'doctors/timeslots', component:ShowAllDoctorTimeslots},
-  {path:'doctors/timeslot/:id', component:DoctorAddTimeslot},
-  { path: 'doctors/:id', component: DoctorProfile },
-  {
-    path: 'doctors/update/:id',
-    component: DoctorEditProfile,
-    canActivate: [authGuard],
-  },
+  {path:'doctors/appointment',component:DoctorCustomerAppointment , canActivate:[authGuard]},
+  {path:'doctors/timeslots', component:ShowAllDoctorTimeslots , canActivate:[doctorGuardGuard]},
+  {path:'doctors/timeslot/:id', component:DoctorAddTimeslot ,canActivate:[doctorGuardGuard]},
+  { path: 'doctors/:id', component: DoctorProfile , canActivate:[authGuard] },
+  {path:'doctor-details/:id',component:DoctorLearnMore},
+  {  path: 'doctors/update/:id',component: DoctorEditProfile, canActivate: [doctorGuardGuard],},
   { path: 'pets', component: Pets },
   { path: 'pet-details/:id', component: PetDetails },
   { path: 'add-pet', component: AddPets, canActivate: [authGuard] },
@@ -67,7 +66,8 @@ export const routes: Routes = [
     component: CustomerProfile,
     canActivate: [authGuard],
   },
-
+  {path:'doc-profile',component:Doctor,canActivate:[doctorGuardGuard]}
+  ,
   { path: 'register', component: Register, children: [] },
   { path: 'register/doctor', component: DoctorRegisterForm },
   { path: 'register/customer', component: CustomerRegisterForm },
@@ -82,7 +82,7 @@ export const routes: Routes = [
   {path:"register/doctor", component:DoctorRegisterForm},
   {path:"register/customer", component:CustomerRegisterForm},
   {path:"notfound/doctor",component:NotFoundDoctor},
-  { path: 'notfound/doctor', component: NotFoundDoctor },
+  {path: 'notfound/doctor', component: NotFoundDoctor},
   {
     path: 'admin',
     component: AdminDashboardComponent,
