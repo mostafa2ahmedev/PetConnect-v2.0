@@ -43,9 +43,11 @@ namespace PetConnect.BLL.Services.Classes
 
             return orders.Select(o => new OrderDetailsDTO
             {
+                Id = o.Id,
                 OrderDate = o.OrderDate,
                 Products = o.OrderProducts.Select(op => new OrderProductDTO
                 {
+
                     ProductName = op.product?.Name ?? "Unknown",
                     Quantity = op.Quantity,
                     Price = op.UnitPrice,
@@ -62,6 +64,7 @@ namespace PetConnect.BLL.Services.Classes
 
             return new OrderDetailsDTO
             {
+                Id = order.Id,
                 OrderDate = order.OrderDate,
                 Products = order.OrderProducts.Select(op => new OrderProductDTO
                 {
@@ -118,6 +121,7 @@ namespace PetConnect.BLL.Services.Classes
 
             return orders.Select(o => new OrderDetailsDTO
             {
+                Id = o.Id,
                 OrderDate = o.OrderDate,
                 Products = o.OrderProducts.Select(op => new OrderProductDTO
                 {

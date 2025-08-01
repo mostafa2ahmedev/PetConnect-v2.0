@@ -65,10 +65,11 @@ namespace PetConnect.API.Controllers
         {
             var result = _orderService.DeleteOrder(id);
             if (result == 0)
-                return NotFound($"No order found with ID {id}");
+                return NotFound(new { message = $"No order found with ID {id}" });
 
-            return Ok($"Order {id} deleted successfully.");
+            return Ok(new { message = $"Order {id} deleted successfully." });
         }
+
 
         [HttpGet("customer/{customerId}")]
         public IActionResult GetOrdersByCustomer(string customerId)

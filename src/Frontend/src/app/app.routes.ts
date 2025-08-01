@@ -22,6 +22,7 @@ import { NotFoundDoctor } from './Feature/not-found-doctor/not-found-doctor';
 import { OrdersComponent} from './Feature/orders/orders';
 import { ProductsComponent} from './Feature/Products/all-products/all-products';
 import { ProductDetailsComponent } from './Feature/Products/product-details/product-details';
+import { CartComponent } from './Feature/cart/cart';
 
 
 export const routes: Routes = [
@@ -53,6 +54,8 @@ export const routes: Routes = [
  { path: 'orders', component: OrdersComponent },
  { path: 'all-products', component: ProductsComponent },
  { path: 'products/:id', component: ProductDetailsComponent },
+  { path: 'cart', component: CartComponent },
+
 
 
 ];

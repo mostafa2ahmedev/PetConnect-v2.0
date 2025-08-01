@@ -9,7 +9,9 @@ using System.Threading.Tasks;
 namespace PetConnect.BLL.Services.DTOs.Order
 {
     public class OrderDetailsDTO
+
     {
+        public int Id { get; set; }
 
         public DateTime OrderDate { get; set; }
         

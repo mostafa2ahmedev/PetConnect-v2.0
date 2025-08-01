@@ -60,6 +60,7 @@ namespace PetConnect.BLL.Services.Classes
                 var producttype = unitOfWork.ProductTypeRepository.GetByID(product.ProductTypeId);
                 productDetailsDTOs.Add(new ProductDetailsDTO
                 {
+                    Id = product.Id,
                     Name = product.Name,
                     Description = product.Description,
                     ImgUrl = $"/assets/ProductImages/{product.ImgUrl}",
@@ -81,6 +82,7 @@ namespace PetConnect.BLL.Services.Classes
             var producttype = unitOfWork.ProductTypeRepository.GetByID(productdata.ProductTypeId);
             ProductDetailsDTO productDetailsDTO = new ProductDetailsDTO()
             {
+                Id = productdata.Id,
                 Name = productdata.Name,
                 Description = productdata.Description,
                 ImgUrl = $"/assets/ProductImages/{productdata.ImgUrl}",
