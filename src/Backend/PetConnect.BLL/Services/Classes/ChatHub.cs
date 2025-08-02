@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Concurrent;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -61,10 +62,12 @@ namespace PetConnect.BLL.Services.Classes
 
 
         }
-        public override Task OnConnectedAsync()
+        public override async Task OnConnectedAsync()
         {
             var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var connectionId = Context.ConnectionId;
+            // this will notify each connected user expect the caller that this caller is now online
+            await Clients.Others.SendAsync("UserOnline", userId);
             Console.WriteLine($"[Connected] ConnectionId: {connectionId}, UserId: {userId}");
             var userConnection = new UserConnection()
             {
@@ -74,21 +77,22 @@ namespace PetConnect.BLL.Services.Classes
             unitOfWork.UserConnectionRepository.Add(userConnection);
             unitOfWork.SaveChanges();
 
-            return base.OnConnectedAsync();
+             await base.OnConnectedAsync();
         }
-        public override Task OnDisconnectedAsync(Exception? exception)
+        public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            //var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var connectionId = Context.ConnectionId;
 
             UserConnection? res = unitOfWork.UserConnectionRepository.GetByID(connectionId);
             if (res is not null)
             {
+                await Clients.Others.SendAsync("UserOffline", userId);
                 unitOfWork.UserConnectionRepository.Delete(res);
                 unitOfWork.SaveChanges();
             }
 
-            return base.OnDisconnectedAsync(exception);
+            await base.OnDisconnectedAsync(exception);
         }
     }
 }
