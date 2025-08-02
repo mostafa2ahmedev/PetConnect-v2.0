@@ -54,14 +54,47 @@ export class ChatSignalrService {
     });
   }
 
-  async sendMessage(receiverId: string, message: string): Promise<void> {
+  async sendMessage(
+    receiverId: string,
+    message: string,
+    attachmentUrl: string | null = null
+  ): Promise<void> {
     try {
-      await this.hubConnection.invoke('SendMessage', message, receiverId, null);
+      await this.hubConnection.invoke(
+        'SendMessage',
+        message,
+        receiverId,
+        attachmentUrl
+      );
     } catch (err) {
       console.error('❌ Error sending message:', err);
     }
   }
 
+  uploadChatFile(file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post(`${environment.apiBaseUrl}/chat/upload`, formData, {
+      responseType: 'text', // or 'json' depending on API
+    });
+  }
+  async sendFileMessage(receiverId: string, file: File): Promise<void> {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const attachmentUrl = await this.http
+        .post(`${environment.apiBaseUrl}/chat/upload`, formData, {
+          responseType: 'text',
+        })
+        .toPromise();
+
+      await this.sendMessage(receiverId, '', attachmentUrl);
+    } catch (err) {
+      console.error('❌ Error sending file message:', err);
+    }
+  }
   getMessengerContacts() {
     return this.http.get<MessengerContact[]>(
       `${environment.apiBaseUrl}/chat/Messenger`
@@ -74,19 +107,17 @@ export class ChatSignalrService {
   }
 
   disconnect(): void {
-  if (!this.connectionEstablished || !this.hubConnection) return;
+    if (!this.connectionEstablished || !this.hubConnection) return;
 
-  this.hubConnection
-    .stop()
-    .then(() => {
-      this.connectionStatus$.next('Disconnected');
-      this.connectionEstablished = false;
-      console.log('❌ SignalR Disconnected');
-    })
-    .catch((err) => {
-      console.error('❌ Error during SignalR disconnection:', err);
-    });
-}
-
-
+    this.hubConnection
+      .stop()
+      .then(() => {
+        this.connectionStatus$.next('Disconnected');
+        this.connectionEstablished = false;
+        console.log('❌ SignalR Disconnected');
+      })
+      .catch((err) => {
+        console.error('❌ Error during SignalR disconnection:', err);
+      });
+  }
 }

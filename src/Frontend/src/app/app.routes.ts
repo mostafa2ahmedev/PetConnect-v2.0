@@ -38,17 +38,35 @@ import { AdminInsights } from './Feature/admin-dashboard/admin-dashboard/admin-i
 import { ChatComponent } from './Feature/chat/chat/chat';
 import { DoctorLearnMore } from './Feature/doctor-learn-more/doctor-learn-more';
 import { doctorGuardGuard } from './core/guards/doctor-guard-guard';
+import { CustomerGuard } from './core/guards/customer-guard';
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'home', component: Home },
   { path: 'doctors', component: Doctors },
-  {path:'doctors/appointment',component:DoctorCustomerAppointment , canActivate:[authGuard]},
-  {path:'doctors/timeslots', component:ShowAllDoctorTimeslots , canActivate:[doctorGuardGuard]},
-  {path:'doctors/timeslot/:id', component:DoctorAddTimeslot ,canActivate:[doctorGuardGuard]},
-  { path: 'doctors/:id', component: DoctorProfile , canActivate:[authGuard] },
-  {path:'doctor-details/:id',component:DoctorLearnMore},
-  {  path: 'doctors/update/:id',component: DoctorEditProfile, canActivate: [doctorGuardGuard],},
+  {
+    path: 'doctors/appointment',
+    component: DoctorCustomerAppointment,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'doctors/timeslots',
+    component: ShowAllDoctorTimeslots,
+    canActivate: [doctorGuardGuard],
+  },
+  {
+    path: 'doctors/timeslot/:id',
+    component: DoctorAddTimeslot,
+    canActivate: [doctorGuardGuard],
+  },
+  { path: 'doctors/:id', component: DoctorProfile, canActivate: [authGuard] },
+  { path: 'doctor-details/:id', component: DoctorLearnMore },
+  {
+    path: 'doctors/update/:id',
+    component: DoctorEditProfile,
+    canActivate: [doctorGuardGuard],
+  },
   { path: 'pets', component: Pets },
+  { path: 'pets/:mode', component: Pets },
   { path: 'pet-details/:id', component: PetDetails },
   { path: 'add-pet', component: AddPets, canActivate: [authGuard] },
   { path: 'pets/update/:id', component: UpdatePet, canActivate: [authGuard] },
@@ -64,25 +82,28 @@ export const routes: Routes = [
   {
     path: 'profile',
     component: CustomerProfile,
-    canActivate: [authGuard],
+    canActivate: [authGuard, CustomerGuard],
   },
-  {path:'doc-profile',component:Doctor,canActivate:[doctorGuardGuard]}
-  ,
+  { path: 'doc-profile', component: Doctor, canActivate: [doctorGuardGuard] },
   { path: 'register', component: Register, children: [] },
   { path: 'register/doctor', component: DoctorRegisterForm },
   { path: 'register/customer', component: CustomerRegisterForm },
   { path: 'register', component: Register, children: [] },
   { path: 'register/doctor', component: DoctorRegisterForm },
   { path: 'register/customer', component: CustomerRegisterForm },
-  { path: 'register', component: Register ,children: []},
-  { path:'profile/:id',component:Profile , children:[
-    // {path:'doctor',component: Doctor},
-    // {path:'customer', component:Customer}
-    ]},
-  {path:"register/doctor", component:DoctorRegisterForm},
-  {path:"register/customer", component:CustomerRegisterForm},
-  {path:"notfound/doctor",component:NotFoundDoctor},
-  {path: 'notfound/doctor', component: NotFoundDoctor},
+  { path: 'register', component: Register, children: [] },
+  {
+    path: 'profile/:id',
+    component: Profile,
+    children: [
+      // {path:'doctor',component: Doctor},
+      // {path:'customer', component:Customer}
+    ],
+  },
+  { path: 'register/doctor', component: DoctorRegisterForm },
+  { path: 'register/customer', component: CustomerRegisterForm },
+  { path: 'notfound/doctor', component: NotFoundDoctor },
+  { path: 'notfound/doctor', component: NotFoundDoctor },
   {
     path: 'admin',
     component: AdminDashboardComponent,
@@ -123,6 +144,6 @@ export const routes: Routes = [
   { path: 'register', component: Register, children: [] },
 
   { path: 'notfound/doctor', component: NotFoundDoctor },
-  { path: 'chat', component: ChatComponent },
-  { path: 'chat/:id', component: ChatComponent },
+  { path: 'chat', component: ChatComponent, canActivate: [authGuard] },
+  { path: 'chat/:id', component: ChatComponent, canActivate: [authGuard] },
 ];

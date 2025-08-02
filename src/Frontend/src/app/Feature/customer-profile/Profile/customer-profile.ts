@@ -7,8 +7,6 @@ import { AdoptionResponse } from '../../../models/adoption-response';
 import { CustomerService } from '../customer-service';
 import { CusotmerPet } from '../../../models/cusotmer-pet';
 import { CustomerPofileDetails } from '../../../models/customer-pofile-details';
-import { AuthService } from '../../../core/services/auth-service';
-import { PetDetailsModel } from '../../../models/pet-details';
 import { AlertService } from '../../../core/services/alert-service';
 
 @Component({
@@ -22,7 +20,7 @@ export class CustomerProfile {
   loadingProfile: boolean = true;
   myPets: CusotmerPet[] = [];
   ReceivedRequests: any[] = [];
-  profileData: CustomerPofileDetails | null = null; // Instead of a large ViewModel type
+  profileData: CustomerPofileDetails | null = null;
   petCount: number = 0;
   selectedPetFilter: string = '';
   sortOrder: 'asc' | 'desc' = 'desc';
@@ -32,7 +30,6 @@ export class CustomerProfile {
   constructor(
     private adoptionService: AdoptionService,
     private customerService: CustomerService,
-    private authService: AuthService,
     private alert: AlertService,
     private cdRef: ChangeDetectorRef
   ) {}

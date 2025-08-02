@@ -194,7 +194,7 @@ namespace PetConnect.BLL.Services.Classes
             }
 
            
-            if (updatedPet.ImgURL != null)
+            if (updatedPet.ImgURL != null )
             {
                 var fileName = await _attachmentService.UploadAsync(updatedPet.ImgURL, "PetImages");
                 if (!string.IsNullOrEmpty(fileName))

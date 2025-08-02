@@ -9,10 +9,13 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { NavigationEnd, Router, RouterLink } from '@angular/router';
+import {
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterModule,
+} from '@angular/router';
 import { AccountService } from '../../core/services/account-service';
-import { AuthService } from '../../core/services/auth-service';
-import { AdoptionService } from '../../core/services/adoption-service';
 import { NotificationModel } from '../../models/notification-model';
 import {
   trigger,
@@ -22,12 +25,15 @@ import {
   transition,
 } from '@angular/animations';
 import { Subscription } from 'rxjs';
+import { NotificationService } from '../../core/services/notification-service';
+import { CustomerService } from '../customer-profile/customer-service';
+import { CustomerPofileDetails } from '../../models/customer-pofile-details';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, CommonModule],
+  imports: [RouterLink, CommonModule, RouterModule],
   templateUrl: './header.html',
-  styleUrls: ['./header.css'],  // ✅ Fixed 'styleUrl' to 'styleUrls'
+  styleUrls: ['./header.css'], // ✅ Fixed 'styleUrl' to 'styleUrls'
   animations: [
     trigger('slideToggle', [
       state('open', style({ height: '*', opacity: 1, zIndex: 999 })),
@@ -37,53 +43,57 @@ import { Subscription } from 'rxjs';
   ],
 })
 export class Header implements OnInit {
-  userFullname: string = "";
+  userFullname: string = '';
   user: JwtUser = {} as JwtUser;
-  userId: string = "";
-  caller: string = "";
+  userId: string = '';
+  caller: string = '';
   doctor: IDoctor = {} as IDoctor;
   customer: CustomerDto = {} as CustomerDto;
   @ViewChild('notificationPanel') notificationPanel!: ElementRef;
+  profileData: CustomerPofileDetails | null = null; // Instead of a large ViewModel type
 
   notifications: NotificationModel[] = [];
   unreadCount = 0;
   isOpen = false;
   routerEventsSub!: Subscription;
-
   constructor(
-    private accontService: AccountService,
+    public accountService: AccountService,
     private router: Router,
-    public authService: AuthService,
-    private adoptionService: AdoptionService
+    private notificationService: NotificationService,
+    private customerService: CustomerService
   ) {}
-
   ngOnInit(): void {
-    if (this.authService.isAuthenticated()) this.loadNotifications();
-
+    if (this.accountService.isAuthenticated()) {
+      this.loadNotifications(this.userId);
+      this.customerService.getCustomerProfile().subscribe((data) => {
+        console.log('Profile Data:', data);
+        this.profileData = data;
+      });
+    }
     this.routerEventsSub = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        this.loadNotifications();
+        this.loadNotifications(this.userId);
       }
     });
 
-    if (this.accontService.isCustomer()) {
-      this.accontService.getCustomerData()?.subscribe({
+    if (this.accountService.isCustomer()) {
+      this.accountService.getCustomerData()?.subscribe({
         next: (resp) => {
-          this.user = this.accontService.jwtTokenDecoder();
+          this.user = this.accountService.jwtTokenDecoder();
           this.userId = this.user.userId;
           if (resp) {
             this.userFullname = `${resp.data.fName} ${resp.data.lName}`;
-            this.caller = "";
+            this.caller = '';
             this.customer = resp.data;
           }
         },
       });
-    } else if (this.accontService.isDoctor()) {
-      this.accontService.getDoctorData()?.subscribe({
+    } else if (this.accountService.isDoctor()) {
+      this.accountService.getDoctorData()?.subscribe({
         next: (resp) => {
           if (resp && typeof resp != 'string') {
             this.userFullname = `${resp.fName} ${resp.lName}`;
-            this.caller = "Dr ";
+            this.caller = 'Dr ';
             this.doctor = resp;
           }
         },
@@ -102,42 +112,45 @@ export class Header implements OnInit {
   }
 
   isAuthenticated(): boolean {
-    return this.accontService.isAuthenticated();
+    return this.accountService.isAuthenticated();
   }
 
   logout(): void {
-    this.accontService.logout();
+    this.accountService.logout();
     this.router.navigate(['/login']);
   }
 
   goToProfile(): void {
-    console.log("entered");
-    if (this.accontService.isCustomer()) {
+    console.log('entered');
+    if (this.accountService.isCustomer()) {
       this.router.navigateByUrl(`/profile/${this.userId}`, {
-        state: { customer: this.customer, role: "customer" },
+        state: { customer: this.customer, role: 'customer' },
       });
     }
-    if (this.accontService.isDoctor()) {
+    if (this.accountService.isDoctor()) {
       this.router.navigateByUrl(`/profile/${this.userId}`, {
-        state: { doctor: this.doctor, role: "doctor" },
+        state: { doctor: this.doctor, role: 'doctor' },
       });
     }
   }
 
-  loadNotifications(): void {
-    this.adoptionService.GetAdoptionNotifications().subscribe({
-      next: (res) => {
-        console.log('Notifications:', res);
-        this.notifications = res;
-        this.unreadCount = res.filter((n) => !n.isRead).length;
+  loadNotifications(userId: string): void {
+    this.notificationService.getNotifications(userId).subscribe({
+      next: (notifications) => {
+        console.log('📢 Notifications:', notifications);
+        this.notifications = notifications;
+        this.unreadCount = notifications.filter((n) => !n.isRead).length;
       },
       error: (err) => {
-        console.error('Failed to load notifications:', err);
+        console.error('❌ Failed to load notifications:', err);
       },
     });
   }
 
   get slideState() {
     return this.isOpen ? 'open' : 'closed';
+  }
+  getFullImageUrl(relativePath: string): string {
+    return `https://localhost:7102${relativePath}`;
   }
 }

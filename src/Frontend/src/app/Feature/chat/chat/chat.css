@@ -7,6 +7,9 @@
 .list-group-item.active {
   background-color: #5d57f4;
 }
+.list-group-item.unread {
+  background-color: #d9d8eb;
+}
 .list-group-item.active * {
   color: #fff;
 }
@@ -41,4 +44,10 @@ img {
   .contacts-bar.active {
     transform: translateX(0);
   }
+}
+.emoji-picker-container {
+  position: absolute;
+  bottom: 60px; /* Adjust based on your layout */
+  right: 20px; /* Adjust based on your layout */
+  z-index: 1000;
 }

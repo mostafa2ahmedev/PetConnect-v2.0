@@ -18,38 +18,36 @@ import { TimeSlotsCustomerService } from './time-slots-customer-service';
 import { TimeSlotsWithCustomerIdStatusBookingDTO } from './time-slots-with-customer-id-status-booking-dto';
 @Component({
   selector: 'app-doctor-profile',
-  imports: [CurrencyPipe,RouterLink,DatePipe,CommonModule],
+  imports: [CurrencyPipe, DatePipe, CommonModule],
   templateUrl: './doctor-profile.html',
-  styleUrl: './doctor-profile.css'
+  styleUrl: './doctor-profile.css',
 })
-export class DoctorProfile implements OnInit{
+export class DoctorProfile implements OnInit {
   profileLoading = signal(true);
   activeRoute = inject(ActivatedRoute);
   doctorsService = inject(DoctorsService);
   accountService = inject(AccountService);
-  timeSlotCustService = inject(TimeSlotsCustomerService)
+  timeSlotCustService = inject(TimeSlotsCustomerService);
   router = inject(Router);
   doctorProfileService = inject(DoctorProfileService);
   appointmentService = inject(AppointmentService);
   alert = inject(AlertService);
-  server = "https://localhost:7102";
-  id:string="";
-  doctor:IDoctor|string="";
-  errorMessage=null;
-  errorFound:boolean=false;
-   userId = undefined ;
-   userRole= undefined ;
-   user:JwtUser= {found:false,userRole:"",userId:""} ;
-   appointments :AppointmentDto[]=[];
+  server = 'https://localhost:7102';
+  id: string = '';
+  doctor: IDoctor | string = '';
+  errorMessage = null;
+  errorFound: boolean = false;
+  userId = undefined;
+  userRole = undefined;
+  user: JwtUser = { found: false, userRole: '', userId: '' };
+  appointments: AppointmentDto[] = [];
   //-----------------------------
- // Array to hold available dates for booking
+  // Array to hold available dates for booking
   availableDates: Date[] = [];
   // The currently selected date for viewing time slots
   selectedDate: Date | null = null;
   // All possible time slots for a given day (these will be cloned for each day)
-  allTimeSlots: DataTimeSlotsDto[] = [
-
-  ];
+  allTimeSlots: DataTimeSlotsDto[] = [];
   //---------------------------------------------------
   selectedSlot: DataTimeSlotsDto | null = null; // The slot selected for booking
   // selectedPet:PetDetailsModel = {} as PetDetailsModel;
@@ -62,35 +60,29 @@ export class DoctorProfile implements OnInit{
   message: string = '';
   messageType: 'success' | 'danger' | 'info' | '' = '';
 
-
-
-//------------------------------
-
-
-  
+  //------------------------------
 
   //-------------------
-ngOnInit(): void {
-  this.activeRoute.params.subscribe({
-    next: (e) => {
-      this.id = e['id'];
-      this.doctorsService.getById(this.id).subscribe({
+  ngOnInit(): void {
+    this.activeRoute.params.subscribe({
+      next: (e) => {
+        this.id = e['id'];
+        this.doctorsService.getById(this.id).subscribe({
+          next: (response) => {
+            this.errorFound = false;
+            this.doctor = response;
+            this.profileLoading.set(false);
+          },
 
-        next:(response) => {
-          this.errorFound=false;
-          this.doctor = response
-          this.profileLoading.set(false);
-        },
-      
-        error: err=>{
-                this.errorFound=true;
-                this.alert.error(err.error?.title?? "not found")
-                this.router.navigateByUrl("/notfound/doctor")
-                this.errorMessage = err.error?.title
-        }}
-      );
+          error: (err) => {
+            this.errorFound = true;
+            this.alert.error(err.error?.title ?? 'not found');
+            this.router.navigateByUrl('/notfound/doctor');
+            this.errorMessage = err.error?.title;
+          },
+        });
 
-      /*** Replacing this with new DTO And new Service 
+        /*** Replacing this with new DTO And new Service 
       this.doctorProfileService.getTimeSlotsForDoctor(e['id']).subscribe({
         next: resp => {
           // console.log(resp.data);
@@ -121,64 +113,70 @@ ngOnInit(): void {
         }
       });*/
 
-      // V2 Here
-       this.doctorProfileService.getTimeSlotsForBookingWithStatus(e['id']).subscribe({
-        next: resp => {
-          resp.data.forEach((slot) => {
-            // Extract the date part (YYYY-MM-DD) from the startTime
-            const dateKey = slot.startTime.split('T')[0];
-            const startTime = slot.startTime.split('T')[1];
-            const endTime = slot.endTime.split('T')[1];
-            if (!this.dateSlotsMap[dateKey]) {
-              this.dateSlotsMap[dateKey] = [];
-              this.availableDates.push(new Date(dateKey));
-            }
-            // Push the slot into the appropriate array
-            this.dateSlotsMap[dateKey].push({
-              // startTime:this.doctorProfileService.convertTo12HourTimer(startTime),
-              // endTime:this.doctorProfileService.convertTo12HourTimer(endTime),
-              startTime:slot.startTime,
-              endTime:slot.endTime,
-              isActive: slot.isActive,
-              maxCapacity: slot.maxCapacity,
-              bookedCount: slot.bookedCount,
-              id :slot.id,
-              status:slot.status,
-              doctorId:slot.doctorId,
-              isFull: slot.isFull
-            });
+        // V2 Here
+        this.doctorProfileService
+          .getTimeSlotsForBookingWithStatus(e['id'])
+          .subscribe({
+            next: (resp) => {
+              resp.data.forEach((slot) => {
+                // Extract the date part (YYYY-MM-DD) from the startTime
+                const dateKey = slot.startTime.split('T')[0];
+                const startTime = slot.startTime.split('T')[1];
+                const endTime = slot.endTime.split('T')[1];
+                if (!this.dateSlotsMap[dateKey]) {
+                  this.dateSlotsMap[dateKey] = [];
+                  this.availableDates.push(new Date(dateKey));
+                }
+                // Push the slot into the appropriate array
+                this.dateSlotsMap[dateKey].push({
+                  // startTime:this.doctorProfileService.convertTo12HourTimer(startTime),
+                  // endTime:this.doctorProfileService.convertTo12HourTimer(endTime),
+                  startTime: slot.startTime,
+                  endTime: slot.endTime,
+                  isActive: slot.isActive,
+                  maxCapacity: slot.maxCapacity,
+                  bookedCount: slot.bookedCount,
+                  id: slot.id,
+                  status: slot.status,
+                  doctorId: slot.doctorId,
+                  isFull: slot.isFull,
+                });
+              });
+              // Optionally, pre-select the first available date
+              if (this.availableDates.length > 0) {
+                this.selectDate(this.availableDates[0]);
+              }
+              // console.log(this.dateSlotsMap);
+            },
           });
-          // Optionally, pre-select the first available date
-          if (this.availableDates.length > 0) {
-            this.selectDate(this.availableDates[0]);
+      },
+    });
+    // this.generateAvailableDates(); // Generate dates for the next 7 days
+
+    this.user = this.accountService.jwtTokenDecoder();
+    // console.log(this.user.userId);
+    this.appointmentService
+      .getCustomerAppointments(this.user.userId)
+      .subscribe({
+        next: (resp) => {
+          // console.log(resp);
+          this.appointments = resp;
+        },
+        error: (e) => {
+          if (e.status == 404) {
+            console.log("didn't find any appointments");
           }
-          // console.log(this.dateSlotsMap);
-        }
-      })
-    }
-  });
-      // this.generateAvailableDates(); // Generate dates for the next 7 days
-      
-  this.user = this.accountService.jwtTokenDecoder();
-  // console.log(this.user.userId);
-  this.appointmentService.getCustomerAppointments(this.user.userId).subscribe(
-    {next: resp=>{
-      // console.log(resp);
-      this.appointments= resp;
-  },
-  error : e=>{
-    if(e.status==404){
-      console.log("didn't find any appointments")
-    }
+        },
+      });
   }
-    })
 
-}
-
-  CustomerHasThisAppointmentSlot(slot :TimeSlotsWithStatusDTO){
-    return this.appointmentService.customerHasAppointmentSlot(this.appointments,slot);
+  CustomerHasThisAppointmentSlot(slot: TimeSlotsWithStatusDTO) {
+    return this.appointmentService.customerHasAppointmentSlot(
+      this.appointments,
+      slot
+    );
   }
- /**
+  /**
    * Generates a list of available dates starting from tomorrow for the next 7 days.
    */
   // generateAvailableDates(): void {
@@ -196,7 +194,7 @@ ngOnInit(): void {
    * Selects a date to display its available time slots.
    * @param date The date selected by the user.
    */
-  selectDate(date: Date|null): void {
+  selectDate(date: Date | null): void {
     this.selectedDate = date;
     this.message = ''; // Clear any previous messages
     this.messageType = '';
@@ -232,44 +230,42 @@ ngOnInit(): void {
     //   error:err=>{
     //     console.log(err);
     //     console.log(slot)
-    //           if (this.CustomerHasThisAppointmentSlot(slot)) 
+    //           if (this.CustomerHasThisAppointmentSlot(slot))
     //                return this.alert.error("you already booked today");
     //     this.alert.error(err.error.data)
     //   }
     // })
- // Do nothing if already booked by the customer
-    const slotCustomer: TimeSlotsWithCustomerIdStatusBookingDTO={
-      customerId : this.accountService.jwtTokenDecoder().userId,
-      bookedCount:slot.bookedCount,
-      doctorId : slot.doctorId,
+    // Do nothing if already booked by the customer
+    const slotCustomer: TimeSlotsWithCustomerIdStatusBookingDTO = {
+      customerId: this.accountService.jwtTokenDecoder().userId,
+      bookedCount: slot.bookedCount,
+      doctorId: slot.doctorId,
       endTime: slot.endTime,
-      id:slot.id,
+      id: slot.id,
       isActive: slot.isActive,
-      isFull:slot.isFull,
-      maxCapacity:slot.maxCapacity,
+      isFull: slot.isFull,
+      maxCapacity: slot.maxCapacity,
       startTime: slot.startTime,
-      status : slot.status
-    } ;
+      status: slot.status,
+    };
     this.timeSlotCustService.canBookAppointment(slotCustomer).subscribe({
-      next:resp=>{
-                // console.log(resp.data)
-                // this.alert.success(resp.data);
+      next: (resp) => {
+        // console.log(resp.data)
+        // this.alert.success(resp.data);
         this.selectedSlot = slot; // Store the selected slot here!
-      this.router.navigateByUrl("/doctors/appointment",{state:{doctor:this.doctor,slot:this.selectedSlot}});
+        this.router.navigateByUrl('/doctors/appointment', {
+          state: { doctor: this.doctor, slot: this.selectedSlot },
+        });
       },
-            error:err=>{
-              
+      error: (err) => {
         console.log(err);
-        console.log(slotCustomer)
-              if (this.CustomerHasThisAppointmentSlot(slot)) 
-                   return this.alert.error("you already booked today");
-        this.alert.error(err.error.data)
-      }
-    })
+        console.log(slotCustomer);
+        if (this.CustomerHasThisAppointmentSlot(slot))
+          return this.alert.error('you already booked today');
+        this.alert.error(err.error.data);
+      },
+    });
   }
-
-
-    
 
   /**
    * Checks if a date is the currently selected date.
@@ -278,6 +274,9 @@ ngOnInit(): void {
    * @returns True if it's the selected date, false otherwise.
    */
   isSelected(date: Date): boolean {
-    return this.selectedDate ? this.doctorProfileService.formatDate(this.selectedDate) === this.doctorProfileService.formatDate(date) : false;
+    return this.selectedDate
+      ? this.doctorProfileService.formatDate(this.selectedDate) ===
+          this.doctorProfileService.formatDate(date)
+      : false;
   }
 }

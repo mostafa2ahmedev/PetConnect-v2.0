@@ -33,19 +33,29 @@
           class="list-group-item d-flex align-items-start cursor-pointer"
           (click)="activateContact(contact)"
           *ngFor="let contact of contacts"
-          [ngClass]="{ active: contact.userId === receiverId }"
+          [ngClass]="{
+            active: activeContact?.userId === contact.userId,
+            unread: unreadSenders.has(contact.userId)
+          }"
         >
-          <img
-            [src]="getFullImageUrl(contact.imageURL)"
-            class="rounded-circle me-2"
-            width="40"
-            height="40"
-          />
+          <div class="position-relative d-inline-block me-2">
+            <img
+              [src]="getFullImageUrl(contact.imageURL)"
+              class="rounded-circle me-2"
+              width="40"
+              height="40"
+            />
+            <span
+              class="position-absolute top-0 end-0 translate-middle border border-white rounded-circle"
+              [ngClass]="contact.isOnline ? 'bg-success' : 'bg-secondary'"
+              style="width: 12px; height: 12px"
+            ></span>
+          </div>
           <div>
             <div class="fw-semibold">
               {{ contact.receiverName }}
             </div>
-            <small class="text-muted">{{ contact.lastMessage }}</small>
+            <small>{{ contact.lastMessage || "**attachement**" }}</small>
           </div>
         </div>
       </div>
@@ -64,80 +74,171 @@
         #messagesContainer
       >
         <!-- Repeat messages -->
-        <div
-          *ngFor="let msg of messagesHistory"
-          class="d-flex align-items-start mb-md-3 msg-block p-1"
-        >
-          <!-- Avatar -->
-          <img
-            [src]="
-              msg.receiverId === receiverId
-                ? getFullImageUrl(profileData?.imgUrl || '')
-                : getFullImageUrl(activeContact?.imageURL || '')
-            "
-            alt="avatar"
-            class="rounded-circle me-2"
-            style="width: 40px; height: 40px; object-fit: cover"
-          />
-
-          <!-- Message Content -->
-          <div class="p-2 rounded" style="max-width: 75%">
-            <div class="d-flex justify-content-between align-items-center mb-1">
-              <div class="fw-semibold">
-                {{
+        <!-- Old messages -->
+        <ng-container *ngFor="let msg of messagesHistory">
+          <div class="d-flex align-items-start mb-md-3 msg-block p-1">
+            <!-- Avatar -->
+            <div class="position-relative d-inline-block me-2">
+              <img
+                [src]="
                   msg.receiverId === receiverId
-                    ? "You"
-                    : activeContact?.receiverName
-                }}
-              </div>
-              <div class="small text-muted ms-2">
-                {{ formatMessageDate(msg.sentDate) }}
-              </div>
+                    ? getFullImageUrl(profileData?.imgUrl || '')
+                    : getFullImageUrl(activeContact?.imageURL || '')
+                "
+                class="rounded-circle me-2"
+                width="40"
+                height="40"
+              />
+              <span
+                class="position-absolute top-0 end-0 translate-middle border border-white rounded-circle"
+                [ngClass]="
+                  msg.receiverId === receiverId
+                    ? 'bg-success'
+                    : activeContact?.isOnline
+                    ? 'bg-success'
+                    : 'bg-secondary'
+                "
+                style="width: 12px; height: 12px"
+              ></span>
             </div>
-            <div class="text-break">
-              {{ msg.message }}
+
+            <!-- Message Body -->
+            <div class="p-2 rounded" style="max-width: 75%">
+              <div
+                class="d-flex justify-content-between align-items-center mb-1"
+              >
+                <div class="fw-semibold">
+                  {{
+                    msg.receiverId === receiverId
+                      ? "You"
+                      : activeContact?.receiverName
+                  }}
+                </div>
+                <div class="small text-muted ms-2">
+                  {{ formatMessageDate(msg.sentDate) }}
+                </div>
+              </div>
+
+              <!-- Message content -->
+              <div class="text-break">
+                <ng-container
+                  *ngIf="!msg.attachmentUrl; else attachmentTemplate"
+                >
+                  {{ msg.message }}
+                </ng-container>
+                <ng-template #attachmentTemplate>
+                  <ng-container *ngIf="msg.attachmentUrl">
+                    <!-- PDF -->
+                    <a
+                      *ngIf="isPdf(msg.attachmentUrl)"
+                      [href]="extractAttachmentPath(msg.attachmentUrl)"
+                      target="_blank"
+                      rel="noopener"
+                      class="btn btn-sm btn-outline-primary mt-2 d-inline-block"
+                    >
+                      📄 View PDF
+                    </a>
+
+                    <!-- Image -->
+                    <img
+                      *ngIf="isImage(msg.attachmentUrl)"
+                      [src]="extractAttachmentPath(msg.attachmentUrl)"
+                      alt="Attachment"
+                      class="rounded shadow"
+                      style="max-width: 200px"
+                    />
+
+                    <!-- Fallback (optional) -->
+                    <div
+                      *ngIf="
+                        !isImage(msg.attachmentUrl) && !isPdf(msg.attachmentUrl)
+                      "
+                    >
+                      <small class="text-muted">Unsupported file type</small>
+                    </div>
+                  </ng-container>
+                </ng-template>
+              </div>
             </div>
           </div>
-        </div>
-        <div
-          *ngFor="let msg of messages"
-          class="d-flex align-items-start mb-md-3 msg-block p-1"
-        >
-          <!-- Avatar -->
-          <img
-            [src]="
-              msg.receiverId === receiverId
-                ? getFullImageUrl(profileData?.imgUrl || '')
-                : getFullImageUrl(activeContact?.imageURL || '')
-            "
-            alt="avatar"
-            class="rounded-circle me-2"
-            style="width: 40px; height: 40px; object-fit: cover"
-          />
+        </ng-container>
 
-          <!-- Message Content -->
-          <div class="p-2 rounded" style="max-width: 75%">
-            <div class="d-flex justify-content-between align-items-center mb-1">
-              <div class="fw-semibold">
-                {{
-                  msg.receiverId === receiverId
-                    ? "You"
-                    : activeContact?.receiverName
-                }}
+        <!-- New real-time messages -->
+        <ng-container *ngFor="let msg of messages">
+          <div class="d-flex align-items-start mb-md-3 msg-block p-1">
+            <img
+              [src]="
+                msg.receiverId === receiverId
+                  ? getFullImageUrl(profileData?.imgUrl || '')
+                  : getFullImageUrl(activeContact?.imageURL || '')
+              "
+              class="rounded-circle me-2"
+              style="width: 40px; height: 40px; object-fit: cover"
+              alt="avatar"
+            />
+
+            <div class="p-2 rounded" style="max-width: 75%">
+              <div
+                class="d-flex justify-content-between align-items-center mb-1"
+              >
+                <div class="fw-semibold">
+                  {{
+                    msg.receiverId === receiverId
+                      ? "You"
+                      : activeContact?.receiverName
+                  }}
+                </div>
+                <div class="small text-muted ms-2">
+                  {{ formatMessageDate(msg.sentDate) }}
+                </div>
               </div>
-              <div class="small text-muted ms-2">
-                {{ formatMessageDate(msg.sentDate) }}
+
+              <div class="text-break">
+                <ng-container
+                  *ngIf="!msg.attachmentUrl; else attachmentTemplate2"
+                >
+                  {{ msg.message }}
+                </ng-container>
+                <ng-template #attachmentTemplate2>
+                  <ng-container *ngIf="msg.attachmentUrl">
+                    <!-- PDF -->
+                    <a
+                      *ngIf="isPdf(msg.attachmentUrl)"
+                      [href]="extractAttachmentPath(msg.attachmentUrl)"
+                      target="_blank"
+                      rel="noopener"
+                      class="btn btn-sm btn-outline-primary mt-2 d-inline-block"
+                    >
+                      📄 View PDF
+                    </a>
+
+                    <!-- Image -->
+                    <img
+                      *ngIf="isImage(msg.attachmentUrl)"
+                      [src]="extractAttachmentPath(msg.attachmentUrl)"
+                      alt="Attachment"
+                      class="rounded shadow"
+                      style="max-width: 200px"
+                    />
+
+                    <!-- Fallback (optional) -->
+                    <div
+                      *ngIf="
+                        !isImage(msg.attachmentUrl) && !isPdf(msg.attachmentUrl)
+                      "
+                    >
+                      <small class="text-muted">Unsupported file type</small>
+                    </div>
+                  </ng-container>
+                </ng-template>
               </div>
-            </div>
-            <div class="text-break">
-              {{ msg.message }}
             </div>
           </div>
-        </div>
+        </ng-container>
       </div>
 
       <!-- Input Area -->
-      <div class="p-3 border-top bg-white">
+      <div class="p-3 border-top bg-white position-relative">
         <!-- <div class="mb-2">
           <input
             [(ngModel)]="receiverId"
@@ -150,8 +251,33 @@
             [(ngModel)]="message"
             class="form-control"
             placeholder="Type a message..."
+            (keydown.enter)="sendMessage()"
           />
-          <!-- <button class="btn btn-outline-secondary" type="file">📎</button> -->
+          <input
+            type="file"
+            #fileInput
+            (change)="onFileSelected($event)"
+            hidden
+          />
+          <button (click)="fileInput.click()" class="btn btn-outline-secondary">
+            📎
+          </button>
+          <button
+            class="btn btn-outline-secondary"
+            (click)="showEmojiPicker = !showEmojiPicker"
+          >
+            😎
+          </button>
+          <div *ngIf="showEmojiPicker" class="emoji-picker-container">
+            <emoji-mart
+              (emojiSelect)="addEmoji($event)"
+              [darkMode]="false"
+              [ariaExpanded]="showEmojiPicker"
+              [enableFrequentEmojiSort]="false"
+              [totalFrequentLines]="4"
+              [style]="{ padding: '0%' }"
+            ></emoji-mart>
+          </div>
           <button class="btn btn-primary" (click)="sendMessage()">Send</button>
         </div>
       </div>

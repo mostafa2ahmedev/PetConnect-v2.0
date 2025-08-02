@@ -1,3 +1,20 @@
 .pointer {
   cursor: pointer;
 }
+.nav-link {
+  border-bottom: 2px solid #fff;
+}
+.nav-link.active,
+.dropdown-item.active {
+  color: #544edc !important;
+  font-weight: 600;
+  border-bottom: 2px solid #544edc;
+}
+
+.nav-link {
+  transition: all 0.2s ease-in-out;
+}
+
+.dropdown-item.active {
+  color: #fff !important;
+}

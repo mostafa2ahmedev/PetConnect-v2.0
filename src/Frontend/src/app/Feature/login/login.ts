@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { AccountService } from '../../core/services/account-service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../core/services/auth-service';
 
 @Component({
   selector: 'app-login',
@@ -18,11 +17,7 @@ export class Login implements OnInit {
   remembered: boolean = false;
   errorMessage: string | null = null;
 
-  constructor(
-    private accountService: AccountService,
-    private router: Router,
-    public authService: AuthService
-  ) {}
+  constructor(public accountService: AccountService, private router: Router) {}
   ngOnInit(): void {
     this.accountService.logout();
   }
@@ -50,10 +45,12 @@ export class Login implements OnInit {
         }
 
         // Redirect to dashboard or another secure route
-        if (this.authService.isAdmin()) {
+        if (this.accountService.isAdmin()) {
           this.router.navigate(['/admin']);
-        } else if (this.authService.isCustomer()) {
+        } else if (this.accountService.isCustomer()) {
           this.router.navigate([`/profile`]);
+        } else if (this.accountService.isDoctor()) {
+          this.router.navigate([`/doc-profile`]);
         } else {
           this.router.navigate(['/doctors']);
         }

@@ -20,7 +20,16 @@ export class PetService {
       .get<ApiResponse<Pet[]>>(`${this.apiUrl}/pet`)
       .pipe(map((res) => res.data));
   }
-
+  getAdoptablePets(): Observable<Pet[]> {
+    return this.http
+      .get<ApiResponse<Pet[]>>(`${this.apiUrl}/pet/foradoptions`)
+      .pipe(map((res) => res.data));
+  }
+  getRescuePets(): Observable<Pet[]> {
+    return this.http
+      .get<ApiResponse<Pet[]>>(`${this.apiUrl}/pet/forrescue`)
+      .pipe(map((res) => res.data));
+  }
   getPetById(id: number): Observable<PetDetailsModel> {
     return this.http
       .get<ApiResponse<PetDetailsModel>>(`${this.apiUrl}/pet/${id}`)
@@ -52,6 +61,7 @@ export class PetService {
   }
 
   updatePet(id: number, pet: AddPetRequest): Observable<any> {
+    console.log('Updating pet with ID:', id, 'and data:', pet);
     const formData = new FormData();
     formData.append('Id', id.toString());
     formData.append('Name', pet.Name);

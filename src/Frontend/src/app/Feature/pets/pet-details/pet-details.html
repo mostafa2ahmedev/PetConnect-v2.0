@@ -81,8 +81,8 @@
                   class="btn btn-warning btn-sm"
                   *ngIf="
                     isDataReady &&
-                    authService.isAuthenticated() &&
-                    authService.getUserId() === pet.customerId
+                    accountService.isAuthenticated() &&
+                    accountService.getUserId() === pet.customerId
                   "
                 >
                   Update
@@ -92,8 +92,8 @@
                   (click)="deletePetById(pet.id)"
                   *ngIf="
                     isDataReady &&
-                    authService.isAuthenticated() &&
-                    authService.getUserId() === pet.customerId
+                    accountService.isAuthenticated() &&
+                    accountService.getUserId() === pet.customerId
                   "
                 >
                   Delete
@@ -103,8 +103,8 @@
                   [disabled]="!isDataReady"
                   *ngIf="
                     !isDataReady &&
-                    authService.isAuthenticated() &&
-                    authService.isCustomer()
+                    accountService.isAuthenticated() &&
+                    accountService.isCustomer()
                   "
                 >
                   loading
@@ -113,8 +113,8 @@
                   class="btn btn-primary btn-sm"
                   *ngIf="
                     isDataReady &&
-                    authService.isAuthenticated() &&
-                    authService.getUserId() !== pet.customerId &&
+                    accountService.isAuthenticated() &&
+                    accountService.getUserId() !== pet.customerId &&
                     !requestedPetIds.includes(pet.id)
                   "
                   (click)="sendAdoptionRequest(pet)"
@@ -128,7 +128,7 @@
                 >
                   Cancel Request
                 </button>
-                <p *ngIf="!authService.isAuthenticated()">
+                <p *ngIf="!accountService.isAuthenticated()">
                   <a routerLink="/login">Login</a> , to adopt or add a new pet
                 </p>
               </div>

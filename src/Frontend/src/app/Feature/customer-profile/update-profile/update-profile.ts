@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { CustomerPofileDetails } from '../../../models/customer-pofile-details';
 import { AlertService } from '../../../core/services/alert-service';
-import { AuthService } from '../../../core/services/auth-service';
+import { AccountService } from '../../../core/services/account-service';
 
 @Component({
   selector: 'app-update-profile',
@@ -24,7 +24,7 @@ export class UpdateProfile implements OnInit {
     private customerService: CustomerService,
     private alert: AlertService,
     private router: Router,
-    private authService: AuthService
+    private accountService: AccountService
   ) {}
 
   ngOnInit(): void {
@@ -62,7 +62,7 @@ export class UpdateProfile implements OnInit {
         next: () => {
           this.alert.success('Profile updated successfully.');
           this.isSubmitting = false;
-          this.router.navigate(['/profile/', this.authService.getUserId()]);
+          this.router.navigate(['/profile/']);
         },
         error: () => {
           this.alert.error('Failed to update profile.');
