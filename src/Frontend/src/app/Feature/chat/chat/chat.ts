@@ -70,6 +70,23 @@ export class ChatComponent implements OnInit, AfterViewInit,OnDestroy {
       this.chatService.messages$.subscribe((msgs) => {
         this.messages = msgs;
       });
+            this.chatService.userOnline$.subscribe(userId => {
+        this.contacts = this.contacts.map(contact => 
+          contact.userId === userId ? {...contact, isOnline: true} : contact
+        );
+        if (this.activeContact?.userId === userId) {
+          this.activeContact.isOnline = true;
+        }
+      });
+
+      this.chatService.userOffline$.subscribe(userId => {
+        this.contacts = this.contacts.map(contact => 
+          contact.userId === userId ? {...contact, isOnline: false} : contact
+        );
+        if (this.activeContact?.userId === userId) {
+          this.activeContact.isOnline = false;
+        }
+      });
     } else {
       alert('🚫 No token found in localStorage!');
     }
