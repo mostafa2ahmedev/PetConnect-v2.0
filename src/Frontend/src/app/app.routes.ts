@@ -23,6 +23,7 @@ import { OrdersComponent} from './Feature/orders/orders';
 import { ProductsComponent} from './Feature/Products/all-products/all-products';
 import { ProductDetailsComponent } from './Feature/Products/product-details/product-details';
 import { CartComponent } from './Feature/cart/cart';
+import {SellerDashboardComponent} from './Feature/seller-dashboard/seller-dashboard';
 
 
 export const routes: Routes = [
@@ -55,6 +56,7 @@ export const routes: Routes = [
  { path: 'all-products', component: ProductsComponent },
  { path: 'products/:id', component: ProductDetailsComponent },
   { path: 'cart', component: CartComponent },
+  {path: 'seller', component: SellerDashboardComponent },
 
 
 
