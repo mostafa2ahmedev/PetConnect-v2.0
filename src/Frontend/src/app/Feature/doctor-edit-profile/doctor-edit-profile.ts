@@ -1,4 +1,4 @@
-import { Component , inject, OnInit} from '@angular/core';
+import { Component , inject, OnInit, signal} from '@angular/core';
 import { DoctorsService } from '../doctors/doctors-service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { IDoctor } from '../doctors/idoctor';
@@ -25,6 +25,7 @@ export class DoctorEditProfile implements OnInit{
   editedDoctor:IDoctorEdit =null as any;
   imageError: string = '';
   certificateError: string = '';
+  profileLoading = signal(true)
 
 onFileChange(event: Event, type: 'image' | 'certificate') {
   const input = event.target as HTMLInputElement;
@@ -61,6 +62,7 @@ onFileChange(event: Event, type: 'image' | 'certificate') {
             this.doctor.certificateFile = "";
           }
           this.editedDoctor = this.doctorCastToEdit();
+          this.profileLoading.set(false);
         })
       })
   }

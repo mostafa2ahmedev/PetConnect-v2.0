@@ -131,32 +131,26 @@ namespace PetConnect.BLL.Services.Classes
             return _unitOfWork.SaveChanges();
         }
 
-        public Task<bool> IsBookable(CheckTimeSlotsForCustomerDoctorDTO timeSlot)
+        public async Task<bool> IsBookable(CheckTimeSlotsForCustomerDoctorDTO timeSlot)
         {
-            var activeTimeSlotsWithCustomerAndStatus = _unitOfWork.TimeSlotsRepository.GetAllQueryable().Include(e => e.Appointments)
-                .Where(e => e.IsActive == true && e.DoctorId == timeSlot.DoctorId).Select(e => new
-                {
-                    Id = e.Id,
-                    CustomerId = e.Appointments.FirstOrDefault(e => e.CustomerId == timeSlot.CustomerId).CustomerId,
-                    DoctorId = e.DoctorId,
-                    StartTime = e.StartTime,
-                    EndTime = e.EndTime,
-                    Status = e.Appointments.FirstOrDefault(e => e.SlotId == timeSlot.Id).Status.ToString(),
-                    MaxCapacity = e.MaxCapacity,
-                    BookedCount = e.BookedCount,
-                    IsFull = e.IsFull,
-                    IsActive = e.IsActive,
-    });
+            if (timeSlot.StartTime.Date < DateTime.Now.Date)
+            {
+                // If the date has already passed, the slot is not bookable.
+                return false;
+            }
+            // Check if the customer has any existing appointments for this doctor on the same day.
+            var isAnyDateBookedAlready = await _unitOfWork.AppointmentsRepository
+                .GetAllQueryable()
+                .AnyAsync(a =>
+                    a.CustomerId == timeSlot.CustomerId &&
+                    a.TimeSlot.DoctorId == timeSlot.DoctorId &&
+                    a.Status != AppointmentStatus.Cancelled &&
+                    a.TimeSlot.StartTime.Date == timeSlot.StartTime.Date);
 
-            bool isAnyDateBookedAlready = activeTimeSlotsWithCustomerAndStatus
-                .Any(e => e.StartTime.Date == timeSlot.StartTime.Date &&
-                !timeSlot.IsFull &&
-                timeSlot.CustomerId == e.CustomerId &&
-                timeSlot.Status == AppointmentStatus.Available.ToString());
-
-            return Task.FromResult(!isAnyDateBookedAlready);
-
-
+            // If an existing appointment is found, the slot is not bookable.
+            // If no existing appointment is found, the slot is bookable (so return true).
+            return !isAnyDateBookedAlready;
+        
         }
 
         public async Task<int> ChangeTimeSlotState(ChangeActiveTimeSlotStateDTO timeSlot)
