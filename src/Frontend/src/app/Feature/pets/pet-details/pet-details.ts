@@ -5,11 +5,10 @@ import { CommonModule } from '@angular/common';
 import { PetDetailsModel } from '../../../models/pet-details';
 import { EnumService } from '../../../core/services/enum-service';
 import { AlertService } from '../../../core/services/alert-service';
-import { AuthService } from '../../../core/services/auth-service';
 import { AdoptionRequest } from '../../../models/adoption-request';
 import { AdoptionService } from '../../../core/services/adoption-service';
-import { Pet } from '../../../models/pet';
 import { AdoptionResponse } from '../../../models/adoption-response';
+import { AccountService } from '../../../core/services/account-service';
 
 @Component({
   selector: 'app-pet-details',
@@ -33,7 +32,7 @@ export class PetDetails implements OnInit {
     private enumservice: EnumService,
     private router: Router,
     private alert: AlertService,
-    public authService: AuthService,
+    public accountService: AccountService,
     public adoptionService: AdoptionService,
     private cdRef: ChangeDetectorRef
   ) {}
@@ -91,7 +90,7 @@ export class PetDetails implements OnInit {
   }
 
   sendAdoptionRequest(pet: PetDetailsModel) {
-    const recCustomerId = this.authService.getUserId();
+    const recCustomerId = this.accountService.getUserId();
 
     if (!recCustomerId) {
       console.error('User ID is null. User might not be logged in.');

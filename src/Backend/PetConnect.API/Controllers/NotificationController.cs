@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PetConnect.BLL.Services.DTOs.Notification;
 using PetConnect.BLL.Services.Interfaces;
+using System.Security.Claims;
 
 namespace PetConnect.API.Controllers
 {
@@ -22,6 +23,7 @@ namespace PetConnect.API.Controllers
         [EndpointSummary("Get All Notifications For User By User Id")]
         public IActionResult GetAllNotificationByUserId(string id)
         {
+         
             var notification = notificationService.GetAllNotificationsByUserId(id);
                 return Ok(notification);
         }

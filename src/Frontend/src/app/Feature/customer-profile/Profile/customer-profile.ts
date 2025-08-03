@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AdoptionService } from '../../../core/services/adoption-service';
@@ -7,9 +7,11 @@ import { AdoptionResponse } from '../../../models/adoption-response';
 import { CustomerService } from '../customer-service';
 import { CusotmerPet } from '../../../models/cusotmer-pet';
 import { CustomerPofileDetails } from '../../../models/customer-pofile-details';
-import { AuthService } from '../../../core/services/auth-service';
-import { PetDetailsModel } from '../../../models/pet-details';
 import { AlertService } from '../../../core/services/alert-service';
+import { AdoptionDecision } from '../../../models/adoption-decision';
+import { AccountService } from '../../../core/services/account-service';
+import { Subscription } from 'rxjs';
+import { NotificationService } from '../../../core/services/notification-service';
 
 @Component({
   selector: 'app-customer-profile',
@@ -17,54 +19,54 @@ import { AlertService } from '../../../core/services/alert-service';
   templateUrl: './customer-profile.html',
   styleUrl: './customer-profile.css',
 })
-export class CustomerProfile {
+export class CustomerProfile implements OnInit, OnDestroy {
   loadingReuests: boolean = true;
   loadingProfile: boolean = true;
+  loadingPets: boolean = true;
   myPets: CusotmerPet[] = [];
   ReceivedRequests: any[] = [];
-  profileData: CustomerPofileDetails | null = null; // Instead of a large ViewModel type
+  profileData: CustomerPofileDetails | null = null;
   petCount: number = 0;
   selectedPetFilter: string = '';
   sortOrder: 'asc' | 'desc' = 'desc';
   sentRequests: AdoptionResponse[] = [];
   requestedPetIds: number[] = [];
+  private notifSub!: Subscription;
 
   constructor(
     private adoptionService: AdoptionService,
     private customerService: CustomerService,
-    private authService: AuthService,
     private alert: AlertService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
     this.loadSentRequests();
-    this.customerService.getCustomerProfile().subscribe((data) => {
-      console.log('Profile Data:', data);
-      this.profileData = data;
-      this.loadingProfile = false;
-    });
-    this.customerService.getCustomerPets().subscribe({
-      next: (pets) => {
-        this.myPets = pets;
-        this.petCount = pets.length;
-        console.log('Owned Pets:', this.myPets);
-      },
-      error: (err) => {
-        console.error('Failed to load owned pets', err);
-      },
-    });
-    this.adoptionService.getReceivedAdoptionRequests().subscribe({
-      next: (pets) => {
-        this.ReceivedRequests = pets;
-        console.log('ReceivedRequests', this.ReceivedRequests);
-      },
-      error: (err) => {
-        console.error('Failed to load owned pets', err);
-      },
-    });
-  }
+    this.loadCustomerPets();
+    this.loadReceivedRequests();
+    this.loadProfile();
 
+    this.notifSub = this.notificationService.newNotification$.subscribe(
+      (notif) => {
+        if (!notif) return;
+
+        // If notification is adoption-related
+        console.log(
+          '🔄 Reloading adoption requests due to notification:',
+          notif.message
+        );
+        this.loadSentRequests();
+        this.loadCustomerPets();
+        this.loadReceivedRequests();
+      }
+    );
+  }
+  ngOnDestroy(): void {
+    if (this.notifSub) {
+      this.notifSub.unsubscribe();
+    }
+  }
   loadSentRequests(): void {
     this.adoptionService.getIncomingRequests().subscribe({
       next: (requests) => {
@@ -79,7 +81,37 @@ export class CustomerProfile {
       },
     });
   }
-
+  loadCustomerPets(): void {
+    this.customerService.getCustomerPets().subscribe({
+      next: (pets) => {
+        this.myPets = pets;
+        this.petCount = pets.length;
+        this.loadingPets = false;
+        console.log('Owned Pets:', this.myPets);
+      },
+      error: (err) => {
+        console.error('Failed to load owned pets', err);
+      },
+    });
+  }
+  loadReceivedRequests(): void {
+    this.adoptionService.getReceivedAdoptionRequests().subscribe({
+      next: (pets) => {
+        this.ReceivedRequests = pets;
+        console.log('ReceivedRequests', this.ReceivedRequests);
+      },
+      error: (err) => {
+        console.error('Failed to load owned pets', err);
+      },
+    });
+  }
+  loadProfile(): void {
+    this.customerService.getCustomerProfile().subscribe((data) => {
+      console.log('Profile Data:', data);
+      this.profileData = data;
+      this.loadingProfile = false;
+    });
+  }
   get uniquePetNames(): string[] {
     const names = this.ReceivedRequests.map((r) => r.petName);
     return [...new Set(names)];
@@ -124,6 +156,33 @@ export class CustomerProfile {
         this.cdRef.detectChanges();
       },
       error: (err) => this.alert.error('Failed to cancel request.'),
+    });
+  }
+
+  approveOrCancel(request: any, status: number): void {
+    const decision = {
+      petId: request.petId,
+      reqCustomerId: request.reqCustomerId, // ✅ correct spelling
+      adoptionDate: request.adoptionDate.replace('T', ' ').replace('Z', ''),
+      adoptionStatus: status,
+    };
+
+    this.adoptionService.approveOrCancelRequest(decision).subscribe({
+      next: () => {
+        this.alert.success(
+          status === 0
+            ? 'Adoption request approved.'
+            : 'Adoption request cancelled.'
+        );
+        // Update UI instantly
+        request.adoptionStatus = status;
+        this.loadSentRequests();
+        this.loadCustomerPets();
+        this.loadReceivedRequests();
+      },
+      error: () => {
+        this.alert.error('Failed to update request.');
+      },
     });
   }
 }

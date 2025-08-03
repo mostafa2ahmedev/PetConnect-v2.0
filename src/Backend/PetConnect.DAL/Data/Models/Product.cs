@@ -20,6 +20,9 @@ namespace PetConnect.DAL.Data.Models
 
         public ICollection<OrderProduct> OrderProducts { get; set; } = new HashSet<OrderProduct>();
 
+        public string? SellerId { get; set; }
+        public Seller? Seller { get; set; }
+
 
     }
 }

@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { AccountService } from '../../core/services/account-service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../core/services/auth-service';
 
 @Component({
   selector: 'app-login',
@@ -18,11 +17,7 @@ export class Login implements OnInit {
   remembered: boolean = false;
   errorMessage: string | null = null;
 
-  constructor(
-    private accountService: AccountService,
-    private router: Router,
-    public authService: AuthService
-  ) {}
+  constructor(public accountService: AccountService, private router: Router) {}
   ngOnInit(): void {
     this.accountService.logout();
   }
@@ -44,19 +39,24 @@ export class Login implements OnInit {
         storage.setItem('userId', res.id);
         storage.setItem('userRoles', JSON.stringify(res.roles));
 
-        // Optional: Store user details (if returned)
+        // Optional: Store user details
         if (res.user) {
           storage.setItem('user', JSON.stringify(res.user));
         }
 
-        // Redirect to dashboard or another secure route
-        if (this.authService.isAdmin()) {
-          this.router.navigate(['/admin']);
-        } else if (this.authService.isCustomer()) {
-          this.router.navigate([`/profile`]);
-        } else {
-          this.router.navigate(['/doctors']);
+        // Navigate first, then reload so the new page sees the updated state
+        let targetRoute = '/doctors';
+        if (this.accountService.isAdmin()) {
+          targetRoute = '/admin';
+        } else if (this.accountService.isCustomer()) {
+          targetRoute = '/profile';
+        } else if (this.accountService.isDoctor()) {
+          targetRoute = '/doc-profile';
         }
+
+        this.router.navigate([targetRoute]).then(() => {
+          window.location.reload();
+        });
       },
       error: (err) => {
         console.error('Login failed', err);

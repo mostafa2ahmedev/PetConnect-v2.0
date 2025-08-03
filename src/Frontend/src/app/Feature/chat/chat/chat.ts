@@ -10,20 +10,22 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatSignalrService } from '../../../core/services/chat-service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../../../core/services/auth-service';
 import { MessengerContact } from '../../../models/messenger-contact';
 import { CustomerService } from '../../customer-profile/customer-service';
 import { CustomerPofileDetails } from '../../../models/customer-pofile-details';
+import { PickerModule } from '@ctrl/ngx-emoji-mart';
+import { AccountService } from '../../../core/services/account-service';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PickerModule],
   templateUrl: './chat.html',
   styleUrls: ['./chat.css'],
 })
-export class ChatComponent implements OnInit, AfterViewInit,OnDestroy {
+export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
+  showEmojiPicker = false;
 
   message = '';
   receiverId = '';
@@ -36,13 +38,14 @@ export class ChatComponent implements OnInit, AfterViewInit,OnDestroy {
   activeContact: MessengerContact | null = null;
   profileData: CustomerPofileDetails | null = null;
   isSidebarVisible = false;
+  unreadSenders = new Set<string>();
 
   // chatMessages: ChatMessage[] = [];
 
   constructor(
     private chatService: ChatSignalrService,
     private route: ActivatedRoute,
-    private authService: AuthService,
+    private accountService: AccountService,
     private router: Router,
     private customerService: CustomerService
   ) {}
@@ -56,7 +59,7 @@ export class ChatComponent implements OnInit, AfterViewInit,OnDestroy {
         this.receiverId = params['id'];
       }
     });
-    this.senderId = this.authService.getUserId();
+    this.senderId = this.accountService.getUserId();
     const token =
       localStorage.getItem('token') || sessionStorage.getItem('token');
 
@@ -68,7 +71,47 @@ export class ChatComponent implements OnInit, AfterViewInit,OnDestroy {
       });
 
       this.chatService.messages$.subscribe((msgs) => {
-        this.messages = msgs;
+        this.messages = msgs.filter(
+          (msg) =>
+            (msg.senderId === this.receiverId &&
+              msg.receiverId === this.senderId) ||
+            (msg.senderId === this.senderId &&
+              msg.receiverId === this.receiverId)
+        );
+
+        const lastMsg = msgs[msgs.length - 1];
+        if (lastMsg) {
+          if (
+            !(
+              (lastMsg.senderId === this.receiverId &&
+                lastMsg.receiverId === this.senderId) ||
+              (lastMsg.senderId === this.senderId &&
+                lastMsg.receiverId === this.receiverId)
+            )
+          ) {
+            this.unreadSenders = new Set(this.unreadSenders).add(
+              lastMsg.senderId
+            );
+          }
+        }
+        this.scrollToBottom();
+      });
+            this.chatService.userOnline$.subscribe(userId => {
+        this.contacts = this.contacts.map(contact => 
+          contact.userId === userId ? {...contact, isOnline: true} : contact
+        );
+        if (this.activeContact?.userId === userId) {
+          this.activeContact.isOnline = true;
+        }
+      });
+
+      this.chatService.userOffline$.subscribe(userId => {
+        this.contacts = this.contacts.map(contact => 
+          contact.userId === userId ? {...contact, isOnline: false} : contact
+        );
+        if (this.activeContact?.userId === userId) {
+          this.activeContact.isOnline = false;
+        }
       });
     } else {
       alert('🚫 No token found in localStorage!');
@@ -113,7 +156,7 @@ export class ChatComponent implements OnInit, AfterViewInit,OnDestroy {
       } catch (err) {
         console.warn('Scroll failed:', err);
       }
-    });
+    }, 200);
   }
   async sendMessage() {
     if (
@@ -136,6 +179,8 @@ export class ChatComponent implements OnInit, AfterViewInit,OnDestroy {
     } catch (error) {
       console.error('❌ Send failed:', error);
     }
+
+    this.scrollToBottom();
   }
 
   loadMessages(receiverId: string) {
@@ -144,7 +189,10 @@ export class ChatComponent implements OnInit, AfterViewInit,OnDestroy {
       next: (res) => {
         console.log('📩 Loaded chat messages:', res);
         this.messagesHistory = res;
+        this.messages = [];
+
         this.scrollToBottom();
+        // Ensure scroll happens after view update
       },
       error: (err) => {
         console.error('❌ Failed to load chat messages:', err);
@@ -158,10 +206,14 @@ export class ChatComponent implements OnInit, AfterViewInit,OnDestroy {
   activateContact(contact: MessengerContact) {
     this.activeContact = contact;
     this.receiverId = contact.userId;
+    this.messages = []; // Clear current messages
     this.router.navigate(['../', contact.userId], {
       relativeTo: this.route,
       replaceUrl: true, // Optional: prevents adding to history stack
     });
+    this.unreadSenders = new Set(
+      [...this.unreadSenders].filter((id) => id !== contact.userId)
+    );
     this.loadMessages(this.receiverId);
     this.toggleContactsSidebar();
   }
@@ -181,5 +233,45 @@ export class ChatComponent implements OnInit, AfterViewInit,OnDestroy {
   }
   toggleContactsSidebar() {
     this.isSidebarVisible = !this.isSidebarVisible;
+  }
+
+  onFileSelected(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file && this.receiverId && this.connectionStatus === 'Connected') {
+      this.chatService.sendFileMessage(this.receiverId, file);
+      this.scrollToBottom();
+    }
+  }
+
+  extractAttachmentPath(raw: string | null): string | null {
+    if (!raw) return null;
+
+    try {
+      const parsed = JSON.parse(raw);
+      return `https://localhost:7102/${parsed?.imagePath}`;
+    } catch (e) {
+      console.warn('Invalid JSON attachment URL:', raw);
+      return null;
+    }
+  }
+  addEmoji(event: any) {
+    this.message += event.emoji.native;
+  }
+  isImage(raw: string | null): boolean {
+    const path = this.extractAttachmentPath(raw)?.toLowerCase();
+    return (
+      !!path &&
+      (path.includes('.jpg') ||
+        path.includes('.jpeg') ||
+        path.includes('.png') ||
+        path.includes('.gif') ||
+        path.includes('.webp') ||
+        path.includes('.bmp'))
+    );
+  }
+
+  isPdf(raw: string | null): boolean {
+    const path = this.extractAttachmentPath(raw)?.toLowerCase();
+    return !!path && path.includes('.pdf');
   }
 }

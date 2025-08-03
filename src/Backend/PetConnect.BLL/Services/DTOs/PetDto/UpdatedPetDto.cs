@@ -22,8 +22,8 @@ namespace PetConnect.BLL.Services.DTO.PetDto
         public PetStatus Status { get; set; }
         [Required(ErrorMessage = "Ownership is required.")]
         public Ownership Ownership { get; set; }
-        [Required(ErrorMessage = "ImgURL is required.")]
-        public IFormFile ImgURL { get; set; } = null!;
+        //[Required(ErrorMessage = "ImgURL is required.")]
+        public IFormFile? ImgURL { get; set; } = null!;
 
         [Required(ErrorMessage = "Breed Id is required.")]
         public int BreedId { get; set; }

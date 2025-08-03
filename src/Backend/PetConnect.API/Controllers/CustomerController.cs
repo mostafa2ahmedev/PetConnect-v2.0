@@ -9,6 +9,7 @@ using PetConnect.BLL.Services.Interfaces;
 using PetConnect.DAL.Data.Enums;
 using PetConnect.DAL.Data.Models;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PetConnect.API.Controllers
@@ -24,6 +25,18 @@ namespace PetConnect.API.Controllers
             _customerService = customerService;
         }
 
+        [HttpGet("Profile")]
+        [ProducesResponseType(typeof(List<CustomerDetailsDTO>), StatusCodes.Status200OK)]
+        [EndpointSummary("Get Customer Profile")]
+        [Authorize(Roles = "Customer")]
+        public ActionResult GetCustomerProfile()
+        {
+            var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var Customer = _customerService.GetProfile(customerId!);
+            if (Customer == null)
+                return NotFound(new GeneralResponse(statusCode: 404, "Customer Not Found"));
+            return Ok(new GeneralResponse(200, Customer));
+        }
 
 
         [HttpGet()]
@@ -50,17 +63,17 @@ namespace PetConnect.API.Controllers
 
 
 
-        [HttpGet("Profile")]
-        [ProducesResponseType(typeof(List<CustomerDetailsDTO>), StatusCodes.Status200OK)]
-        [EndpointSummary("Get Customer Profile")]
-        [Authorize(Roles = "Customer")]
+        //[HttpGet("Profile")]
+        //[ProducesResponseType(typeof(List<CustomerDetailsDTO>), StatusCodes.Status200OK)]
+        //[EndpointSummary("Get Customer Profile")]
+        //[Authorize(Roles = "Customer")]
 
-        public ActionResult GetCustomerProfile()
-        {
-            var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var Customer = _customerService.GetProfile(customerId!);
-            return Ok(new GeneralResponse(200, Customer));
-        }
+        //public ActionResult GetCustomerProfile()
+        //{
+        //    var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    var Customer = _customerService.GetProfile(customerId!);
+        //    return Ok(new GeneralResponse(200, Customer));
+        //}
 
 
 
@@ -136,7 +149,7 @@ namespace PetConnect.API.Controllers
         [HttpDelete]
         [EndpointSummary("Delete An Adoption Request")]
         [Authorize(Roles = "Customer")]
-        public ActionResult DeleteRequestAdoption([FromBody] DelCusRequestAdoptionDto delCusRequestAdoptionDto)
+        public async Task<ActionResult> DeleteRequestAdoption([FromBody] DelCusRequestAdoptionDto delCusRequestAdoptionDto)
         {
 
             if (!ModelState.IsValid)
@@ -151,9 +164,9 @@ namespace PetConnect.API.Controllers
                 return BadRequest(new GeneralResponse(400, errors));
             }
             var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result=  _customerService.DeleteRequestAdoption(delCusRequestAdoptionDto, customerId!);
-            if(result==0)
-                return NotFound(new GeneralResponse(404, $"No Data found"));
+            var result= await  _customerService.DeleteRequestAdoption(delCusRequestAdoptionDto, customerId!);
+            //if(result==0)
+            //    return NotFound(new GeneralResponse(404, $"No Data found"));
 
             return Ok(new GeneralResponse(200, "Request Deleted Successfully"));
         }
@@ -187,7 +200,7 @@ namespace PetConnect.API.Controllers
         [HttpPut("ApproveORCancel")]
         [EndpointSummary("Approve OR Cancel Received Requests For Customer")]
         [Authorize(Roles = "Customer")]
-        public ActionResult ApproveORCancelCustomerReceivedRequest([FromBody] ApproveORCancelReceivedCustomerRequest approveORCancelCustomerRequestDTO)
+        public async Task<ActionResult> ApproveORCancelCustomerReceivedRequest([FromBody] ApproveORCancelReceivedCustomerRequest approveORCancelCustomerRequestDTO)
         {
             if (!ModelState.IsValid) {
                 var errors = ModelState
@@ -201,7 +214,7 @@ namespace PetConnect.API.Controllers
             }
 
             var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result=  _customerService.ApproveOrCancelCustomerAdoptionRequest(approveORCancelCustomerRequestDTO,customerId!);
+            var result= await _customerService.ApproveOrCancelCustomerAdoptionRequest(approveORCancelCustomerRequestDTO,customerId!);
 
             if (result == null)
                 return BadRequest(new GeneralResponse(400, "Error in submitted data"));

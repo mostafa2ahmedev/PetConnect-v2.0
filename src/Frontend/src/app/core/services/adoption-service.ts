@@ -30,6 +30,7 @@ export class AdoptionService {
 
   // Approve or cancel a request
   approveOrCancelRequest(decision: AdoptionDecision): Observable<any> {
+    console.log('Decision:', decision);
     return this.http.put(`${this.baseUrl}/ApproveORCancel`, decision);
   }
 

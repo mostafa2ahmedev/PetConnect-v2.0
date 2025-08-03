@@ -64,24 +64,32 @@ export class UpdatePet {
     });
 
     this.loadCategories();
-    this.loadBreeds();
 
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (!isNaN(id)) {
       this.petService.getPetById(id).subscribe({
         next: (response) => {
-          console.log('res', response);
           this.petDetail = response;
+
           this.pet.Name = response.name;
           this.pet.Status = response.status;
           this.pet.Age = response.age;
           this.pet.Notes = response.notes;
-          this.pet.BreedId = this.findBreedIdByName(response.breadName);
-          this.selectedCategoryId = this.findCategoryIdByName(
-            response.categoryName
-          );
-          this.filterBreeds();
-          this.loading = false;
+
+          // Temporarily store names
+          const breedName = response.breadName;
+          const categoryName = response.categoryName;
+
+          this.loadBreeds(() => {
+            // After breeds are loaded
+            this.selectedCategoryId = this.findCategoryIdByName(categoryName);
+            this.filterBreeds();
+
+            // Now that filteredBreeds is updated, set the correct breed ID
+            this.pet.BreedId = this.findBreedIdByName(breedName);
+
+            this.loading = false;
+          });
         },
         error: () => {
           this.error = 'Failed to load pet details.';
@@ -153,12 +161,16 @@ export class UpdatePet {
     });
   }
 
-  loadBreeds(): void {
+  loadBreeds(callback?: () => void): void {
     this.breedService.getAllBreeds().subscribe({
       next: (breeds) => {
         this.breeds = breeds;
+        if (callback) callback();
       },
-      error: (err) => console.error('Error loading breeds', err),
+      error: (err) => {
+        console.error('Error loading breeds', err);
+        if (callback) callback();
+      },
     });
   }
 

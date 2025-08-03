@@ -1,6 +1,7 @@
 export interface NotificationModel {
-  id: string; // UUID
+  notificationId: string;
   message: string;
+  type: number;
   isRead: boolean;
-  date: string;
+  createdAt: string;
 }

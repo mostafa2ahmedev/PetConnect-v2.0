@@ -40,7 +40,7 @@ export class AdminInsights {
   loadingProfile = true;
   selectedRejectionId: string | number | null = null;
   rejectionTarget: 'doctor' | 'pet' | null = null;
-  statistics: any;
+  statistics: AdminStatistics | null = null;
   rejectionMessage: string = '';
   chartReady = false;
   doctors: Doctor[] = [];
@@ -108,19 +108,82 @@ export class AdminInsights {
       },
     ],
   };
+  PetApprovalChat: ChartOptions = {
+    series: [], // For adoption, rescue, owned
+
+    chart: {
+      type: 'pie',
+    },
+    labels: ['Approved', 'Pending', 'Rejected'],
+    colors: ['#5D57F4', '#9915a2ff', '#cd1313ff'], // ✅ Custom colors here
+    dataLabels: {
+      enabled: true,
+      style: {
+        colors: ['#ffffff'], // ✅ Text color for percentages on each slice
+        fontSize: '12px',
+        fontWeight: 'bold',
+      },
+      dropShadow: {
+        enabled: false,
+      },
+    },
+    legend: {
+      position: 'bottom',
+    },
+    plotOptions: {
+      pie: {
+        donut: {
+          size: '70%', // smaller = thinner stroke; try '50%', '40%', etc.
+          labels: {
+            show: false,
+            name: {
+              show: true,
+              fontSize: '12px',
+              fontWeight: 'bold',
+              color: '#343a40', // Label name color
+            },
+            value: {
+              show: true,
+              fontSize: '12px',
+              color: '#5D57F4', // ✅ Percentage number color
+            },
+            total: {
+              show: true,
+              label: 'Total',
+              color: '#212529', // Total label color
+              fontSize: '12px',
+            },
+          },
+        },
+      },
+    },
+    responsive: [
+      {
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: 320,
+          },
+          legend: {
+            position: 'bottom',
+          },
+        },
+      },
+    ],
+  };
   DocChartOptions: ChartOptions = {
     series: [], // For adoption, rescue, owned
 
     chart: {
       type: 'pie',
     },
-    labels: ['Approved', 'Not Approved'],
-    colors: ['#5D57F4', '#9915a2ff'], // ✅ Custom colors here
+    labels: ['Approved', 'Pending', 'Rejected'],
+    colors: ['#5D57F4', '#9915a2ff', '#cd1313ff'], // ✅ Custom colors here
     dataLabels: {
       enabled: true,
       style: {
         colors: ['#ffffff'], // ✅ Text color for percentages on each slice
-        fontSize: '16px',
+        fontSize: '12px',
         fontWeight: 'bold',
       },
       dropShadow: {
@@ -272,17 +335,23 @@ export class AdminInsights {
         this.chartReady = true;
 
         this.PetChartOptions.series = [
-          stats.totalPets,
           stats.petsForAdoption,
           stats.petsForRescue,
+          stats.approvedPets - stats.petsForAdoption - stats.petsForRescue,
+        ];
+        this.PetApprovalChat.series = [
+          stats.approvedPets,
+          stats.pendingPets,
+          stats.rejectedPets,
         ];
         this.DocChartOptions.series = [
-          stats.totalDoctors - this.doctors.length,
-          this.doctors.length,
+          stats.approvedDoctors,
+          stats.pendingDoctors,
+          stats.rejectedDoctors,
         ];
         this.UserChartOptions.series = [
+          stats.totalUsers - stats.totalCustomers,
           stats.totalCustomers,
-          stats.totalDoctors,
         ];
       },
       error: (err) => {

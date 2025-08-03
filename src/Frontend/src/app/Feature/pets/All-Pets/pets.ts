@@ -1,10 +1,14 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router,
+  RouterModule,
+  UrlSegment,
+} from '@angular/router';
 import { Pet } from '../../../models/pet';
 import { PetService } from '../pet-service';
 import { EnumService } from '../../../core/services/enum-service';
-import { AuthService } from '../../../core/services/auth-service';
 import { AdoptionService } from '../../../core/services/adoption-service';
 import { AdoptionRequest } from '../../../models/adoption-request';
 import { AlertService } from '../../../core/services/alert-service';
@@ -12,6 +16,9 @@ import { AdoptionResponse } from '../../../models/adoption-response';
 import { Category } from '../../../models/category';
 import { CategoryService } from '../../categories/category-service';
 import { FormsModule } from '@angular/forms';
+import { Observable, Subscription } from 'rxjs';
+import { AccountService } from '../../../core/services/account-service';
+import { NotificationService } from '../../../core/services/notification-service';
 
 @Component({
   selector: 'app-pets',
@@ -21,6 +28,8 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './pets.css',
 })
 export class Pets implements OnInit {
+  mode: 'all' | 'adopt' | 'rescue' = 'all';
+  title = 'Dicover All our Pets';
   pets: Pet[] = [];
   statusMap: { [key: number]: string } = {};
   loading = true;
@@ -37,35 +46,76 @@ export class Pets implements OnInit {
   constructor(
     private petService: PetService,
     private enumService: EnumService,
-    public authService: AuthService,
+    public accountService: AccountService,
     public adoptionService: AdoptionService,
     private alert: AlertService,
     private cdRef: ChangeDetectorRef,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private route: ActivatedRoute,
+    private notificationService: NotificationService
   ) {}
   requestedPetIds: number[] = []; // pet IDs user has requested
   allSentRequests: AdoptionResponse[] = []; // all requests sent by the user
+  private notifSub!: Subscription;
+
   ngOnInit(): void {
     this.enumService.loadAllEnums().subscribe();
     this.loadCategories();
 
-    this.loadPets();
+    this.route.paramMap.subscribe((params) => {
+      const modeParam = params.get('mode');
+
+      if (modeParam === 'adopt' || modeParam === 'rescue') {
+        this.mode = modeParam;
+        this.title =
+          modeParam.charAt(0).toUpperCase() + modeParam.slice(1) + ' Pets';
+      } else {
+        this.mode = 'all';
+      }
+
+      this.loadPets();
+    });
     this.loadSubmittedRequests();
+
+    this.notifSub = this.notificationService.newNotification$.subscribe(
+      (notif) => {
+        if (!notif) return;
+
+        // If notification is adoption-related
+        console.log(
+          '🔄 Reloading adoption requests due to notification:',
+          notif.message
+        );
+        this.loadPets();
+        this.loadSubmittedRequests();
+      }
+    );
   }
 
   loadPets(): void {
-    this.petService.getAllPets().subscribe({
+    this.loading = true;
+
+    let request$: Observable<any>;
+
+    if (this.mode === 'adopt') {
+      request$ = this.petService.getAdoptablePets();
+    } else if (this.mode === 'rescue') {
+      request$ = this.petService.getRescuePets();
+    } else {
+      request$ = this.petService.getAllPets();
+    }
+
+    request$.subscribe({
       next: (pets) => {
         this.pets = pets;
         this.filteredPets = pets;
         this.loading = false;
-        console.log('petssss', this.pets);
+        console.log('Loaded pets:', pets);
       },
       error: (err) => {
         console.error('Error loading pets:', err);
         this.error = 'Failed to load pets. Please try again later.';
         this.loading = false;
-        // this.failedLoad = true;
       },
     });
   }

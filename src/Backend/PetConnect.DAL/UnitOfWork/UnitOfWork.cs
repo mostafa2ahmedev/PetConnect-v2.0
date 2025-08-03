@@ -51,11 +51,13 @@ namespace PetConnect.DAL.UnitofWork
 
         public IProductRepository ProductRepository => new ProductRepository(context);
         public IProductTypeRepository ProductTypeRepository => new ProductTypeRepository(context);
+        public IOrderProductRepository orderProductRepository => new OrderProductRepository(context);
         public IOrderRepository OrderRepository => new OrderRepository(context);
 
         public ITimeSlotsRepository TimeSlotsRepository =>  new TimeSlotsRepository(context);
         public IAppointmentsRepository AppointmentsRepository => new AppointmentsRepository(context);
 
+        public ISellerRepository SellerRepository => new SellerRepository(context);
 
         public IAdminDoctorMessageRepository AdminDoctorMessageRepository => new AdminDoctorMessageRepository(context);
         public IAdminPetMessageRepository AdminPetMessageRepository => new AdminPetMessageRepository(context);

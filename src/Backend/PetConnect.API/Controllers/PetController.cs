@@ -31,7 +31,7 @@ namespace PetConnect.API.Controllers
         [EndpointSummary("Get All Pets")]
         public ActionResult GetAll()
         {
-            var pets = _petService.GetAllPetsWithBelongsToCustomer();
+            var pets = _petService.GetAllApprovedPetsWithBelongsToCustomer();
             return Ok(new GeneralResponse(200, pets));
         }
 

@@ -9,13 +9,13 @@ namespace PetConnect.BLL.Services.Interfaces
 {
     public interface IProductService
     {
-        Task<int> AddProduct(AddedProductDTO addedProductDTO);
-        Task<int> UpdateProduct(UpdatedProductDTO updatedProductDTO);
+        Task<int> AddProduct(string SellerId,AddedProductDTO addedProductDTO);
+        Task<int> UpdateProduct(string SellerId, UpdatedProductDTO updatedProductDTO);
 
         int DeleteProduct(int id);
 
         IEnumerable<ProductDetailsDTO> GetAllProducts();
 
-        ProductDetailsDTO GetProductDetails(int id);
+        ProductDetailsDTO? GetProductDetails(int id);
     }
 }

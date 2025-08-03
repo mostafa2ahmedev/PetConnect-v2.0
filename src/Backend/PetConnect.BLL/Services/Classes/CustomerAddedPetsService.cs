@@ -21,12 +21,15 @@ namespace PetConnect.BLL.Services.Classes
 
         public void RegisterCustomerPetAddition(string userId, int petId)
         {
-           var CustomerPetAddition= new CustomerAddedPets(){
-               CustomerId = userId,
-               PetId = petId,
-               AdditionDate = DateTime.Now,
-               Status = AddedStatus.Pending,
+            var CustomerPetAddition = new CustomerAddedPets()
+            {
+                CustomerId = userId,
+                PetId = petId,
+                AdditionDate = DateTime.Now,
+                Status = AddedStatus.Pending,
             };
+            var pet = _unitOfWork.PetRepository.GetByID(petId);
+            pet.Status = PetStatus.Owned;
             _unitOfWork.CustomerAddedPetsRepository.Add(CustomerPetAddition);
         }
     }

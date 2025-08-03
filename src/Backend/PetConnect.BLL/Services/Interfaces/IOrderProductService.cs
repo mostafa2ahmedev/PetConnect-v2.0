@@ -1,4 +1,4 @@
-﻿using PetConnect.BLL.Services.DTOs.Product;
+﻿using PetConnect.BLL.Services.DTOs.OrderProduct;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +9,10 @@ namespace PetConnect.BLL.Services.Interfaces
 {
     public interface IOrderProductService
     {
-        Task<int> AddOrderProduct(AddedProductDTO addedProductDTO);
-        Task<int> UpdateOrderProduct(UpdatedProductDTO updatedProductDTO);
+        IEnumerable<OrderProductForSellerConfirmationDto> GetOrderProductForSellerConfirmationDto(string SellerId);
 
-        int DeleteOrderProduct(int id);
+        int? ShippingOrDenyingOrderProductInOrder(string SellerId, ShipOrDenyOrderProductDto shipOrDenyOrderProductDto);
 
-        IEnumerable<ProductDetailsDTO> GetAllOrderProduct();
-
-        ProductDetailsDTO GetOrderProductDetails(int id);
+        bool CheckIfThereIsAnyOrderProductWithStatusPendingForSpecificProduct(int OrderId);
     }
 }
