@@ -18,5 +18,8 @@ namespace PetConnect.BLL.Services.DTOs.Product
 
         public int ProductTypeId { get; set; }
         public string ProductTypeName { get; set; } = null!;
+
+        public string SellerId { get; set; } = null!;
+        public string SellerName { get; set; } = null!;
     }
 }

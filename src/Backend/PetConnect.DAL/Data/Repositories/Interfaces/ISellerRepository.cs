@@ -1,5 +1,6 @@
 ﻿using PetConnect.DAL.Data.GenericRepository;
 using PetConnect.DAL.Data.Models;
+using PetConnect.DAL.Data.Repositories.Classes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +9,11 @@ using System.Threading.Tasks;
 
 namespace PetConnect.DAL.Data.Repositories.Interfaces
 {
-    public interface IProductRepository:IGenericRepository<Product>
+    public interface ISellerRepository  : IGenericRepository<Seller>
     {
-        public Product? GetProductWithSellerData(int productId);
-        public IEnumerable<Product> GetAllProductsWithSeller();
+
+
+        string? GetSellerByProductInfo(int ProductId);
+
     }
 }

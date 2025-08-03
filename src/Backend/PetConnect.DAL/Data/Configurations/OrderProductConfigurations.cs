@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using PetConnect.DAL.Data.Enums;
 using PetConnect.DAL.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,14 @@ namespace PetConnect.DAL.Data.Configurations
             builder.HasOne(p => p.product).WithMany(o => o.OrderProducts).HasForeignKey(o => o.ProductId);
             builder.Property(op => op.Quantity).IsRequired();
             builder.Property(op => op.UnitPrice).IsRequired().HasColumnType("decimal(18,2)");
+
+            builder.HasOne(OP => OP.Seller).WithMany(S => S.ReviewedOrderProduct).HasForeignKey(OP => OP.SellerId).OnDelete(DeleteBehavior.Restrict);
+
+            builder.Property(OP => OP.OrderProductStatus)
+             .HasConversion(
+             OrderProductStatus => OrderProductStatus.ToString(),
+             returnOrderProductStatus => (OrderProductStatus)Enum.Parse(typeof(OrderProductStatus), returnOrderProductStatus)
+             );
         }
     }
 }

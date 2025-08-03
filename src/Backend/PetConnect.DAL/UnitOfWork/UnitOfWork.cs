@@ -58,6 +58,8 @@ namespace PetConnect.DAL.UnitofWork
         public IOrderProductRepository orderProductRepository => new OrderProductRepository(context);
         public IOrderRepository OrderRepository => new OrderRepository(context);
 
+        public ISellerRepository SellerRepository => new SellerRepository(context);
+
         public void Dispose()
         {
             context.Dispose();

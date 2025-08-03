@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PetConnect.BLL.Services.Classes;
 using PetConnect.BLL.Services.DTO.PetDto;
 using PetConnect.BLL.Services.DTOs;
 using PetConnect.BLL.Services.DTOs.Product;
 using PetConnect.BLL.Services.Interfaces;
+using System.Security.Claims;
 
 namespace PetConnect.API.Controllers
 {
@@ -39,6 +41,7 @@ namespace PetConnect.API.Controllers
         #region AddProduct
         [HttpPost]
         [EndpointSummary("Add A New Product")]
+        [Authorize(Roles = "Seller")]
         public async Task<ActionResult> AddProduct([FromForm] AddedProductDTO AddProduct)
         {
             if (!ModelState.IsValid)
@@ -53,14 +56,15 @@ namespace PetConnect.API.Controllers
                 return BadRequest(new GeneralResponse(400, errors));
             }
 
-
-            await productService.AddProduct(AddProduct);
+            var SellerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await productService.AddProduct(SellerId!, AddProduct);
             return Ok(new GeneralResponse(200, "Product added successfully"));
         }
         #endregion
         #region UpdateProduct
         [HttpPut]
         [EndpointSummary("Update Product")]
+        [Authorize(Roles = "Seller")]
         public async Task<ActionResult> Edit([FromForm] UpdatedProductDTO updatedProductDTO)
         {
             if (!ModelState.IsValid)
@@ -74,8 +78,8 @@ namespace PetConnect.API.Controllers
 
                 return BadRequest(new GeneralResponse(400, errors));
             }
-
-            var result = await productService.UpdateProduct(updatedProductDTO);
+            var SellerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await productService.UpdateProduct(SellerId!, updatedProductDTO);
             if (result == 0)
                 return NotFound(new GeneralResponse(404, $"No Product found with ID = {updatedProductDTO.Id}"));
 

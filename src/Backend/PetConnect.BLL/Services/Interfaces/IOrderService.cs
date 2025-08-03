@@ -1,4 +1,4 @@
-﻿using PetConnect.BLL.Services.DTOs.Order;
+﻿ using PetConnect.BLL.Services.DTOs.Order;
 using PetConnect.BLL.Services.DTOs.Product;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,8 @@ namespace PetConnect.BLL.Services.Interfaces
 {
     public interface IOrderService
     {
-        int AddOrder(AddedOrderDTO dto);
+        int AddOrder( AddedOrderDTO dto);
+
         List<OrderDetailsDTO> GetAllOrders();
         OrderDetailsDTO? GetOrderDetails(int id);
         int UpdateOrder(UpdatedOrderDTO dto);

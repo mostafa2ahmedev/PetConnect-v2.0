@@ -22,12 +22,12 @@ namespace PetConnect.BLL.Services.Classes
             unitOfWork = _unitOfWork;
             attachmentService = _attachmentService;
         }
-        public async Task<int> AddProduct(AddedProductDTO addedProductDTO)
+        public async Task<int> AddProduct(string SellerId,AddedProductDTO addedProductDTO)
         {
             var image = await attachmentService.UploadAsync(addedProductDTO.ImgUrl, "ProductImages");
             var ProductData = new Product
             {
-                
+                SellerId= SellerId,
                 Name = addedProductDTO.Name,
                 Description = addedProductDTO.Description,
                 ImgUrl = image,
@@ -54,7 +54,7 @@ namespace PetConnect.BLL.Services.Classes
         public IEnumerable<ProductDetailsDTO> GetAllProducts()
         {
             List<ProductDetailsDTO> productDetailsDTOs = new List<ProductDetailsDTO>();
-            IEnumerable<Product> products = unitOfWork.ProductRepository.GetAll();
+            IEnumerable<Product> products = unitOfWork.ProductRepository.GetAllProductsWithSeller();
             foreach (var product in products)
             {
                 var producttype = unitOfWork.ProductTypeRepository.GetByID(product.ProductTypeId);
@@ -66,17 +66,20 @@ namespace PetConnect.BLL.Services.Classes
                     ImgUrl = $"/assets/ProductImages/{product.ImgUrl}",
                     Price = product.Price,
                     Quantity = product.Quantity,
-                    ProductTypeName = producttype.Name
+                    ProductTypeName = producttype.Name,
+                    SellerId = product.SellerId,
+                    SellerName = product.Seller?.FName + "" + product.Seller?.LName
+
 
                 });
             }
             return productDetailsDTOs;
         }
 
-        public ProductDetailsDTO GetProductDetails(int id)
+        public ProductDetailsDTO? GetProductDetails(int id)
         {
             
-            Product productdata = unitOfWork.ProductRepository.GetByID(id);
+            Product? productdata = unitOfWork.ProductRepository.GetProductWithSellerData(id);
             if (productdata is null)
                 return null;
             var producttype = unitOfWork.ProductTypeRepository.GetByID(productdata.ProductTypeId);
@@ -88,13 +91,16 @@ namespace PetConnect.BLL.Services.Classes
                 ImgUrl = $"/assets/ProductImages/{productdata.ImgUrl}",
                 Price = productdata.Price,
                 Quantity = productdata.Quantity,
-                ProductTypeName = producttype.Name
+                ProductTypeName = producttype.Name,
+                SellerId = productdata.SellerId,
+                SellerName = productdata.Seller?.FName + "" + productdata.Seller?.LName
+
 
             };
             return productDetailsDTO;
         }
 
-        public async Task<int> UpdateProduct(UpdatedProductDTO updatedProductDTO)
+        public async Task<int> UpdateProduct(string SellerId, UpdatedProductDTO updatedProductDTO)
         {
             
             var product = unitOfWork.ProductRepository.GetByID(updatedProductDTO.Id);
@@ -114,6 +120,7 @@ namespace PetConnect.BLL.Services.Classes
             product.Price = updatedProductDTO.Price??product.Price;
             product.Quantity = updatedProductDTO.Quantity??product.Quantity;
             product.ProductTypeId = updatedProductDTO.ProductTypeId ?? product.ProductTypeId;
+            product.SellerId = SellerId;
 
             unitOfWork.ProductRepository.Update(product);
             return unitOfWork.SaveChanges();

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PetConnect.BLL.Services.DTO.Account;
+using PetConnect.BLL.Services.DTOs.Account;
 using PetConnect.BLL.Services.Interfaces;
 using PetConnect.BLL.Services.Models;
 using PetConnect.DAL.Data.Identity;
@@ -104,8 +105,43 @@ namespace PetConnect.API.Controllers
                 });
             }
         }
+        [HttpPost(template: "register/Seller")]
+        public async Task<IActionResult> PostSellerRegister([FromForm] SellerRegisterDto registerDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Return validation errors as array
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToArray();
 
+                return BadRequest(new
+                {
+                    success = false,
+                    errors = errors
+                });
+            }
+
+            RegistrationResult result = await accountService.SellerRegister(registerDTO);
+
+            if (result.Succeeded)
+            {
+                return Ok(new
+                {
+                    success = true,
+                    message = "Seller Registered Successfully."
+                });
+            }
+
+            return BadRequest(new
+            {
+                success = false,
+                errors = result.Errors.ToArray()
+            });
+        }
         [HttpPost("login")]
+
         public async Task<IActionResult> PostLogin(SignInDTO signInDTO)
         {
             if (!ModelState.IsValid)
