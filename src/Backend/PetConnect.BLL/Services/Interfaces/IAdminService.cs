@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using PetConnect.BLL.Services.DTO.Doctor;
 using PetConnect.BLL.Services.DTO.PetDto;
 using PetConnect.BLL.Services.DTOs.Admin;
+using PetConnect.BLL.Services.DTOs.Customer;
 using PetConnect.DAL.Data.Models;
 
 namespace PetConnect.BLL.Services.Interfaces
@@ -13,8 +14,13 @@ namespace PetConnect.BLL.Services.Interfaces
     public interface IAdminService
     {
         public AdminDashboardDTO GetPendingDoctorsAndPets();
-        public void ApproveDoctor(string id);
-        public void ApprovePet(int id);
+        public DoctorDetailsDTO? ApproveDoctor(string id);
+        public Task<PetDetailsDto?> ApprovePet(int id);
+        public Task<DoctorDetailsDTO?> RejectDoctor(string id, string message);
+        public PetDetailsDto? RejectPet(int id, string message);
+        public  Task<AdminStatisticsDTO> GetAdminStatistics();
+
+        public CustomerDetailsDTO? GetProfile(string id);
 
 
 

@@ -20,6 +20,10 @@ namespace PetConnect.BLL.Services.DTO.PetDto
 
         public string CustomerId { get; set; } = null!;
         public string CustomerName { get; set; } = null!;
+        public string CustomerStreet { get; set; } = null!;
+        public string CustomerCity { get; set; } = null!;
+        public string CustomerCountry { get; set; } = null!;
+        public string Notes { get; set; } = null!;
 
     }
 }

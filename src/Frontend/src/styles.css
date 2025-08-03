@@ -67,6 +67,7 @@ body {
   color: var(--default-color);
   background-color: var(--background-color);
   font-family: var(--default-font);
+  font-family: "Nunito Sans", sans-serif;
 }
 
 a {
@@ -2595,4 +2596,49 @@ section,
 .form-control,
 .form-select {
   border-color: #222;
+}
+
+/*table*/
+.custom-header th {
+  background-color: #f8f9fc; /* Light gray-blue background */
+  text-transform: uppercase;
+  font-size: 0.75rem; /* Smaller text */
+  letter-spacing: 0.03em;
+  font-weight: 600;
+  padding: 1rem 0.75rem; /* Bigger padding */
+  line-height: 2.5;
+  color: #495057;
+  border-bottom: 2px solid #dee2e6;
+}
+.custom-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  z-index: 1055;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  min-width: 250px;
+  background-color: #5d57f4;
+  color: #fff;
+}
+.custom-toast .btn-close {
+  opacity: 0.8;
+}
+.custom-toast.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.custom-toast.fade-out {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.custom-toast .toast-body {
+  padding: 2px 12px 2px 5px;
+}
+.theme-color {
+  color: #544edc;
 }

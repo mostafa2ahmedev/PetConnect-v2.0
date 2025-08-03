@@ -8,9 +8,10 @@ namespace PetConnect.DAL.Data.Enums
 {
     public enum AppointmentStatus
     {
-        Confirmed,   // Default: auto-approved and upcoming
+        Confirmed,   // CMarked when Doctor approves a customer request
         Completed,   // Marked when appointment has successfully happened
         Cancelled,    // Manually cancelled by customer or system
-        Pending         //customer waiting for doctors confirmation
+        Pending,         //customer waiting for doctors confirmation
+        Available          //customer is requesting an appointment
     }
 }

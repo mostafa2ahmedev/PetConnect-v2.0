@@ -1,9 +1,9 @@
-<section class="container my-5">
-  <div class="section-title text-center mb-4">
+<section class="container mt-0 pt-0 pb-0">
+  <!-- <div class="section-title text-center mb-4">
     <h2>Breed Details</h2>
     <p>Update or delete this breed</p>
-  </div>
-
+  </div> -->
+  <h5>Breed Details</h5>
   <div *ngIf="loading" class="text-center text-muted">Loading...</div>
   <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
 
@@ -74,7 +74,7 @@
           >
             {{ deleting ? "Deleting..." : "Delete" }}
           </button>
-          <a routerLink="/breeds" class="btn btn-secondary">Cancel</a>
+          <a routerLink="/admin/breeds" class="btn btn-secondary">Cancel</a>
         </div>
       </div>
     </form>

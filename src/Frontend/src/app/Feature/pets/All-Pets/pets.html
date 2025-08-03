@@ -3,17 +3,20 @@
     class="container section-title aos-init aos-animate pb-0"
     data-aos="fade-up"
   >
-    <h2>Discover Our Pets</h2>
+    <h2>{{ title }}</h2>
     <p>Find your new best friend and give a rescued pet a loving home.</p>
 
-    <div class="mt-3 d-flex justify-content-center gap-3">
+    <!-- <div
+      class="mt-3 d-flex justify-content-center gap-3"
+      *ngIf="accountService.isAuthenticated()"
+    >
       <a class="btn btn-primary btn-sm" routerLink="/categories">
         Manage Categories
       </a>
       <a class="btn btn-outline-primary btn-sm" href="/PetBread">
         Manage Breeds
       </a>
-    </div>
+    </div> -->
   </div>
 </section>
 
@@ -21,42 +24,135 @@
   <div class="spinner-border text-primary" role="status"></div>
   <p class="mt-3">Loading pet details...</p>
 </div>
+<section>
+  <div
+    class="container aos-init aos-animate"
+    data-aos="fade-up"
+    data-aos-delay="100"
+  >
+    <form class="row g-3 mb-2" *ngIf="!loading">
+      <!-- Category Filter -->
+      <div class="col-md-4">
+        <label for="categorySelect" class="form-label">Select Category</label>
+        <select
+          id="categorySelect"
+          class="form-select"
+          [(ngModel)]="filters.categoryId"
+          name="categoryId"
+          (change)="applyFilters()"
+        >
+          <option [ngValue]="''" selected>Select a category</option>
+          <option *ngFor="let cat of categories" [ngValue]="cat.id">
+            {{ cat.name }}
+          </option>
+        </select>
+      </div>
 
-<section id="adoptable-pets" class="team section bg-light">
+      <!-- Age Sorting -->
+      <div class="col-md-4">
+        <label for="sortAge" class="form-label">Sort by Age</label>
+        <select
+          id="sortAge"
+          class="form-select"
+          [(ngModel)]="filters.sortOrder"
+          name="sortOrder"
+          (change)="applyFilters()"
+        >
+          <option [ngValue]="''">Default</option>
+          <option [ngValue]="'asc'">Age: Low to High</option>
+          <option [ngValue]="'desc'">Age: High to Low</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label for="locationSearch" class="form-label"
+          >Search by Location</label
+        >
+        <input
+          id="locationSearch"
+          type="text"
+          class="form-control"
+          placeholder="Enter city or country"
+          [(ngModel)]="filters.location"
+          name="location"
+          (input)="applyFilters()"
+        />
+      </div>
+    </form>
+  </div>
+</section>
+<section id="adoptable-pets" class="team section bg-light pt-0">
   <div
     class="container aos-init aos-animate"
     data-aos="fade-up"
     data-aos-delay="100"
   >
     <div class="row g-5">
+      <div class="alert alert-danger mt-3" *ngIf="failedLoad">
+        No pets found matching your filters.
+      </div>
       <div
         class="col-md-6 col-lg-3"
-        *ngFor="let pet of pets"
+        *ngFor="let pet of filteredPets"
         data-aos="zoom-in"
         data-aos-delay="100"
       >
         <div class="team-card text-center">
-          <div class="team-image">
-            <img
-              [src]="getFullImageUrl(pet.imgUrl)"
-              class="img-fluid"
-              [alt]="pet.name"
-            />
-          </div>
+          <a [routerLink]="['/pet-details', pet.id]">
+            <div class="team-image">
+              <img
+                [src]="getFullImageUrl(pet.imgUrl)"
+                class="img-fluid"
+                [alt]="pet.name"
+              /></div
+          ></a>
           <div class="team-content pet-info">
             <h4>{{ pet.name }}</h4>
             <span>Age: {{ pet.age }} years</span>
             <span>{{ statusMap[pet.status] }}</span>
-            <span>Posted by: {{ pet.customerId }}</span>
+            <span
+              class="text-success"
+              *ngIf="accountService.getUserId() === pet.customerId"
+              >Your Pet</span
+            >
+
+            <span *ngIf="accountService.getUserId() !== pet.customerId"
+              ><span class="fw-semibold d-inline">Posted By:</span>
+              {{ pet.customerName }}</span
+            >
+            <span *ngIf="accountService.getUserId() !== pet.customerId"
+              ><span class="fw-semibold d-inline">From:</span>
+              {{ pet.customerCity }}</span
+            >
             <div class="mt-3 d-flex justify-content-center gap-2">
               <a
                 [routerLink]="['/pet-details', pet.id]"
                 class="btn btn-outline-primary btn-sm"
                 >Learn More</a
               >
-              <a [routerLink]="['/pets', pet.id]" class="btn btn-primary btn-sm"
-                >Adopt Now</a
+              <button
+                class="btn btn-primary btn-sm"
+                *ngIf="
+                  isDataReady &&
+                  accountService.isAuthenticated() &&
+                  accountService.getUserId() !== pet.customerId &&
+                  !requestedPetIds.includes(pet.id)
+                "
+                (click)="sendAdoptionRequest(pet)"
               >
+                Adopt Now
+              </button>
+              <button
+                *ngIf="
+                  isDataReady &&
+                  accountService.isAuthenticated() &&
+                  accountService.getUserId() !== pet.customerId &&
+                  requestedPetIds.includes(pet.id)
+                "
+                class="btn btn-danger btn-sm"
+                (click)="cancelAdoptionRequest(pet)"
+              >
+                Cancel Request
+              </button>
             </div>
           </div>
         </div>

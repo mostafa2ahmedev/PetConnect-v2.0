@@ -14,5 +14,10 @@ namespace PetConnect.DAL.Data.Identity
         public Gender Gender{ get; set; }
         public Address Address { get; set; } = null!;
         public string? ImgUrl{ get; set; } = null!;
+        public bool IsDeleted { get; set; }
+        public ICollection<UsersMessages> SentMessages { get; set; } = new HashSet<UsersMessages>();
+        public ICollection<UsersMessages> ReceivedMessages { get; set; } = new HashSet<UsersMessages>();
+        public ICollection<UserConnection> UserConnections { get; set; } = new HashSet<UserConnection>();
+        public ICollection<Notification> Notifications{ get; set; } = new HashSet<Notification>();
     }
 }

@@ -26,25 +26,75 @@ import { CartComponent } from './Feature/cart/cart';
 import {SellerDashboardComponent} from './Feature/seller-dashboard/seller-dashboard';
 
 
+import { DoctorAddTimeslot } from './Feature/doctor-add-timeslot/doctor-add-timeslot';
+import { DoctorCustomerAppointment } from './Feature/doctor-customer-appointment/doctor-customer-appointment';
+import { Profile } from './Feature/profile/profile';
+import { Customer } from './Feature/profile/customer/customer';
+import { Doctor } from './Feature/profile/doctor/doctor';
+import { ShowAllDoctorTimeslots } from './Feature/Doctor/show-all-doctor-timeslots/show-all-doctor-timeslots';
+
+import { AdminDashboardComponent } from './Feature/admin-dashboard/admin-dashboard/admin-dashboard';
+import { authGuard } from './core/guards/auth-guard';
+import { CustomerProfile } from './Feature/customer-profile/Profile/customer-profile';
+import { UpdateProfile } from './Feature/customer-profile/update-profile/update-profile';
+import { AdminGuard } from './core/guards/admin-guard';
+import { UnauthComponent } from './Feature/unauthorized/unauth-component/unauth-component';
+import { AdminDoctors } from './Feature/admin-dashboard/admin-dashboard/admin-doctors/admin-doctors';
+import { AdminPets } from './Feature/admin-dashboard/admin-dashboard/admin-pets/admin-pets';
+import { AdminInsights } from './Feature/admin-dashboard/admin-dashboard/admin-insights/admin-insights';
+import { ChatComponent } from './Feature/chat/chat/chat';
+import { DoctorLearnMore } from './Feature/doctor-learn-more/doctor-learn-more';
+import { doctorGuardGuard } from './core/guards/doctor-guard-guard';
+import { CustomerGuard } from './core/guards/customer-guard';
 export const routes: Routes = [
   { path: '', component: Home },
+  { path: 'home', component: Home },
   { path: 'doctors', component: Doctors },
-  { path: 'doctors/:id', component: DoctorProfile },
-  { path: 'doctors/update/:id', component: DoctorEditProfile },
+  {
+    path: 'doctors/appointment',
+    component: DoctorCustomerAppointment,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'doctors/timeslots',
+    component: ShowAllDoctorTimeslots,
+    canActivate: [doctorGuardGuard],
+  },
+  {
+    path: 'doctors/timeslot/:id',
+    component: DoctorAddTimeslot,
+    canActivate: [doctorGuardGuard],
+  },
+  { path: 'doctors/:id', component: DoctorProfile, canActivate: [authGuard] },
+  { path: 'doctor-details/:id', component: DoctorLearnMore },
+  {
+    path: 'doctors/update/:id',
+    component: DoctorEditProfile,
+    canActivate: [doctorGuardGuard],
+  },
   { path: 'pets', component: Pets },
+  { path: 'pets/:mode', component: Pets },
   { path: 'pet-details/:id', component: PetDetails },
-  { path: 'add-pet', component: AddPets },
-  { path: 'pets/update/:id', component: UpdatePet },
-  { path: 'categories', component: Categories },
-  { path: 'category/:id', component: CategoryDetails },
-  { path: 'add-category', component: AddCategory },
+  { path: 'add-pet', component: AddPets, canActivate: [authGuard] },
+  { path: 'pets/update/:id', component: UpdatePet, canActivate: [authGuard] },
 
-  { path: 'breeds', component: AllBreeds },
-  { path: 'breed/:id', component: BreedDetails },
-
-  { path: 'add-breed', component: AddBreed },
   { path: 'contact', component: Contact },
   { path: 'login', component: Login },
+  {
+    path: 'profile/update',
+    component: UpdateProfile,
+    canActivate: [authGuard],
+  },
+
+  {
+    path: 'profile',
+    component: CustomerProfile,
+    canActivate: [authGuard, CustomerGuard],
+  },
+  { path: 'doc-profile', component: Doctor, canActivate: [doctorGuardGuard] },
+  { path: 'register', component: Register, children: [] },
+  { path: 'register/doctor', component: DoctorRegisterForm },
+  { path: 'register/customer', component: CustomerRegisterForm },
   { path: 'register', component: Register, children: [] },
   { path: 'register/doctor', component: DoctorRegisterForm },
   { path: 'register/customer', component: CustomerRegisterForm },
@@ -60,4 +110,59 @@ export const routes: Routes = [
 
 
 
+  { path: 'register', component: Register, children: [] },
+  {
+    path: 'profile/:id',
+    component: Profile,
+    children: [
+      // {path:'doctor',component: Doctor},
+      // {path:'customer', component:Customer}
+    ],
+  },
+  { path: 'register/doctor', component: DoctorRegisterForm },
+  { path: 'register/customer', component: CustomerRegisterForm },
+  { path: 'notfound/doctor', component: NotFoundDoctor },
+  { path: 'notfound/doctor', component: NotFoundDoctor },
+  {
+    path: 'admin',
+    component: AdminDashboardComponent,
+    canActivate: [authGuard, AdminGuard],
+    children: [
+      { path: '', component: AdminInsights },
+
+      { path: 'categories', component: Categories },
+      {
+        path: 'category/:id',
+        component: CategoryDetails,
+        canActivate: [authGuard, AdminGuard],
+      },
+      {
+        path: 'add-category',
+        component: AddCategory,
+        canActivate: [authGuard, AdminGuard],
+      },
+      { path: 'breeds', component: AllBreeds },
+      { path: 'doctors', component: AdminDoctors },
+      { path: 'pets', component: AdminPets },
+      {
+        path: 'breed/:id',
+        component: BreedDetails,
+        canActivate: [authGuard, AdminGuard],
+      },
+
+      {
+        path: 'add-breed',
+        component: AddBreed,
+        canActivate: [authGuard, AdminGuard],
+      },
+
+      { path: '', redirectTo: 'insights', pathMatch: 'full' }, // default child
+    ],
+  },
+  { path: 'unauthorized', component: UnauthComponent },
+  { path: 'register', component: Register, children: [] },
+
+  { path: 'notfound/doctor', component: NotFoundDoctor },
+  { path: 'chat', component: ChatComponent, canActivate: [authGuard] },
+  { path: 'chat/:id', component: ChatComponent, canActivate: [authGuard] },
 ];

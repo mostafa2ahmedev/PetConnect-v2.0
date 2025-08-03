@@ -1,5 +1,11 @@
+<div *ngIf="profileLoading()" class="container py-5">
+  <div  class="text-center">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-3">Loading doctor details...</p>
+  </div>
+</div>
 
- @if(typeof editedDoctor != 'string'){
+ @if(typeof editedDoctor != 'string' && !profileLoading()){
 
 <section id="hero" class="hero section pb-3">
     <div class="container section-title aos-init aos-animate pb-0" data-aos="fade-up">
@@ -72,17 +78,6 @@
     </div>
   </div>
 
-  <!-- Certificate URL -->
-  <div class="col-md-6">
-    <label class="form-label">Certificate URL:</label>
-    <input name="CertificateUrl" [(ngModel)]="editedDoctor.CertificateUrl" class="form-control" />
-  </div>
-
-  <!-- Image URL -->
-  <div class="col-md-6">
-    <label class="form-label">Image URL:</label>
-    <input name="ImgUrl" [(ngModel)]="editedDoctor.ImgUrl" class="form-control" />
-  </div>
 
   <!-- Street -->
   <div class="col-md-6">
@@ -116,11 +111,14 @@
   <div *ngIf="certificateError" class="text-danger">{{ certificateError }}</div>
 </div>
 
+<div class="col-md-6">
+  <!-- <button [routerLink]="['/doctors','timeslot',editedDoctor.id]" class="btn btn-primary">Update Time Slot</button> -->
+</div>
 
   <!-- Actions -->
   <div class="col-12 mt-4">
     <button type="submit" [disabled]="formRef.invalid" class="btn btn-primary mx-2">Save Changes</button>
-    <a class="btn btn-outline-danger" [routerLink]="['/doctors', editedDoctor.id]">Cancel</a>
+    <a class="btn btn-outline-danger" (click)="goBack()">Cancel</a>
   </div>
 
 </form>

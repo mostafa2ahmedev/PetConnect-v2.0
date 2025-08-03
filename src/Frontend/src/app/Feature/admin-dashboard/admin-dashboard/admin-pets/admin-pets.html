@@ -1,0 +1,137 @@
+<div class="row container">
+  <h5 class="mb-4 ps-0">Pending Pets</h5>
+  <!-- <span class="badge bg-primary rounded-pill">{{ pets.length }}</span> -->
+
+  <table class="table table-hover align-middle table-bordered">
+    <thead class="table-light">
+      <tr>
+        <th scope="col" class="fw-semibold text-dark p-2">Pet</th>
+        <th scope="col" class="fw-semibold text-dark">Category</th>
+        <!-- <th scope="col" class="fw-semibold text-dark">Owner</th> -->
+        <th scope="col" class="fw-semibold text-dark">Breed</th>
+        <!-- <th scope="col" class="fw-semibold text-dark">Age</th> -->
+        <th scope="col" class="fw-semibold text-dark">Status</th>
+        <th scope="col" class="fw-semibold text-dark text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let pet of pets">
+        <!-- Pet Image + Name -->
+        <td>
+          <div class="d-flex align-items-center p-2">
+            <img
+              [src]="pet.imgUrl || 'assets/default-pet.jpg'"
+              class="rounded-circle me-2"
+              style="width: 33px; height: 33px; object-fit: cover"
+              [alt]="pet.name"
+            />
+            <div>
+              <div>{{ pet.name }}</div>
+            </div>
+          </div>
+        </td>
+
+        <!-- Other Fields -->
+        <td>{{ pet.categoryName }}</td>
+        <!-- <td>{{ pet.customerName }}</td> -->
+        <td>{{ pet.breadName }}</td>
+        <!-- <td>{{ pet.age }} y</td> -->
+
+        <!-- Status Badge -->
+        <td>
+          <span
+            class="badge"
+            [ngClass]="{
+              'bg-secondary': pet.status === 0,
+              'bg-info': pet.status === 1,
+              'bg-danger': pet.status === 2
+            }"
+          >
+            {{
+              pet.status === 0
+                ? "Owned"
+                : pet.status === 1
+                ? "For Addoption"
+                : "For Rescue"
+            }}
+          </span>
+        </td>
+
+        <!-- Approve/Reject Icons -->
+        <td class="text-center">
+          <button
+            class="btn btn-sm btn-primary me-1"
+            (click)="approvePet(pet.id)"
+            title="Approve"
+          >
+            <i class="bi bi-check-lg"></i>
+          </button>
+          <button
+            class="btn btn-sm btn-outline-danger"
+            (click)="openRejectionModal(rejectionModal, pet.id, 'pet')"
+            title="Reject"
+          >
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="text-center py-4" *ngIf="pets.length === 0">
+    <i
+      class="fas fa-paw text-muted mb-2"
+      style="font-size: 2.5rem; opacity: 0.3"
+    ></i>
+    <h6 class="text-muted">No pending pet approvals</h6>
+  </div>
+</div>
+
+<!-- Pending Pets -->
+<div>
+  <!-- <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0 fw-bold">
+      <i class="fas fa-paw text-primary me-2"></i>
+      Pending Pets
+    </h5>
+  </div> -->
+
+  <!-- Rejection Modal -->
+  <ng-template #rejectionModal let-modal>
+    <div class="modal-header border-0 pb-2">
+      <h5 class="modal-title text-danger">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        Reject Request
+      </h5>
+      <button
+        type="button"
+        class="btn-close"
+        (click)="modal.dismiss()"
+      ></button>
+    </div>
+    <div class="modal-body pt-0">
+      <p class="text-muted small mb-3">
+        Please provide a reason for rejection:
+      </p>
+      <div class="mb-3">
+        <textarea
+          id="rejectionMessage"
+          class="form-control"
+          [(ngModel)]="rejectionMessage"
+          name="rejectionMessage"
+          rows="3"
+          placeholder="Enter rejection reason..."
+          required
+        ></textarea>
+      </div>
+    </div>
+    <div class="modal-footer border-0 pt-0">
+      <button class="btn btn-light btn-sm" (click)="modal.dismiss()">
+        Cancel
+      </button>
+      <button class="btn btn-danger btn-sm" (click)="confirmRejection(modal)">
+        <i class="fas fa-ban me-1"></i>
+        Confirm Rejection
+      </button>
+    </div>
+  </ng-template>
+</div>

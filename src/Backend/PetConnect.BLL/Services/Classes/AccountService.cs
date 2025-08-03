@@ -64,6 +64,7 @@ namespace PetConnect.BLL.Services.Classes
                 Gender = registerDTO.Gender,
                 PhoneNumber = registerDTO.PhoneNumber,
                 IsApproved = false,
+                IsDeleted = false,
                 CertificateUrl = "",
                 PricePerHour = registerDTO.PricePerHour,
                 PetSpecialty = registerDTO.PetSpecialty,
@@ -124,6 +125,7 @@ namespace PetConnect.BLL.Services.Classes
                 Gender = registerDTO.Gender,
                 PhoneNumber = registerDTO.PhoneNumber,
                 IsApproved = true,
+                IsDeleted = false,
                 Address = new Address
                 {
                     City = registerDTO.City,

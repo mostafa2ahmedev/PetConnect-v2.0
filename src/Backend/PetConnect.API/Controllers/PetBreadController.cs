@@ -6,37 +6,37 @@ using PetConnect.BLL.Services.Interfaces;
 
 [Route("api/[controller]")]
 [ApiController]
-public class PetBreadController : ControllerBase
+public class PetBreedController : ControllerBase
 {
-    private readonly IPetBreadService _petBreadService;
+    private readonly IPetBreedService _petBreedService;
 
-    public PetBreadController(IPetBreadService petBreadService)
+    public PetBreedController(IPetBreedService petBreedService)
     {
-        _petBreadService = petBreadService;
+        _petBreedService = petBreedService;
     }
 
     [HttpGet]
-    [EndpointSummary("Get All Breads")]
-    [ProducesResponseType(typeof(List<GPetBreadDto>), StatusCodes.Status200OK)]
+    [EndpointSummary("Get All Breeds")]
+    [ProducesResponseType(typeof(List<GPetBreedDto>), StatusCodes.Status200OK)]
     public ActionResult GetAll()
     {
-        var breads = _petBreadService.GetAllBreads();
-        return Ok(new GeneralResponse(200, breads));
+        var breeds = _petBreedService.GetAllBreeds();
+        return Ok(new GeneralResponse(200, breeds));
     }
 
     [HttpGet("{id}")]
-    [EndpointSummary("Get Bread By Id")]
-    public ActionResult PetBreadDetails(int id)
+    [EndpointSummary("Get Breed By Id")]
+    public ActionResult PetBreedDetails(int id)
     {
         //if(id==null)  > GetAll
-        var PetBread= _petBreadService.GetBreadById(id);
-        if (PetBread == null)
-            return NotFound(new GeneralResponse(404, $"No BREAD found with ID ={id}"));
-        return Ok(new GeneralResponse(200, PetBread));
+        var PetBreed= _petBreedService.GetBreedById(id);
+        if (PetBreed == null)
+            return NotFound(new GeneralResponse(404, $"No Breed found with ID ={id}"));
+        return Ok(new GeneralResponse(200, PetBreed));
     }
     [HttpPost]
-    [EndpointSummary("Add A New Bread")]
-    public IActionResult Add([FromForm] AddedPetBreadDto addedPetBreadDto)
+    [EndpointSummary("Add A New Breed")]
+    public IActionResult Add([FromForm] AddedPetBreedDto addedPetBreedDto)
     {
         if (!ModelState.IsValid)
         {
@@ -50,15 +50,15 @@ public class PetBreadController : ControllerBase
             return BadRequest(new GeneralResponse(400, errors));
         }
 
-        if (_petBreadService.AddPetBread(addedPetBreadDto) > 0)
-            return Ok(new GeneralResponse(200, "Pet bread added successfully"));
+        if (_petBreedService.AddPetBread(addedPetBreedDto) > 0)
+            return Ok(new GeneralResponse(200, "Pet Breed added successfully"));
 
-        return BadRequest(new GeneralResponse(400, "Failed to add pet bread"));
+        return BadRequest(new GeneralResponse(400, "Failed to add pet Breed"));
     }
 
     [HttpPut]
-    [EndpointSummary("Modify An Existing Bread")]
-    public IActionResult Edit([FromForm] UPetBreadDto uPetBreadDto)
+    [EndpointSummary("Modify An Existing Breed")]
+    public IActionResult Edit([FromForm] UPetBreedDto uPetBreedDto)
     {
         if (!ModelState.IsValid)
         {
@@ -72,38 +72,38 @@ public class PetBreadController : ControllerBase
             return BadRequest(new GeneralResponse(400, errors));
         }
 
-        if (_petBreadService.UpdatePetBread(uPetBreadDto) > 0)
-            return Ok(new GeneralResponse(200, "Pet bread updated successfully"));
+        if (_petBreedService.UpdatePetBread(uPetBreedDto) > 0)
+            return Ok(new GeneralResponse(200, "Pet Breed updated successfully"));
 
-        return NotFound(new GeneralResponse(404, $"No bread found with ID = {uPetBreadDto.Id}"));
+        return NotFound(new GeneralResponse(404, $"No Breed found with ID = {uPetBreedDto.Id}"));
     }
 
     [HttpDelete]
-    [EndpointSummary("Delete An Existing Bread")]
+    [EndpointSummary("Delete An Existing Breed")]
     public IActionResult Delete(int? id)
     {
         if (id == null)
             return BadRequest(new GeneralResponse(400, "Invalid ID"));
 
-        if (_petBreadService.DeletePetBread(id.Value) == 0)
-            return NotFound(new GeneralResponse(404, $"No bread found with ID = {id}"));
+        if (_petBreedService.DeletePetBreed(id.Value) == 0)
+            return NotFound(new GeneralResponse(404, $"No Breed found with ID = {id}"));
 
-        return Ok(new GeneralResponse(200, "Pet bread deleted successfully"));
+        return Ok(new GeneralResponse(200, "Pet Breed deleted successfully"));
     }
 
-    [HttpGet("Breads/{id}")]
-    [ProducesResponseType(typeof(List<GPetBreadDto>), StatusCodes.Status200OK)]
-    [EndpointSummary("Get Breads By Category")]
+    [HttpGet("Breeds/{id}")]
+    [ProducesResponseType(typeof(List<GPetBreedDto>), StatusCodes.Status200OK)]
+    [EndpointSummary("Get Breeds By Category")]
     public IActionResult GetBreadsByCategory(int? id)
     {
         if (id == null)
             return BadRequest(new GeneralResponse(400, "Invalid ID"));
 
-        var BreadList = _petBreadService.GetBreadsByCategoryId(id.Value);
+        var BreedList = _petBreedService.GetBreedsByCategoryId(id.Value);
 
-        if (BreadList is not { })
+        if (BreedList is not { })
             return NotFound(new GeneralResponse(404, $"No Category found with ID = {id}"));
 
-        return Ok(new GeneralResponse(200, BreadList));
+        return Ok(new GeneralResponse(200, BreedList));
     }
 }

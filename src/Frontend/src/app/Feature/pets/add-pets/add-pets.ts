@@ -29,6 +29,7 @@ export class AddPets {
     Ownership: 0,
     BreedId: 0,
     ImgURL: null!,
+    Notes: '',
   };
   imageError: string = '';
   statusOptions: { key: number; value: string }[] = [];

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using PetConnect.DAL.Data.Enums;
 using PetConnect.DAL.Data.GenericRepository;
 using PetConnect.DAL.Data.Models;
 using PetConnect.DAL.Data.Repositories.Interfaces;
@@ -28,11 +29,24 @@ namespace PetConnect.DAL.Data.Repositories.Classes
                 .Where(p => !p.IsApproved);
         }
 
-        public IQueryable<Pet> GetPetDataWithCustomer()
+        public IQueryable<Pet> GetPetBreadCategoryDataWithCustomer()
         {
-            return context.Pets.Include(P => P.CustomerAddedPets).ThenInclude(d => d.Customer);
+            return context.Pets.Include(P => P.CustomerAddedPets).ThenInclude(P => P.Customer).Include(P => P.Breed).ThenInclude(B => B.Category);
         }
-        public Pet GetPetDetails(int id)
+
+
+        public IQueryable<Pet> GetApprovedPetBreadCategoryDataWithCustomer()
+        {
+            return context.Pets
+                .Include(p => p.CustomerAddedPets)
+                    .ThenInclude(p => p.Customer)
+                .Include(p => p.Breed)
+                    .ThenInclude(b => b.Category)
+                .Where(p => p.IsApproved == true && p.Status != PetStatus.Owned);
+        }
+
+
+        public Pet? GetPetDetails(int id)
         {
             return context.Pets
                 .Include(p => p.Breed)
@@ -40,6 +54,11 @@ namespace PetConnect.DAL.Data.Repositories.Classes
                 .Include(p => p.CustomerAddedPets)
                     .ThenInclude(c => c.Customer)
                 .FirstOrDefault(p => p.Id == id);
+        }
+
+        public IQueryable<Pet> GetPetDataWithCustomer()
+        {
+            return context.Pets.Include(P => P.CustomerAddedPets).ThenInclude(d => d.Customer);
         }
 
     }

@@ -9,7 +9,7 @@ import { ApiResponse } from '../../models/api-response';
   providedIn: 'root',
 })
 export class BreedService {
-  private apiUrl = `${environment.apiBaseUrl}/petbread`;
+  private apiUrl = `${environment.apiBaseUrl}/petbreed`;
 
   constructor(private http: HttpClient) {}
 

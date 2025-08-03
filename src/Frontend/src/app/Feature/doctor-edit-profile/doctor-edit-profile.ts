@@ -1,10 +1,10 @@
-import { Component , inject, OnInit} from '@angular/core';
+import { Component , inject, OnInit, signal} from '@angular/core';
 import { DoctorsService } from '../doctors/doctors-service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { IDoctor } from '../doctors/idoctor';
 import { FormsModule } from '@angular/forms';
 import { IDoctorEdit } from './idoctor-edit';
-import { CommonModule } from '@angular/common';
+import { CommonModule , Location } from '@angular/common';
 import { DoctorEditProfileService } from './doctor-edit-profile-service';
 
 @Component({
@@ -18,13 +18,14 @@ export class DoctorEditProfile implements OnInit{
   router = inject(Router)
   doctorsService = inject(DoctorsService);
   doctorEditService = inject(DoctorEditProfileService);
-
+  locationService = inject(Location)
   server = "https://localhost:7102";
   id:string="";
   doctor:IDoctor|string="";
   editedDoctor:IDoctorEdit =null as any;
   imageError: string = '';
   certificateError: string = '';
+  profileLoading = signal(true)
 
 onFileChange(event: Event, type: 'image' | 'certificate') {
   const input = event.target as HTMLInputElement;
@@ -61,6 +62,7 @@ onFileChange(event: Event, type: 'image' | 'certificate') {
             this.doctor.certificateFile = "";
           }
           this.editedDoctor = this.doctorCastToEdit();
+          this.profileLoading.set(false);
         })
       })
   }
@@ -78,5 +80,8 @@ onFileChange(event: Event, type: 'image' | 'certificate') {
 
   doctorCastToEdit(): IDoctorEdit {
     return this.doctorEditService.doctorCastToEdit(this.doctor);
+  }
+  goBack(){
+    this.locationService.back();
   }
 }

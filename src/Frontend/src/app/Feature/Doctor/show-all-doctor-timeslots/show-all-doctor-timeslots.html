@@ -1,0 +1,207 @@
+<!-- <div class="table-responsive">
+  <table class="table table-bordered table-hover">
+    <thead class="table-light">
+      <tr>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>Max Capacity</th>
+        <th>Booked Count</th>
+        <th>Active</th>
+        <th>ID</th>
+      </tr>
+    </thead>
+    <tbody>
+        @for(slot of allTimeSlots;track slot){
+      <tr >
+        <td>{{ slot.startTime | date:'medium'}}</td>
+        <td>{{ slot.endTime | date:'medium'}}</td>
+        <td>{{ slot.maxCapacity }}</td>
+        <td>{{ slot.bookedCount }}</td>
+        <td>
+          <span [class]="slot.isActive ? 'text-success' : 'text-danger'">
+            {{ slot.isActive ? 'Active' : 'Inactive' }}
+          </span>
+        </td>
+        <td>{{ slot.id }}</td>
+        @if(slot.isActive){
+        <td >
+          <button (click)="changeStatusToActive(slot)">Change Active State</button>
+        </td>
+      }
+      </tr>
+    }
+    </tbody>
+  </table>
+  
+</div> -->
+
+<!-- 
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+  @for(slot of allTimeSlots; track slot){
+  <div class="col">
+    <div class="card h-100 shadow-sm" [class.border-danger]="!slot.isActive" [class.border-warning]="slot.bookedCount === slot.maxCapacity && slot.isActive">
+      <div class="card-body">
+        <h5 class="card-title mb-3">
+          {{ slot.startTime | date:'shortTime' }} - {{ slot.endTime | date:'shortTime' }}
+        </h5>
+        <h6 class="card-subtitle mb-2 text-muted">
+          {{ slot.startTime | date:'mediumDate' }}
+        </h6>
+
+        <div class="mb-3">
+          <strong>Availability: {{ (slot.bookedCount / slot.maxCapacity) * 100 | number: '1.0-0'}}%</strong>
+          <div class="progress mt-1" style="height: 25px;">
+            <div class="progress-bar progress-bar-striped"
+                 role="progressbar"
+                 [style.width.%]="(slot.bookedCount / slot.maxCapacity) * 100"
+                 [class.bg-success]="slot.bookedCount < slot.maxCapacity && slot.isActive"
+                 [class.bg-warning]="slot.bookedCount === slot.maxCapacity && slot.isActive"
+                 [class.bg-danger]="!slot.isActive"
+                 [attr.aria-valuenow]="slot.bookedCount"
+                 aria-valuemin="0"
+                 [attr.aria-valuemax]="slot.maxCapacity">
+              <span class="fw-bold">{{ slot.bookedCount }} / {{ slot.maxCapacity }}</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="card-text">
+          <strong>Status:</strong>
+          <span [class]="slot.isActive ? 'badge bg-success ms-2' : 'badge bg-danger ms-2'">
+            {{ slot.isActive ? 'Active' : 'Inactive' }}
+          </span>
+        </p>
+      </div>
+      <div class="card-footer bg-transparent border-top d-flex justify-content-end">
+        @if(slot.isActive){
+        <button class="btn btn-outline-danger btn-sm" (click)="changeStatusToActive(slot)">Deactivate Slot</button>
+        } @else {
+        <button class="btn btn-outline-success btn-sm" (click)="changeStatusToActive(slot)">Activate Slot</button>
+        }
+      </div>
+    </div>
+  </div>
+  }
+</div> -->
+
+
+<div class="container-fluid mt-4">
+
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header bg-light">
+      <h4 class="mb-0">Filter Time Slots</h4>
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-3">
+          <label for="filterStatus" class="form-label">Status</label>
+          <select id="filterStatus" class="form-select" [(ngModel)]="filterStatus" (change)="applyFiltersAndPagination()">
+            <option value="all">All</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label for="filterSearchId" class="form-label">Search by ID</label>
+          <input type="text" id="filterSearchId" class="form-control" [(ngModel)]="filterSearchId" (input)="applyFiltersAndPagination()" placeholder="e.g., slot-10">
+        </div>
+        <div class="col-md-3">
+          <label for="filterStartDate" class="form-label">Start Date</label>
+          <input type="date" id="filterStartDate" class="form-control" [(ngModel)]="filterStartDate" (change)="applyFiltersAndPagination()">
+        </div>
+        <div class="col-md-3">
+          <label for="filterEndDate" class="form-label">End Date</label>
+          <input type="date" id="filterEndDate" class="form-control" [(ngModel)]="filterEndDate" (change)="applyFiltersAndPagination()">
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @for(slot of paginatedTimeSlots; track slot.id){ <div class="col">
+      <div class="card h-100 shadow-sm" [class.border-danger]="!slot.isActive" [class.border-warning]="slot.bookedCount === slot.maxCapacity && slot.isActive">
+        <div class="card-body">
+          <h5 class="card-title mb-3">
+            {{ slot.startTime | date:'shortTime' }} - {{ slot.endTime | date:'shortTime' }}
+          </h5>
+          <h6 class="card-subtitle mb-2 text-muted">
+            {{ slot.startTime | date:'mediumDate' }}
+          </h6>
+
+          <div class="mb-3">
+            <strong>Availability: {{ (slot.bookedCount / slot.maxCapacity) * 100 | number: '1.0-0'}}%</strong>
+            <div class="progress mt-1" style="height: 25px;">
+              <div class="progress-bar progress-bar-striped"
+                   role="progressbar"
+                   [style.width.%]="(slot.bookedCount / slot.maxCapacity) * 100"
+                   [class.bg-success]="slot.bookedCount < slot.maxCapacity && slot.isActive"
+                   [class.bg-warning]="slot.bookedCount === slot.maxCapacity && slot.isActive"
+                   [class.bg-danger]="!slot.isActive"
+                   [attr.aria-valuenow]="slot.bookedCount"
+                   [attr.aria-valuemin]="0"
+                   [attr.aria-valuemax]="slot.maxCapacity">
+                <span class="fw-bold">{{ slot.bookedCount }} / {{ slot.maxCapacity }}</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="card-text">
+            <strong>Status:</strong>
+            <span [class]="slot.isActive ? 'badge bg-success ms-2' : 'badge bg-danger ms-2'">
+              {{ slot.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </p>
+          <p class="card-text">
+            <small class="text-muted">ID: {{ slot.id }}</small>
+          </p>
+        </div>
+        <div class="card-footer bg-transparent border-top d-flex justify-content-end">
+          @if(slot.isActive){
+          <button class="btn btn-outline-danger btn-sm" (click)="changeStatusToActive(slot)">Deactivate Slot</button>
+          } @else {
+          <button class="btn btn-outline-success btn-sm" (click)="changeStatusToActive(slot)">Activate Slot</button>
+          }
+        </div>
+      </div>
+    </div>
+    }
+
+    @if(paginatedTimeSlots.length === 0 && allTimeSlots.length > 0){
+      <div class="col-12 text-center text-muted py-5">
+        <h4 class="fw-bold text-center">No time slots match your current filters.</h4>
+        <p>Try adjusting your search criteria.</p>
+      </div>
+    } @else if (allTimeSlots.length === 0) {
+      <div class="col-12 text-center text-muted py-5">
+        <h4>No time slots available.</h4>
+      </div>
+    }
+  </div>
+
+  <nav aria-label="Time Slot Pagination" class="mt-4">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" (click)="previousPage()" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </button>
+      </li>
+      @for(page of getPages(); track page){
+      <li class="page-item" [class.active]="currentPage === page">
+        <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+      </li>
+      }
+      <li class="page-item" [class.disabled]="currentPage === totalPages || totalPages === 0">
+        <button class="page-link" (click)="nextPage()" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </button>
+      </li>
+    </ul>
+    <div class="text-center text-muted">
+      Showing {{ paginatedTimeSlots.length }} of {{ totalItems }} slots
+    </div>
+  </nav>
+
+</div>
+
+      <button class="btn btn-danger ms-5" (click)="goBack()">Go Back</button>

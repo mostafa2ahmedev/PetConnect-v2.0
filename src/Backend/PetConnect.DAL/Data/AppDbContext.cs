@@ -24,6 +24,7 @@ namespace PetConnect.DAL.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductType> ProductType { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         public DbSet<OrderProduct> orderProducts { get; set; }
 
@@ -46,7 +47,6 @@ namespace PetConnect.DAL.Data
             builder.Entity<Doctor>().ToTable("Doctors");
             builder.Entity<ShelterOwner>().ToTable("ShelterOwners");
             builder.Entity<Admin>().ToTable("Admins");
-
         }
 
     }

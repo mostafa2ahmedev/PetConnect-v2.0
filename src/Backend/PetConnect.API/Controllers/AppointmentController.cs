@@ -4,6 +4,7 @@ using PetConnect.BLL.Services.Interfaces;
 using PetConnect.BLL.Services.DTOs.AppointmentDto;
 using System;
 using System.Threading.Tasks;
+using PetConnect.BLL.Services.DTOs;
 
 namespace PetConnect.API.Controllers
 {
@@ -73,10 +74,63 @@ namespace PetConnect.API.Controllers
         {
             var result = await _appointmentService.CancelAppointmentAsync(id);
             if (!result)
-                return NotFound("Appointment not found or already canceled.");
+                return BadRequest(new GeneralResponse(400, "Appointment not found or already Canceled."));
 
-            return Ok("Appointment canceled successfully.");
+            return Ok(new GeneralResponse(200, "Appointment Canceled successfully."));
         }
+        // PUT: api/Appointment/{id}/confirm
+        [HttpPut("{id}/confirm")]
+        public async Task<IActionResult> ConfirmAppointment(Guid id)
+        {
+            var result = await _appointmentService.ConfirmAppointmentAsync(id);
+            if (!result)
+                return BadRequest(new GeneralResponse(400, "Appointment not found or already Confirmed."));
+
+            return Ok(new GeneralResponse(200, "Appointment Confirmed successfully."));
+        }
+
+        // PUT: api/Appointment/{id}/book
+        [HttpPut("{id}/book")]
+        public async Task<IActionResult> BookAppointment(Guid id)
+        {
+            var result = await _appointmentService.BookAppointmentAsync(id);
+            if (!result)
+                return BadRequest(new GeneralResponse(400, "Cannot Book at this timeslot"));
+
+            return Ok(new GeneralResponse(200, "Appointment Booked successfully."));
+        }
+
+        // PUT: api/Appointment/{id}/complete
+        [HttpPut("{id}/complete")]
+        public async Task<IActionResult> Complete(Guid id)
+        {
+            var result = await _appointmentService.CompleteAppointmentAsync(id);
+            if (!result)
+                return BadRequest(new GeneralResponse(400,"Appointment not found or already Completed."));
+
+            return Ok(new GeneralResponse(200, "Appointment Completed successfully."));
+        }
+
+        // GET: api/Appointment/DoctorProfile/{doctorId}
+        [HttpGet("DoctorProfile/{doctorId}")]
+        public IActionResult GetAppointmentsForDoctorProfile(string doctorId)
+        {
+            var appointments = _appointmentService.GetAppointmentsForDoctorProfile(doctorId);
+            if (appointments == null)
+                return NotFound();
+            return Ok(appointments);
+        }
+
+        // Post: api/Appointment/Book
+        [HttpPost("Book")]
+        public IActionResult GetAppointmentsForCustomerBookingDoctor(string doctorId,string customerId)
+        {
+            var appointments = _appointmentService.GetCurrentTimeSlotsAvailableDocCustomer(doctorId,customerId);
+            if (appointments == null)
+                return NotFound();
+            return Ok(appointments);
+        }
+
     }
 }
 
