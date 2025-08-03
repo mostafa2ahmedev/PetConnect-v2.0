@@ -10,5 +10,7 @@ namespace PetConnect.DAL.Data.Repositories.Interfaces
 {
     public interface IProductRepository:IGenericRepository<Product>
     {
+        public Product? GetProductWithSellerData(int productId);
+        public IEnumerable<Product> GetAllProductsWithSeller();
     }
 }

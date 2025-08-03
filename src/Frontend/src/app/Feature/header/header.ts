@@ -17,6 +17,8 @@ import {
   RouterModule,
 } from '@angular/router';
 import { AccountService } from '../../core/services/account-service';
+import { Product } from '../../models/product';
+import { CartService } from '../cart/cart-service';
 import { NotificationModel } from '../../models/notification-model';
 import {
   trigger,
@@ -56,12 +58,14 @@ export class Header implements OnInit, OnDestroy {
   notifications: NotificationModel[] = [];
   unreadCount = 0;
   isOpen = false;
+  cartLength:number = 0;
   routerEventsSub!: Subscription;
   constructor(
     public accountService: AccountService,
     private router: Router,
     private notificationService: NotificationService,
-    private customerService: CustomerService
+    private customerService: CustomerService,
+    private cartService:CartService
   ) {}
   ngOnDestroy(): void {
     this.notificationService.disconnect();
@@ -100,6 +104,9 @@ export class Header implements OnInit, OnDestroy {
         },
       });
     }
+              this.cartService.cart$.subscribe(cart => {
+      this.cartLength = cart.length;
+  })
   }
 
   private loadProfileAndNotifications() {
@@ -136,6 +143,9 @@ export class Header implements OnInit, OnDestroy {
     }
   }
 
+ 
+
+  
   isAuthenticated(): boolean {
     return this.accountService.isAuthenticated();
   }

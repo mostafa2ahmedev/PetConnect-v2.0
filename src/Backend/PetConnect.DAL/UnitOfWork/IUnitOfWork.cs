@@ -37,6 +37,8 @@ namespace PetConnect.DAL.UnitofWork
         public IAdminDoctorMessageRepository AdminDoctorMessageRepository { get;  }
         public IAdminPetMessageRepository AdminPetMessageRepository { get;  }
         public IApplicationUserRepository ApplicationUserRepository{ get;  }
+        public ISellerRepository SellerRepository { get; }
+        public IOrderProductRepository orderProductRepository { get; }
         public int SaveChanges();
         Task<int> SaveChangesAsync();
 

@@ -111,7 +111,41 @@ namespace PetConnect.API.Controllers
                 });
             }
         }
+        [HttpPost(template: "register/Seller")]
+        public async Task<IActionResult> PostSellerRegister([FromForm] SellerRegisterDto registerDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Return validation errors as array
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToArray();
 
+                return BadRequest(new
+                {
+                    success = false,
+                    errors = errors
+                });
+            }
+
+            RegistrationResult result = await accountService.SellerRegister(registerDTO);
+
+            if (result.Succeeded)
+            {
+                return Ok(new
+                {
+                    success = true,
+                    message = "Seller Registered Successfully."
+                });
+            }
+
+            return BadRequest(new
+            {
+                success = false,
+                errors = result.Errors.ToArray()
+            });
+        }
         [HttpPost("login")]
         [EndpointSummary("Login with email and password.")]
         [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status200OK)]

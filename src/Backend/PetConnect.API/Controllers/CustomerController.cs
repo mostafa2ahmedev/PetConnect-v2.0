@@ -25,6 +25,18 @@ namespace PetConnect.API.Controllers
             _customerService = customerService;
         }
 
+        [HttpGet("Profile")]
+        [ProducesResponseType(typeof(List<CustomerDetailsDTO>), StatusCodes.Status200OK)]
+        [EndpointSummary("Get Customer Profile")]
+        [Authorize(Roles = "Customer")]
+        public ActionResult GetCustomerProfile()
+        {
+            var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var Customer = _customerService.GetProfile(customerId!);
+            if (Customer == null)
+                return NotFound(new GeneralResponse(statusCode: 404, "Customer Not Found"));
+            return Ok(new GeneralResponse(200, Customer));
+        }
 
 
         [HttpGet()]
@@ -51,17 +63,17 @@ namespace PetConnect.API.Controllers
 
 
 
-        [HttpGet("Profile")]
-        [ProducesResponseType(typeof(List<CustomerDetailsDTO>), StatusCodes.Status200OK)]
-        [EndpointSummary("Get Customer Profile")]
-        [Authorize(Roles = "Customer")]
+        //[HttpGet("Profile")]
+        //[ProducesResponseType(typeof(List<CustomerDetailsDTO>), StatusCodes.Status200OK)]
+        //[EndpointSummary("Get Customer Profile")]
+        //[Authorize(Roles = "Customer")]
 
-        public ActionResult GetCustomerProfile()
-        {
-            var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var Customer = _customerService.GetProfile(customerId!);
-            return Ok(new GeneralResponse(200, Customer));
-        }
+        //public ActionResult GetCustomerProfile()
+        //{
+        //    var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    var Customer = _customerService.GetProfile(customerId!);
+        //    return Ok(new GeneralResponse(200, Customer));
+        //}
 
 
 

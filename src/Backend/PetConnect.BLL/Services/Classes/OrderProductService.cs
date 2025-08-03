@@ -1,5 +1,8 @@
-﻿using PetConnect.BLL.Services.DTOs.Product;
+﻿using PetConnect.BLL.Services.DTOs.OrderProduct;
 using PetConnect.BLL.Services.Interfaces;
+using PetConnect.DAL.Data.Enums;
+using PetConnect.DAL.Data.Models;
+using PetConnect.DAL.UnitofWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,29 +13,67 @@ namespace PetConnect.BLL.Services.Classes
 {
     public class OrderProductService : IOrderProductService
     {
-        public Task<int> AddOrderProduct(AddedProductDTO addedProductDTO)
+        private readonly IUnitOfWork _unitOfWork;
+
+        public OrderProductService(IUnitOfWork unitOfWork)
         {
-            throw new NotImplementedException();
+            _unitOfWork = unitOfWork;
         }
 
-        public int DeleteOrderProduct(int id)
+     
+
+        public IEnumerable<OrderProductForSellerConfirmationDto> GetOrderProductForSellerConfirmationDto(string SellerId)
         {
-            throw new NotImplementedException();
+            return _unitOfWork.orderProductRepository
+                .GetOrderProductWithProduct_Order_CustomerData(SellerId)
+                .Select(OP => new OrderProductForSellerConfirmationDto()
+                {
+                    OrderId = OP.OrderId,
+                    CustomerId = OP.order.CustomerId,
+                    ProductId = OP.ProductId,
+                    CustomerName = OP.order.customer.FName + " " + OP.order.customer.LName,
+                    OrderDate = OP.order.OrderDate,
+                    ProductName = OP.product.Name,
+                    Quantity = OP.Quantity,
+                    UnitPrice = OP.UnitPrice,
+                    OrderProductStatus = OP.OrderProductStatus,
+                    ProductImgUrl = OP.product.ImgUrl
+
+                });
         }
 
-        public IEnumerable<ProductDetailsDTO> GetAllOrderProduct()
+        public int? ShippingOrDenyingOrderProductInOrder(string SellerId, ShipOrDenyOrderProductDto shipOrDenyOrderProductDto)
         {
-            throw new NotImplementedException();
+         var OrderProduct=  _unitOfWork.orderProductRepository.GetOrderProductForSeller(SellerId,shipOrDenyOrderProductDto.ProductId,shipOrDenyOrderProductDto.OrderId);
+            if (OrderProduct == null)
+                return null;
+
+            OrderProduct.OrderProductStatus=shipOrDenyOrderProductDto.OrderProductStatus;
+
+         var result=   _unitOfWork.SaveChanges();
+
+          var IsAnyProductPending=  CheckIfThereIsAnyOrderProductWithStatusPendingForSpecificProduct(shipOrDenyOrderProductDto.OrderId);
+
+            if (!IsAnyProductPending) {
+                    Order? order = _unitOfWork.OrderRepository.GetByID(shipOrDenyOrderProductDto.OrderId);
+
+                if (order is { })
+                {
+                    order.OrderStatus = OrderStatus.Shipped;
+                    _unitOfWork.OrderRepository.Update(order);
+                    _unitOfWork.SaveChanges();
+                }
+                
+            }
+            return result;
+                
         }
 
-        public ProductDetailsDTO GetOrderProductDetails(int id)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<int> UpdateOrderProduct(UpdatedProductDTO updatedProductDTO)
+
+        public bool CheckIfThereIsAnyOrderProductWithStatusPendingForSpecificProduct(int OrderId)
         {
-            throw new NotImplementedException();
+        return  _unitOfWork.orderProductRepository.CheckStatusOfOrderProductsInOrder(OrderId);
         }
     }
 }

@@ -26,6 +26,8 @@ namespace PetConnect.DAL.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<Notification> Notifications { get; set; }
 
+        public DbSet<OrderProduct> orderProducts { get; set; }
+
 
         public AppDbContext(DbContextOptions<AppDbContext> contextOptions) : base(contextOptions)
         {

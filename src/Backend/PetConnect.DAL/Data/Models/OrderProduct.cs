@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PetConnect.DAL.Data.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,5 +17,13 @@ namespace PetConnect.DAL.Data.Models
 
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
+
+        public string? SellerId { get; set; }
+        public Seller? Seller { get; set; }
+
+        public OrderProductStatus OrderProductStatus { get; set; }
+
+
+        
     }
 }

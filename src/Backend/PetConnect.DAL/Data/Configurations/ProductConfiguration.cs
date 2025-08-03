@@ -20,6 +20,8 @@ namespace PetConnect.DAL.Data.Configurations
             builder.Property(d => d.Description).HasColumnType("varchar(150)");
             builder.Property(d => d.Price).HasColumnType("decimal(18,2)");
             builder.HasOne(p => p.Producttype).WithMany(d => d.Products).HasForeignKey(d => d.ProductTypeId);
+
+            builder.HasOne(p => p.Seller).WithMany(S => S.AddedProducts).HasForeignKey(P => P.SellerId);
         }
     }
 }
