@@ -136,8 +136,8 @@ namespace PetConnect.BLL.Services.Classes
             if (doctor is not null)
             {
                 //update doctor
-                doctor.IsDeleted = true;
                 doctor.IsApproved = false;
+                doctor.IsDeleted = true;
                 unitOfWork.DoctorRepository.Update(doctor);
                 //add the message to the database
                 AdminDoctorMessage adminDoctorMessage = new AdminDoctorMessage()
@@ -180,8 +180,8 @@ namespace PetConnect.BLL.Services.Classes
             if (pet is not null)
             {
                 //udate pet
-                pet.IsDeleted = true;
                 pet.IsApproved = false;
+                pet.IsDeleted = true;
                 unitOfWork.PetRepository.Update(pet);
                 //add the message to database
                 AdminPetMessage adminPetMessage = new AdminPetMessage()
@@ -215,7 +215,7 @@ namespace PetConnect.BLL.Services.Classes
         public async Task<AdminStatisticsDTO> GetAdminStatistics()
         {
             //Pet Stats 
-            var totalPets = await unitOfWork.PetRepository.GetAllQueryable().Where(P => P.IsDeleted == false).CountAsync();
+            var totalPets = await unitOfWork.PetRepository.GetAllQueryable().Where(P => P.IsApproved == true).CountAsync();
             var totalPetsForAdpotion = await unitOfWork.PetRepository.GetAllQueryable().Where(P => P.Status == PetStatus.ForAdoption).CountAsync();
             var totalPetsForRescue = await unitOfWork.PetRepository.GetAllQueryable().Where(P => P.Status == PetStatus.ForRescue).CountAsync();
             //Users Stats
