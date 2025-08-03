@@ -1,14 +1,4 @@
-
-import {
-  Component,
-  input,
-  OnInit,
-  ChangeDetectorRef,
-  inject,
-  Signal,
-  computed,
-  signal,
-} from '@angular/core';
+import { Component, OnInit, signal, computed, inject, Signal } from '@angular/core';
 import { IDoctor } from '../../doctors/idoctor';
 import { CommonModule, CurrencyPipe, DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -26,17 +16,15 @@ import { DoctorsService } from '../../doctors/doctors-service';
 @Component({
   selector: 'app-doctor',
   standalone: true,
-
   imports: [
     RouterLink,
     DatePipe,
     CommonModule,
     FormsModule,
     RouterModule,
-    ReactiveFormsModule,
   ],
   templateUrl: './doctor.html',
-  styleUrl: './doctor.css',
+  styleUrl: './doctor.css'
 })
 export class Doctor implements OnInit {
 
@@ -63,57 +51,6 @@ export class Doctor implements OnInit {
   filteredRequests = computed(() => {
     const requests = this.appointmentRequests();
     let filtered = requests;
-
-  loadingAppointments: boolean = true;
-  loadingProfile: boolean = true;
-  ReceivedRequests: any[] = [];
-  profileData!: Signal<IDoctor>; // Instead of a large ViewModel type
-  petCount: number = 0;
-  selectedStatusFilter: string = '';
-  sortOrder: 'asc' | 'desc' = 'desc';
-  // sentRequests: AdoptionResponse[] = [];
-  requestedPetIds: number[] = [];
-  appointmentRequests: DoctorProfileAppointmentView[] = [];
-  statusArr: string[] = [];
-  server = 'https://localhost:7102';
-  doctor = signal<IDoctor>({} as IDoctor);
-  // private accountService: AccountService=inject(AccountService);
-  private alert: AlertService = inject(AlertService);
-  private appointmentService: AppointmentService = inject(AppointmentService);
-  private doctorAppointmentService: DoctorCustomerAppointmentService = inject(
-    DoctorCustomerAppointmentService
-  );
-  private doctorService = inject(DoctorsService);
-  private accountService = inject(AccountService);
-  // private changeDetector: ChangeDetectorRef=inject(ChangeDetectorRef)
-  ngOnInit(): void {
-    const user = this.accountService.jwtTokenDecoder();
-    this.doctorService.getById(user.userId).subscribe({
-      next: (resp) => {
-        if (typeof resp !== 'string') this.doctor.set(resp);
-      },
-    });
-    console.log(this.doctor().id);
-    this.profileData = computed(() =>
-      this.doctor() ? this.doctor() : ({} as IDoctor)
-    );
-    this.loadingProfile = false;
-    this.doctorAppointmentService
-      .getAppointmentsForDoctorProfileView()
-      .subscribe({
-        next: (resp) => {
-          this.appointmentRequests = resp;
-          console.log(resp);
-          this.statusArr = Array.from(
-            new Set(this.appointmentRequests.map((e) => e.status))
-          );
-
-          this.loadingAppointments = false;
-        },
-      });
-  }
-  get filteredAndSortedRequests() {
-    let filtered = this.appointmentRequests;
 
     // Apply status filter
     if (this.selectedStatusFilter()) {
@@ -225,7 +162,6 @@ export class Doctor implements OnInit {
         console.log(err);
         this.alert.error(err.data);
       }
-
     });
   }
 
@@ -246,7 +182,6 @@ export class Doctor implements OnInit {
         console.log(err);
         this.alert.error(err.data);
       }
-
     });
   }
 
@@ -265,8 +200,7 @@ export class Doctor implements OnInit {
       error: err => {
         console.log(err);
         this.alert.error(err.data);
-      }
-    });
-  }
-
+      }
+    });
+  }
 }
