@@ -24,16 +24,28 @@ namespace PetConnect.API.Controllers
             _customerService = customerService;
         }
 
+        [HttpGet("Profile")]
+        [ProducesResponseType(typeof(List<CustomerDetailsDTO>), StatusCodes.Status200OK)]
+        [EndpointSummary("Get Customer Profile")]
+        [Authorize(Roles = "Customer")]
+        public ActionResult GetCustomerProfile()
+        {
+            var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var Customer = _customerService.GetProfile(customerId!);
+            if (Customer == null)
+                return NotFound(new GeneralResponse(statusCode: 404, "Customer Not Found"));
+            return Ok(new GeneralResponse(200, Customer));
+        }
 
 
         [HttpGet()]
         [ProducesResponseType(typeof(List<CustomerDataDto>), StatusCodes.Status200OK)]
         [EndpointSummary("Get All Customers")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult GetAll()
         {
-            var pets = _customerService.GetAllCustomers();
-            return Ok(new GeneralResponse(200, pets));
+            var Customers = _customerService.GetAllCustomers();
+            return Ok(new GeneralResponse(200, Customers));
         }
 
 
@@ -65,7 +77,7 @@ namespace PetConnect.API.Controllers
 
         [HttpDelete("DeleteProfile/{CustomerId}")]
         [EndpointSummary("Delete Customer Profile")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
 
         public ActionResult DeleteProfile(string CustomerId) {
 

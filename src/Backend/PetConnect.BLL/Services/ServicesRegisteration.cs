@@ -29,6 +29,8 @@ namespace PetConnect.DAL.Services
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductTypeService, ProductTypeService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<ISellerService, SellerService>();
+            services.AddScoped<IOrderProductService, OrderProductService>();
             return services;
         }
     }

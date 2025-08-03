@@ -31,7 +31,7 @@ namespace PetConnect.DAL.UnitofWork
         public IProductRepository ProductRepository { get; }
         public IProductTypeRepository ProductTypeRepository { get; }
         public IOrderRepository OrderRepository { get; }
-
+        public ISellerRepository SellerRepository { get; }
         public IOrderProductRepository orderProductRepository { get; }
         public int SaveChanges();
         Task<int> SaveChangesAsync();

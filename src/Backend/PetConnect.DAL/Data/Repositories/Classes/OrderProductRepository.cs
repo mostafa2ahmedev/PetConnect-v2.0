@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using PetConnect.DAL.Data.Enums;
 using PetConnect.DAL.Data.GenericRepository;
 using PetConnect.DAL.Data.Models;
 using PetConnect.DAL.Data.Repositories.Interfaces;
@@ -24,6 +25,23 @@ namespace PetConnect.DAL.Data.Repositories.Classes
                 .Include(op => op.product)
                 .Where(op => op.OrderId == orderId)
                 .ToList();
+        }
+        public IEnumerable<OrderProduct> GetOrderProductWithProduct_Order_CustomerData(string SellerId)
+        {
+            return context.orderProducts.Include(P => P.product)
+                 .Include(O => O.order)
+                 .ThenInclude(C => C.customer)
+                 .Where(OP => OP.SellerId == SellerId).ToList();
+        }
+
+        public OrderProduct? GetOrderProductForSeller(string SellerId, int ProductId, int OrderId)
+        {
+            return context.orderProducts.SingleOrDefault(OP => OP.SellerId == SellerId && OP.ProductId == ProductId && OP.OrderId == OrderId);
+        }
+
+        public bool CheckStatusOfOrderProductsInOrder(int orderId)
+        {
+       return  context.orderProducts.Where(OP=>OP.OrderId==orderId).Any(OP=>OP.OrderProductStatus==OrderProductStatus.Pending);
         }
     }
 }

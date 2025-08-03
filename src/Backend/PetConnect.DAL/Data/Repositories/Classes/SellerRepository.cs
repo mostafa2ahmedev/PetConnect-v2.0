@@ -10,25 +10,18 @@ using System.Threading.Tasks;
 
 namespace PetConnect.DAL.Data.Repositories.Classes
 {
-    public class ProductRepository: GenericRepository<Product> , IProductRepository
+    public class SellerRepository : GenericRepository<Seller>, ISellerRepository
     {
         private readonly AppDbContext context;
 
-        public ProductRepository(AppDbContext _context):base(_context)
+        public SellerRepository(AppDbContext _context) : base(_context)
         {
             context = _context;
         }
 
-        public Product? GetProductWithSellerData(int productId) {
-            return context.Products.Include(P => P.Seller).SingleOrDefault(P=>P.Id== productId);
-
-
-        }
-        public IEnumerable<Product>? GetAllProductsWithSeller()
+        public string? GetSellerByProductInfo(int ProductId)
         {
-            return context.Products.Include(P => P.Seller).ToList();
-
-
+       return   context.Products.SingleOrDefault(P => P.Id == ProductId)?.SellerId;
         }
     }
 }
