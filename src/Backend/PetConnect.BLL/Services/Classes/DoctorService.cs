@@ -81,6 +81,7 @@ namespace PetConnect.BLL.Services.Classes
             doctor.ImgUrl = dto.ImgUrl;
             doctor.PricePerHour = dto.PricePerHour;
             doctor.CertificateUrl = dto.CertificateUrl;
+            doctor.IsDeleted = false;
 
             // Enum and complex object parsing
             if (Enum.TryParse(dto.PetSpecialty, out PetSpecialty specialty))
