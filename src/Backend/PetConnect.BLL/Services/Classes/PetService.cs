@@ -49,20 +49,20 @@ namespace PetConnect.BLL.Services.Classes
             }
             return result;
         }
-   
+
 
 
         public IEnumerable<PetDataDto> GetAllPetsWithBelongsToCustomer()
         {
             List<PetDataDto> petDatas = new List<PetDataDto>();
-            IEnumerable<Pet> PetList= _unitOfWork.PetRepository.GetPetBreadCategoryDataWithCustomer();
+            IEnumerable<Pet> PetList = _unitOfWork.PetRepository.GetPetBreadCategoryDataWithCustomer();
 
 
 
             foreach (var Pet in PetList)
             {
 
-          
+
                 petDatas.Add(new PetDataDto()
                 {
                     Name = Pet.Name,
@@ -82,12 +82,48 @@ namespace PetConnect.BLL.Services.Classes
 
 
                 });
-             }
+            }
+            return petDatas;
+        }
+
+
+
+        public IEnumerable<PetDataDto> GetAllApprovedPetsWithBelongsToCustomer()
+        {
+            List<PetDataDto> petDatas = new List<PetDataDto>();
+            IEnumerable<Pet> PetList = _unitOfWork.PetRepository.GetApprovedPetBreadCategoryDataWithCustomer();
+
+
+
+            foreach (var Pet in PetList)
+            {
+
+
+                petDatas.Add(new PetDataDto()
+                {
+                    Name = Pet.Name,
+                    ImgUrl = $"/assets/PetImages/{Pet.ImgUrl}",
+                    Status = Pet.Status,
+                    Id = Pet.Id,
+                    Age = Pet.Age,
+                    CategoryName = Pet.Breed.Category.Name,
+                    CustomerId = Pet.CustomerAddedPets.CustomerId,
+                    CustomerName = Pet.CustomerAddedPets.Customer.FName + " " + Pet.CustomerAddedPets.Customer.LName,
+                    CustomerCity = Pet.CustomerAddedPets.Customer.Address.City,
+                    CustomerCountry = Pet.CustomerAddedPets.Customer.Address.Country,
+                    CustomerStreet = Pet.CustomerAddedPets.Customer.Address.Street,
+                    Notes = Pet.Notes
+
+
+
+
+                });
+            }
             return petDatas;
         }
         public IEnumerable<PetDataDto> GetAllForAdoptionPetsWithCustomerData()
         {
-            var PetList = _unitOfWork.PetRepository.GetPetBreadCategoryDataWithCustomer().Where(P=>P.Status == PetStatus.ForAdoption).Select(P=>
+            var PetList = _unitOfWork.PetRepository.GetPetBreadCategoryDataWithCustomer().Where(P=>P.Status == PetStatus.ForAdoption && P.IsApproved == true).Select(P=>
             new PetDataDto() {
                 Name = P.Name,
                 ImgUrl = $"/assets/PetImages/{P.ImgUrl}",
@@ -111,7 +147,7 @@ namespace PetConnect.BLL.Services.Classes
 
         public IEnumerable<PetDataDto> GetAllForRescuePetsWithCustomerData()
         {
-            var PetList = _unitOfWork.PetRepository.GetPetBreadCategoryDataWithCustomer().Where(P => P.Status == PetStatus.ForRescue).Select(P =>
+            var PetList = _unitOfWork.PetRepository.GetPetBreadCategoryDataWithCustomer().Where(P => P.Status == PetStatus.ForRescue && P.IsApproved == true).Select(P =>
             new PetDataDto()
             {
                 Name = P.Name,

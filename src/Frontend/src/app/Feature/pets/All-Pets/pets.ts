@@ -16,8 +16,9 @@ import { AdoptionResponse } from '../../../models/adoption-response';
 import { Category } from '../../../models/category';
 import { CategoryService } from '../../categories/category-service';
 import { FormsModule } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AccountService } from '../../../core/services/account-service';
+import { NotificationService } from '../../../core/services/notification-service';
 
 @Component({
   selector: 'app-pets',
@@ -50,10 +51,13 @@ export class Pets implements OnInit {
     private alert: AlertService,
     private cdRef: ChangeDetectorRef,
     private categoryService: CategoryService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private notificationService: NotificationService
   ) {}
   requestedPetIds: number[] = []; // pet IDs user has requested
   allSentRequests: AdoptionResponse[] = []; // all requests sent by the user
+  private notifSub!: Subscription;
+
   ngOnInit(): void {
     this.enumService.loadAllEnums().subscribe();
     this.loadCategories();
@@ -72,6 +76,20 @@ export class Pets implements OnInit {
       this.loadPets();
     });
     this.loadSubmittedRequests();
+
+    this.notifSub = this.notificationService.newNotification$.subscribe(
+      (notif) => {
+        if (!notif) return;
+
+        // If notification is adoption-related
+        console.log(
+          '🔄 Reloading adoption requests due to notification:',
+          notif.message
+        );
+        this.loadPets();
+        this.loadSubmittedRequests();
+      }
+    );
   }
 
   loadPets(): void {

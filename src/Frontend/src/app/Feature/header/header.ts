@@ -67,38 +67,21 @@ export class Header implements OnInit, OnDestroy {
     this.notificationService.disconnect();
   }
   ngOnInit(): void {
-    if (this.accountService.isAuthenticated()) {
-      this.customerService.getCustomerProfile().subscribe((data) => {
-        console.log('Profile Data:', data);
-        this.profileData = data;
-      });
+    if (!this.accountService.isAuthenticated()) return;
 
-      const token =
-        localStorage.getItem('token') || sessionStorage.getItem('token') || '';
-      this.notificationService.startConnection(token);
-
-      // Subscribe to real-time notifications
-      this.notificationService.newNotification$.subscribe((notif) => {
-        if (notif) {
-          this.unreadCount++;
-          this.loadNotifications(this.userId);
-          this.showNotificationToast(notif.message);
-        }
-      });
+    // Step 1: Decode the token immediately if available
+    const decodedUser = this.accountService.jwtTokenDecoder();
+    console.log('Decoded User:', decodedUser);
+    if (decodedUser && decodedUser.userId) {
+      this.userId = decodedUser.userId;
+      this.loadProfileAndNotifications();
     }
-    // this.routerEventsSub = this.router.events.subscribe((event) => {
-    //   if (event instanceof NavigationEnd) {
-    //     this.loadNotifications(this.userId);
-    //   }
-    // });
 
+    // Step 2: Load profile and role-specific data
     if (this.accountService.isCustomer()) {
+      console;
       this.accountService.getCustomerData()?.subscribe({
         next: (resp) => {
-          this.user = this.accountService.jwtTokenDecoder();
-          this.userId = this.user.userId;
-          this.loadNotifications(this.userId);
-
           if (resp) {
             this.userFullname = `${resp.data.fName} ${resp.data.lName}`;
             this.caller = '';
@@ -109,7 +92,7 @@ export class Header implements OnInit, OnDestroy {
     } else if (this.accountService.isDoctor()) {
       this.accountService.getDoctorData()?.subscribe({
         next: (resp) => {
-          if (resp && typeof resp != 'string') {
+          if (resp && typeof resp !== 'string') {
             this.userFullname = `${resp.fName} ${resp.lName}`;
             this.caller = 'Dr ';
             this.doctor = resp;
@@ -117,6 +100,30 @@ export class Header implements OnInit, OnDestroy {
         },
       });
     }
+  }
+
+  private loadProfileAndNotifications() {
+    // Load customer profile picture/details
+    this.customerService.getCustomerProfile().subscribe((data) => {
+      this.profileData = data;
+    });
+
+    // Start SignalR connection only once
+    const token =
+      localStorage.getItem('token') || sessionStorage.getItem('token') || '';
+    this.notificationService.startConnection(token);
+
+    // Initial load of notifications
+    this.loadNotifications(this.userId);
+
+    // Listen for real-time notifications
+    this.notificationService.newNotification$.subscribe((notif) => {
+      if (notif) {
+        this.unreadCount++;
+        this.loadNotifications(this.userId);
+        this.showNotificationToast(notif.message);
+      }
+    });
   }
 
   @HostListener('document:click', ['$event'])

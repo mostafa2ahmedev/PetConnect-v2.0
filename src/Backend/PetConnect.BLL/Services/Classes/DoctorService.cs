@@ -24,7 +24,7 @@ namespace PetConnect.BLL.Services.Classes
         // Return list of doctor DTOs 
         public IEnumerable<DoctorDetailsDTO> GetAll()
         {
-            return UOW.DoctorRepository.GetAll()
+            return UOW.DoctorRepository.GetAll().Where(D=> D.IsApproved==true && D.IsDeleted == false)
                 .Select(d => new DoctorDetailsDTO
                 {
                     Id = d.Id,

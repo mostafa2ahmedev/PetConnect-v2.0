@@ -215,22 +215,37 @@ namespace PetConnect.BLL.Services.Classes
         public async Task<AdminStatisticsDTO> GetAdminStatistics()
         {
             //Pet Stats 
-            var totalPets = await unitOfWork.PetRepository.GetAllQueryable().Where(P => P.IsApproved == true).CountAsync();
-            var totalPetsForAdpotion = await unitOfWork.PetRepository.GetAllQueryable().Where(P => P.Status == PetStatus.ForAdoption).CountAsync();
-            var totalPetsForRescue = await unitOfWork.PetRepository.GetAllQueryable().Where(P => P.Status == PetStatus.ForRescue).CountAsync();
+            var totalPets = await unitOfWork.PetRepository.GetAllQueryable().CountAsync();
+            var approvedPets = await unitOfWork.PetRepository.GetAllQueryable().Where(P => P.IsApproved == true).CountAsync();
+            var rejectedPets = await unitOfWork.PetRepository.GetAllQueryable().Where(P => P.IsApproved == false && P.IsDeleted == true).CountAsync();
+            var pendingPets = await unitOfWork.PetRepository.GetAllQueryable().Where(P => P.IsApproved == false && P.IsDeleted == false).CountAsync();
+
+            var totalPetsForAdpotion = await unitOfWork.PetRepository.GetAllQueryable().Where(P => P.Status == PetStatus.ForAdoption && P.IsApproved == true).CountAsync();
+            var totalPetsForRescue = await unitOfWork.PetRepository.GetAllQueryable().Where(P => P.Status == PetStatus.ForRescue && P.IsApproved == true).CountAsync();
             //Users Stats
             var totalUsers = await unitOfWork.ApplicationUserRepository.GetAllQueryable().Where(U => U.IsDeleted == false).CountAsync();
-            var totalDoctors = await unitOfWork.DoctorRepository.GetAllQueryable().Where(U => U.IsDeleted == false).CountAsync();
+
+            var totalDoctors = await unitOfWork.DoctorRepository.GetAllQueryable().CountAsync();
+            var approvedDoctors = await unitOfWork.DoctorRepository.GetAllQueryable().Where(U => U.IsApproved == true ).CountAsync();
+            var rejectedDoctors = await unitOfWork.DoctorRepository.GetAllQueryable().Where(U => U.IsApproved == false && U.IsDeleted == true).CountAsync();
+            var pendingDoctors = await unitOfWork.DoctorRepository.GetAllQueryable().Where(U => U.IsApproved == false && U.IsDeleted == false).CountAsync();
+
             var totalCustomers = await unitOfWork.CustomerRepository.GetAllQueryable().Where(U => U.IsDeleted == false).CountAsync();
 
             AdminStatisticsDTO stats = new AdminStatisticsDTO()
             {
                 TotalPets = totalPets,
+                ApprovedPets= approvedPets,
+                PendingPets = pendingPets,
+                RejectedPets=rejectedPets,
                 PetsForAdoption = totalPetsForAdpotion,
                 PetsForRescue = totalPetsForRescue,
                 TotalUsers = totalUsers,
                 TotalCustomers = totalCustomers,
-                TotalDoctors = totalDoctors
+                TotalDoctors = totalDoctors,
+                ApprovedDoctors = approvedDoctors,
+                RejectedDoctors = rejectedDoctors,
+                PendingDoctors=pendingDoctors
             };
             return stats;
         }
