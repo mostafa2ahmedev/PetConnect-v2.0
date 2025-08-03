@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router'; 
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth';
+import { AlertService } from '../../../core/services/alert-service';
+import { CartService } from '../../cart/cart-service';
 
 @Component({
   selector: 'app-products',
@@ -15,17 +17,19 @@ import { AuthService } from '../../../services/auth';
 export class ProductsComponent implements OnInit {
   products: any[] = [];
   filteredProducts: any[] = [];
-
   filterType: string = "";
   filterExactPrice: number | null = null;
-
+  loadingProducts: boolean = true; // Flag to show loading state
   server = "https://localhost:7102";
 
   
   constructor(
     private http: HttpClient,
     private authService: AuthService,
-    private router: Router        
+    private router: Router   ,
+    private alertService: AlertService    ,
+    private changeDetectorRef: ChangeDetectorRef,
+    private cartService : CartService
   ) {}
 
   ngOnInit(): void {
@@ -33,9 +37,11 @@ export class ProductsComponent implements OnInit {
       next: (res) => {
         this.products = res;
         this.filteredProducts = res;
+        this.loadingProducts=false;
       },
       error: (err) => {
-        console.error('Error loading products', err);
+        // console.error('Error loading products', err);
+        this.alertService.error('Failed to load products. Please try again later.');
       }
     });
   }
@@ -60,10 +66,13 @@ export class ProductsComponent implements OnInit {
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/login']);
     } else {
-      let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-      cart.push(product);
-      localStorage.setItem('cart', JSON.stringify(cart));
-      alert('Product added to cart!');
+      // let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      // cart.push(product);
+      // localStorage.setItem('cart', JSON.stringify(cart));
+      this.cartService.addToCart(product);
+      this.alertService.success('Product added to cart!');
+      this.changeDetectorRef.detectChanges();
+      // alert('Product added to cart!');
     }
   }
  

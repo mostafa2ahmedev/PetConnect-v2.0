@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AccountService } from '../../core/services/account-service';
+import { Product } from '../../models/product';
+import { CartService } from '../cart/cart-service';
 
 @Component({
   selector: 'app-header',
@@ -9,9 +11,14 @@ import { AccountService } from '../../core/services/account-service';
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
-export class Header {
-  constructor(private accontService: AccountService, private router: Router) {}
-
+export class Header implements OnInit{
+  cartLength: number = 0;
+  constructor(private accontService: AccountService, private router: Router , private cartService:CartService) {}
+  ngOnInit(): void {
+          this.cartService.cart$.subscribe(cart => {
+      this.cartLength = cart.length;
+  })
+  }
   isAuthenticated(): boolean {
     return this.accontService.isAuthenticated();
   }

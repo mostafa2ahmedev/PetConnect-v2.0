@@ -64,11 +64,14 @@
             >Contact</a
           >
         </li>
-        <li *ngIf="isAuthenticated()">
-          <a [routerLink]="['/cart']" class="btn btn-outline-primary position-relative">
-          <i class="fas fa-shopping-cart"></i>
-          </a>
-        </li>
+    <li *ngIf="isAuthenticated()">
+      <a [routerLink]="['/cart']" class="btn btn-outline-primary position-relative">
+      <i class="fas fa-shopping-cart"></i>
+      @if(cartLength>0){
+        <span class="cart-badge">{{ cartLength }}</span>
+      }
+      </a>
+    </li>
       </ul>
 
       <!-- Auth Buttons (Mobile) -->

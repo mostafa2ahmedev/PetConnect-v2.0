@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth';
 import { RouterModule } from '@angular/router';  
 import { Router } from '@angular/router';       
 import { AlertService } from '../../core/services/alert-service';
+import { CartService } from './cart-service';
 
 @Component({
   selector: 'app-cart',
@@ -21,30 +22,31 @@ export class CartComponent implements OnInit {
     private http: HttpClient,
     private authService: AuthService,
     private router: Router,
-    private alertService : AlertService
+    private alertService : AlertService,
+    private cartService : CartService
   ) {}
 
   ngOnInit() {
-    const savedCart = localStorage.getItem('cart');
-    if (savedCart) {
-      this.cartItems = JSON.parse(savedCart);
-    }
+    this.cartService.cart$.subscribe({next: items=>{
+      this.cartItems = items;
+    }})
+    // if (this.cartService) {
+    //   this.cartItems = JSON.parse(savedCart);
+    // }
   }
 
   removeItem(index: number) {
-    this.cartItems.splice(index, 1);
-    localStorage.setItem('cart', JSON.stringify(this.cartItems));
+    this.cartService.removeItem(index);
   }
 
   clearCart() {
-    this.cartItems = [];
-    localStorage.removeItem('cart');
+    this.cartService.clearCart();
   }
 
   checkout() {
     const customerId = this.authService.getCustomerIdFromToken();
     if (!customerId) {
-      alert('Please login first!');
+      this.alertService.error('Please login first!');
       return;
     }
 
@@ -64,7 +66,8 @@ export class CartComponent implements OnInit {
        this.clearCart();
       this.router.navigate(['/orders']); },
        error: (err) => {
-      this.alertService.error('Error placing order:', err)
+      this.alertService.error('Error placing order')
+      console.log(err);
        }
       });
   }
