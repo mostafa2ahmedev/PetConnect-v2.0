@@ -10,6 +10,7 @@ namespace PetConnect.DAL.UnitofWork
 {
     public interface IUnitOfWork : IDisposable
     {
+        public IUserRepository UserRepository { get; }
         public IAdminRepository AdminRepository { get; }
         public ICustomerRepository CustomerRepository { get; }
         public ICustomerAddedPetsRepository CustomerAddedPetsRepository { get; }
@@ -25,11 +26,22 @@ namespace PetConnect.DAL.UnitofWork
         public IShelterImagesRepository ShelterImagesRepository { get; }
         public IShelterLocationsRepository ShelterLocationsRepository { get; }
         public IShelterPhonesRepository ShelterPhonesRepository { get; }
+        public ITimeSlotsRepository TimeSlotsRepository { get; }
+        public IAppointmentsRepository AppointmentsRepository { get; }
         public IProductRepository ProductRepository { get; }
         public IProductTypeRepository ProductTypeRepository { get; }
         public IOrderRepository OrderRepository { get; }
-        public ITimeSlotsRepository TimeSlotsRepository { get; }
+        public INotificationRepository NotificationRepository { get; }
+        public IUserMessagesRepository UserMessagesRepository { get; }
+        public IUserConnectionRepository UserConnectionRepository { get; }
+        public IAdminDoctorMessageRepository AdminDoctorMessageRepository { get;  }
+        public IAdminPetMessageRepository AdminPetMessageRepository { get;  }
+        public IApplicationUserRepository ApplicationUserRepository{ get;  }
+        public ISellerRepository SellerRepository { get; }
+        public IOrderProductRepository orderProductRepository { get; }
         public int SaveChanges();
+        Task<int> SaveChangesAsync();
+
     }
 
 }

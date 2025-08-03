@@ -31,7 +31,7 @@ namespace PetConnect.API.Controllers
         [EndpointSummary("Get All Pets")]
         public ActionResult GetAll()
         {
-            var pets = _petService.GetAllPetsWithBelongsToCustomer();
+            var pets = _petService.GetAllApprovedPetsWithBelongsToCustomer();
             return Ok(new GeneralResponse(200, pets));
         }
 
@@ -166,7 +166,23 @@ namespace PetConnect.API.Controllers
 
 
 
-        } 
+        }
+        #endregion
+
+
+        #region Get Pet By Customer ID
+
+        [HttpGet("Customer/{CustomerId}")]
+        [EndpointSummary("Get Pets By Customer Id")]
+        public ActionResult PetsForCustomer(string CustomerId)
+        {
+            //if(id==null)  > GetAll
+            var pets = _petService.GetPetsForCustomer(CustomerId);
+            if (pets == null || pets.Count()==0)
+                return NotFound(new GeneralResponse(404, $"No Pets found with this Customer ID"));
+            return Ok(new GeneralResponse(200, pets));
+        }
+
         #endregion
     }
 }

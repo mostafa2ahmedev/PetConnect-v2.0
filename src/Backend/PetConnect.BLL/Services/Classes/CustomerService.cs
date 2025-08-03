@@ -2,6 +2,7 @@
 using PetConnect.BLL.Common.AttachmentServices;
 using PetConnect.BLL.Services.DTO.PetDto;
 using PetConnect.BLL.Services.DTOs.Customer;
+using PetConnect.BLL.Services.DTOs.Notification;
 using PetConnect.BLL.Services.Interfaces;
 using PetConnect.DAL.Data.Enums;
 using PetConnect.DAL.Data.Models;
@@ -9,8 +10,10 @@ using PetConnect.DAL.UnitofWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace PetConnect.BLL.Services.Classes
 {
@@ -20,19 +23,25 @@ namespace PetConnect.BLL.Services.Classes
         private readonly IPetService _petService;
         private readonly IAttachmentService attachmentSetvice;
         private readonly ICustomerAddedPetsService _customerAddedPetsService;
+        private readonly INotificationService notificationService;
 
-        public CustomerService(IUnitOfWork unitOfWork, IPetService petService, IAttachmentService attachmentSetvice,ICustomerAddedPetsService customerAddedPetsService)
+
+        public CustomerService(IUnitOfWork unitOfWork, IPetService petService,
+            IAttachmentService attachmentSetvice,ICustomerAddedPetsService customerAddedPetsService, INotificationService notificationService)
         {
             _unitOfWork = unitOfWork;
             _petService = petService;
             this.attachmentSetvice = attachmentSetvice;
             _customerAddedPetsService = customerAddedPetsService;
+            this.notificationService = notificationService;
         }
 
 
 
-        public void RequestAdoption(CusRequestAdoptionDto adoptionDto,string ReqCustomerId)
+        public async Task RequestAdoption(CusRequestAdoptionDto adoptionDto,string ReqCustomerId)
         {
+            var Pet = _unitOfWork.PetRepository.GetByID(adoptionDto.PetId);
+
             var CusReqAdoption = new CustomerPetAdoptions()
             {
                 RequesterCustomerId = ReqCustomerId,
@@ -44,15 +53,27 @@ namespace PetConnect.BLL.Services.Classes
             };
             _unitOfWork.CustomerPetAdpotionsRepository.Add(CusReqAdoption);
             _unitOfWork.SaveChanges();
+            await notificationService.CreateAndSendNotification(adoptionDto.RecCustomerId, new NotificationDTO()
+            {
+                Message = $"You got a new aoption request for {Pet.Name}",
+                Type = NotificationType.Approval
+            });
         }
-        public int DeleteRequestAdoption(DelCusRequestAdoptionDto DeladoptionDto, string ReqCustomerId)
+        public async Task<int> DeleteRequestAdoption(DelCusRequestAdoptionDto DeladoptionDto, string ReqCustomerId)
         {
             var AdoptionRecord = _unitOfWork.CustomerPetAdpotionsRepository
                 .GetCustomerAdoptionRecord(DeladoptionDto.RecCustomerId, ReqCustomerId, DeladoptionDto.PetId,DeladoptionDto.AdoptionDate);
+            var Pet = _unitOfWork.PetRepository.GetByID(DeladoptionDto.PetId);
 
-            if (AdoptionRecord is not null) {
+            if (AdoptionRecord is not null)
+            {
                 _unitOfWork.CustomerPetAdpotionsRepository.Delete(AdoptionRecord);
-               return _unitOfWork.SaveChanges();
+                await notificationService.CreateAndSendNotification(DeladoptionDto.RecCustomerId, new NotificationDTO()
+                {
+                    Message = $"The request to adopt {Pet.Name} was cancelled",
+                    Type = NotificationType.Rejection
+                });
+                return _unitOfWork.SaveChanges();
             }
             return 0;
      
@@ -88,7 +109,7 @@ namespace PetConnect.BLL.Services.Classes
         public IEnumerable<DetailsCustomerReceivedAdoption> GetCustomerRecAdoptionsPendingData(string userId)
         {
 
-            var CustomerReqAdoptionsData = _unitOfWork.CustomerPetAdpotionsRepository.GetAllQueryable().Include(CPA=>CPA.RequesterCustomer)
+            var CustomerReqAdoptionsData = _unitOfWork.CustomerPetAdpotionsRepository.GetAllQueryable().Include(CPA=>CPA.ReceiverCustomer)
                 .Include(CPA=>CPA.Pet)
                 .ThenInclude(P=>P.Breed)
                 .ThenInclude(B=>B.Category)
@@ -108,9 +129,11 @@ namespace PetConnect.BLL.Services.Classes
             return CustomerReqAdoptionsData;
         }
 
-        public string? ApproveOrCancelCustomerAdoptionRequest(ApproveORCancelReceivedCustomerRequest approveORCancelCustomerRequestDto,string RecuserId)
+        public async Task<string?> ApproveOrCancelCustomerAdoptionRequest(ApproveORCancelReceivedCustomerRequest approveORCancelCustomerRequestDto,string RecuserId)
         {
             string? result = null;
+            var pet = _petService.GetPet(approveORCancelCustomerRequestDto.PetId);
+
             var CustomerAdoptionsRecord = _unitOfWork.CustomerPetAdpotionsRepository
                 .GetCustomerAdoptionRecord(RecuserId, approveORCancelCustomerRequestDto.ReqCustomerId,approveORCancelCustomerRequestDto.PetId,approveORCancelCustomerRequestDto.AdoptionDate);
 
@@ -122,15 +145,38 @@ namespace PetConnect.BLL.Services.Classes
                 CustomerAdoptionsRecord.Status = AdoptionStatus.Approved;
                 result = AdoptionStatus.Approved.ToString();
 
-                var CAPRecord=  _unitOfWork.CustomerAddedPetsRepository.DeleteCustomerAddedPetRecord(approveORCancelCustomerRequestDto.PetId, RecuserId);
+                var CAPRecord = _unitOfWork.CustomerAddedPetsRepository.DeleteCustomerAddedPetRecord(approveORCancelCustomerRequestDto.PetId, RecuserId);
                 _customerAddedPetsService.RegisterCustomerPetAddition(approveORCancelCustomerRequestDto.ReqCustomerId, approveORCancelCustomerRequestDto.PetId);
-               
+                _unitOfWork.CustomerPetAdpotionsRepository.RemoveSingleReq(RecuserId, approveORCancelCustomerRequestDto.ReqCustomerId, approveORCancelCustomerRequestDto.PetId);
+
+                var otherRequesterIds = _unitOfWork.CustomerPetAdpotionsRepository.RemoveOtherRequestsForPet(approveORCancelCustomerRequestDto.PetId, approveORCancelCustomerRequestDto.ReqCustomerId);
+                await notificationService.CreateAndSendNotification(approveORCancelCustomerRequestDto.ReqCustomerId, new NotificationDTO()
+                {
+                    Message = $"Congratulations! Your request to adopt {pet.Name} has been approved.",
+                    Type = NotificationType.Approval
+                });
+                foreach (var requesterId in otherRequesterIds)
+                {
+                 await notificationService.CreateAndSendNotification(requesterId, new NotificationDTO()
+                    {
+                        Message = $"Sorry, the pet {pet.Name} has been adopted by someone else.",
+                        Type = NotificationType.Rejection
+                    });
+                }
 
             }
 
-            else if (approveORCancelCustomerRequestDto.AdoptionStatus == AdoptionStatus.Cancelled) {
-                CustomerAdoptionsRecord.Status = AdoptionStatus.Cancelled;
+            else if (approveORCancelCustomerRequestDto.AdoptionStatus == AdoptionStatus.Cancelled)
+            {
+
+                //CustomerAdoptionsRecord.Status = AdoptionStatus.Cancelled;
+                _unitOfWork.CustomerPetAdpotionsRepository.RemoveSingleReq(RecuserId, approveORCancelCustomerRequestDto.ReqCustomerId, approveORCancelCustomerRequestDto.PetId);
                 result = AdoptionStatus.Cancelled.ToString();
+               await notificationService.CreateAndSendNotification(approveORCancelCustomerRequestDto.ReqCustomerId, new NotificationDTO()
+                {
+                    Message = $"Sorry, Your request to adopt {pet.Name} has been declined.",
+                    Type = NotificationType.Rejection
+                });
             }
             _unitOfWork.SaveChanges();
             return result;
@@ -181,13 +227,19 @@ namespace PetConnect.BLL.Services.Classes
 
             return new CustomerDetailsDTO
             {
+                UserName = customer.UserName!,
                 FName = customer.FName,
                 LName = customer.LName,
-                ImgUrl = customer.ImgUrl,
+                ImgUrl = customer.ImgUrl!,
                 Gender = customer.Gender,
                 Street = customer.Address.Street,
                 City = customer.Address.City,
                 Country = customer.Address.Country,
+                Email =customer.Email!,
+                IsApproved= customer.IsApproved,
+                PhoneNumber = customer.PhoneNumber!
+            
+                
             };
         }
 
@@ -239,6 +291,9 @@ namespace PetConnect.BLL.Services.Classes
             customer.FName = dto.FName;
             customer.LName = dto.LName;
             customer.Gender = dto.Gender;
+            customer.PhoneNumber = dto.PhoneNumber;
+            customer.UserName = dto.UserName;   
+            
 
             customer.Address = new Address()
             {
@@ -246,15 +301,25 @@ namespace PetConnect.BLL.Services.Classes
                 Street = dto.Street,
                 Country = dto.Country
             };
-      
-
-       
-
-
+     
             _unitOfWork.CustomerRepository.Update(customer);
            return _unitOfWork.SaveChanges();
         }
 
-      
+        public CustomerDataDto? GetCustomerById(string id)
+        {
+            Customer c = _unitOfWork.CustomerRepository.GetAll().FirstOrDefault(e => e.Id == id);
+            CustomerDataDto customerData = new CustomerDataDto()
+            {
+                CustomerId = c.Id,
+                FName = c.FName,
+                LName = c.LName,
+                ImgUrl = c.ImgUrl,
+                City = c.Address.City
+            };
+            return customerData;
+
+        }
+
     }
 }

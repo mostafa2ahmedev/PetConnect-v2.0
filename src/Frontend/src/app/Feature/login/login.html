@@ -1,7 +1,8 @@
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-md-6 col-lg-5">
-      <div class="card"> <!-- Removed shadow -->
+      <div class="card">
+        <!-- Removed shadow -->
         <div class="card-body">
           <h3 class="text-center mb-4">Login</h3>
 
@@ -10,8 +11,11 @@
             {{ errorMessage }}
           </div>
 
-          <form (ngSubmit)="onLogin()" #loginForm="ngForm">
-
+          <form
+            (ngSubmit)="onLogin()"
+            #loginForm="ngForm"
+            *ngIf="!accountService.isAuthenticated()"
+          >
             <!-- Email -->
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
@@ -23,7 +27,7 @@
                 required
                 [(ngModel)]="Email"
                 placeholder="Enter your email"
-                autocomplete="username" 
+                autocomplete="username"
               />
             </div>
 
@@ -38,7 +42,7 @@
                 required
                 [(ngModel)]="Password"
                 placeholder="Enter your password"
-                autocomplete="current-password" 
+                autocomplete="current-password"
               />
             </div>
 
@@ -57,15 +61,17 @@
             </div>
 
             <!-- Submit Button -->
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               class="btn btn-primary w-100"
-              [disabled]="loginForm.invalid" 
+              [disabled]="loginForm.invalid"
             >
               Login
             </button>
-
           </form>
+          <p *ngIf="accountService.isAuthenticated()" class="text-center">
+            You are already logged in ✔️✔️
+          </p>
         </div>
       </div>
     </div>

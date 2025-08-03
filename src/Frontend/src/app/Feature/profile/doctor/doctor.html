@@ -1,0 +1,298 @@
+@if(typeof profileData() != 'undefined'){
+<section
+    class="w-100 p-4"
+    style="background-color: #eee; border-radius: 0.5rem 0.5rem 0 0"
+>
+    <div class="row">
+        <!-- Left Column: Doctor Profile Info -->
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <!-- Loading Spinner -->
+                @if(loadingProfile()){
+                    <div class="text-center p-5">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-3">Loading profile...</p>
+                    </div>
+                }
+
+                <!-- No profile fallback -->
+                @if(!loadingProfile() && !profileData()){
+                    <div class="alert alert-warning text-center">
+                        Unable to load profile information.
+                    </div>
+                }
+
+                <!-- Profile Card - Doctor's basic info -->
+                @if(!loadingProfile() && profileData()){
+                    <div class="card-body text-center">
+                        <img
+                            [src]="getFullImageUrl(profileData().imgUrl) || 'assets/img/default-user.png'"
+                            alt="Doctor Avatar"
+                            class="rounded-circle img-fluid"
+                            style="width: 150px"
+                        />
+                        <h5 class="my-3">
+                            {{ profileData().fName }} {{ profileData().lName }}
+                        </h5>
+                        <p class="text-muted mb-1">{{ profileData().city }}</p>
+                        <p class="text-muted mb-4">
+                            <strong>{{ profileData().pricePerHour }}</strong> EGP/Hour
+                        </p>
+                        <div class="d-flex justify-content-center mb-2">
+                            <button
+                                type="button"
+                                class="btn btn-primary"
+                                [routerLink]="['/doctors','update',profileData().id]"
+                            >
+                                Update Profile
+                            </button>
+                            <button
+                                type="button"
+                                class="btn btn-outline-primary ms-1"
+                                [routerLink]="['/doctors','timeslot',profileData().id]"
+                            >
+                                Add Timeslot
+                            </button>
+                            <button
+                                type="button"
+                                class="btn btn-outline-primary ms-1"
+                                [routerLink]="['/doctors','timeslots']"
+                            >
+                                Show Timeslots
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Doctor's Detailed Information -->
+            <div class="card mb-4 mt-3">
+                @if(!loadingProfile() && profileData()){
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Full Name</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">
+                                    {{ profileData().fName }} {{ profileData().lName }}
+                                </p>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Gender</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">{{ profileData().gender }}</p>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Specialty</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">{{ profileData().petSpecialty }}</p>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Address</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">
+                                    {{ profileData().street }}, {{ profileData().city }}
+                                </p>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Certificate</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">
+                                    <a [href]="profileData().certificateUrl" target="_blank" class="text-decoration-underline">View Certificate</a>
+                                </p>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Approved</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="mb-0">
+                                    <span
+                                        class="badge"
+                                        [ngClass]="profileData().isApproved ? 'bg-success' : 'bg-danger'"
+                                    >
+                                        {{ profileData().isApproved ? 'Yes' : 'No' }}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Right Column: Appointment Requests -->
+        <div class="col-lg-8">
+            <div class="row">
+                <div class="sent-requests mb-5 mt-3">
+                    <h5 class="mb-4">Appointment requests</h5>
+                    
+                    <!-- Loading Spinner for Appointments -->
+                    @if(loadingAppointments()){
+                        <div class="text-center p-5">
+                            <div class="spinner-border text-primary" role="status"></div>
+                            <p class="mt-3">Loading Appointment requests...</p>
+                        </div>
+                    }
+
+                    <!-- Filters and Sort Controls (Updated) -->
+                    @if(!loadingAppointments() && totalItems() > 0){
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-6 mb-2">
+                                        <label for="statusFilter" class="form-label fw-semibold">Filter by Status:</label>
+                                        <select id="statusFilter" class="form-select" [ngModel]="selectedStatusFilter()" (ngModelChange)="selectedStatusFilter.set($event); currentPage.set(1)">
+                                            <option value="">Show All</option>
+                                            @for(stat of statusArr; track stat){
+                                                <option [value]="stat">{{ stat }}</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <label for="sortOrder" class="form-label fw-semibold">Sort by Date:</label>
+                                        <select id="sortOrder" class="form-select" [ngModel]="sortOrder()" (ngModelChange)="sortOrder.set($event)">
+                                            <option value="desc">Newest First</option>
+                                            <option value="asc">Oldest First</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Appointment List (Updated with Pagination) -->
+                    @if(!loadingAppointments() && paginatedRequests().length === 0 && totalItems() > 0){
+                        <div class="alert alert-info text-center" role="alert">
+                            No appointments match the current filter.
+                        </div>
+                    } @else if(!loadingAppointments() && totalItems() === 0){
+                        <div class="alert alert-info text-center" role="alert">
+                            You have no appointments.
+                        </div>
+                    } @else if(!loadingAppointments()){
+                        <div class="card shadow-sm">
+                            <div class="card-body p-4 request-section">
+                                @for(req of paginatedRequests(); track req.id ; let i = $index){
+                                <div [ngClass]="(req.id === paginatedRequests()[0].id) ? ['mb-4','p-3','scaler'] : ['mb-4','border-top','p-3','scaler']">
+                                    <div class="row g-3 align-items-center">
+                                        <!-- Appointment Header -->
+                                        <div class="col-12">
+                                            <h5 class="text-primary">{{(currentPage() - 1) * itemsPerPage() + i + 1 }} - Appointment with {{ req.customerName }}</h5>
+                                            <small class="text-muted">Created at: {{ req.createdAt | date: 'medium' }}</small>
+                                        </div>
+
+                                        <!-- Appointment Details -->
+                                        <div class="col-md-6">
+                                            <p class="mb-1">
+                                                @if(typeof req.petImg == 'string'){
+
+                                                <img [src]="getFullImageUrl(req.petImg)" alt="{{ req.petName }}" class="img-fluid rounded-circle me-2" width="30" height="30">
+                                                }
+                                                <strong>Pet:</strong> {{ req.petName }}
+                                            </p>
+                                            <p class="mb-1">
+                                                @if(typeof req.customerImg == 'string'){
+                                                <img [src]="getFullImageUrl(req.customerImg)" alt="{{ req.customerName }}" class="img-fluid rounded-circle me-2" width="30" height="30">
+                                                }
+                                                <strong>Customer:</strong> {{ req.customerName }}
+                                            </p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="mb-1">
+                                                <strong>Time Slot:</strong> {{ req.slotStartTime |date: "medium" }} - {{ req.slotEndTime | date : "medium" }}
+                                            </p>
+                                            <p class="mb-1">
+                                                <strong>Capacity:</strong> {{ req.bookedCount }} / {{ req.maxCapacity }}
+                                            </p>
+                                        </div>
+                                        
+                                        <!-- Appointment Notes -->
+                                        <div class="col-12">
+                                          <p class="mb-1">
+                                              <strong>Notes:</strong> {{ req.notes || 'None' }}
+                                          </p>
+                                        </div>
+
+                                        <!-- Status & Actions -->
+                                        <div class="col-md-3 text-md-center">
+                                            <span
+                                                class="badge rounded-pill px-3 py-1"
+                                                [ngClass]="{
+                                                  'bg-warning text-dark': req.status === 'Pending',
+                                                  'bg-success': req.status === 'Completed',
+                                                  'bg-primary': req.status === 'Confirmed',
+                                                  'bg-danger': req.status === 'Cancelled'
+                                                }"
+                                                style="font-size: 0.75rem"
+                                            >
+                                                {{ req.status }}
+                                            </span>
+                                        </div>
+
+                                        <!-- Action Buttons -->
+                                        <div class="col-md-9 text-md-end">
+                                            @if(req.status === 'Pending'){
+                                                <button class="btn btn-outline-success btn-sm me-2" (click)="confirmRequest(req.id)">Confirm</button>
+                                                <button class="btn btn-outline-danger btn-sm" (click)="cancelRequest(req.id)">Cancel</button>
+                                            } @else if(req.status === 'Confirmed'){
+                                                <button class="btn btn-outline-primary btn-sm" (click)="completeRequest(req.id)">Mark as Completed</button>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Pagination Controls (Updated) -->
+                        @if(totalPages() > 1) {
+                            <nav aria-label="Appointments Pagination" class="mt-4">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item" [class.disabled]="currentPage() === 1">
+                                        <button class="page-link" (click)="previousPage()" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </button>
+                                    </li>
+                                    @for(page of getPages(); track page){
+                                        <li class="page-item" [class.active]="currentPage() === page">
+                                            <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+                                        </li>
+                                    }
+                                    <li class="page-item" [class.disabled]="currentPage() === totalPages()">
+                                        <button class="page-link" (click)="nextPage()" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </button>
+                                    </li>
+                                </ul>
+                                <div class="text-center text-muted">
+                                    Page {{ currentPage() }} of {{ totalPages() }} ({{ totalItems() }} total appointments)
+                                </div>
+                            </nav>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+}

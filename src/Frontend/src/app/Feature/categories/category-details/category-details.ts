@@ -63,7 +63,7 @@ export class CategoryDetails {
       next: () => {
         this.alert.success('Category updated successfully!');
 
-        this.router.navigate(['/categories']);
+        this.router.navigate(['/admin/categories']);
       },
       error: (err) => {
         console.error('Update failed', err);
@@ -88,7 +88,7 @@ export class CategoryDetails {
     this.categoryService.deleteCategory(this.category.id).subscribe({
       next: () => {
         this.alert.success('Category deleted successfully');
-        this.router.navigate(['/categories']);
+        this.router.navigate(['/admin/categories']);
       },
       error: (err) => {
         console.error('Delete failed', err);

@@ -33,10 +33,14 @@ namespace PetConnect.DAL.Data
             services.AddScoped<IShelterRepository, ShelterRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<ISellerRepository, SellerRepository>();
             services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
             services.AddScoped<IOrderProductRepository, OrderProductRepository>();
             services.AddScoped<ITimeSlotsRepository, TimeSlotsRepository>();
+            services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUserConnectionRepository, UserConnectionRepository>();
+            services.AddScoped<IUserMessagesRepository, UserMessagesRepository>();
 
             return services;
         }

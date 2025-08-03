@@ -405,6 +405,39 @@ namespace PetConnect.DAL.Data.Migrations
                     b.ToTable("CustomerPetAdoptions");
                 });
 
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.Notification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NotificationType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("PetConnect.DAL.Data.Models.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -419,6 +452,10 @@ namespace PetConnect.DAL.Data.Migrations
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("OrderStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
@@ -438,8 +475,15 @@ namespace PetConnect.DAL.Data.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
+                    b.Property<string>("OrderProductStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<string>("SellerId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("UnitPrice")
                         .HasColumnType("decimal(18,2)");
@@ -448,7 +492,9 @@ namespace PetConnect.DAL.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderProduct");
+                    b.HasIndex("SellerId");
+
+                    b.ToTable("orderProducts");
                 });
 
             modelBuilder.Entity("PetConnect.DAL.Data.Models.Pet", b =>
@@ -480,6 +526,10 @@ namespace PetConnect.DAL.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("varchar(20)");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("Ownership")
                         .IsRequired()
@@ -565,9 +615,14 @@ namespace PetConnect.DAL.Data.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<string>("SellerId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ProductTypeId");
+
+                    b.HasIndex("SellerId");
 
                     b.ToTable("Products");
                 });
@@ -734,6 +789,72 @@ namespace PetConnect.DAL.Data.Migrations
                     b.ToTable("TimeSlots");
                 });
 
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.UserConnection", b =>
+                {
+                    b.Property<string>("ConnectionId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ConnectionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserConnection");
+                });
+
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.UsersMessages", b =>
+                {
+                    b.Property<int>("MessageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MessageId"));
+
+                    b.Property<string>("AttachmentUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MessageType")
+                        .IsRequired()
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<DateTime?>("ReadDate")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("RecieverId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SenderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("SentDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.HasKey("MessageId");
+
+                    b.HasIndex("RecieverId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("UsersMessages");
+                });
+
             modelBuilder.Entity("PetConnect.DAL.Data.Models.Admin", b =>
                 {
                     b.HasBaseType("PetConnect.DAL.Data.Identity.ApplicationUser");
@@ -764,6 +885,13 @@ namespace PetConnect.DAL.Data.Migrations
                         .HasColumnType("decimal(6,2)");
 
                     b.ToTable("Doctors", (string)null);
+                });
+
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.Seller", b =>
+                {
+                    b.HasBaseType("PetConnect.DAL.Data.Identity.ApplicationUser");
+
+                    b.ToTable("Seller");
                 });
 
             modelBuilder.Entity("PetConnect.DAL.Data.Models.ShelterOwner", b =>
@@ -960,6 +1088,17 @@ namespace PetConnect.DAL.Data.Migrations
                     b.Navigation("RequesterCustomer");
                 });
 
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.Notification", b =>
+                {
+                    b.HasOne("PetConnect.DAL.Data.Identity.ApplicationUser", "User")
+                        .WithMany("Notifications")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("PetConnect.DAL.Data.Models.Order", b =>
                 {
                     b.HasOne("PetConnect.DAL.Data.Models.Customer", "customer")
@@ -984,6 +1123,13 @@ namespace PetConnect.DAL.Data.Migrations
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("PetConnect.DAL.Data.Models.Seller", "Seller")
+                        .WithMany("ReviewedOrderProduct")
+                        .HasForeignKey("SellerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Seller");
 
                     b.Navigation("order");
 
@@ -1020,7 +1166,13 @@ namespace PetConnect.DAL.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("PetConnect.DAL.Data.Models.Seller", "Seller")
+                        .WithMany("AddedProducts")
+                        .HasForeignKey("SellerId");
+
                     b.Navigation("Producttype");
+
+                    b.Navigation("Seller");
                 });
 
             modelBuilder.Entity("PetConnect.DAL.Data.Models.ProductType", b =>
@@ -1161,6 +1313,36 @@ namespace PetConnect.DAL.Data.Migrations
                     b.Navigation("Doctor");
                 });
 
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.UserConnection", b =>
+                {
+                    b.HasOne("PetConnect.DAL.Data.Identity.ApplicationUser", "ApplicationUser")
+                        .WithMany("UserConnections")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+                });
+
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.UsersMessages", b =>
+                {
+                    b.HasOne("PetConnect.DAL.Data.Identity.ApplicationUser", "Receiver")
+                        .WithMany("ReceivedMessages")
+                        .HasForeignKey("RecieverId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PetConnect.DAL.Data.Identity.ApplicationUser", "Sender")
+                        .WithMany("SentMessages")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
+                });
+
             modelBuilder.Entity("PetConnect.DAL.Data.Models.Admin", b =>
                 {
                     b.HasOne("PetConnect.DAL.Data.Identity.ApplicationUser", null)
@@ -1188,6 +1370,15 @@ namespace PetConnect.DAL.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.Seller", b =>
+                {
+                    b.HasOne("PetConnect.DAL.Data.Identity.ApplicationUser", null)
+                        .WithOne()
+                        .HasForeignKey("PetConnect.DAL.Data.Models.Seller", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("PetConnect.DAL.Data.Models.ShelterOwner", b =>
                 {
                     b.HasOne("PetConnect.DAL.Data.Identity.ApplicationUser", null)
@@ -1195,6 +1386,17 @@ namespace PetConnect.DAL.Data.Migrations
                         .HasForeignKey("PetConnect.DAL.Data.Models.ShelterOwner", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PetConnect.DAL.Data.Identity.ApplicationUser", b =>
+                {
+                    b.Navigation("Notifications");
+
+                    b.Navigation("ReceivedMessages");
+
+                    b.Navigation("SentMessages");
+
+                    b.Navigation("UserConnections");
                 });
 
             modelBuilder.Entity("PetConnect.DAL.Data.Models.Order", b =>
@@ -1277,6 +1479,13 @@ namespace PetConnect.DAL.Data.Migrations
                     b.Navigation("Appointments");
 
                     b.Navigation("TimeSlots");
+                });
+
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.Seller", b =>
+                {
+                    b.Navigation("AddedProducts");
+
+                    b.Navigation("ReviewedOrderProduct");
                 });
 
             modelBuilder.Entity("PetConnect.DAL.Data.Models.ShelterOwner", b =>

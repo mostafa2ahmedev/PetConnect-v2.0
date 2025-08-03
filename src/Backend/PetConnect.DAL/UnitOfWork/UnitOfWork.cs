@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using PetConnect.DAL.Data;
 using PetConnect.DAL.Data.Repositories.Classes;
 using PetConnect.DAL.Data.Repositories.Interfaces;
@@ -17,6 +18,7 @@ namespace PetConnect.DAL.UnitofWork
         {
             context = _context;
         }
+        public IUserRepository UserRepository => new UserRepository(context);
         public IAdminRepository AdminRepository => new AdminRepository(context);
 
         public ICustomerRepository CustomerRepository => new CustomerRepository(context);
@@ -49,9 +51,24 @@ namespace PetConnect.DAL.UnitofWork
 
         public IProductRepository ProductRepository => new ProductRepository(context);
         public IProductTypeRepository ProductTypeRepository => new ProductTypeRepository(context);
+        public IOrderProductRepository orderProductRepository => new OrderProductRepository(context);
         public IOrderRepository OrderRepository => new OrderRepository(context);
 
         public ITimeSlotsRepository TimeSlotsRepository =>  new TimeSlotsRepository(context);
+        public IAppointmentsRepository AppointmentsRepository => new AppointmentsRepository(context);
+
+        public ISellerRepository SellerRepository => new SellerRepository(context);
+
+        public IAdminDoctorMessageRepository AdminDoctorMessageRepository => new AdminDoctorMessageRepository(context);
+        public IAdminPetMessageRepository AdminPetMessageRepository => new AdminPetMessageRepository(context);
+        public IApplicationUserRepository ApplicationUserRepository=> new ApplicationUserRepository(context);
+
+
+        public INotificationRepository NotificationRepository => new NotificationRepository(context);
+        public IUserConnectionRepository UserConnectionRepository => new UserConnectionRepository(context);
+        public IUserMessagesRepository UserMessagesRepository => new UserMessagesRepository(context);
+
+       
 
         public void Dispose()
         {
@@ -61,5 +78,10 @@ namespace PetConnect.DAL.UnitofWork
         {
             return context.SaveChanges();
         }
+        public async Task<int> SaveChangesAsync()
+        {
+            return await context.SaveChangesAsync();
+        }
+
     }
 }

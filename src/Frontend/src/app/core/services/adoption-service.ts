@@ -6,6 +6,7 @@ import { map, Observable } from 'rxjs';
 import { AdoptionResponse } from '../../models/adoption-response';
 import { AdoptionDecision } from '../../models/adoption-decision';
 import { Pet } from '../../models/pet';
+import { NotificationModel } from '../../models/notification-model';
 
 @Injectable({
   providedIn: 'root',
@@ -29,6 +30,7 @@ export class AdoptionService {
 
   // Approve or cancel a request
   approveOrCancelRequest(decision: AdoptionDecision): Observable<any> {
+    console.log('Decision:', decision);
     return this.http.put(`${this.baseUrl}/ApproveORCancel`, decision);
   }
 
@@ -36,7 +38,13 @@ export class AdoptionService {
   getCustomerPets(): Observable<Pet[]> {
     return this.http.get<Pet[]>(`${this.baseUrl}/CustomerPets`);
   }
-
+  GetAdoptionNotifications(): Observable<NotificationModel[]> {
+    return this.http
+      .get<{ data: NotificationModel[] }>(
+        `${environment.apiBaseUrl}/AdoptionNotification`
+      )
+      .pipe(map((res) => res.data));
+  }
   cancelRequest(request: {
     recCustomerId: string;
     petId: number;

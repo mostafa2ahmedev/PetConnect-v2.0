@@ -10,5 +10,12 @@ namespace PetConnect.DAL.Data.Repositories.Interfaces
 {
     public interface IOrderRepository:IGenericRepository<Order>
     {
+        List<Order> GetOrdersWithDetails();
+        Order? GetOrderWithDetails(int id);
+        List<Order> GetOrdersByCustomerId(string customerId);
+
+
+
+
     }
 }

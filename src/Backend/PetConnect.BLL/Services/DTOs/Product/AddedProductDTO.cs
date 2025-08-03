@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,7 +16,7 @@ namespace PetConnect.BLL.Services.DTOs.Product
         [Required(ErrorMessage ="Description is Required")]
         public string Description { get; set; } = null!;
         [Required(ErrorMessage ="Image URL is Required")]
-        public string ImgUrl { get; set; } = null!;
+        public IFormFile ImgUrl { get; set; } = null!;
         [Required(ErrorMessage ="Price is Required")]
         public decimal Price { get; set; }
         [Required(ErrorMessage = "Quantity Is Required")]

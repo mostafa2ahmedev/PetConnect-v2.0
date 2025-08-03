@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PetConnect.BLL.Services.DTO.PetBreadDto
 {
-    public class UPetBreadDto
+    public class UPetBreedDto
     {
         [Required(ErrorMessage = "ID is Required")]
         public int Id { get; set; }

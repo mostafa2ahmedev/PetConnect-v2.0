@@ -12,12 +12,13 @@ namespace PetConnect.BLL.Services.Interfaces
     public interface ICustomerService
     {
 
-        public void RequestAdoption(CusRequestAdoptionDto adoptionDto, string ReqCustomerId);
-        public string? ApproveOrCancelCustomerAdoptionRequest(ApproveORCancelReceivedCustomerRequest approveORCancelCustomerRequestDto, string userId);
-        public int DeleteRequestAdoption(DelCusRequestAdoptionDto DeladoptionDto, string ReqCustomerId);
+        public Task RequestAdoption(CusRequestAdoptionDto adoptionDto, string ReqCustomerId);
+        public Task<string?> ApproveOrCancelCustomerAdoptionRequest(ApproveORCancelReceivedCustomerRequest approveORCancelCustomerRequestDto, string userId);
+        public Task<int> DeleteRequestAdoption(DelCusRequestAdoptionDto DeladoptionDto, string ReqCustomerId);
         public IEnumerable<CustomerOwnedPetsDto> GetCustomerOwnedPets(string UserId);
         public CustomerDetailsDTO? GetProfile(string id);
         public IEnumerable<CustomerDataDto> GetAllCustomers();
+        public CustomerDataDto? GetCustomerById(string id);
         public int Delete(string id);
         public IEnumerable<DetailsCustomerRequestAdoption> GetCustomerReqAdoptionsPendingData(string userId);
         public IEnumerable<DetailsCustomerReceivedAdoption> GetCustomerRecAdoptionsPendingData(string userId);

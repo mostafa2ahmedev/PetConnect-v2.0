@@ -1,0 +1,16 @@
+  /* Basic conceptual styling for scheduler-like view */
+  #scheduler-container {
+    position: relative;
+    border: 1px solid #ddd;
+    overflow-y: auto;
+  }
+  .time-slot {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+  }

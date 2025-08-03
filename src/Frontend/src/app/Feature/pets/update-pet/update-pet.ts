@@ -37,20 +37,10 @@ export class UpdatePet {
     Ownership: 0,
     BreedId: 0,
     ImgURL: null!,
+    Notes: '',
   };
 
-  petDetail: PetDetailsModel = {
-    id: 0,
-    name: '',
-    status: 0,
-    isApproved: false,
-    ownership: 0,
-    breadName: '',
-    imgUrl: '',
-    categoryName: '',
-    age: 0,
-    customerId: '',
-  };
+  petDetail: PetDetailsModel | null = null;
 
   statusOptions: { key: number; value: string }[] = [];
   backendErrors: { [key: string]: string[] } = {};
@@ -74,22 +64,32 @@ export class UpdatePet {
     });
 
     this.loadCategories();
-    this.loadBreeds();
 
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (!isNaN(id)) {
       this.petService.getPetById(id).subscribe({
         next: (response) => {
           this.petDetail = response;
+
           this.pet.Name = response.name;
           this.pet.Status = response.status;
           this.pet.Age = response.age;
-          this.pet.BreedId = this.findBreedIdByName(response.breadName);
-          this.selectedCategoryId = this.findCategoryIdByName(
-            response.categoryName
-          );
-          this.filterBreeds();
-          this.loading = false;
+          this.pet.Notes = response.notes;
+
+          // Temporarily store names
+          const breedName = response.breadName;
+          const categoryName = response.categoryName;
+
+          this.loadBreeds(() => {
+            // After breeds are loaded
+            this.selectedCategoryId = this.findCategoryIdByName(categoryName);
+            this.filterBreeds();
+
+            // Now that filteredBreeds is updated, set the correct breed ID
+            this.pet.BreedId = this.findBreedIdByName(breedName);
+
+            this.loading = false;
+          });
         },
         error: () => {
           this.error = 'Failed to load pet details.';
@@ -113,7 +113,6 @@ export class UpdatePet {
   onSubmit(form: NgForm): void {
     this.backendErrors = {};
     this.imageError = '';
-
     // Mark all controls as touched
     Object.values(form.controls).forEach((control) => control.markAsTouched());
 
@@ -132,21 +131,25 @@ export class UpdatePet {
       return;
     }
 
-    const id = this.petDetail.id;
-    this.petService.updatePet(id, this.pet).subscribe({
-      next: () => {
-        this.alert.success('Pet updated successfully!');
-        this.router.navigate(['/pets']);
-      },
-      error: (err) => {
-        if (err.status === 400 && err.error?.data) {
-          this.backendErrors = err.error.data;
-        } else {
-          console.error('Unexpected error:', err);
-        }
-        this.alert.error('Failed to update pet.');
-      },
-    });
+    const id = this.petDetail?.id;
+    if (id) {
+      this.petService.updatePet(id, this.pet).subscribe({
+        next: () => {
+          this.alert.success('Pet updated successfully!');
+          this.router.navigate(['/pets']);
+        },
+        error: (err) => {
+          if (err.status === 400 && err.error?.data) {
+            this.backendErrors = err.error.data;
+          } else {
+            console.error('Unexpected error:', err);
+          }
+          this.alert.error('Failed to update pet.');
+        },
+      });
+    } else {
+      this.alert.error('Failed to update pet.');
+    }
   }
 
   loadCategories(): void {
@@ -158,12 +161,16 @@ export class UpdatePet {
     });
   }
 
-  loadBreeds(): void {
+  loadBreeds(callback?: () => void): void {
     this.breedService.getAllBreeds().subscribe({
       next: (breeds) => {
         this.breeds = breeds;
+        if (callback) callback();
       },
-      error: (err) => console.error('Error loading breeds', err),
+      error: (err) => {
+        console.error('Error loading breeds', err);
+        if (callback) callback();
+      },
     });
   }
 

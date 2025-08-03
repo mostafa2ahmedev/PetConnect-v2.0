@@ -1,0 +1,24 @@
+<div *ngIf="product" class="container mt-5">
+  <div class="row align-items-start shadow p-4 rounded bg-white">
+    
+    <div class="col-md-5 mb-3 mb-md-0">
+      <img 
+        [src]="server + product.imgUrl" 
+        class="img-fluid rounded" 
+        alt="Product Image"
+        style="object-fit: cover; height: 300px; width: 100%;"
+      />
+    </div>
+    
+    <div class="col-md-7">
+      <h2 class="h4 font-weight-bold mb-3">{{ product.name }}</h2>
+      <p class="text-muted mb-3">{{ product.description }}</p>
+      <p class="text-primary font-weight-bold mb-2">Price: {{ product.price | currency:'USD' }}</p>
+      <p class="text-secondary mb-4">Category: {{ product.productTypeName }}</p>
+      
+      <button class="btn btn-primary" (click)="addToCart()">Add to Cart</button>
+
+    </div>
+    
+  </div>
+</div>

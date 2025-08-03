@@ -7,6 +7,9 @@ namespace PetConnect.BLL.Services.DTOs.Customer
     public class UpdateCustomerProfileDTO
     {
 
+        [Required(ErrorMessage = "UserName is required.")]
+        public string UserName { get; set; } = null!;
+
         [Required(ErrorMessage = "First name is required.")]
         [StringLength(50)]
         [Display(Name = "First Name")]
@@ -30,7 +33,10 @@ namespace PetConnect.BLL.Services.DTOs.Customer
         [Required(ErrorMessage = "City is required.")]
         public string City { get; set; } = null!;
 
-        [Required(ErrorMessage = "City is required.")]
-        public string Country { get; set; } = null!; 
+        [Required(ErrorMessage = "Country is required.")]
+        public string Country { get; set; } = null!;
+
+        [Required(ErrorMessage = "Phone Number is required.")]
+        public string PhoneNumber { get; set; } = null!;
     }
 }

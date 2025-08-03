@@ -49,6 +49,7 @@ namespace PetConnect.API
             builder.Services.AddScoped<IDoctorService, DoctorService>();
             builder.Services.AddScoped<IAttachmentService, AttachmentService>();
             builder.Services.AddScoped<IAdminService, AdminService>();
+            builder.Services.AddScoped<IAppointmentService, AppointmentService>();
             builder.Services.AddTransient<IJwtService, JwtService>();
 
             builder.Services.AddCors(options =>
@@ -59,7 +60,8 @@ namespace PetConnect.API
                         builder
                             .WithOrigins("http://localhost:4200")
                             .AllowAnyMethod()
-                            .AllowAnyHeader();
+                            .AllowAnyHeader()
+                            .AllowCredentials();
                     });
             });
 
@@ -106,6 +108,19 @@ namespace PetConnect.API
                             message = "Forbidden: You are not allowed to access this resource"
                         });
                         return context.Response.WriteAsync(result);
+                    },
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            (path.StartsWithSegments("/chat") || path.StartsWithSegments("/notificationHub")))
+                        {
+                            context.Token = accessToken;
+                        }
+
+                        return Task.CompletedTask;
                     }
                 };
 
@@ -119,6 +134,9 @@ namespace PetConnect.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.MapHub<ChatHub>("/Chat");
+            app.MapHub<NotificationHub>("/NotificationHub");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

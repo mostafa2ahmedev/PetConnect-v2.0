@@ -12,6 +12,10 @@ namespace PetConnect.DAL.Data.Repositories.Interfaces
     {
         public IQueryable<Pet> GetPendingPetsWithBreedAndCategory();
         public IQueryable<Pet> GetPetBreadCategoryDataWithCustomer();
+        public IQueryable<Pet> GetApprovedPetBreadCategoryDataWithCustomer();
+
         public Pet? GetPetDetails(int id);
+        public IQueryable<Pet> GetPetDataWithCustomer();
+       
     }
 }

@@ -192,6 +192,41 @@
             />
             <span *ngIf="imageError" class="text-danger">{{ imageError }}</span>
           </div>
+          <!-- Notes / Desc  -->
+          <!-- Notes / Desc  -->
+          <div class="mb-3">
+            <label class="form-label">Description / Notes</label>
+            <textarea
+              name="Notes"
+              class="form-control"
+              [(ngModel)]="pet.Notes"
+              #notes="ngModel"
+              required
+              minlength="3"
+              maxlength="100"
+            ></textarea>
+            <span
+              *ngIf="notes.errors?.['required'] && (notes.dirty || notes.touched)"
+              class="text-danger"
+            >
+              Notes are required.
+            </span>
+            <span
+              *ngIf="notes.errors?.['minlength'] && (notes.dirty || notes.touched)"
+              class="text-danger"
+            >
+              Notes must be at least 3 characters.
+            </span>
+            <span
+              *ngIf="notes.errors?.['maxlength'] && (notes.dirty || notes.touched)"
+              class="text-danger"
+            >
+              Notes cannot exceed 100 characters.
+            </span>
+            <span *ngIf="backendErrors['Notes']" class="text-danger">
+              {{ backendErrors["Notes"][0] }}
+            </span>
+          </div>
 
           <!-- Buttons -->
           <div class="d-flex gap-2">

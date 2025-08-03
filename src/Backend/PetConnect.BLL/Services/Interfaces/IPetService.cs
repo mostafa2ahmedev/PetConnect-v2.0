@@ -21,8 +21,13 @@ namespace PetConnect.BLL.Services.Interfaces
         int DeletePet(int id);
         IEnumerable<PetDataDto> GetAllPetsWithBelongsToCustomer();
         //IEnumerable<PetDataDto> GetAllPets();
+
+        public IEnumerable<PetDataDto> GetAllApprovedPetsWithBelongsToCustomer();
+
         PetDetailsDto? GetPet(int id);
         IEnumerable<PetDataDto> GetAllPetsByCountForAdoption(int count);
+
+        IEnumerable<PetDetailsDto> GetPetsForCustomer(string CustomerId);
 
         public IEnumerable<PetDataDto> GetAllForAdoptionPetsWithCustomerData();
         public IEnumerable<PetDataDto> GetAllForRescuePetsWithCustomerData();

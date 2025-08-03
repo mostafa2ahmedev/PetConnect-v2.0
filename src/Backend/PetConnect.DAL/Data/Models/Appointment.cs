@@ -21,7 +21,7 @@ namespace PetConnect.DAL.Data.Models
 
         public int? PetId { get; set; }  
 
-        public AppointmentStatus Status { get; set; } = AppointmentStatus.Confirmed;  // Always auto-approved in future doctor can have control on thuis
+        public AppointmentStatus Status { get; set; } = AppointmentStatus.Available;  // Pending and waiting for doctor to confirm
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
