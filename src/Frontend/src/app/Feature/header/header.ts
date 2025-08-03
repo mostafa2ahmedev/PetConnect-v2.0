@@ -6,6 +6,7 @@ import {
   Component,
   ElementRef,
   HostListener,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -42,7 +43,7 @@ import { CustomerPofileDetails } from '../../models/customer-pofile-details';
     ]),
   ],
 })
-export class Header implements OnInit {
+export class Header implements OnInit, OnDestroy {
   userFullname: string = '';
   user: JwtUser = {} as JwtUser;
   userId: string = '';
@@ -62,25 +63,42 @@ export class Header implements OnInit {
     private notificationService: NotificationService,
     private customerService: CustomerService
   ) {}
+  ngOnDestroy(): void {
+    this.notificationService.disconnect();
+  }
   ngOnInit(): void {
     if (this.accountService.isAuthenticated()) {
-      this.loadNotifications(this.userId);
       this.customerService.getCustomerProfile().subscribe((data) => {
         console.log('Profile Data:', data);
         this.profileData = data;
       });
+
+      const token =
+        localStorage.getItem('token') || sessionStorage.getItem('token') || '';
+      this.notificationService.startConnection(token);
+
+      // Subscribe to real-time notifications
+      this.notificationService.newNotification$.subscribe((notif) => {
+        if (notif) {
+          this.unreadCount++;
+          this.loadNotifications(this.userId);
+          this.showNotificationToast(notif.message);
+        }
+      });
     }
-    this.routerEventsSub = this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.loadNotifications(this.userId);
-      }
-    });
+    // this.routerEventsSub = this.router.events.subscribe((event) => {
+    //   if (event instanceof NavigationEnd) {
+    //     this.loadNotifications(this.userId);
+    //   }
+    // });
 
     if (this.accountService.isCustomer()) {
       this.accountService.getCustomerData()?.subscribe({
         next: (resp) => {
           this.user = this.accountService.jwtTokenDecoder();
           this.userId = this.user.userId;
+          this.loadNotifications(this.userId);
+
           if (resp) {
             this.userFullname = `${resp.data.fName} ${resp.data.lName}`;
             this.caller = '';
@@ -138,7 +156,10 @@ export class Header implements OnInit {
     this.notificationService.getNotifications(userId).subscribe({
       next: (notifications) => {
         console.log('📢 Notifications:', notifications);
-        this.notifications = notifications;
+        this.notifications = [...notifications].sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
         this.unreadCount = notifications.filter((n) => !n.isRead).length;
       },
       error: (err) => {
@@ -152,5 +173,68 @@ export class Header implements OnInit {
   }
   getFullImageUrl(relativePath: string): string {
     return `https://localhost:7102${relativePath}`;
+  }
+
+  markAsRead(notif: NotificationModel) {
+    this.notificationService.markAsRead(notif.notificationId).subscribe(() => {
+      notif.isRead = true;
+      this.unreadCount = this.notifications.filter((n) => !n.isRead).length;
+    });
+
+    if (this.accountService.isCustomer()) {
+      this.router.navigateByUrl(`/profile`);
+    } else {
+      if (this.accountService.isDoctor()) {
+        this.router.navigateByUrl(`/doc-profile`);
+      }
+    }
+    this.isOpen = false; // Close the notification panel after clicking
+  }
+
+  deleteNotification(notif: NotificationModel, event: MouseEvent) {
+    event.stopPropagation(); // Prevent triggering markAsRead
+    this.notificationService
+      .deleteNotification(notif.notificationId)
+      .subscribe(() => {
+        this.notifications = this.notifications.filter(
+          (n) => n.notificationId !== notif.notificationId
+        );
+        this.unreadCount = this.notifications.filter((n) => !n.isRead).length;
+      });
+  }
+
+  showNotificationToast(message: string) {
+    const toastEl = document.createElement('div');
+    toastEl.className = 'custom-toast align-items-center border-0';
+    toastEl.role = 'alert';
+    toastEl.innerHTML = `
+    <div class="d-flex">
+     <i class="bi bi-bell text-white fs-5"></i>
+      <div class="toast-body">
+        ${message}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto"
+        aria-label="Close"></button>
+    </div>
+  `;
+
+    // Close button event
+    toastEl.querySelector('.btn-close')?.addEventListener('click', () => {
+      toastEl.classList.remove('fade-in');
+      toastEl.classList.add('fade-out');
+      setTimeout(() => toastEl.remove(), 500);
+    });
+
+    document.body.appendChild(toastEl);
+
+    // Trigger fade-in
+    setTimeout(() => toastEl.classList.add('fade-in'), 10);
+
+    // Auto remove after 5s
+    setTimeout(() => {
+      toastEl.classList.remove('fade-in');
+      toastEl.classList.add('fade-out');
+      setTimeout(() => toastEl.remove(), 500);
+    }, 5000);
   }
 }

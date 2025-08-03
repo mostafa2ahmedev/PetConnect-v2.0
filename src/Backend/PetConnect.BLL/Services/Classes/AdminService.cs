@@ -102,7 +102,7 @@ namespace PetConnect.BLL.Services.Classes
             return null;
         }
 
-        public PetDetailsDto? ApprovePet(int id)
+        public async Task<PetDetailsDto?> ApprovePet(int id)
         {
             Pet? pet = unitOfWork.PetRepository.GetByID(id);
             var userId = unitOfWork.CustomerAddedPetsRepository.GetAllQueryable().FirstOrDefault(C => C.PetId == id)?.CustomerId;
@@ -120,7 +120,7 @@ namespace PetConnect.BLL.Services.Classes
                     Status = pet.Status,
                     IsApproved = pet.IsApproved
                 };
-                notificationService.CreateAndSendNotification(userId, new NotificationDTO()
+               await notificationService.CreateAndSendNotification(userId, new NotificationDTO()
                 {
                     Message = $"Your Pet {pet.Name} With Id {pet.Id} Has Been Approved.",
                     Type = NotificationType.Approval
@@ -130,7 +130,7 @@ namespace PetConnect.BLL.Services.Classes
             return null;
         }
 
-        public DoctorDetailsDTO? RejectDoctor(string id, string message)
+        public async Task<DoctorDetailsDTO?> RejectDoctor(string id, string message)
         {
             var doctor = unitOfWork.DoctorRepository.GetByID(id);
             if (doctor is not null)
@@ -161,7 +161,7 @@ namespace PetConnect.BLL.Services.Classes
                     PricePerHour = doctor.PricePerHour,
                     IsDeleted = doctor.IsDeleted
                 };
-                notificationService.CreateAndSendNotification(id, new NotificationDTO
+               await  notificationService.CreateAndSendNotification(id, new NotificationDTO
                 {
                     Message = "You Account Has Been Rejected.",
                     Type = NotificationType.Rejection,

@@ -42,6 +42,7 @@
                 class="dropdown-item"
                 routerLink="/pets"
                 routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
                 >All Pets</a
               >
             </li>
@@ -132,7 +133,13 @@
         <div
           [@slideToggle]="slideState"
           class="card shadow position-absolute mt-4"
-          style="width: 300px; z-index: 1000; right: -15px"
+          style="
+            width: 300px;
+            z-index: 1000;
+            right: -15px;
+            max-height: 70vh;
+            overflow-y: auto;
+          "
         >
           <div class="card-header py-3 text-center">
             <h6 class="fw-semibold mb-0">Notifications</h6>
@@ -140,19 +147,30 @@
           <div class="card-body p-0">
             <div
               *ngFor="let notif of notifications"
-              class="px-3 py-3 border-bottom d-flex align-items-start gap-2 notification-item"
+              class="px-3 py-3 border-bottom d-flex align-items-start gap-2 notification-item position-relative"
+              [ngClass]="{ unread: !notif.isRead }"
+              (click)="markAsRead(notif)"
               style="cursor: pointer"
-              routerLink="/profile"
-              (click)="isOpen = !isOpen"
             >
+              <!-- Close Icon -->
+              <i
+                class="bi bi-x-lg position-absolute top-0 end-0 me-2 mt-2 text-muted"
+                style="cursor: pointer"
+                (click)="deleteNotification(notif, $event)"
+              ></i>
+
+              <!-- Icon -->
               <i class="bi bi-bell-fill text-black-50 fs-5"></i>
+
+              <!-- Message content -->
               <div class="flex-grow-1">
                 <small class="lh-sm d-block">{{ notif.message }}</small>
-                <small class="text-muted" style="font-size: 0.8em">{{
-                  notif.createdAt | date : "short"
-                }}</small>
+                <small class="text-muted" style="font-size: 0.8em">
+                  {{ notif.createdAt | date : "short" }}
+                </small>
               </div>
             </div>
+
             <div
               *ngIf="notifications.length === 0"
               class="text-center text-muted py-3"
@@ -220,7 +238,11 @@
         >
       </li>
       <li>
-        <a class="nav-link" routerLink="/pets" routerLinkActive="active"
+        <a
+          class="nav-link"
+          routerLink="/pets"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
           >All Pets</a
         >
       </li>

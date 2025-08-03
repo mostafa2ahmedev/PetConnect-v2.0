@@ -137,21 +137,36 @@ namespace PetConnect.BLL.Services.Classes
             var pet = _unitOfWork.PetRepository.GetPetDetails(id);
             if (pet == null)
                 return null;
-            var bread =   _unitOfWork.PetBreedRepository.GetByID(pet.BreedId);
-            var Category =   _unitOfWork.PetCategoryRepository.GetByID(bread.CategoryId);
 
+            var breed = _unitOfWork.PetBreedRepository.GetByID(pet.BreedId);
+            var category = breed != null
+                ? _unitOfWork.PetCategoryRepository.GetByID(breed.CategoryId)
+                : null;
 
-            PetDetailsDto Pet = new PetDetailsDto() {Id = pet.Id, Name = pet.Name , IsApproved = pet.IsApproved ,BreadName =bread.Name  ,
-            ImgUrl = $"/assets/PetImages/{pet.ImgUrl}", Ownership = pet.Ownership , Status = pet.Status , CategoryName = Category.Name,Age = pet.Age ,
-                CustomerId = pet.CustomerAddedPets.CustomerId,
-                CustomerName  = pet.CustomerAddedPets.Customer.FName+" "+pet.CustomerAddedPets.Customer.LName,
-                CustomerCity = pet.CustomerAddedPets.Customer.Address.City,
-                CustomerCountry = pet.CustomerAddedPets.Customer.Address.Country,
-                CustomerStreet = pet.CustomerAddedPets.Customer.Address.Street,
+            var customerAddedPet = pet.CustomerAddedPets;
+            var customer = customerAddedPet?.Customer;
+            var address = customer?.Address;
+
+            PetDetailsDto petDto = new PetDetailsDto()
+            {
+                Id = pet.Id,
+                Name = pet.Name,
+                IsApproved = pet.IsApproved,
+                BreadName = breed?.Name ?? "Unknown",
+                ImgUrl = $"/assets/PetImages/{pet.ImgUrl}",
+                Ownership = pet.Ownership,
+                Status = pet.Status,
+                CategoryName = category?.Name ?? "Unknown",
+                Age = pet.Age,
+                CustomerId = customerAddedPet?.CustomerId ?? "",
+                CustomerName = $"{customer?.FName ?? ""} {customer?.LName ?? ""}".Trim(),
+                CustomerCity = address?.City ?? "",
+                CustomerCountry = address?.Country ?? "",
+                CustomerStreet = address?.Street ?? "",
                 Notes = pet.Notes
-
             };
-            return Pet;
+
+            return petDto;
         }
 
         public IEnumerable<PetDataDto> GetAllPetsByCountForAdoption(int count)

@@ -8,6 +8,8 @@ import { CustomerService } from '../customer-service';
 import { CusotmerPet } from '../../../models/cusotmer-pet';
 import { CustomerPofileDetails } from '../../../models/customer-pofile-details';
 import { AlertService } from '../../../core/services/alert-service';
+import { AdoptionDecision } from '../../../models/adoption-decision';
+import { AccountService } from '../../../core/services/account-service';
 
 @Component({
   selector: 'app-customer-profile',
@@ -31,7 +33,8 @@ export class CustomerProfile {
     private adoptionService: AdoptionService,
     private customerService: CustomerService,
     private alert: AlertService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private accountService: AccountService
   ) {}
 
   ngOnInit(): void {
@@ -121,6 +124,30 @@ export class CustomerProfile {
         this.cdRef.detectChanges();
       },
       error: (err) => this.alert.error('Failed to cancel request.'),
+    });
+  }
+
+  approveOrCancel(request: any, status: number): void {
+    const decision = {
+      petId: request.petId,
+      reqCustomerId: request.reqCustomerId, // ✅ correct spelling
+      adoptionDate: request.adoptionDate.replace('T', ' ').replace('Z', ''),
+      adoptionStatus: status,
+    };
+
+    this.adoptionService.approveOrCancelRequest(decision).subscribe({
+      next: () => {
+        this.alert.success(
+          status === 0
+            ? 'Adoption request approved.'
+            : 'Adoption request cancelled.'
+        );
+        // Update UI instantly
+        request.adoptionStatus = status;
+      },
+      error: () => {
+        this.alert.error('Failed to update request.');
+      },
     });
   }
 }

@@ -2610,3 +2610,32 @@ section,
   color: #495057;
   border-bottom: 2px solid #dee2e6;
 }
+.custom-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  z-index: 1055;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  min-width: 250px;
+  background-color: #5d57f4;
+  color: #fff;
+}
+.custom-toast .btn-close {
+  opacity: 0.8;
+}
+.custom-toast.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.custom-toast.fade-out {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.custom-toast .toast-body {
+  padding: 2px 12px 2px 5px;
+}

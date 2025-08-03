@@ -289,6 +289,22 @@
                       >
                         Chat
                       </button>
+
+                      <button
+                        *ngIf="request.adoptionStatus === 1"
+                        class="btn btn-outline-success btn-sm me-2"
+                        (click)="approveOrCancel(request, 0)"
+                      >
+                        Approve
+                      </button>
+
+                      <button
+                        *ngIf="request.adoptionStatus === 1"
+                        class="btn btn-outline-success btn-sm me-2"
+                        (click)="approveOrCancel(request, 2)"
+                      >
+                        Cancel
+                      </button>
                       <div *ngIf="request.showPhone" class="mt-2">
                         <a
                           [href]="'https://wa.me/2' + request.reqPhoneNumber"
