@@ -1,8 +1,8 @@
 <h2 class="seller-name text-2xl font-bold mb-4" *ngIf="seller">
-  Welcome, {{ seller.name }}
+  <!-- Welcome, {{ seller.name }} -->
 </h2>
 
-<div *ngIf="seller">
+<div >
 
   <!-- 🛠️ Form to Add or Edit Product -->
   <div class="bg-white p-6 rounded shadow mb-6">
@@ -24,6 +24,7 @@
 
     <div class="mt-4">
       <button *ngIf="!isEditing" (click)="addProduct()">Add Product</button>
+      <button (click)="addProduct()">Add Product</button>
       <button *ngIf="isEditing" (click)="saveChanges()">Save Changes</button>
     </div>
   </div>

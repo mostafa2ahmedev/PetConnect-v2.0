@@ -46,6 +46,8 @@ import { ChatComponent } from './Feature/chat/chat/chat';
 import { DoctorLearnMore } from './Feature/doctor-learn-more/doctor-learn-more';
 import { doctorGuardGuard } from './core/guards/doctor-guard-guard';
 import { CustomerGuard } from './core/guards/customer-guard';
+import { SellerRegisterForm } from './Feature/seller-register-form/seller-register-form';
+import { Dashboard } from './Feature/Seller/dashboard/dashboard';
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'home', component: Home },
@@ -101,13 +103,15 @@ export const routes: Routes = [
   { path: 'register', component: Register ,children: []},
   {path:"register/doctor", component:DoctorRegisterForm},
   {path:"register/customer", component:CustomerRegisterForm},
+  {path: 'register/seller', component:SellerRegisterForm},
+
   {path:"notfound/doctor",component:NotFoundDoctor},
  { path: 'orders', component: OrdersComponent },
  { path: 'all-products', component: ProductsComponent },
  { path: 'products/:id', component: ProductDetailsComponent },
   { path: 'cart', component: CartComponent },
-  {path: 'seller', component: SellerDashboardComponent },
-
+  // {path: 'seller', component: SellerDashboardComponent },
+  {path: 'seller', component: Dashboard },
 
 
   { path: 'register', component: Register, children: [] },
@@ -128,7 +132,7 @@ export const routes: Routes = [
     component: AdminDashboardComponent,
     canActivate: [authGuard, AdminGuard],
     children: [
-      { path: '', component: AdminInsights },
+      { path: '', component: AdminInsights},
 
       { path: 'categories', component: Categories },
       {

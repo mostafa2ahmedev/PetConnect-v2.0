@@ -57,7 +57,7 @@ export class ProductService {
   }
 
   getProductsBySellerId(sellerId: string): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.baseUrl}/products?sellerId=${sellerId}`, {
+    return this.http.get<Product[]>(`${this.baseUrl}/Seller/Products`, {
       headers: this.getAuthHeaders()
     });
   }

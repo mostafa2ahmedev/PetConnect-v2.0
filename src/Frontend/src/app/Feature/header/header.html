@@ -137,6 +137,9 @@
           <li *ngIf="accountService.isAdmin()">
             <a class="dropdown-item" routerLink="/admin">Dashboard</a>
           </li>
+          <li *ngIf="accountService.isSeller()">
+            <a class="dropdown-item" routerLink="/seller">Dashboard</a>
+          </li>
           <li>
             <a class="dropdown-item" routerLink="/chat">Messages</a>
           </li>

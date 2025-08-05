@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; // DatePipe & CurrencyPipe موجودين فيه
+import { CommonModule, Location } from '@angular/common'; // DatePipe & CurrencyPipe موجودين فيه
 
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth';
@@ -20,7 +20,7 @@ export class OrdersComponent implements OnInit {
 currentPage: number = 1;
 pageSize: number = 2;
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient, private authService: AuthService, private location:Location) {}
 
   ngOnInit() {
     const customerId = this.authService.getCustomerIdFromToken();
@@ -71,5 +71,8 @@ get pagedOrders() {
     }
   }
 
+  goBack(){
+    this.location.back();
+  }
 
 }

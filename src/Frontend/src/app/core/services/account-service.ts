@@ -26,6 +26,9 @@ export class AccountService {
     return this.http.post(API_URL + '/register/doctor', formData);
   }
 
+  public PostSellerRegister(formData: FormData): Observable<any> {
+    return this.http.post(API_URL + '/register/Seller', formData);
+  }
   public PostLogin(credentials: {
     email: string;
     password: string;

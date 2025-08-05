@@ -16,7 +16,7 @@ export class Register {
   constructor(private router: Router) {}
 
   navigateToForm() {
-    if (this.selectedRole === 'doctor' || this.selectedRole === 'customer') {
+    if (this.selectedRole === 'doctor' || this.selectedRole === 'customer'|| this.selectedRole === 'seller') {
       this.router.navigate(['/register', this.selectedRole]);
     }
   }
