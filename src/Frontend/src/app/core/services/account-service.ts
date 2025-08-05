@@ -86,6 +86,10 @@ export class AccountService {
     const user = this.jwtTokenDecoder();
     return user?.userRole == 'Doctor' ? true : false;
   }
+   isSeller(): boolean {
+    const user = this.jwtTokenDecoder();
+    return user?.userRole == 'Seller' ? true : false;
+  }
 
   getCustomerData(): Observable<{ statusCode: number; data: CustomerDto }> {
     const user = this.jwtTokenDecoder();

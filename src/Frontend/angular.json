@@ -97,7 +97,7 @@
               "node_modules/glightbox/dist/css/glightbox.min.css",
               "node_modules/swiper/swiper-bundle.min.css",
               "node_modules/bootstrap-icons/font/bootstrap-icons.css",
-
+               "node_modules/@ctrl/ngx-emoji-mart/picker.css",
               "src/styles.css"
             ]
           }

@@ -7,4 +7,6 @@ export interface Product {
   price: number;
   productTypeId: number;
   productType?: ProductType;
+  image?: File;
+
 }

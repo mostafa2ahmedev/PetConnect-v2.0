@@ -52,7 +52,9 @@ export class Login implements OnInit {
           targetRoute = '/profile';
         } else if (this.accountService.isDoctor()) {
           targetRoute = '/doc-profile';
-        }
+        }else if (this.accountService.isSeller()) {
+          targetRoute = '/seller';
+        };
 
         this.router.navigate([targetRoute]).then(() => {
           window.location.reload();
@@ -62,7 +64,7 @@ export class Login implements OnInit {
         console.error('Login failed', err);
         this.errorMessage =
           err.error?.message || 'Login failed. Please try again.';
-      },
+      }
     });
   }
 }
