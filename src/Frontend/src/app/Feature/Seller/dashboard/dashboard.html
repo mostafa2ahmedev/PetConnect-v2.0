@@ -3,7 +3,7 @@
 <div class="dashboard-container">
   <div class="sidebar">
     <div class="seller-info">
-      <img [src]="seller.imgUrl" [alt]="sellerName" class="seller-avatar">
+      <img [src]="getProfileImage(seller.imgUrl)" [alt]="sellerName" class="seller-avatar">
       <div class="seller-details">
         <h2 class="seller-name">Welcome, {{ seller.fName }}</h2>
         <p class="seller-location">{{ seller.city }}, {{ seller.country }}</p>
@@ -41,7 +41,6 @@
           Add Product
         </button>
       </div>
-
       <!-- Add Product Form -->
       <form *ngIf="showAddForm" class="add-product-form" [formGroup]="addProductGroup" (ngSubmit)="addProduct()">
         <h3>Add New Product</h3>
@@ -64,7 +63,7 @@
               class="form-control"
               formControlName="ProductTypeId"
             >
-              <option *ngFor="let type of productTypes" [value]="type.breedId">{{ type.name }}</option>
+              <option *ngFor="let type of productTypes" [value]="type.id">{{ type.name }}</option>
             </select>
           </div>
 
@@ -124,9 +123,10 @@
       <div class="products-grid" *ngIf="products.length > 0">
         <div class="product-card" *ngFor="let product of products; let i = index">
           <div class="product-image">
-            <img 
-              [src]="product.imgUrl" 
-              [alt]="product.name"
+            
+            <img *ngIf="product.imgUrl"
+              [src]="getFullImageUrl(product.imgUrl)" 
+              [alt]="product.productName"
               (error)="onImageError($event)"
             >
             <div class="image-placeholder">
@@ -134,21 +134,21 @@
             </div>
           </div>
           <div class="product-info">
-            <h3>{{ product.name }}</h3>
-            <p class="product-type">{{ product.productType }}</p>
-            <p class="product-description" *ngIf="product.description">
-              {{ product.description }}
+            <h3>Name: {{ product.productName }}</h3>
+            <p class="product-type">Type: {{ product.productType.name }}</p>
+            <p class="product-description" *ngIf="product.productDescription">
+              Description: {{ product.productDescription }}
             </p>
             <div class="product-details">
-              <span class="price">${{ product.price }}</span>
+              <span class="price">Price: ${{ product.price }}</span>
               <span class="stock">Stock: {{ product.quantity }}</span>
             </div>
             <div class="product-actions">
-              <button class="btn btn-edit" (click)="editProduct(product)">
+              <!-- <button class="btn btn-edit" (click)="editProduct(product)">
                 <i class="icon-edit"></i>
                 Edit
-              </button>
-              <button class="btn btn-delete" (click)="deleteProduct(i)">
+              </button> -->
+              <button class="btn btn-delete" (click)="deleteProduct(product.id)">
                 <i class="icon-trash"></i>
                 Delete
               </button>
@@ -185,22 +185,35 @@
           </thead>
           <tbody>
             <tr *ngFor="let order of orders">
-              <td>{{ order.id }}</td>
+              <td>{{ order.orderId }}</td>
               <td>{{ order.customerName }}</td>
               <td>{{ order.productName }}</td>
               <td>{{ order.quantity }}</td>
-              <td class="price">${{ order.total }}</td>
+              <td class="price">${{ order.unitPrice * order.quantity }}</td>
               <td>
-                <span class="status" [ngClass]="getStatusClass(order.status)">
-                  {{ order.status }}
+                <!-- <span class="status" [ngClass]="getStatusClass(order.orderProductStatus)"> -->
+                <span class="status" [ngClass]="getStatusClass(getOrderStatusEnum(order.orderProductStatus))">
+                  {{ getOrderStatusEnum(order.orderProductStatus) }}
                 </span>
               </td>
-              <td>{{ order.date }}</td>
+              <td>{{ order.orderDate }}</td>
               <td>
-                <button class="btn btn-view">
+                <!-- <button class="btn btn-view">
                   <i class="icon-eye"></i>
                   View
+                </button> -->
+                @if(order.orderProductStatus === 0) {
+                <button class="btn btn-view" (click)="shipOrder({orderId:order.orderId,productId:order.productId,orderProductStatus:order.orderProductStatus})">
+                  <i class="icon-eye"></i>
+                  Ship Order
                 </button>
+                }
+              @if(order.orderProductStatus === 1) {
+                <button class="btn btn-view" (click)="shipOrder({orderId:order.orderId,productId:order.productId,orderProductStatus:order.orderProductStatus})">
+                  <i class="icon-eye"></i>
+                   Order Arrived
+                </button>
+                }
               </td>
             </tr>
           </tbody>

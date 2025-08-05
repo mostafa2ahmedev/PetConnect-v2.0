@@ -9,6 +9,7 @@ namespace PetConnect.BLL.Services.DTOs.Seller
 {
    public class SellerProductsDto
     {
+        public int Id { get; set; }
         public string SellerId { get; set; }
         public string ProductName { get; set; }
         public PetConnect.DAL.Data.Models.ProductType ProductType { get; set; }

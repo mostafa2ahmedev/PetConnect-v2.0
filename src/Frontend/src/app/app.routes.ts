@@ -48,6 +48,7 @@ import { doctorGuardGuard } from './core/guards/doctor-guard-guard';
 import { CustomerGuard } from './core/guards/customer-guard';
 import { SellerRegisterForm } from './Feature/seller-register-form/seller-register-form';
 import { Dashboard } from './Feature/Seller/dashboard/dashboard';
+import { EditProduct } from './Feature/edit-product/edit-product';
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'home', component: Home },
@@ -108,6 +109,7 @@ export const routes: Routes = [
   {path:"notfound/doctor",component:NotFoundDoctor},
  { path: 'orders', component: OrdersComponent },
  { path: 'all-products', component: ProductsComponent },
+ {path: 'products/edit', component: EditProduct },
  { path: 'products/:id', component: ProductDetailsComponent },
   { path: 'cart', component: CartComponent },
   // {path: 'seller', component: SellerDashboardComponent },

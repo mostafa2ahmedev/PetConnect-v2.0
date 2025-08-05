@@ -32,7 +32,7 @@ namespace PetConnect.API.Controllers
         #region GetDetails
         [HttpGet("{id}")]
         [EndpointSummary("Get Product By Id")]
-        public IActionResult GetProduct(int id) 
+        public IActionResult GetProduct(int id)
         {
             var product = productService.GetProductDetails(id);
             return Ok(product);
@@ -88,7 +88,7 @@ namespace PetConnect.API.Controllers
         }
         #endregion
         #region DeleteProduct
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [EndpointSummary("Delete Product")]
         public IActionResult Delete(int? id)
         {

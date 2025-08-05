@@ -1,5 +1,5 @@
 // seller-dashboard.component.ts
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { SellerModel } from '../../seller-dashboard/seller-model';
 import { SellerProductsModel } from '../../seller-dashboard/seller-products-model';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -10,16 +10,21 @@ import { ProductTypeService } from '../../ProductType/product-type-service';
 import { ProductType } from '../../../models/product-type';
 import { ProductService } from '../../Products/product-service';
 import { Product } from '../../../models/product';
+import { AlertService } from '../../../core/services/alert-service';
+import { Router } from '@angular/router';
+import { SellerOrderProduct } from './seller-order-product';
+import { OrderStatusEnum } from './order-status-enum';
+import { OrderSellerAction } from './order-seller-action';
 
-interface OrderModel {
-  id: string;
-  customerName: string;
-  productName: string;
-  quantity: number;
-  total: number;
-  status: string;
-  date: string;
-}
+// interface OrderModel {
+//   id: string;
+//   customerName: string;
+//   productName: string;
+//   quantity: number;
+//   total: number;
+//   status: string;
+//   date: string;
+// }
 
 @Component({
   selector: 'app-dashboard',
@@ -32,97 +37,53 @@ export class Dashboard implements OnInit {
   accountService = inject(AccountService);
   productTypeService = inject(ProductTypeService)
   productsService = inject(ProductService)
+  changeDetectorRef = inject(ChangeDetectorRef);
+  alertService = inject(AlertService);
   fb = inject(FormBuilder)
+  router = inject(Router);
 
+  orderStatusEnum!: OrderStatusEnum ;
   activeTab: string = 'products';
   seller: SellerModel= {}as SellerModel;
-  // products: SellerProductsModel[] = [];
-  products: Array<Product> =[];
-  orders: OrderModel[] = [];
+  products: Array<SellerProductsModel> =[];
+  // orders: OrderModel[] = [];
   showAddForm: boolean = false;
-  
-  // newProduct: Product = {
-  //   name: '',
-  //   productTypeId: 1,
-  //   quantity: 0,
-  //   price: 0,
-  //   imgUrl: ,
-  //   description: ''
-  // };
-  addProductGroup!:FormGroup;
-  // productTypes = ['Electronics', 'Clothing', 'Home', 'Books', 'Sports'];
-  productTypes:any[]=[];
-  constructor() {
-    // Mock data
-    // this.seller = {
-    //   fName: 'John',
-    //   lName: 'Smith',
-    //   imgUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
-    //   gender: 0,
-    //   street: '123 Main St',
-    //   city: 'New York',
-    //   country: 'USA'
-    // };
+  selectedImageFile: File | null = null;
 
-    // this.products = [
+  addProductGroup!:FormGroup;
+  productTypes:any[]=[];
+  orders:SellerOrderProduct[] = [];
+  constructor() {
+ 
+    // this.orders = [
     //   {
-    //     sellerId: 'seller-1',
+    //     id: 'ORD-001',
+    //     customerName: 'Alice Johnson',
     //     productName: 'Wireless Headphones',
-    //     productType: {id:1,name:"hi"},
-    //     quantity: 25,
-    //     price: 99.99,
-    //     imgUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&h=200&fit=crop',
-    //     productDescription: 'High-quality wireless headphones with noise cancellation'
+    //     quantity: 2,
+    //     total: 199.98,
+    //     status: 'Processing',
+    //     date: '2024-01-15'
     //   },
     //   {
-    //     sellerId: 'seller-1',
+    //     id: 'ORD-002',
+    //     customerName: 'Bob Wilson',
     //     productName: 'Cotton T-Shirt',
-    // productType: {id:1,name:"hi"},
-    //     quantity: 50,
-    //     price: 19.99,
-    //     imgUrl: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200&h=200&fit=crop',
-    //     productDescription: '100% cotton comfortable t-shirt'
+    //     quantity: 3,
+    //     total: 59.97,
+    //     status: 'Shipped',
+    //     date: '2024-01-14'
     //   },
     //   {
-    //     sellerId: 'seller-1',
+    //     id: 'ORD-003',
+    //     customerName: 'Carol Davis',
     //     productName: 'Coffee Mug',
-    // productType: {id:1,name:"hi"},
-    //     quantity: 15,
-    //     price: 12.50,
-    //     imgUrl: 'https://images.unsplash.com/photo-1514228742587-6b1558fcf93a?w=200&h=200&fit=crop',
-    //     productDescription: 'Ceramic coffee mug with custom design'
+    //     quantity: 1,
+    //     total: 12.50,
+    //     status: 'Delivered',
+    //     date: '2024-01-13'
     //   }
     // ];
-    // this.products= []
-    this.orders = [
-      {
-        id: 'ORD-001',
-        customerName: 'Alice Johnson',
-        productName: 'Wireless Headphones',
-        quantity: 2,
-        total: 199.98,
-        status: 'Processing',
-        date: '2024-01-15'
-      },
-      {
-        id: 'ORD-002',
-        customerName: 'Bob Wilson',
-        productName: 'Cotton T-Shirt',
-        quantity: 3,
-        total: 59.97,
-        status: 'Shipped',
-        date: '2024-01-14'
-      },
-      {
-        id: 'ORD-003',
-        customerName: 'Carol Davis',
-        productName: 'Coffee Mug',
-        quantity: 1,
-        total: 12.50,
-        status: 'Delivered',
-        date: '2024-01-13'
-      }
-    ];
   }
 
   ngOnInit(): void {
@@ -133,26 +94,24 @@ export class Dashboard implements OnInit {
 
     this.productTypeService.getAll().subscribe({next:res=>{
       this.productTypes= res;
-      console.log(res);
     }}) 
     this.productsService.getProductsBySellerId(userId).subscribe({
       next: resp=>{
-        console.log(resp);
-        this.products= resp
+        this.products= resp.data
+        console.log(this.products);
       }
     })
-    // this.addProductGroup = this.fb.group({
-    //       Name: ['', Validators.required],
-    // ProductTypeId: ['', Validators.required],
-    // Quantity: [0, [Validators.required, Validators.min(0)]],
-    // Price: [0, [Validators.required, Validators.min(0)]],
-    // ImgUrl: [''],
-    // Description: ['']
-    // })
+    this.sellerDashboardService.getSellerOrders().subscribe({
+      next: resp=>{
+        this.orders = resp.data;
+        console.log(this.orders);
+ 
+      }
+    });
+
     this.addProductGroup = this.fb.group({
   Name: ['', Validators.required],
   Description: ['', Validators.required],
-  ImgUrl: [null, Validators.required], // Use null for file input
   Price: [0, [Validators.required, Validators.min(0)]],
   Quantity: [0, [Validators.required, Validators.min(0)]],
   ProductTypeId: [null, Validators.required] // Must be integer
@@ -165,61 +124,51 @@ export class Dashboard implements OnInit {
   }
 
   addProduct(): void {
-    // if (this.isValidProduct()) {
-    //   this.products.push({ ...this.newProduct });
-    //   this.resetForm();
-    //   this.showAddForm = false;
-    // }
-      // const formData = new FormData();
 
-  // Add basic fields
-  // formData.append('Name', this.newProduct.productName);
-  // formData.append('ProductTypeId', String(this.newProduct.productType)); // ensure it's a string
-  // formData.append('Quantity', String(this.newProduct.quantity));
-  // formData.append('Price', String(this.newProduct.price));
-  // formData.append('ImgUrl', this.newProduct.imgUrl || '');
-  // formData.append('Description', this.newProduct.productDescription || '');
-
-  // Send to backend (example using HttpClient)
     const formData = new FormData();
     const product = this.addProductGroup.value;
 
     for (const key in product) {
+      if (product[key] === null || product[key] === undefined) 
+        continue;
       formData.append(key, String(product[key] || ''));
     }
+    if (this.selectedImageFile) {
+    formData.append('ImgUrl', this.selectedImageFile);
+    }
 
-    //   if (this.addProductGroup.valid) {
-    // const formValues = this.addProductGroup.value;
-    // const formData = new FormData();
+    for (const [key, value] of formData.entries()) {
+    console.log(`${key}:`, value);
+    }
 
-    // formData.append('Name', formValues.Name);
-    // formData.append('Description', formValues.Description);
-    // formData.append('Price', formValues.Price.toString());
-    // formData.append('Quantity', formValues.Quantity.toString());
-    // formData.append('ProductTypeId', formValues.ProductTypeId.toString());
-    // if (formValues.ImgUrl instanceof File) {
-    //   formData.append('ImgUrl', formValues.ImgUrl);
-    // }
     this.productsService.addWithImage(formData).subscribe({next:resp=>{
       console.log(resp);
-      console.log("success");
-      
+      this.alertService.success('Product added successfully');
+
     },
   error: err=>{
     console.log(formData.values())
-    console.log(err)
+    this.alertService.error('Failed to add product');
   }})
   }
 
-  editProduct(product: Product): void {
+  editProduct(product: SellerProductsModel): void {
     // In a real app, this would open an edit modal/form
-    console.log('Edit product:', product);
+    this.router.navigateByUrl('products/edit', { state: { product } });
+
   }
 
-  deleteProduct(index: number): void {
-    if (confirm('Are you sure you want to delete this product?')) {
-      this.products.splice(index, 1);
-    }
+  deleteProduct(productId: number): void {
+    console.log(productId);
+    this.sellerDashboardService.deleteProduct(productId).subscribe({
+      next: res => {
+        this.alertService.success('Product deleted successfully');
+      },
+      error: err => {
+        console.log(err);
+        this.alertService.error('Failed to delete product');
+      }
+    });
   }
 
   cancelAdd(): void {
@@ -228,35 +177,32 @@ export class Dashboard implements OnInit {
   }
 
   private resetForm(): void {
-    // this.newProduct = {
-    //   sellerId: 'seller-1',
-    //   productName: '',
-    // productType: {id:1,name:"hi"},
-    //   quantity: 0,
-    //   price: 0,
-    //   imgUrl: '',
-    //   productDescription: ''
-    // };
+
   }
-onFileSelected(event: any) {
-  if (event.target.files.length > 0) {
-    const file = event.target.files[0];
-    console.log(file);
-    this.addProductGroup.patchValue({ ImgUrl: file });
+  onFileSelected(event: any) {
+  const file = event.target.files[0];
+  console.log(file);
+  if (!file) {
+    return;
+  }
+
+  // Example: validate file type and size
+  const allowedTypes = ['image/png', 'image/jpeg'];
+  if (!allowedTypes.includes(file.type)) {
+    // this.onImageError('Only JPEG and PNG images are allowed.');
+  } else if (file.size > 2 * 1024 * 1024) { // 2MB limit
+    // this.onImageError('Image must be less than 2MB.');
+  } else {
+    // this.onImageError('');
+    // Save the file to a property for submission
+    this.selectedImageFile = file;
   }
 }
 
-  // private isValidProduct(): boolean {
-  //   return !!(
-  //     // this.newProduct.productName.trim() &&
-  //     // this.newProduct.quantity >= 0 &&
-  //     // this.newProduct.price > 0
-  //   );
-  // }
 
   getStatusClass(status: string): string {
     switch (status) {
-      case 'Processing': return 'status-processing';
+      case 'Pending': return 'status-pending';
       case 'Shipped': return 'status-shipped';
       case 'Delivered': return 'status-delivered';
       default: return 'status-default';
@@ -266,5 +212,26 @@ onFileSelected(event: any) {
   onImageError(event: any): void {
     event.target.style.display = 'none';
     event.target.nextElementSibling.style.display = 'flex';
+  }
+
+    getFullImageUrl(relativePath: string): string {
+    return `https://localhost:7102/assets/ProductImages/${relativePath}`;
+  }
+
+  getOrderStatusEnum(status:number){
+   return OrderStatusEnum[status] 
+  }
+  shipOrder(orderAction:OrderSellerAction){
+    orderAction.orderProductStatus= 1 ;
+    this.sellerDashboardService.changeOrderStatus(orderAction);
+  }
+
+    arrivedOrder(orderAction:OrderSellerAction){
+    orderAction.orderProductStatus= 2 ;
+    this.sellerDashboardService.changeOrderStatus(orderAction);
+  }
+  getProfileImage(fileName:string){
+    return `https://localhost:7102//assets/img/person/${fileName}`;
+    
   }
 }

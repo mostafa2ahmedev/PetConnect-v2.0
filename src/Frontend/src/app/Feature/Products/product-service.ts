@@ -2,6 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Product } from '../../models/product';
+import { ApiResponse } from '../../models/api-response';
+import { SellerProductsModel } from '../seller-dashboard/seller-products-model';
 
 @Injectable({
   providedIn: 'root'
@@ -56,8 +58,8 @@ export class ProductService {
     });
   }
 
-  getProductsBySellerId(sellerId: string): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.baseUrl}/Seller/Products`, {
+  getProductsBySellerId(sellerId: string): Observable<ApiResponse<SellerProductsModel[]>> {
+    return this.http.get<ApiResponse<SellerProductsModel[]>>(`https://localhost:7102/api/Seller/Products`, {
       headers: this.getAuthHeaders()
     });
   }

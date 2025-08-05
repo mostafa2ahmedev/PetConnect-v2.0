@@ -106,11 +106,14 @@ namespace PetConnect.BLL.Services.Classes
             List<SellerProductsDto> result = new List<SellerProductsDto>();
             foreach(var sWP in sellerWithProducts)
             {
+                var producttype = _unitOfWork.ProductTypeRepository.GetByID(sWP.ProductTypeId);
+
                 SellerProductsDto SPD = new SellerProductsDto()
                 { ImgUrl = sWP.ImgUrl, Price = sWP.Price ,
                     SellerId=sWP.SellerId , ProductDescription = sWP.Description,
-                    ProductName=sWP.Name, ProductType = sWP.Producttype,
-                    Quantity=sWP.Quantity};
+                    ProductName=sWP.Name, ProductType = producttype,
+                    Quantity=sWP.Quantity,
+                Id=sWP.Id};
                 result.Add(SPD);
             }
 

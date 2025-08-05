@@ -9,6 +9,6 @@ export interface Product {
   productType?: ProductType;
   // image?: File;
   quantity:number;
-  imgUrl:File;
+  imgUrl:string;
 
 }
