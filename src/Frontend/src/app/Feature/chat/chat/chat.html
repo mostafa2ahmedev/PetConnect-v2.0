@@ -2,7 +2,7 @@
   <button
     class="btn btn-primary d-md-none m-2"
     (click)="toggleContactsSidebar()"
-    [class.d-none]="isSidebarVisible"
+    [class.d-none]="isSidebarVisible || emptyChat"
   >
     <i class="bi bi-toggle-off"></i>
     Contacts
@@ -12,6 +12,7 @@
     <div
       class="col-md-3 border-end overflow-auto contacts-bar"
       style="height: 100%"
+      [ngClass]="{ 'd-none': emptyChat }"
       [class.active]="isSidebarVisible"
     >
       <h5
@@ -62,8 +63,15 @@
     </div>
 
     <!-- Middle Content: Chat Window -->
-    <div class="col-md-6 d-flex flex-column p-0" style="height: 100%">
-      <div class="border-bottom p-3 bg-light">
+    <div
+      class="col-md-6 d-flex flex-column p-0"
+      style="height: 100%"
+      [ngClass]="{ 'col-md-12': emptyChat }"
+    >
+      <div
+        class="border-bottom p-3 bg-light"
+        [ngClass]="{ 'd-none': emptyChat }"
+      >
         <h5 class="mb-0">{{ activeContact?.receiverName }}</h5>
       </div>
 
@@ -73,6 +81,19 @@
         style="background-color: #f9f9f9"
         #messagesContainer
       >
+        <!-- If emptyChat is true -->
+        <div
+          *ngIf="emptyChat"
+          class="d-flex flex-column justify-content-center align-items-center text-center w-100 p-5"
+        >
+          <i class="bi bi-shield-exclamation fs-1"></i>
+
+          <h4 class="mt-3">No conversations yet</h4>
+          <p class="text-muted">
+            Add a pet to adopt or rescue, or send an adoption request so you can
+            contact other pet owners.
+          </p>
+        </div>
         <!-- Repeat messages -->
         <!-- Old messages -->
         <ng-container *ngFor="let msg of messagesHistory">
@@ -238,7 +259,10 @@
       </div>
 
       <!-- Input Area -->
-      <div class="p-3 border-top bg-white position-relative">
+      <div
+        class="p-3 border-top bg-white position-relative"
+        [ngClass]="{ 'd-none': emptyChat }"
+      >
         <!-- <div class="mb-2">
           <input
             [(ngModel)]="receiverId"
@@ -284,7 +308,10 @@
     </div>
 
     <!-- Right Sidebar: Customer Info -->
-    <div class="col-md-3 border-start px-3 d-none d-md-block pt-5">
+    <div
+      class="col-md-3 border-start px-3 d-none d-md-block pt-5"
+      [ngClass]="{ 'd-none': emptyChat }"
+    >
       <div class="text-center pt-3">
         <img
           [src]="getFullImageUrl(activeContact?.imageURL || '')"

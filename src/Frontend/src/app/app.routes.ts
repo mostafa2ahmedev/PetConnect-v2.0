@@ -19,11 +19,10 @@ import { BreedDetails } from './Feature/breeds/breed-details/breed-details';
 import { DoctorProfile } from './Feature/doctor-profile/doctor-profile';
 import { DoctorEditProfile } from './Feature/doctor-edit-profile/doctor-edit-profile';
 import { NotFoundDoctor } from './Feature/not-found-doctor/not-found-doctor';
-import { OrdersComponent} from './Feature/orders/orders';
-import { ProductsComponent} from './Feature/Products/all-products/all-products';
+import { OrdersComponent } from './Feature/orders/orders';
+import { ProductsComponent } from './Feature/Products/all-products/all-products';
 import { ProductDetailsComponent } from './Feature/Products/product-details/product-details';
 import { CartComponent } from './Feature/cart/cart';
-
 
 import { DoctorAddTimeslot } from './Feature/doctor-add-timeslot/doctor-add-timeslot';
 import { DoctorCustomerAppointment } from './Feature/doctor-customer-appointment/doctor-customer-appointment';
@@ -97,16 +96,14 @@ export const routes: Routes = [
   { path: 'register', component: Register, children: [] },
   { path: 'register/doctor', component: DoctorRegisterForm },
   { path: 'register/customer', component: CustomerRegisterForm },
-  { path: 'register', component: Register ,children: []},
-  {path:"register/doctor", component:DoctorRegisterForm},
-  {path:"register/customer", component:CustomerRegisterForm},
-  {path:"notfound/doctor",component:NotFoundDoctor},
- { path: 'orders', component: OrdersComponent },
- { path: 'all-products', component: ProductsComponent },
- { path: 'products/:id', component: ProductDetailsComponent },
+  { path: 'register', component: Register, children: [] },
+  { path: 'register/doctor', component: DoctorRegisterForm },
+  { path: 'register/customer', component: CustomerRegisterForm },
+  { path: 'notfound/doctor', component: NotFoundDoctor },
+  { path: 'orders', component: OrdersComponent },
+  { path: 'all-products', component: ProductsComponent },
+  { path: 'products/:id', component: ProductDetailsComponent },
   { path: 'cart', component: CartComponent },
-
-
 
   { path: 'register', component: Register, children: [] },
   {
@@ -161,6 +158,14 @@ export const routes: Routes = [
   { path: 'register', component: Register, children: [] },
 
   { path: 'notfound/doctor', component: NotFoundDoctor },
-  { path: 'chat', component: ChatComponent, canActivate: [authGuard] },
-  { path: 'chat/:id', component: ChatComponent, canActivate: [authGuard] },
+  {
+    path: 'chat',
+    component: ChatComponent,
+    canActivate: [authGuard, CustomerGuard],
+  },
+  {
+    path: 'chat/:id',
+    component: ChatComponent,
+    canActivate: [authGuard, CustomerGuard],
+  },
 ];

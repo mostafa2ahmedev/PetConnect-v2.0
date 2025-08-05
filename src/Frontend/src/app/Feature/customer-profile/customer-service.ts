@@ -47,4 +47,10 @@ export class CustomerService {
 
     return this.http.put(`${this.baseUrl}/UpdateProfile`, formData);
   }
+
+  getCustomerById(id: string): Observable<CustomerPofileDetails> {
+    return this.http
+      .get<any>(`${this.baseUrl}/${id}`)
+      .pipe(map((response) => response.data as CustomerPofileDetails));
+  }
 }

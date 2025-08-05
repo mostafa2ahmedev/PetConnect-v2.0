@@ -39,7 +39,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   profileData: CustomerPofileDetails | null = null;
   isSidebarVisible = false;
   unreadSenders = new Set<string>();
-
+  emptyChat: boolean = false; // Flag to indicate if there are no contacts
   // chatMessages: ChatMessage[] = [];
 
   constructor(
@@ -96,18 +96,18 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         this.scrollToBottom();
       });
-            this.chatService.userOnline$.subscribe(userId => {
-        this.contacts = this.contacts.map(contact => 
-          contact.userId === userId ? {...contact, isOnline: true} : contact
+      this.chatService.userOnline$.subscribe((userId) => {
+        this.contacts = this.contacts.map((contact) =>
+          contact.userId === userId ? { ...contact, isOnline: true } : contact
         );
         if (this.activeContact?.userId === userId) {
           this.activeContact.isOnline = true;
         }
       });
 
-      this.chatService.userOffline$.subscribe(userId => {
-        this.contacts = this.contacts.map(contact => 
-          contact.userId === userId ? {...contact, isOnline: false} : contact
+      this.chatService.userOffline$.subscribe((userId) => {
+        this.contacts = this.contacts.map((contact) =>
+          contact.userId === userId ? { ...contact, isOnline: false } : contact
         );
         if (this.activeContact?.userId === userId) {
           this.activeContact.isOnline = false;
@@ -121,22 +121,44 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
       next: (data) => {
         console.log('📨 Messenger contacts:', data);
         this.contacts = data;
-        this.activeContact =
-          this.contacts.find((contact) => contact.userId === this.receiverId) ||
-          null;
-        console.log('📬 Active contact:', this.activeContact);
-        if (!this.receiverId && this.contacts.length > 0) {
-          this.receiverId = this.contacts[0].userId;
-          this.activeContact = this.contacts[0];
-          this.loadMessages(this.receiverId);
 
-          console.log('📬 Default active contact:', this.activeContact);
+        if (!this.receiverId) {
+          console.log('📬 No receiver ID provided in URL');
+          // Case 1: /chat with no ID in URL
+          if (this.contacts.length > 0) {
+            this.receiverId = this.contacts[0].userId;
+            this.activeContact = this.contacts[0];
+            this.loadMessages(this.receiverId);
+            console.log('📬 Default active contact:', this.activeContact);
+          } else {
+            // No contacts at all
+            console.warn('⚠️ No contacts found — empty chat.');
+            this.emptyChat = true; // You'll need to define this flag in your class
+          }
+        } else {
+          console.log('📬 Receiver ID from URL:', this.receiverId);
+          // Case 2: /chat/:id
+          const foundContact = this.contacts.find(
+            (c) => c.userId === this.receiverId
+          );
+
+          if (foundContact) {
+            // Contact exists in the list
+            this.activeContact = foundContact;
+            this.loadMessages(this.receiverId);
+            console.log('📬 Activated existing contact:', this.activeContact);
+          } else {
+            // ID not in contacts — fetch new user
+            console.warn('⚠️ Contact not found in list — fetching new user.');
+            this.fetchNewUser(this.receiverId); // You'll implement this
+          }
         }
       },
       error: (err) => {
         console.error('❌ Failed to fetch messenger contacts:', err);
       },
     });
+
     this.loadMessages(this.receiverId);
 
     this.customerService.getCustomerProfile().subscribe((data) => {
@@ -273,5 +295,44 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   isPdf(raw: string | null): boolean {
     const path = this.extractAttachmentPath(raw)?.toLowerCase();
     return !!path && path.includes('.pdf');
+  }
+
+  private fetchNewUser(userId: string) {
+    console.log(
+      `⚠️ Contact not found in list. Trying to fetch new user ${userId}...`
+    );
+
+    this.customerService.getCustomerById(userId).subscribe({
+      next: (customer) => {
+        const newContact: MessengerContact = {
+          receiverName: `${customer.fName} ${customer.lName}`,
+          imageURL: customer.imgUrl,
+          lastMessage: '',
+          lastMessageDate: '',
+          isOnline: false,
+          isRead: true,
+          userId: this.senderId,
+        };
+
+        this.contacts.push(newContact);
+        this.activeContact = newContact;
+        this.loadMessages(userId);
+        console.log('✅ New contact fetched and activated:', newContact);
+      },
+      error: (err) => {
+        console.error('❌ Failed to fetch user by ID:', err);
+
+        if (this.contacts.length > 0) {
+          console.log('📌 Falling back to first contact.');
+          this.receiverId = this.contacts[0].userId;
+          this.activeContact = this.contacts[0];
+          this.loadMessages(this.receiverId);
+          console.log('📬 Default active contact:', this.activeContact);
+        } else {
+          console.warn('⚠️ No contacts available. Marking chat as empty.');
+          this.emptyChat = true;
+        }
+      },
+    });
   }
 }
