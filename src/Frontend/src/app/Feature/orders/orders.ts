@@ -3,6 +3,7 @@ import { CommonModule, Location } from '@angular/common'; // DatePipe & Currency
 
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth';
+import { OrderStatusEnum } from '../Seller/dashboard/order-status-enum';
 
 @Component({
   selector: 'app-orders',
@@ -16,6 +17,7 @@ import { AuthService } from '../../services/auth';
 export class OrdersComponent implements OnInit {
   orders: any[] = [];
  server = "https://localhost:7102/assets/ProductImages";
+ orderStatusEnum = OrderStatusEnum;
 
 currentPage: number = 1;
 pageSize: number = 2;
@@ -74,5 +76,12 @@ get pagedOrders() {
   goBack(){
     this.location.back();
   }
-
+getStatusClass(status: string): string {
+    switch (status) {
+      case 'Pending': return 'status-pending';
+      case 'Shipped': return 'status-shipped';
+      case 'Delivered': return 'status-delivered';
+      default: return 'status-default';
+    }
+  }
 }
