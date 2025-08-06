@@ -58,7 +58,9 @@ namespace PetConnect.BLL.Services.Classes
                 PricePerHour = doctor.PricePerHour,
                 CertificateUrl = doctor.CertificateUrl,
                 Street = doctor.Address.Street,
-                City = doctor.Address.City
+                City = doctor.Address.City,
+                IsApproved = doctor.IsApproved,
+                PhoneNumber = doctor.PhoneNumber
             };
         }
 
@@ -82,7 +84,7 @@ namespace PetConnect.BLL.Services.Classes
             doctor.PricePerHour = dto.PricePerHour;
             doctor.CertificateUrl = dto.CertificateUrl;
             doctor.IsDeleted = false;
-
+            doctor.IsApproved = false;
             // Enum and complex object parsing
             if (Enum.TryParse(dto.PetSpecialty, out PetSpecialty specialty))
                 doctor.PetSpecialty = specialty;

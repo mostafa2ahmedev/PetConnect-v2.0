@@ -14,233 +14,246 @@
     </div>
   </div>
 </section>
+<section style="background-color: #f7f6fe" class="pt-0">
+  <div
+    class="container aos-init aos-animate"
+    data-aos="fade-up"
+    data-aos-delay="100"
+  >
+    <h3 class="text-center mb-4">Add New Pet</h3>
+  </div>
+  <!-- Form Section -->
+  <div class="container mb-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow rounded-4 p-4">
+          <form
+            #form="ngForm"
+            (ngSubmit)="onSubmit(form)"
+            enctype="multipart/form-data"
+            novalidate
+          >
+            <!-- Name -->
+            <div class="mb-3">
+              <label class="form-label">Pet Name</label>
+              <input
+                type="text"
+                name="name"
+                class="form-control"
+                [(ngModel)]="pet.Name"
+                #name="ngModel"
+                required
+                minlength="3"
+                maxlength="20"
+              />
+              <span
+                *ngIf="name.errors?.['required'] && (name.dirty || name.touched)"
+                class="text-danger"
+              >
+                Pet name is required.
+              </span>
+              <span
+                *ngIf="name.errors?.['minlength'] && (name.dirty || name.touched)"
+                class="text-danger"
+              >
+                Name must be at least 3 characters.
+              </span>
+              <span
+                *ngIf="name.errors?.['maxlength'] && (name.dirty || name.touched)"
+                class="text-danger"
+              >
+                Name cannot exceed 20 characters.
+              </span>
+              <span *ngIf="backendErrors['Name']" class="text-danger">
+                {{ backendErrors["Name"][0] }}
+              </span>
+            </div>
 
-<!-- Form Section -->
-<div class="container mb-5">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card shadow rounded-4 p-4">
-        <form
-          #form="ngForm"
-          (ngSubmit)="onSubmit(form)"
-          enctype="multipart/form-data"
-          novalidate
-        >
-          <!-- Name -->
-          <div class="mb-3">
-            <label class="form-label">Pet Name</label>
-            <input
-              type="text"
-              name="name"
-              class="form-control"
-              [(ngModel)]="pet.Name"
-              #name="ngModel"
-              required
-              minlength="3"
-              maxlength="20"
-            />
-            <span
-              *ngIf="name.errors?.['required'] && (name.dirty || name.touched)"
-              class="text-danger"
-            >
-              Pet name is required.
-            </span>
-            <span
-              *ngIf="name.errors?.['minlength'] && (name.dirty || name.touched)"
-              class="text-danger"
-            >
-              Name must be at least 3 characters.
-            </span>
-            <span
-              *ngIf="name.errors?.['maxlength'] && (name.dirty || name.touched)"
-              class="text-danger"
-            >
-              Name cannot exceed 20 characters.
-            </span>
-            <span *ngIf="backendErrors['Name']" class="text-danger">
-              {{ backendErrors["Name"][0] }}
-            </span>
-          </div>
+            <!-- Category -->
+            <div class="mb-3">
+              <label for="categoryList" class="form-label">Categories</label>
+              <select
+                class="form-select"
+                id="categoryList"
+                [(ngModel)]="selectedCategoryId"
+                name="category"
+                #category="ngModel"
+                (change)="onCategoryChange($event)"
+                required
+              >
+                <option value="0" selected>-- Select Category --</option>
+                <option *ngFor="let cat of categories" [value]="cat.id">
+                  {{ cat.name }}
+                </option>
+              </select>
+              <span
+                *ngIf="category.value == '0' && category.touched"
+                class="text-danger"
+              >
+                Category is required.
+              </span>
+            </div>
 
-          <!-- Category -->
-          <div class="mb-3">
-            <label for="categoryList" class="form-label">Categories</label>
-            <select
-              class="form-select"
-              id="categoryList"
-              [(ngModel)]="selectedCategoryId"
-              name="category"
-              #category="ngModel"
-              (change)="onCategoryChange($event)"
-              required
-            >
-              <option value="0" selected>-- Select Category --</option>
-              <option *ngFor="let cat of categories" [value]="cat.id">
-                {{ cat.name }}
-              </option>
-            </select>
-            <span
-              *ngIf="category.value == '0' && category.touched"
-              class="text-danger"
-            >
-              Category is required.
-            </span>
-          </div>
+            <!-- Breed -->
+            <div class="mb-3">
+              <label class="form-label">Breeds</label>
+              <select
+                class="form-select"
+                name="breedId"
+                [(ngModel)]="pet.BreedId"
+                #breedId="ngModel"
+                [disabled]="selectedCategoryId === 0"
+                required
+              >
+                <option value="0" disabled>
+                  {{
+                    selectedCategoryId === 0
+                      ? "Select a category first"
+                      : "Select a breed"
+                  }}
+                </option>
+                <option *ngFor="let breed of filteredBreeds" [value]="breed.id">
+                  {{ breed.name }}
+                </option>
+              </select>
+              <span
+                *ngIf="breedId.value == '0' && breedId.touched"
+                class="text-danger"
+              >
+                Breed selection is required.
+              </span>
+              <span *ngIf="backendErrors['BreedId']" class="text-danger">
+                {{ backendErrors["BreedId"][0] }}
+              </span>
+            </div>
 
-          <!-- Breed -->
-          <div class="mb-3">
-            <label class="form-label">Breeds</label>
-            <select
-              class="form-select"
-              name="breedId"
-              [(ngModel)]="pet.BreedId"
-              #breedId="ngModel"
-              [disabled]="selectedCategoryId === 0"
-              required
-            >
-              <option value="0" disabled>
-                {{
-                  selectedCategoryId === 0
-                    ? "Select a category first"
-                    : "Select a breed"
-                }}
-              </option>
-              <option *ngFor="let breed of filteredBreeds" [value]="breed.id">
-                {{ breed.name }}
-              </option>
-            </select>
-            <span
-              *ngIf="breedId.value == '0' && breedId.touched"
-              class="text-danger"
-            >
-              Breed selection is required.
-            </span>
-            <span *ngIf="backendErrors['BreedId']" class="text-danger">
-              {{ backendErrors["BreedId"][0] }}
-            </span>
-          </div>
+            <!-- Status -->
+            <div class="mb-3">
+              <label class="form-label">Status</label>
+              <select
+                class="form-select"
+                name="status"
+                [(ngModel)]="pet.Status"
+                #status="ngModel"
+                required
+              >
+                <option value="">-- Select Status --</option>
+                <option
+                  *ngFor="let status of statusOptions"
+                  [value]="status.key"
+                >
+                  {{ status.value }}
+                </option>
+              </select>
+              <span
+                *ngIf="status.invalid && (status.dirty || status.touched)"
+                class="text-danger"
+              >
+                Status is required.
+              </span>
+              <span *ngIf="backendErrors['Status']" class="text-danger">
+                {{ backendErrors["Status"][0] }}
+              </span>
+            </div>
 
-          <!-- Status -->
-          <div class="mb-3">
-            <label class="form-label">Status</label>
-            <select
-              class="form-select"
-              name="status"
-              [(ngModel)]="pet.Status"
-              #status="ngModel"
-              required
-            >
-              <option value="">-- Select Status --</option>
-              <option *ngFor="let status of statusOptions" [value]="status.key">
-                {{ status.value }}
-              </option>
-            </select>
-            <span
-              *ngIf="status.invalid && (status.dirty || status.touched)"
-              class="text-danger"
-            >
-              Status is required.
-            </span>
-            <span *ngIf="backendErrors['Status']" class="text-danger">
-              {{ backendErrors["Status"][0] }}
-            </span>
-          </div>
+            <!-- Age -->
+            <div class="mb-3">
+              <label class="form-label">Age</label>
+              <input
+                type="number"
+                name="Age"
+                class="form-control"
+                [(ngModel)]="pet.Age"
+                #Age="ngModel"
+                required
+                min="0"
+                max="50"
+              />
+              <span
+                *ngIf="Age.errors?.['required'] && (Age.dirty || Age.touched)"
+                class="text-danger"
+              >
+                Age is required.
+              </span>
+              <span
+                *ngIf="Age.errors?.['min'] && (Age.dirty || Age.touched)"
+                class="text-danger"
+              >
+                Age must be at least 0.
+              </span>
+              <span *ngIf="backendErrors['Age']" class="text-danger">
+                {{ backendErrors["Age"][0] }}
+              </span>
+              <span
+                *ngIf="Age.errors?.['max'] && (Age.dirty || Age.touched)"
+                class="text-danger"
+              >
+                Age must be less than or equal to 50.
+              </span>
+            </div>
 
-          <!-- Age -->
-          <div class="mb-3">
-            <label class="form-label">Age</label>
-            <input
-              type="number"
-              name="Age"
-              class="form-control"
-              [(ngModel)]="pet.Age"
-              #Age="ngModel"
-              required
-              min="0"
-              max="50"
-            />
-            <span
-              *ngIf="Age.errors?.['required'] && (Age.dirty || Age.touched)"
-              class="text-danger"
-            >
-              Age is required.
-            </span>
-            <span
-              *ngIf="Age.errors?.['min'] && (Age.dirty || Age.touched)"
-              class="text-danger"
-            >
-              Age must be at least 0.
-            </span>
-            <span *ngIf="backendErrors['Age']" class="text-danger">
-              {{ backendErrors["Age"][0] }}
-            </span>
-            <span
-              *ngIf="Age.errors?.['max'] && (Age.dirty || Age.touched)"
-              class="text-danger"
-            >
-              Age must be less than or equal to 50.
-            </span>
-          </div>
+            <!-- Image Upload -->
+            <div class="mb-3">
+              <label class="form-label">Upload Image</label>
+              <input
+                type="file"
+                class="form-control"
+                (change)="onFileChange($event)"
+              />
+              <span *ngIf="imageError" class="text-danger">{{
+                imageError
+              }}</span>
+            </div>
+            <!-- Notes / Desc  -->
+            <!-- Notes / Desc  -->
+            <div class="mb-3">
+              <label class="form-label">Description / Notes</label>
+              <textarea
+                name="Notes"
+                class="form-control"
+                [(ngModel)]="pet.Notes"
+                #notes="ngModel"
+                required
+                minlength="3"
+                maxlength="100"
+              ></textarea>
+              <span
+                *ngIf="notes.errors?.['required'] && (notes.dirty || notes.touched)"
+                class="text-danger"
+              >
+                Notes are required.
+              </span>
+              <span
+                *ngIf="notes.errors?.['minlength'] && (notes.dirty || notes.touched)"
+                class="text-danger"
+              >
+                Notes must be at least 3 characters.
+              </span>
+              <span
+                *ngIf="notes.errors?.['maxlength'] && (notes.dirty || notes.touched)"
+                class="text-danger"
+              >
+                Notes cannot exceed 100 characters.
+              </span>
+              <span *ngIf="backendErrors['Notes']" class="text-danger">
+                {{ backendErrors["Notes"][0] }}
+              </span>
+            </div>
 
-          <!-- Image Upload -->
-          <div class="mb-3">
-            <label class="form-label">Upload Image</label>
-            <input
-              type="file"
-              class="form-control"
-              (change)="onFileChange($event)"
-            />
-            <span *ngIf="imageError" class="text-danger">{{ imageError }}</span>
-          </div>
-          <!-- Notes / Desc  -->
-          <!-- Notes / Desc  -->
-          <div class="mb-3">
-            <label class="form-label">Description / Notes</label>
-            <textarea
-              name="Notes"
-              class="form-control"
-              [(ngModel)]="pet.Notes"
-              #notes="ngModel"
-              required
-              minlength="3"
-              maxlength="100"
-            ></textarea>
-            <span
-              *ngIf="notes.errors?.['required'] && (notes.dirty || notes.touched)"
-              class="text-danger"
-            >
-              Notes are required.
-            </span>
-            <span
-              *ngIf="notes.errors?.['minlength'] && (notes.dirty || notes.touched)"
-              class="text-danger"
-            >
-              Notes must be at least 3 characters.
-            </span>
-            <span
-              *ngIf="notes.errors?.['maxlength'] && (notes.dirty || notes.touched)"
-              class="text-danger"
-            >
-              Notes cannot exceed 100 characters.
-            </span>
-            <span *ngIf="backendErrors['Notes']" class="text-danger">
-              {{ backendErrors["Notes"][0] }}
-            </span>
-          </div>
-
-          <!-- Buttons -->
-          <div class="d-flex gap-2">
-            <button
-              type="submit"
-              class="btn btn-primary"
-              [disabled]="form.invalid"
-            >
-              Save
-            </button>
-            <a routerLink="/pets" class="btn btn-secondary">Cancel</a>
-          </div>
-        </form>
+            <!-- Buttons -->
+            <div class="d-flex gap-2">
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="form.invalid"
+              >
+                Save
+              </button>
+              <a routerLink="/pets" class="btn btn-secondary">Cancel</a>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</section>

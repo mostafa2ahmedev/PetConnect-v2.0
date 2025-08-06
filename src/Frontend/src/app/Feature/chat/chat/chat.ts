@@ -41,7 +41,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   unreadSenders = new Set<string>();
   emptyChat: boolean = false; // Flag to indicate if there are no contacts
   // chatMessages: ChatMessage[] = [];
-
+  loaded = false;
   constructor(
     private chatService: ChatSignalrService,
     private route: ActivatedRoute,
@@ -153,9 +153,11 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
             this.fetchNewUser(this.receiverId); // You'll implement this
           }
         }
+        this.loaded = true;
       },
       error: (err) => {
         console.error('❌ Failed to fetch messenger contacts:', err);
+        this.loaded = true; // Set loaded to true even on error
       },
     });
 
