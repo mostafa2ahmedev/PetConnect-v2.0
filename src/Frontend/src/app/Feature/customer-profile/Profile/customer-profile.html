@@ -278,7 +278,7 @@
                     <td>{{ request.adoptionDate | date : "mediumDate" }}</td>
                     <td>
                       <button
-                        class="btn btn-outline-success btn-sm"
+                        class="btn btn-outline-dark btn-sm"
                         (click)="request.showPhone = !request.showPhone"
                       >
                         <i class="bi bi-whatsapp me-1"></i> Contact
@@ -292,7 +292,7 @@
 
                       <button
                         *ngIf="request.adoptionStatus === 1"
-                        class="btn btn-outline-success btn-sm me-2"
+                        class="btn btn-outline-primary btn-sm me-2"
                         (click)="approveOrCancel(request, 0)"
                       >
                         Approve
@@ -300,7 +300,7 @@
 
                       <button
                         *ngIf="request.adoptionStatus === 1"
-                        class="btn btn-outline-success btn-sm me-2"
+                        class="btn btn-outline-danger btn-sm me-2"
                         (click)="approveOrCancel(request, 2)"
                       >
                         Cancel
@@ -354,8 +354,8 @@
                         "
                         alt="Pet"
                         class="rounded-circle m-1"
-                        width="28"
-                        height="28"
+                        width="33"
+                        height="33"
                       />
                       <span>{{ appt.petName }}</span>
                     </td>
@@ -395,11 +395,7 @@
 <!--0000000000000000000000000000000000000000000000000000000000-->
 
 <!--0000000000000000000000000000000000000000000000000000000000-->
-<!--0000000000000000000000000000000000000000000000000000000000-->
-<!--0000000000000000000000000000000000000000000000000000000000-->
-<!--0000000000000000000000000000000000000000000000000000000000-->
-<!--0000000000000000000000000000000000000000000000000000000000-->
-<!--0000000000000000000000000000000000000000000000000000000000-->
+
 <div class="container-fluid p-5">
   <div class="row px-5">
     <!-- 🔸 Right Content (Scrollable Sections) -->
