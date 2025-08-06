@@ -209,7 +209,7 @@
                 </button>
                 }
               @if(order.orderProductStatus === 1) {
-                <button class="btn btn-view" (click)="shipOrder({orderId:order.orderId,productId:order.productId,orderProductStatus:order.orderProductStatus})">
+                <button class="btn btn-view" (click)="arrivedOrder({orderId:order.orderId,productId:order.productId,orderProductStatus:order.orderProductStatus})">
                   <i class="icon-eye"></i>
                    Order Arrived
                 </button>

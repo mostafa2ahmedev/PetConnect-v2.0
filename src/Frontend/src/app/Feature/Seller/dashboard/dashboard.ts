@@ -223,15 +223,20 @@ export class Dashboard implements OnInit {
   }
   shipOrder(orderAction:OrderSellerAction){
     orderAction.orderProductStatus= 1 ;
-    this.sellerDashboardService.changeOrderStatus(orderAction);
+    
+    this.sellerDashboardService.changeOrderStatus(orderAction).subscribe({next:resp=>{
+      this.alertService.success(resp.data);
+    }});
   }
 
     arrivedOrder(orderAction:OrderSellerAction){
     orderAction.orderProductStatus= 2 ;
-    this.sellerDashboardService.changeOrderStatus(orderAction);
+    this.sellerDashboardService.changeOrderStatus(orderAction).subscribe({next:resp=>{
+      this.alertService.success(resp.data);
+    }});
   }
   getProfileImage(fileName:string){
-    return `https://localhost:7102//assets/img/person/${fileName}`;
+    return `https://localhost:7102${fileName}`;
     
   }
 }
