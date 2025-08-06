@@ -31,6 +31,7 @@ pageSize: number = 2;
         .subscribe({
           next: (res) => {
             this.orders = res;
+            console.log('Orders fetched successfully:', this.orders);
           },
           error: (err) => {
             console.error('Error fetching orders:', err);

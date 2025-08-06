@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/auth';
+import { CartService } from '../../cart/cart-service';
+import { AlertService } from '../../../core/services/alert-service';
 
 @Component({
   selector: 'app-product-details',
@@ -17,7 +19,9 @@ export class ProductDetailsComponent implements OnInit {
     private route: ActivatedRoute, 
     private http: HttpClient,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cartService: CartService,
+    private alertService :AlertService
   ) {}
 
   ngOnInit(): void {
@@ -36,10 +40,13 @@ export class ProductDetailsComponent implements OnInit {
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/login']);
     } else {
-      let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-      cart.push(this.product);
-      localStorage.setItem('cart', JSON.stringify(cart));
-      alert('Product added to cart!');
+      // let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      // cart.push(this.product);
+      // localStorage.setItem('cart', JSON.stringify(cart));
+      this.cartService.addToCart(this.product);
+      this.alertService.success("Product Added Successfully")
+      this.router.navigateByUrl("/cart")
+      // alert('Product added to cart!');
     }
   }
 }

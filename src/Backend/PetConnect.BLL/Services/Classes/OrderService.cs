@@ -135,7 +135,8 @@ namespace PetConnect.BLL.Services.Classes
                     ProductName = op.product?.Name ?? "Unknown",
                     Quantity = op.Quantity,
                     Price = op.UnitPrice,
-                    ProductImageUrl = op.product?.ImgUrl
+                    ProductImageUrl = op.product?.ImgUrl,
+                    Status = op.OrderProductStatus.ToString()
 
                 }).ToList()
             }).ToList();

@@ -40,9 +40,11 @@
                   class="img-thumbnail" 
                   style="width: 80px; height: 80px; object-fit: contain;">
               </td>
-       <td [ngClass]="getStatusClass(orderStatusEnum[product.orderProductStatus])">
-           {{ orderStatusEnum[product.orderProductStatus] }}
-                </td>
+       <td class="d-flex justify-content-center align-items-center ">
+        <span class=" status " [ngClass]="getStatusClass(product.status)">
+           {{ product.status }}
+        </span>
+        </td>
             </tr>
           </tbody>
         </table>

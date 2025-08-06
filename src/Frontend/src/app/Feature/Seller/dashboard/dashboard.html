@@ -208,10 +208,10 @@
                   Ship Order
                 </button>
                 }
-              @if(order.orderProductStatus === 1) {
+              @if(order.orderProductStatus === 0) {
                 <button class="btn btn-view" (click)="arrivedOrder({orderId:order.orderId,productId:order.productId,orderProductStatus:order.orderProductStatus})">
                   <i class="icon-eye"></i>
-                   Order Arrived
+                   Deny Order 
                 </button>
                 }
               </td>

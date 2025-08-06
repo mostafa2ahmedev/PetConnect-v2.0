@@ -21,6 +21,8 @@
           <h5 class="card-title">{{ item.name }}</h5>
           <p class="card-text">{{ item.description }}</p>
           <p class="card-text text-primary">Price: {{ item.price | currency:'USD' }}</p>
+          <input type="number" name="quantity" id="quantity-{{ i }}" [(ngModel)]="item.quantity" min="1" [max]="item.maxQuantity" class="form-control mb-2" style="width: 100px; display: inline-block;" value="1">
+          <p class="card-text">Total: {{ item.price * item.quantity | currency:'USD' }}</p>
           <button class="btn btn-danger btn-sm" (click)="removeItem(i)">Remove</button>
         </div>
       </div>

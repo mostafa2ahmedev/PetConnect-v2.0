@@ -10,5 +10,6 @@ export interface Product {
   // image?: File;
   quantity:number;
   imgUrl:string;
+  maxQuantity:number;
 
 }
