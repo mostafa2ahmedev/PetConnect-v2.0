@@ -25,15 +25,16 @@ namespace PetConnect.BLL.Services.Classes
         private readonly ICustomerAddedPetsService _customerAddedPetsService;
         private readonly INotificationService notificationService;
 
-
+        private readonly IEmailService _emailService;
         public CustomerService(IUnitOfWork unitOfWork, IPetService petService,
-            IAttachmentService attachmentSetvice,ICustomerAddedPetsService customerAddedPetsService, INotificationService notificationService)
+            IAttachmentService attachmentSetvice,ICustomerAddedPetsService customerAddedPetsService, INotificationService notificationService, IEmailService emailService)
         {
             _unitOfWork = unitOfWork;
             _petService = petService;
             this.attachmentSetvice = attachmentSetvice;
             _customerAddedPetsService = customerAddedPetsService;
             this.notificationService = notificationService;
+            _emailService = emailService;
         }
 
 
@@ -150,6 +151,9 @@ namespace PetConnect.BLL.Services.Classes
                 _unitOfWork.CustomerPetAdpotionsRepository.RemoveSingleReq(RecuserId, approveORCancelCustomerRequestDto.ReqCustomerId, approveORCancelCustomerRequestDto.PetId);
 
                 var otherRequesterIds = _unitOfWork.CustomerPetAdpotionsRepository.RemoveOtherRequestsForPet(approveORCancelCustomerRequestDto.PetId, approveORCancelCustomerRequestDto.ReqCustomerId);
+
+
+
                 await notificationService.CreateAndSendNotification(approveORCancelCustomerRequestDto.ReqCustomerId, new NotificationDTO()
                 {
                     Message = $"Congratulations! Your request to adopt {pet.Name} has been approved.",
