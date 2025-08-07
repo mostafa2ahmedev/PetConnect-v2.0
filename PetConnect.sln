@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetConnect.BLL", "src\Backe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetConnect.DAL", "src\Backend\PetConnect.DAL\PetConnect.DAL.csproj", "{862F9729-7958-0990-1E5D-2403A08D3794}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetConnect.UnitTests", "tests\PetConnect.UnitTests\PetConnect.UnitTests\PetConnect.UnitTests.csproj", "{1913A832-06D2-4B8A-8512-535A3F42E5CA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetConnect.UnitTests", "tests\PetConnect.UnitTests\PetConnect.UnitTests.csproj", "{35F0A81A-656D-AFD4-BC27-82FC4CFDEB4C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{862F9729-7958-0990-1E5D-2403A08D3794}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{862F9729-7958-0990-1E5D-2403A08D3794}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{862F9729-7958-0990-1E5D-2403A08D3794}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1913A832-06D2-4B8A-8512-535A3F42E5CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1913A832-06D2-4B8A-8512-535A3F42E5CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1913A832-06D2-4B8A-8512-535A3F42E5CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1913A832-06D2-4B8A-8512-535A3F42E5CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35F0A81A-656D-AFD4-BC27-82FC4CFDEB4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35F0A81A-656D-AFD4-BC27-82FC4CFDEB4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35F0A81A-656D-AFD4-BC27-82FC4CFDEB4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35F0A81A-656D-AFD4-BC27-82FC4CFDEB4C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

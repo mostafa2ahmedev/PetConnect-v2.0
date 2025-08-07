@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Backend\PetConnect.BLL\PetConnect.BLL.csproj" />
+    <ProjectReference Include="..\..\src\Backend\PetConnect.BLL\PetConnect.BLL.csproj" />
   </ItemGroup>
 
   <ItemGroup>
