@@ -18,32 +18,45 @@ namespace PetConnect.BLL.Services.Classes
             _unitOfWork = unitOfWork;
         }
 
-        public int AddOrder( AddedOrderDTO dto)
+        public int AddOrder(AddedOrderDTO dto)
         {
+           
+
+      
             var order = new Order
             {
                 OrderDate = dto.OrderDate,
                 CustomerId = dto.CustomerId,
                 OrderStatus = OrderStatus.Pending,
-               
-                TotalPrice = dto.Products.Sum(AP=>(AP.Quantity*AP.UnitPrice)),
-                OrderProducts = dto.Products.Select(p => new OrderProduct
-                {
-                    ProductId = p.ProductId,
-                    Quantity = p.Quantity,
-                    UnitPrice = p.UnitPrice,
-                    OrderProductStatus = OrderProductStatus.Pending, 
-                    SellerId = _unitOfWork.SellerRepository.GetSellerByProductInfo(p.ProductId),
-                   
-                }).ToList()
+                TotalPrice = dto.Products.Sum(p => p.Quantity * p.UnitPrice)
             };
 
             _unitOfWork.OrderRepository.Add(order);
             _unitOfWork.SaveChanges();
 
+ 
+            foreach (var p in dto.Products)
+            {
+                var sellerId = _unitOfWork.SellerRepository.GetSellerByProductInfo(p.ProductId);
+
+          
+                var orderProduct = new OrderProduct
+                {
+                    OrderId = order.Id,
+                    ProductId = p.ProductId,
+                    Quantity = p.Quantity,
+                    UnitPrice = p.UnitPrice,
+                    OrderProductStatus = OrderProductStatus.Pending,
+                    SellerId = sellerId
+                };
+
+                _unitOfWork.orderProductRepository.Add(orderProduct);
+            }
+
+            _unitOfWork.SaveChanges();
+
             return order.Id;
         }
-
         public List<OrderDetailsDTO> GetAllOrders()
         {
             var orders = _unitOfWork.OrderRepository.GetOrdersWithDetails();
