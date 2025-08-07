@@ -68,7 +68,21 @@ namespace PetConnect.DAL.UnitofWork
         public IUserConnectionRepository UserConnectionRepository => new UserConnectionRepository(context);
         public IUserMessagesRepository UserMessagesRepository => new UserMessagesRepository(context);
 
-       
+        public IBlogRepository BlogRepository =>  new BlogRepository(context);
+
+        public IBlogCommentRepository BlogCommentRepository => new BlogCommentRepository(context);
+
+        public IBlogCommentReplyRepository BlogCommentReplyRepository => new BlogCommentReplyRepository(context);
+
+        public IUserBlogLikeRepository UserBlogLikeRepository => new UserBlogLikeRepository(context);
+
+        public IUserBlogCommentLikeRepository UserBlogCommentLikeRepository => new UserBlogCommentLikeRepository(context);
+
+        public IUserBlogCommentReplyLikeRepository UserBlogCommentReplyLikeRepository => new UserBlogCommentReplyLikeRepository(context);
+
+        public IUserBlogCommentRepository UserBlogCommentRepository => new UserBlogCommentRepository(context);
+
+        public IUserBlogCommentReplyRepository UserBlogCommentReplyRepository => new UserBlogCommentReplyRepository(context);
 
         public void Dispose()
         {

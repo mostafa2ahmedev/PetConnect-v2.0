@@ -36,6 +36,7 @@ namespace PetConnect.DAL.Services
             services.AddScoped<INotificationService, NotificationService>();
             services.AddSignalR();
             services.AddScoped<IChatService, ChatService>();
+            services.AddScoped<IBlogService, BlogService>();
             return services;
         } 
     }
