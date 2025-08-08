@@ -9,10 +9,9 @@ namespace PetConnect.BLL.Services.Interfaces
 {
     public interface IBlogService
     {  
-        IEnumerable<ReadBlogDataDto> GetAllReadBlogs();
         
-        IEnumerable<ReadWriteBlogDataDto> GetAllReadWriteBlogs();
-
+        IEnumerable<BlogData> GetAllBlogs();
+        BlogDetails? GetBlogById(Guid BlogId);
         IEnumerable<CommentDataDto> GetAllCommentsForSpecificBlog(Guid BlogId);
 
         IEnumerable<ReplyDataDto> GetAllRepliesForSpecificComment(Guid CommentId);
@@ -24,7 +23,7 @@ namespace PetConnect.BLL.Services.Interfaces
         string? ToggleBlogLike(string UserId,Guid BlogId);
         string? ToggleCommentLike(string UserId, Guid CommentId);
         string? ToggleReplyLike(string UserId, Guid ReplyId);
-        bool UpdateBlog(UpdateBlogDto AddedBlogDto);
+        Task<bool> UpdateBlog(UpdateBlogDto UpdateBlogDto);
 
         bool DeleteBlog(Guid BlogId);
 

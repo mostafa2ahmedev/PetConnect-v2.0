@@ -24,35 +24,17 @@ namespace PetConnect.BLL.Services.Classes
             _unitOfWork = unitOfWork;
             _attachmentService = attachmentService;
         }
-        public IEnumerable<ReadBlogDataDto> GetAllReadBlogs()
+
+
+        public IEnumerable<BlogData> GetAllBlogs()
         {
-             return _unitOfWork.BlogRepository.GetAllReadBlogs()
-                .Select(B=>new ReadBlogDataDto() {
-                ID = B.ID,
-                BlogType = B.BlogType,
-                Content = B.Content,
-                Media = B.Media,
-                PostDate = B.PostDate,
-                DoctorId = B.DoctorId,
-                Likes = B.UserBlogLikes.Count,
-                DoctorName= B.Doctor.FName + " "+ B.Doctor.LName,
-                DoctorImgUrl = B.Doctor.ImgUrl
-                
-
-
-                });
-
-            
-        }
-
-        public IEnumerable<ReadWriteBlogDataDto> GetAllReadWriteBlogs()
-        {
-            return _unitOfWork.BlogRepository.GetAllReadWriteBlogs()
-                  .Select(B => new ReadWriteBlogDataDto()
+            return _unitOfWork.BlogRepository.GetAllBlogsWithAuthorDataAndSomeStatistics()
+                  .Select(B => new BlogData()
                   {
                       ID = B.ID,
                       BlogType = B.BlogType,
-                      Content = B.Content,
+                      excerpt = B.excerpt,
+                      Title = B.Title,
                       Media = B.Media,
                       PostDate = B.PostDate,
                       DoctorId = B.DoctorId,
@@ -65,7 +47,27 @@ namespace PetConnect.BLL.Services.Classes
 
                   });
         }
+        public BlogDetails? GetBlogById(Guid BlogId)
+        {
+            var Blog = _unitOfWork.BlogRepository.GetBlogByIdWithAuthorDataAndSomeStatistics(BlogId);
+            if (Blog == null)
+                return null;
+            return new BlogDetails() {
+                ID = Blog.ID,
+                BlogType = Blog.BlogType,
+                excerpt = Blog.excerpt,
+                Title = Blog.Title,
+                Media = Blog.Media,
+                Content = Blog.Content,
+                PostDate = Blog.PostDate,
+                DoctorId = Blog.DoctorId,
+                Likes = Blog.UserBlogLikes.Count,
+                DoctorName = Blog.Doctor.FName + " " + Blog.Doctor.LName,
+                DoctorImgUrl = Blog.Doctor.ImgUrl,
+                Comments = Blog.UserBlogComments.Count
 
+            };
+        }
         public IEnumerable<CommentDataDto> GetAllCommentsForSpecificBlog(Guid BlogId)
         {
             return _unitOfWork.UserBlogCommentRepository.GetAllCommentsByBlogId(BlogId)
@@ -280,11 +282,33 @@ namespace PetConnect.BLL.Services.Classes
             return result;
         }
 
-        public bool UpdateBlog(UpdateBlogDto UpdateBlogDto)
+        public async Task<bool> UpdateBlog(UpdateBlogDto UpdateBlogDto)
         {
-            throw new NotImplementedException();
+            var Blog = _unitOfWork.BlogRepository.GetByID(UpdateBlogDto.BlogId);
+            if (Blog == null)
+                return false;
+
+            if (UpdateBlogDto.Media != null)
+            {
+                var fileName = await _attachmentService.UploadAsync(UpdateBlogDto.Media, Path.Combine("img", "blogs"));
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    Blog.Media = $"/assets/img/blogs/{fileName}";
+                }
+            }
+
+            Blog.Title = UpdateBlogDto.Title;
+            Blog.excerpt = UpdateBlogDto.excerpt;
+            Blog.Content = UpdateBlogDto.Content;
+            Blog.BlogType = UpdateBlogDto.BlogType;
+
+
+
+
+            _unitOfWork.BlogRepository.Update(Blog);
+            return  await _unitOfWork.SaveChangesAsync()>=1?true:false;
         }
 
-       
+   
     }
 }

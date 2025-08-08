@@ -15,7 +15,7 @@ namespace PetConnect.DAL.Data.GenericRepository
         public T? GetByID(int id); // Get Element By Id
 
         public T? GetByID(string id); // Get Element By Id
-
+        public T? GetByID(Guid Id);
         public void Add(T entity); // Add entity record to DbSet
 
         public void Update(T entity); // update entity data from existing DbSet

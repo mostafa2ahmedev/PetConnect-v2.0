@@ -7,6 +7,7 @@ using PetConnect.BLL.Services.DTOs;
 using PetConnect.BLL.Services.DTOs.Blog;
 using PetConnect.BLL.Services.Interfaces;
 using PetConnect.DAL.Data.Models;
+using System.Diagnostics.Eventing.Reader;
 using System.Security.Claims;
 
 namespace PetConnect.API.Controllers
@@ -24,26 +25,26 @@ namespace PetConnect.API.Controllers
 
 
 
-        [HttpGet("ReadBlogs")]
-        [ProducesResponseType(typeof(List<ReadBlogDataDto>), StatusCodes.Status200OK)]
-        [EndpointSummary("Get All {{{{{Read}}}}} Blog Data")]
-        public ActionResult GetAllReadBlogData()
+
+        [HttpGet("AllBlogs")]
+        [ProducesResponseType(typeof(List<BlogData>), StatusCodes.Status200OK)]
+        [EndpointSummary("Get All {{{{{Blogs}}}}} Blog Data")]
+        public ActionResult GetAllBlogs()
         {
-            var ReadBlogs = _blogService.GetAllReadBlogs();
-            return Ok(new GeneralResponse(200, ReadBlogs));
+            var Blogs = _blogService.GetAllBlogs();
+            return Ok(new GeneralResponse(200, Blogs));
         }
 
-
-
-        [HttpGet("ReadWriteBlogs")]
-        [ProducesResponseType(typeof(List<ReadWriteBlogDataDto>), StatusCodes.Status200OK)]
-        [EndpointSummary("Get All {{{{{ReadWrite}}}}} Blog Data")]
-        public ActionResult GetAllReadWriteBlogData()
+        [HttpGet("Blog/{BlogId}")]
+        [ProducesResponseType(typeof(List<BlogDetails>), StatusCodes.Status200OK)]
+        [EndpointSummary("Get Blog Details by ID")]
+        public ActionResult GetBlogDetails(Guid BlogId)
         {
-            var ReadWriteBlogs = _blogService.GetAllReadWriteBlogs();
-            return Ok(new GeneralResponse(200, ReadWriteBlogs));
+            var Blog = _blogService.GetBlogById(BlogId);
+            if(Blog == null)
+                return NotFound(new GeneralResponse(404,$"Blog with ID {BlogId} Not Found"));
+            return Ok(new GeneralResponse(200, Blog));
         }
-
 
 
 
@@ -189,6 +190,31 @@ namespace PetConnect.API.Controllers
                 return NotFound(new GeneralResponse(400, "Not Found"));
             else
                 return Ok(new GeneralResponse(200, result));
+
+        }
+        [HttpPut("Edit")]
+        [EndpointSummary("Update Blog Data")]
+        [Authorize()]
+        public async Task<ActionResult> EditBlog([FromForm] UpdateBlogDto updateBlogDto)
+        {
+
+            if ((updateBlogDto.Content == null && updateBlogDto.Media == null) || !ModelState.IsValid)
+            {
+                var errors = ModelState
+                    .Where(ms => ms.Value.Errors.Count > 0) 
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                    );
+
+                return BadRequest(new GeneralResponse(400, errors));
+            }
+
+            var result =await _blogService.UpdateBlog(updateBlogDto);
+            if (!result)
+                return NotFound(new GeneralResponse(400, "Not Found"));
+            else
+                return Ok(new GeneralResponse(200, "Data Updated Successfully"));
 
         }
     }
