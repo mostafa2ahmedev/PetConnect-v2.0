@@ -11,7 +11,7 @@ namespace PetConnect.DAL.Data.Models
     {
         public Guid ID { get; set; }
         public string Title { get; set; } = null!; 
-        public string excerpt { get; set; } = null!;
+        public string? excerpt { get; set; } = null!;
         public string Content { get; set; } = null!;
         public string? Media { get; set; } = null!;
         public bool IsApproved { get; set; }

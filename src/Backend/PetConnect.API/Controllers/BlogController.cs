@@ -77,7 +77,7 @@ namespace PetConnect.API.Controllers
 
         public async Task<ActionResult> AddBlog([FromForm]AddBlogDto addBlogDto)
         {
-            if ((addBlogDto.Content == null && addBlogDto.Media == null) || !ModelState.IsValid )
+            if (!ModelState.IsValid )
             {
                 return BadRequest(new GeneralResponse(400, "Data is not correct"));
            
@@ -198,7 +198,7 @@ namespace PetConnect.API.Controllers
         public async Task<ActionResult> EditBlog([FromForm] UpdateBlogDto updateBlogDto)
         {
 
-            if ((updateBlogDto.Content == null && updateBlogDto.Media == null) || !ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var errors = ModelState
                     .Where(ms => ms.Value.Errors.Count > 0) 

@@ -385,7 +385,6 @@ namespace PetConnect.DAL.Data.Migrations
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("excerpt")
-                        .IsRequired()
                         .HasColumnType("varchar(500)");
 
                     b.HasKey("ID");

@@ -12,8 +12,8 @@ using PetConnect.DAL.Data;
 namespace PetConnect.DAL.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250808095534_BlogStructureModified2")]
-    partial class BlogStructureModified2
+    [Migration("20250808111704_BlogStructureModified")]
+    partial class BlogStructureModified
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -388,7 +388,6 @@ namespace PetConnect.DAL.Data.Migrations
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("excerpt")
-                        .IsRequired()
                         .HasColumnType("varchar(500)");
 
                     b.HasKey("ID");

@@ -12,13 +12,13 @@ namespace PetConnect.BLL.Services.DTOs.Blog
     public class UpdateBlogDto
     {
         public Guid BlogId { get; set; }
-        
+        [Required]
         public string Content { get; set; } = null!;
-        public IFormFile Media { get; set; } = null!;
+        public IFormFile? Media { get; set; } = null!;
         [Required]
         public string Title { get; set; } = null!;
-        [Required]
-        public string excerpt { get; set; } = null!;
+     
+        public string? excerpt { get; set; } = null!;
         [Required]
         public BlogType BlogType { get; set; }
     }
