@@ -1,0 +1,24 @@
+.schedule-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+button.mdc-button {
+  background-color: rgb(13, 110, 253);
+  color: #fff;
+  font-size: 14px;
+}
+.mat-mdc-form-field
+  .mdc-text-field--outlined
+  .mdc-notched-outline--upgraded
+  .mdc-floating-label--float-above
+  * {
+  font-size: 22px !important;
+}
+.mat-mdc-form-field-infix {
+  padding: 0 !important;
+}

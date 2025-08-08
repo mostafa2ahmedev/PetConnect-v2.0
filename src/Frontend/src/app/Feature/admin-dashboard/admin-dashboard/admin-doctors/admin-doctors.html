@@ -15,74 +15,83 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let doctor of doctors">
-        <!-- Image + Name -->
-        <td>
-          <div class="d-flex align-items-center p-2">
-            <img
-              [src]="
-                doctor.imgUrl
-                  ? 'https://localhost:7102' + doctor.imgUrl
-                  : 'assets/default-doctor.jpg'
-              "
-              class="rounded-circle me-2"
-              style="width: 33px; height: 33px; object-fit: cover"
-              [alt]="getDoctorFullName(doctor)"
-            />
-            <div>
+      <!-- Loading Spinner -->
+      <div *ngIf="loading" class="text-center p-5 mx-auto">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-3">Loading profile...</p>
+      </div>
+      <ng-container *ngIf="!loading && doctors.length > 0">
+        <!-- Repeat for each doctor -->
+        <tr *ngFor="let doctor of doctors">
+          <!-- Image + Name -->
+          <td>
+            <div class="d-flex align-items-center p-2">
+              <img
+                [src]="
+                  doctor.imgUrl
+                    ? 'https://localhost:7102' + doctor.imgUrl
+                    : 'assets/default-doctor.jpg'
+                "
+                class="rounded-circle me-2"
+                style="width: 33px; height: 33px; object-fit: cover"
+                [alt]="getDoctorFullName(doctor)"
+              />
               <div>
-                {{ getDoctorFullName(doctor) }}
+                <div>
+                  {{ getDoctorFullName(doctor) }}
+                </div>
+                <small class="text-muted">{{ doctor.email }}</small>
               </div>
-              <small class="text-muted">{{ doctor.email }}</small>
             </div>
-          </div>
-        </td>
+          </td>
 
-        <!-- Other Columns -->
-        <td>{{ doctor.petSpecialty }}</td>
-        <td>
-          <i class="fas fa-map-marker-alt me-1 text-muted"></i>{{ doctor.city }}
-        </td>
-        <td>{{ doctor.phoneNumber }}</td>
-        <td>${{ doctor.pricePerHour }}</td>
+          <!-- Other Columns -->
+          <td>{{ doctor.petSpecialty }}</td>
+          <td>
+            <i class="fas fa-map-marker-alt me-1 text-muted"></i
+            >{{ doctor.city }}
+          </td>
+          <td>{{ doctor.phoneNumber }}</td>
+          <td>${{ doctor.pricePerHour }}</td>
 
-        <!-- Certificate Button -->
-        <td>
-          <button
-            *ngIf="doctor.certificateUrl"
-            class="btn btn-sm text-primary"
-            (click)="
-              openImageModal(
-                imageModal,
-                'https://localhost:7102' + doctor.certificateUrl
-              )
-            "
-          >
-            <!-- <i class="bi bi-file-earmark-break-fill"></i>-->Certificate
-          </button>
-        </td>
+          <!-- Certificate Button -->
+          <td>
+            <button
+              *ngIf="doctor.certificateUrl"
+              class="btn btn-sm text-primary"
+              (click)="
+                openImageModal(
+                  imageModal,
+                  'https://localhost:7102' + doctor.certificateUrl
+                )
+              "
+            >
+              <!-- <i class="bi bi-file-earmark-break-fill"></i>-->Certificate
+            </button>
+          </td>
 
-        <!-- Actions: Icons Only -->
-        <td class="text-center">
-          <button
-            class="btn btn-sm btn-primary me-1"
-            (click)="approveDoctor(doctor.id)"
-            title="Approve"
-          >
-            <i class="bi bi-check-lg"></i>
-          </button>
-          <button
-            class="btn btn-sm btn-outline-danger"
-            (click)="openRejectionModal(rejectionModal, doctor.id, 'doctor')"
-            title="Reject"
-          >
-            <i class="bi bi-trash"></i>
-          </button>
-        </td>
-      </tr>
+          <!-- Actions: Icons Only -->
+          <td class="text-center">
+            <button
+              class="btn btn-sm btn-primary me-1"
+              (click)="approveDoctor(doctor.id)"
+              title="Approve"
+            >
+              <i class="bi bi-check-lg"></i>
+            </button>
+            <button
+              class="btn btn-sm btn-outline-danger"
+              (click)="openRejectionModal(rejectionModal, doctor.id, 'doctor')"
+              title="Reject"
+            >
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-container>
     </tbody>
   </table>
-  <div class="text-center py-4" *ngIf="doctors.length === 0">
+  <div class="text-center py-4" *ngIf="!loading && doctors.length === 0">
     <i
       class="fas fa-user-md text-muted mb-2"
       style="font-size: 2.5rem; opacity: 0.3"

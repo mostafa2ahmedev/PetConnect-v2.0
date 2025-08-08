@@ -29,7 +29,7 @@ namespace PetConnect.BLL.Services.Classes
                 Status = AddedStatus.Pending,
             };
             var pet = _unitOfWork.PetRepository.GetByID(petId);
-            pet.Status = PetStatus.Owned;
+            //pet.Status = PetStatus.Owned;
             _unitOfWork.CustomerAddedPetsRepository.Add(CustomerPetAddition);
         }
     }

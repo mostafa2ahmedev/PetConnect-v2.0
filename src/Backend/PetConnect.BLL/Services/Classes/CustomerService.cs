@@ -145,7 +145,8 @@ namespace PetConnect.BLL.Services.Classes
             {
                 CustomerAdoptionsRecord.Status = AdoptionStatus.Approved;
                 result = AdoptionStatus.Approved.ToString();
-
+                pet.Status = PetStatus.Owned;
+                _petService.UpdatePetStatus(pet.Id, PetStatus.Owned);
                 var CAPRecord = _unitOfWork.CustomerAddedPetsRepository.DeleteCustomerAddedPetRecord(approveORCancelCustomerRequestDto.PetId, RecuserId);
                 _customerAddedPetsService.RegisterCustomerPetAddition(approveORCancelCustomerRequestDto.ReqCustomerId, approveORCancelCustomerRequestDto.PetId);
                 _unitOfWork.CustomerPetAdpotionsRepository.RemoveSingleReq(RecuserId, approveORCancelCustomerRequestDto.ReqCustomerId, approveORCancelCustomerRequestDto.PetId);
@@ -313,15 +314,19 @@ namespace PetConnect.BLL.Services.Classes
         public CustomerDataDto? GetCustomerById(string id)
         {
             Customer c = _unitOfWork.CustomerRepository.GetAll().FirstOrDefault(e => e.Id == id);
-            CustomerDataDto customerData = new CustomerDataDto()
+            if (c is not null)
             {
-                CustomerId = c.Id,
-                FName = c.FName,
-                LName = c.LName,
-                ImgUrl = c.ImgUrl,
-                City = c.Address.City
-            };
-            return customerData;
+                CustomerDataDto customerData = new CustomerDataDto()
+                {
+                    CustomerId = c.Id,
+                    FName = c.FName,
+                    LName = c.LName,
+                    ImgUrl = c.ImgUrl,
+                    City = c.Address.City
+                };
+                return customerData;
+            }
+            else { return null; }
 
         }
 
