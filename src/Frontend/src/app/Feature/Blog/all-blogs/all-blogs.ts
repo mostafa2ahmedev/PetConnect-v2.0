@@ -21,7 +21,7 @@ export class AllBlogs implements OnInit {
   }
 
   loadBlogs(): void {
-    this.blogService.getAllReadWriteBlogs().subscribe({
+    this.blogService.getAllBlogs().subscribe({
       next: (data) => {
         this.blogs = data;
         this.loading = false;

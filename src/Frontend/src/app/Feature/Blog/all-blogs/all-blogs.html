@@ -3,7 +3,7 @@
     class="container section-title aos-init aos-animate pb-0"
     data-aos="fade-up"
   >
-    <h2>Lates Blog Post</h2>
+    <h2>Latest Blog Posts</h2>
     <p>Find your new best friend and give a rescued pet a loving home.</p>
 
     <!-- <div
@@ -47,7 +47,7 @@
           <small class="text-muted mb-2">
             {{ blog.postDate | date : "medium" }}
           </small>
-          <p class="card-text" [innerHTML]="blog.content"></p>
+          <p class="card-text" [innerHTML]="blog.excerpt"></p>
           <div class="mt-auto">
             <span class="badge bg-primary me-2">{{ blog.likes }} Likes</span>
             <span class="badge bg-secondary">Type {{ blog.blogType }}</span>
