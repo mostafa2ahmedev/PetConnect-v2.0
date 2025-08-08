@@ -57,7 +57,7 @@ namespace PetConnect.UnitTests
 
         //Add Pet Test the happy path, the only pass in the method in the service no other passes.
         [Fact]
-        public async Task AddPet_Pass_PassCorrectData_PetShouldBeAdded()
+        public async Task AddPet_PassCorrectData_PetShouldBeAdded()
         {
             //Arrange
             //auto fixture will create all these variable with default values to be used in the test
@@ -78,8 +78,12 @@ namespace PetConnect.UnitTests
                 .Callback<Pet>(p => capturedPet = p);// put the added data in the capturedPet above.
 
             _unitOfWorkMock
-                .Setup(u => u.SaveChanges())
-                .Returns(1);
+                .SetupSequence(u => u.SaveChanges())
+                .Returns(1).Returns(1);
+
+            _customerPetsServiceMock
+            .Setup(s => s.RegisterCustomerPetAddition(customerId, It.IsAny<int>()))
+            .Verifiable();
 
             //Act 
             var res = await _petService.AddPet(addedPet, customerId);
@@ -89,8 +93,10 @@ namespace PetConnect.UnitTests
             capturedPet.Should().NotBeNull();
             capturedPet.Name.Should().Be(addedPet.Name);
             capturedPet.BreedId.Should().Be(addedPet.BreedId);
+            capturedPet.BreedId.Should().Be(addedPet.BreedId);
             capturedPet.Age.Should().Be(addedPet.Age);
             capturedPet.ImgUrl.Should().Be(fakeImageUrl);
+            capturedPet.Status.Should().Be(addedPet.Status);
         }
 
         [Fact]
@@ -327,7 +333,6 @@ namespace PetConnect.UnitTests
             // Assert
             result.Should().Be(0);
         }
-
 
         [Fact]
         public async Task UpdatePet_PetFoundWithoutImage_ShouldUpdateAndReturnSaveChanges()

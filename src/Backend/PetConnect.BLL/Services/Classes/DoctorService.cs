@@ -57,7 +57,7 @@ namespace PetConnect.BLL.Services.Classes
                 Gender = doctor.Gender.ToString(),
                 PricePerHour = doctor.PricePerHour,
                 CertificateUrl = doctor.CertificateUrl,
-                Street = doctor.Address.Street,
+                Street = doctor.Address.Street, 
                 City = doctor.Address.City
             };
         }
@@ -101,7 +101,7 @@ namespace PetConnect.BLL.Services.Classes
             UOW.DoctorRepository.Update(doctor);
             UOW.SaveChanges();
         }
-
+            
         public void Delete(string id)
         {
             var doctor = UOW.DoctorRepository.GetByID(id);
