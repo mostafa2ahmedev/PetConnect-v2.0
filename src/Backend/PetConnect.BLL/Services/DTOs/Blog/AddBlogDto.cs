@@ -12,15 +12,15 @@ namespace PetConnect.BLL.Services.DTOs.Blog
     public class AddBlogDto
     {
 
-        public string? Content { get; set; } = null!;
+        [Required]
+        public string Content { get; set; } = null!;
         public IFormFile? Media { get; set; } = null!;
-
-        [Required(ErrorMessage ="Blog Type Is Required")]
-        public BlogType BlogType { get; set; }
         [Required]
         public string Title { get; set; } = null!;
+
+        public string? excerpt { get; set; } = null!;
         [Required]
-        public string excerpt { get; set; } = null!;
-       
+        public BlogType BlogType { get; set; }
+
     }
 }

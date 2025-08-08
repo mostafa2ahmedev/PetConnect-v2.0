@@ -118,7 +118,10 @@ namespace PetConnect.BLL.Services.Classes
                 Content = AddedBlogDto.Content ?? string.Empty,
                 DoctorId = DoctorId,
                 IsApproved = false,
-                Media = fileName != null ? $"/assets/img/blogs/{fileName}" : string.Empty,
+                Media = fileName != null ? $"/assets/img/blogs/{fileName}" : null,
+                excerpt = AddedBlogDto.excerpt,
+                Title = AddedBlogDto.Title,
+                
             };
             _unitOfWork.BlogRepository.Add(Blog);
            var result= _unitOfWork.SaveChanges();

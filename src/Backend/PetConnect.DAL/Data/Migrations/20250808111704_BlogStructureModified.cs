@@ -10,6 +10,14 @@ namespace PetConnect.DAL.Data.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterColumn<string>(
+                name: "Media",
+                table: "Blogs",
+                type: "varchar(200)",
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "varchar(200)");
+
             migrationBuilder.AddColumn<string>(
                 name: "Title",
                 table: "Blogs",
@@ -21,8 +29,7 @@ namespace PetConnect.DAL.Data.Migrations
                 name: "excerpt",
                 table: "Blogs",
                 type: "varchar(500)",
-                nullable: false,
-                defaultValue: "");
+                nullable: true);
         }
 
         /// <inheritdoc />
@@ -35,6 +42,16 @@ namespace PetConnect.DAL.Data.Migrations
             migrationBuilder.DropColumn(
                 name: "excerpt",
                 table: "Blogs");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Media",
+                table: "Blogs",
+                type: "varchar(200)",
+                nullable: false,
+                defaultValue: "",
+                oldClrType: typeof(string),
+                oldType: "varchar(200)",
+                oldNullable: true);
         }
     }
 }
