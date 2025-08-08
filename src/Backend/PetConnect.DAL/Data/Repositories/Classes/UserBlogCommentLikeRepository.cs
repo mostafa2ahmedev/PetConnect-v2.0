@@ -18,15 +18,22 @@ namespace PetConnect.DAL.Data.Repositories.Classes
             context = _context;
         }
 
-        public int GetNumberOfLikesForSpecificComment(Guid CommentId) {
+        public int GetNumberOfLikesForSpecificComment(Guid CommentId)
+        {
 
-            return context.UserBlogCommentLikes.Where(UBCL => UBCL.BlogCommentId == CommentId).Count() ;
+            return context.UserBlogCommentLikes.Where(UBCL => UBCL.BlogCommentId == CommentId).Count();
         }
 
         public UserBlogCommentLike? GetUserBlogCommentLike(string UserId, Guid CommentId)
         {
 
             return context.UserBlogCommentLikes.Where(UBCL => UBCL.UserId == UserId && UBCL.BlogCommentId == CommentId).FirstOrDefault();
+        }
+
+        public bool IsCommentLikedByUser(Guid commentId, string userId)
+        {
+            return context.UserBlogCommentLikes
+                .Any(like => like.BlogCommentId == commentId && like.UserId == userId);
         }
     }
 }

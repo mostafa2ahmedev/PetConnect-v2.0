@@ -1,0 +1,89 @@
+<div class="container mt-4" style="max-width: 700px">
+  <h5>Create New Blog Post</h5>
+
+  <div *ngIf="errorMsg" class="alert alert-danger">{{ errorMsg }}</div>
+  <div *ngIf="successMsg" class="alert alert-success">{{ successMsg }}</div>
+
+  <form (ngSubmit)="submitBlog()" #blogForm="ngForm" novalidate>
+    <div class="mb-3">
+      <label for="title" class="form-label">Title *</label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        class="form-control"
+        required
+        [(ngModel)]="blog.title"
+        #title="ngModel"
+      />
+      <div *ngIf="title.invalid && title.touched" class="text-danger">
+        Title is required.
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="blogType" class="form-label">Blog Type *</label>
+      <select
+        id="blogType"
+        name="blogType"
+        class="form-select"
+        required
+        [(ngModel)]="blog.blogType"
+        #blogType="ngModel"
+      >
+        <option [value]="0">General</option>
+        <option [value]="1">Read</option>
+        <option [value]="2">Read & Write</option>
+        <!-- add your types -->
+      </select>
+      <div *ngIf="blogType.invalid && blogType.touched" class="text-danger">
+        Blog type is required.
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="excerpt" class="form-label">Excerpt (optional)</label>
+      <textarea
+        id="excerpt"
+        name="excerpt"
+        class="form-control"
+        [(ngModel)]="blog.excerpt"
+        rows="2"
+      ></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label for="content" class="form-label">Content *</label><br />
+      <quill-editor
+        [(ngModel)]="blog.content"
+        name="content"
+        [modules]="{ toolbar: true, }"
+        [styles]="{ height: '200px', background: '#fff' }"
+        #content="ngModel"
+        style="width: 100%; background-color: #fff"
+      >
+      </quill-editor>
+      <div *ngIf="content.invalid && content.touched" class="text-danger">
+        Content is required.
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="media" class="form-label">Upload Media (optional)</label>
+      <input
+        type="file"
+        id="media"
+        class="form-control"
+        (change)="onFileSelected($event)"
+      />
+    </div>
+
+    <button
+      type="submit"
+      class="btn btn-primary"
+      [disabled]="isSubmitting || blogForm.invalid"
+    >
+      {{ isSubmitting ? "Submitting..." : "Submit" }}
+    </button>
+  </form>
+</div>

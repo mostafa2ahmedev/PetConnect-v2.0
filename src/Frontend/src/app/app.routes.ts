@@ -44,6 +44,8 @@ import { DoctorLearnMore } from './Feature/Doctor/doctor-learn-more/doctor-learn
 import { DoctorEditProfile } from './Feature/Doctor/doctor-edit-profile/doctor-edit-profile';
 import { DocAppointmentets } from './Feature/profile/doctor/doc-appointmentets/doc-appointmentets';
 import { AllBlogs } from './Feature/Blog/all-blogs/all-blogs';
+import { SinglePost } from './Feature/Blog/single-post/single-post';
+import { AddBlog } from './Feature/Blog/add-blog/add-blog';
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'home', component: Home },
@@ -111,10 +113,15 @@ export const routes: Routes = [
         path: 'timeslots/:id',
         component: ShowAllDoctorTimeslots,
       },
+      {
+        path: 'blog/add',
+        component: AddBlog,
+      },
     ],
   },
   { path: 'blog', component: AllBlogs, children: [] },
-
+  { path: 'blog/post/:id', component: SinglePost, children: [] },
+  { path: 'blog/add', component: AddBlog, children: [] },
   { path: 'register', component: Register, children: [] },
   { path: 'register/doctor', component: DoctorRegisterForm },
   { path: 'register/customer', component: CustomerRegisterForm },

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -47,7 +48,7 @@ namespace PetConnect.BLL.Services.Classes
 
                   });
         }
-        public BlogDetails? GetBlogById(Guid BlogId)
+        public BlogDetails? GetBlogById(Guid BlogId, string UserId)
         {
             var Blog = _unitOfWork.BlogRepository.GetBlogByIdWithAuthorDataAndSomeStatistics(BlogId);
             if (Blog == null)
@@ -64,28 +65,32 @@ namespace PetConnect.BLL.Services.Classes
                 Likes = Blog.UserBlogLikes.Count,
                 DoctorName = Blog.Doctor.FName + " " + Blog.Doctor.LName,
                 DoctorImgUrl = Blog.Doctor.ImgUrl,
-                Comments = Blog.UserBlogComments.Count
+                Comments = Blog.UserBlogComments.Count,
+                IsLikedByUser = Blog.UserBlogLikes.Any(like => like.UserId == UserId) // ✅
+
 
             };
         }
-        public IEnumerable<CommentDataDto> GetAllCommentsForSpecificBlog(Guid BlogId)
+        public IEnumerable<CommentDataDto> GetAllCommentsForSpecificBlog(Guid BlogId, string UserId)
         {
             return _unitOfWork.UserBlogCommentRepository.GetAllCommentsByBlogId(BlogId)
-                .Select(UBC=>new CommentDataDto() { 
-                Comment = UBC.BlogComment.Comment,
-                ID = UBC.BlogCommentId,
-                Media = UBC.BlogComment.Media,
-                PosterImage = UBC.User.ImgUrl,
-                PosterName=UBC.User.FName + " " + UBC.User.LName,
-                NumberOfLikes = _unitOfWork.UserBlogCommentLikeRepository.GetNumberOfLikesForSpecificComment(UBC.BlogCommentId),
-                NumberOfReplies = _unitOfWork.UserBlogCommentReplyRepository.GetNumberOfRepliesByCommentId(UBC.BlogCommentId),
+                .Select(UBC => new CommentDataDto()
+                {
+                    Comment = UBC.BlogComment.Comment,
+                    ID = UBC.BlogCommentId,
+                    Media = UBC.BlogComment.Media,
+                    PosterImage = UBC.User.ImgUrl,
+                    PosterName = UBC.User.FName + " " + UBC.User.LName,
+                    NumberOfLikes = _unitOfWork.UserBlogCommentLikeRepository.GetNumberOfLikesForSpecificComment(UBC.BlogCommentId),
+                    NumberOfReplies = _unitOfWork.UserBlogCommentReplyRepository.GetNumberOfRepliesByCommentId(UBC.BlogCommentId),
 
-
+                    IsLikedByUser = _unitOfWork.UserBlogCommentLikeRepository
+                .IsCommentLikedByUser(UBC.BlogCommentId, UserId)
                 });
         }
 
     
-        public IEnumerable<ReplyDataDto> GetAllRepliesForSpecificComment(Guid CommentId)
+        public IEnumerable<ReplyDataDto> GetAllRepliesForSpecificComment(Guid CommentId, string UserId)
         {
             return _unitOfWork.UserBlogCommentReplyRepository.GetAllRepliesByCommentId(CommentId)
                    .Select(UBCR => new ReplyDataDto()
@@ -95,8 +100,9 @@ namespace PetConnect.BLL.Services.Classes
                        Media = UBCR.BlogCommentReply.Media,
                        PosterImage = UBCR.User.ImgUrl,
                        PosterName = UBCR.User.FName + " " + UBCR.User.LName,
-                       NumberOfLikes = _unitOfWork.UserBlogCommentReplyLikeRepository.GetNumberOfLikesForSpecificReply(UBCR.BlogCommentReplyId), 
-
+                       NumberOfLikes = _unitOfWork.UserBlogCommentReplyLikeRepository.GetNumberOfLikesForSpecificReply(UBCR.BlogCommentReplyId),
+                       IsLikedByUser = _unitOfWork.UserBlogCommentReplyLikeRepository
+                .IsCommentLikedByUser(UBCR.BlogCommentReplyId, UserId)
                    });
         }
 

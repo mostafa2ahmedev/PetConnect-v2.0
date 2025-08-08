@@ -12,7 +12,7 @@ namespace PetConnect.BLL.Services.DTOs.Blog
         public Guid ID { get; set; }
         public string Title { get; set; } = null!;
         public string excerpt { get; set; } = null!;
-        public string Media { get; set; } = null!;
+        public string? Media { get; set; } = null!;
         public int Likes { get; set; }
         public int Comments { get; set; }
         public BlogType BlogType { get; set; }

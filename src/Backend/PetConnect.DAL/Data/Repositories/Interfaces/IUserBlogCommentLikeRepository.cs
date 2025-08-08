@@ -12,6 +12,7 @@ namespace PetConnect.DAL.Data.Repositories.Interfaces
     {
         public int GetNumberOfLikesForSpecificComment(Guid CommentId);
         public UserBlogCommentLike? GetUserBlogCommentLike(string UserId, Guid CommentId);
+        public bool IsCommentLikedByUser(Guid commentId, string userId);
 
     }
 }

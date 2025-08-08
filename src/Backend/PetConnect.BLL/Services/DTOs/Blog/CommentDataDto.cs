@@ -15,6 +15,7 @@ namespace PetConnect.BLL.Services.DTOs.Blog
         public string PosterImage { get; set; } = null!;
         public int NumberOfLikes { get; set; }
         public int NumberOfReplies { get; set; }
+       public Boolean IsLikedByUser { get; set; }
 
     }
 }

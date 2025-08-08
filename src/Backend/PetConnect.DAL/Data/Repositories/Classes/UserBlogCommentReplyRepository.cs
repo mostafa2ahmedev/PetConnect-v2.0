@@ -21,7 +21,7 @@ namespace PetConnect.DAL.Data.Repositories.Classes
         public IQueryable<UserBlogCommentReply> GetAllRepliesByCommentId(Guid CommentId)
         {
 
-            return context.UserBlogCommentReplies.Include(UBCR=>UBCR.BlogCommentReply);
+            return context.UserBlogCommentReplies.Include(UBCR=>UBCR.BlogCommentReply).Where(UBCR => UBCR.BlogCommentId == CommentId); ;
         }
         public int GetNumberOfRepliesByCommentId(Guid CommentId)
         {

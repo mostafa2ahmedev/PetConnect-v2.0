@@ -11,10 +11,10 @@ namespace PetConnect.BLL.Services.Interfaces
     {  
         
         IEnumerable<BlogData> GetAllBlogs();
-        BlogDetails? GetBlogById(Guid BlogId);
-        IEnumerable<CommentDataDto> GetAllCommentsForSpecificBlog(Guid BlogId);
+        BlogDetails? GetBlogById(Guid BlogId, string UserId);
+        public IEnumerable<CommentDataDto> GetAllCommentsForSpecificBlog(Guid BlogId, string UserId);
 
-        IEnumerable<ReplyDataDto> GetAllRepliesForSpecificComment(Guid CommentId);
+        IEnumerable<ReplyDataDto> GetAllRepliesForSpecificComment(Guid CommentId, string UserId);
 
         Task<bool> AddBlog(string DoctorId ,AddBlogDto AddedBlogDto);
         Task<bool> AddBlogComment(string UserId, AddCommentDto AddedBlogDto);

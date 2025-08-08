@@ -40,7 +40,9 @@ namespace PetConnect.API.Controllers
         [EndpointSummary("Get Blog Details by ID")]
         public ActionResult GetBlogDetails(Guid BlogId)
         {
-            var Blog = _blogService.GetBlogById(BlogId);
+            var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var Blog = _blogService.GetBlogById(BlogId, UserId);
             if(Blog == null)
                 return NotFound(new GeneralResponse(404,$"Blog with ID {BlogId} Not Found"));
             return Ok(new GeneralResponse(200, Blog));
@@ -48,23 +50,26 @@ namespace PetConnect.API.Controllers
 
 
 
-        [HttpGet("/ReadWriteBlogs/Comments/{BlogId}")]
+        [HttpGet("ReadWriteBlogs/Comments/{BlogId}")]
         [ProducesResponseType(typeof(List<CommentDataDto>), StatusCodes.Status200OK)]
         [EndpointSummary("Get All {{{{{Comments}}}}} For ReadWrite Blogs")]
         public ActionResult GetAllCommentsForReadWriteBlogs(Guid BlogId)
         {
-            var Comments = _blogService.GetAllCommentsForSpecificBlog(BlogId);
+            var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var Comments = _blogService.GetAllCommentsForSpecificBlog(BlogId, UserId);
             return Ok(new GeneralResponse(200, Comments));
         }
 
 
 
-        [HttpGet("/Replies/{CommentId}")]
+        [HttpGet("Replies/{CommentId}")]
         [ProducesResponseType(typeof(List<ReplyDataDto>), StatusCodes.Status200OK)]
         [EndpointSummary("Get All {{{{{Replies}}}}} For Specific Comment")]
         public ActionResult GetAllRepliesForComment(Guid CommentId)
         {
-            var Replies = _blogService.GetAllRepliesForSpecificComment(CommentId);
+            var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var Replies = _blogService.GetAllRepliesForSpecificComment(CommentId, UserId);
             return Ok(new GeneralResponse(200, Replies));
         }
 

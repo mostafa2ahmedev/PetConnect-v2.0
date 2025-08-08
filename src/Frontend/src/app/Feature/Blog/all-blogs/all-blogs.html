@@ -4,7 +4,10 @@
     data-aos="fade-up"
   >
     <h2>Latest Blog Posts</h2>
-    <p>Find your new best friend and give a rescued pet a loving home.</p>
+    <p>
+      Explore inspiring pet stories and practical advice to nurture your beloved
+      companions.
+    </p>
 
     <!-- <div
       class="mt-3 d-flex justify-content-center gap-3"
@@ -20,7 +23,7 @@
   </div>
 </section>
 
-<div class="container my-4">
+<div class="container my-4 pt-5">
   <!-- Loading Spinner -->
   <div *ngIf="loading" class="text-center my-5">
     <div class="spinner-border text-primary" role="status"></div>
@@ -35,22 +38,26 @@
   <!-- Blog Cards -->
   <div *ngIf="!loading && blogs.length > 0" class="row g-4">
     <div class="col-md-4" *ngFor="let blog of blogs">
-      <div class="card h-100 shadow-sm">
-        <img
-          *ngIf="blog.media"
-          [src]="getFullImageUrl(blog.media)"
-          class="card-img-top"
-          alt="Blog Media"
-        />
+      <div class="card h-100 shadow-lg mx-2 mb-5">
+        <a [routerLink]="`/blog/post/${blog.id}`">
+          <img
+            *ngIf="blog.media"
+            [src]="getFullImageUrl(blog.media)"
+            class="card-img-top"
+            style="max-height: 300px; object-fit: cover"
+            alt="Blog Media"
+        /></a>
         <div class="card-body d-flex flex-column">
-          <h5 class="card-title">{{ blog.doctorName }}</h5>
-          <small class="text-muted mb-2">
-            {{ blog.postDate | date : "medium" }}
-          </small>
+          <a [routerLink]="`/blog/post/${blog.id}`">
+            <h5 class="card-title">{{ blog.title }}</h5>
+            <small class="text-muted mb-2">
+              {{ blog.postDate | date : "medium" }}
+            </small>
+          </a>
           <p class="card-text" [innerHTML]="blog.excerpt"></p>
           <div class="mt-auto">
             <span class="badge bg-primary me-2">{{ blog.likes }} Likes</span>
-            <span class="badge bg-secondary">Type {{ blog.blogType }}</span>
+            <span class="badge bg-secondary">Comments {{ blog.comments }}</span>
           </div>
         </div>
       </div>

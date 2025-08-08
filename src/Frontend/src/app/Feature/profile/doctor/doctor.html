@@ -42,7 +42,7 @@
             <strong>{{ profileData().pricePerHour }}</strong> EGP/Hour
           </p>
           <div
-            class="d-flex justify-content-center mb-2"
+            class="d-flex justify-content-center mb-2 flex-wrap"
             *ngIf="doctor().isApproved"
           >
             <button
@@ -71,6 +71,15 @@
               [routerLinkActiveOptions]="{ exact: true }"
             >
               Show Timeslots
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary ms-1 mt-2"
+              [routerLink]="['/doc-profile/blog/add']"
+              [routerLinkActive]="'active'"
+              [routerLinkActiveOptions]="{ exact: true }"
+            >
+              Add blog
             </button>
           </div>
         </div>

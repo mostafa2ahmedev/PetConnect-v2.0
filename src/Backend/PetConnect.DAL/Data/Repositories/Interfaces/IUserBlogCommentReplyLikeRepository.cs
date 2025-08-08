@@ -11,6 +11,7 @@ namespace PetConnect.DAL.Data.Repositories.Interfaces
     public interface IUserBlogCommentReplyLikeRepository : IGenericRepository<UserBlogCommentReplyLike>
     {
         public int GetNumberOfLikesForSpecificReply(Guid ReplyId);
-        public  UserBlogCommentReplyLike? GetUserBlogCommentReplyLike(string UserId, Guid ReplyId);
+        public UserBlogCommentReplyLike? GetUserBlogCommentReplyLike(string UserId, Guid ReplyId);
+        public bool IsCommentLikedByUser(Guid commentId, string userId);
     }
 }

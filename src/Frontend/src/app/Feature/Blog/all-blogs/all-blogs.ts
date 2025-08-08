@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Blog } from '../blog-models';
 import { BlogService } from '../blog-service';
 import { CommonModule, DatePipe } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-all-blogs',
-  imports: [DatePipe, CommonModule],
+  imports: [DatePipe, CommonModule, RouterModule],
   templateUrl: './all-blogs.html',
   styleUrl: './all-blogs.css',
 })

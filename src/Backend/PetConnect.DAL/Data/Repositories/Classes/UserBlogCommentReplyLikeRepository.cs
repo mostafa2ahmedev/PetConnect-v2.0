@@ -1,4 +1,5 @@
-﻿using PetConnect.DAL.Data.GenericRepository;
+﻿using Microsoft.EntityFrameworkCore;
+using PetConnect.DAL.Data.GenericRepository;
 using PetConnect.DAL.Data.Models;
 using PetConnect.DAL.Data.Repositories.Interfaces;
 using System;
@@ -29,5 +30,11 @@ namespace PetConnect.DAL.Data.Repositories.Classes
             return context.UserBlogCommentReplyLikes.Where(UBCRL => UBCRL.UserId == UserId && UBCRL.BlogCommentReplyId == ReplyId).FirstOrDefault();
         }
 
+        public bool IsCommentLikedByUser(Guid ReplyId, string userId)
+        {
+            return context.UserBlogCommentReplyLikes
+                .Any(like => like.BlogCommentReplyId == ReplyId && like.UserId == userId);
+
+        }
     }
 }

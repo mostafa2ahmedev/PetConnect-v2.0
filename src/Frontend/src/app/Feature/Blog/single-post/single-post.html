@@ -1,0 +1,179 @@
+<div *ngIf="blogPost" class="container py-5 min-vh-100">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="loader" *ngIf="loading"></div>
+      <!-- Header -->
+      <div class="mb-3 p-4 bg-light rounded shadow-sm">
+        <h1 class="fw-bold mb-3">{{ blogPost.title }}</h1>
+        <div class="d-flex align-items-center flex-wrap text-muted">
+          <a
+            [routerLink]="['/doctor-details', blogPost.doctorId]"
+            class="d-flex align-items-center text-decoration-none me-3"
+          >
+            <img
+              [src]="getFullImageUrl(blogPost.doctorImgUrl)"
+              alt="Doctor"
+              class="rounded-circle me-2 border"
+              style="width: 50px; height: 50px; object-fit: cover"
+            />
+            <span class="fw-semibold text-dark"
+              >Dr. {{ blogPost.doctorName }}</span
+            >
+          </a>
+          <span>{{ blogPost.postDate | date : "mediumDate" }}</span>
+        </div>
+      </div>
+
+      <!-- Media -->
+      <div *ngIf="blogPost.media" class="mb-4">
+        <img
+          [src]="getFullImageUrl(blogPost.media)"
+          alt="Blog Media"
+          class="img-fluid rounded shadow mb-5"
+          style="max-height: 400px; object-fit: cover"
+        />
+      </div>
+
+      <!-- Content -->
+      <!-- <p class="lead text-center mt-5 mb-5">
+        {{ blogPost.content }}
+      </p> -->
+      <div [innerHTML]="blogPost.content" class="mb-5 fs-5 lh-lg"></div>
+
+      <!-- Likes -->
+      <div class="d-flex align-items-center my-4">
+        <button
+          class="like-btn"
+          [class.active]="blogPost.isLikedByUser"
+          (click)="likePost(blogPost.id)"
+          *ngIf="isAuth"
+        >
+          <i class="fas fa-thumbs-up me-2"></i>
+          <span>{{ blogPost.isLikedByUser ? "Liked" : "Like" }}</span>
+        </button>
+        <span class="ms-3">{{ blogPost.likes }} likes</span>
+      </div>
+
+      <hr />
+
+      <!-- Comments Section -->
+      <h5 class="mb-3">Comments ({{ comments?.length || 0 }})</h5>
+
+      <!-- Comments List -->
+      <div *ngFor="let comment of comments" class="text-start">
+        <div class="mb-3 p-3 border rounded">
+          <div class="d-flex align-items-center mb-2">
+            <img
+              [src]="getFullImageUrl(comment.posterImage)"
+              class="rounded-circle me-2"
+              alt="User"
+              width="40"
+              height="40"
+            />
+            <div>
+              <strong>{{ comment.posterName }}</strong>
+              <!-- <small class="text-muted d-block">
+                {{ comment. | date : "short" }}
+              </small> -->
+            </div>
+          </div>
+          <p class="mb-2">{{ comment.comment }}</p>
+
+          <!-- Like button -->
+          <div class="mb-2">
+            <button
+              class="like-btn py-1 px-2 me-2"
+              [class.active]="comment.isLikedByUser"
+              (click)="likeComment(comment.id)"
+            >
+              <i class="fas fa-thumbs-up me-1 small"></i>
+              <span class="small">
+                {{ comment.isLikedByUser ? "Liked" : "Like" }}
+              </span>
+            </button>
+            <span class="d-inline-block px-2"
+              >{{ comment.numberOfLikes }} likes</span
+            >
+            <button class="btn btn-sm" (click)="loadReplies(comment.id)">
+              {{ comment.numberOfReplies }} Replies
+            </button>
+          </div>
+        </div>
+
+        <!-- Replies section -->
+        <div *ngIf="comment.showReplies" class="ms-5 mt-2 mb-4">
+          <div *ngIf="comment.replies.length > 0; else noReplies">
+            <div
+              *ngFor="let reply of comment.replies"
+              class="border p-2 mb-2 rounded"
+            >
+              <img
+                [src]="getFullImageUrl(reply.posterImage)"
+                class="rounded-circle me-2"
+                alt="User"
+                width="30"
+                height="30"
+              />
+
+              <strong>{{ reply.posterName }}</strong>
+              <p class="my-1">{{ reply.reply }}</p>
+              <button
+                class="like-btn btn-sm me-2"
+                [class.active]="reply.isLikedByUser"
+                (click)="likeReply(reply.id, comment.id)"
+              >
+                <i class="fas fa-thumbs-up me-1 small"></i>
+                <span class="small">{{
+                  reply.isLikedByUser ? "Liked" : "Like"
+                }}</span>
+              </button>
+              <span class="small">{{ reply.numberOfLikes || 0 }} likes</span>
+            </div>
+          </div>
+          <ng-template #noReplies>
+            <p class="text-muted small">No replies yet.</p>
+          </ng-template>
+
+          <!-- Reply input -->
+          <div class="d-flex mt-2">
+            <input
+              type="text"
+              [(ngModel)]="newReply.reply"
+              placeholder="Write a reply..."
+              class="form-control me-2"
+            />
+            <button
+              class="btn btn-primary btn-sm"
+              (click)="addReply(comment.id)"
+            >
+              Reply
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Comment Form -->
+      <form class="mb-4 text-start" *ngIf="isAuth" (ngSubmit)="addComment()">
+        <div class="mb-3">
+          <textarea
+            [(ngModel)]="newComment.comment"
+            name="comment"
+            class="form-control"
+            rows="3"
+            placeholder="Add a comment..."
+            required
+          ></textarea>
+        </div>
+
+        <!-- <div class="mb-3">
+          <input
+            type="file"
+            (change)="newComment.media = $event.target.files[0]"
+            class="form-control"
+          />
+        </div> -->
+
+        <button type="submit" class="btn btn-primary">Post Comment</button>
+      </form>
+    </div>
+  </div>
+</div>
