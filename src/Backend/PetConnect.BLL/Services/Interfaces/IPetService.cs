@@ -19,10 +19,10 @@ namespace PetConnect.BLL.Services.Interfaces
 
         Task<int> UpdatePet(UpdatedPetDto UpdatedPet);
         int DeletePet(int id);
-        IEnumerable<PetDataDto> GetAllPetsWithBelongsToCustomer();
+        IEnumerable<PetDataDto> GetAllPetsWithCustomerData();
         //IEnumerable<PetDataDto> GetAllPets();
 
-        public IEnumerable<PetDataDto> GetAllApprovedPetsWithBelongsToCustomer();
+        public IEnumerable<PetDataDto> GetAllApprovedPetsWithCustomerData();
 
         PetDetailsDto? GetPet(int id);
         IEnumerable<PetDataDto> GetAllPetsByCountForAdoption(int count);

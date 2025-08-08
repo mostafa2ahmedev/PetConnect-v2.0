@@ -21,7 +21,6 @@ namespace PetConnect.BLL.Services.Classes
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAttachmentService _attachmentService;
         private readonly ICustomerAddedPetsService _customerAddedPetsService;
-    
 
         public PetService(IUnitOfWork unitOfWork , IAttachmentService attachmentService,ICustomerAddedPetsService customerAddedPetsService)
         {
@@ -30,9 +29,6 @@ namespace PetConnect.BLL.Services.Classes
             _customerAddedPetsService = customerAddedPetsService;
     
         }
-
-        
-
         public async Task <int> AddPet(AddedPetDto addedPet ,string CustomerId)
         {
             var Image = await _attachmentService.UploadAsync(addedPet.ImgURL, "PetImages");
@@ -51,10 +47,7 @@ namespace PetConnect.BLL.Services.Classes
             }
             return result;
         }
-
-
-
-        public IEnumerable<PetDataDto> GetAllPetsWithBelongsToCustomer()
+        public IEnumerable<PetDataDto> GetAllPetsWithCustomerData()
         {
             List<PetDataDto> petDatas = new List<PetDataDto>();
             IEnumerable<Pet> PetList = _unitOfWork.PetRepository.GetPetBreadCategoryDataWithCustomer();
@@ -87,10 +80,7 @@ namespace PetConnect.BLL.Services.Classes
             }
             return petDatas;
         }
-
-
-
-        public IEnumerable<PetDataDto> GetAllApprovedPetsWithBelongsToCustomer()
+        public IEnumerable<PetDataDto> GetAllApprovedPetsWithCustomerData()
         {
             List<PetDataDto> petDatas = new List<PetDataDto>();
             IEnumerable<Pet> PetList = _unitOfWork.PetRepository.GetApprovedPetBreadCategoryDataWithCustomer();
@@ -146,7 +136,6 @@ namespace PetConnect.BLL.Services.Classes
 
             return PetList;
         }
-
         public IEnumerable<PetDataDto> GetAllForRescuePetsWithCustomerData()
         {
             var PetList = _unitOfWork.PetRepository.GetPetBreadCategoryDataWithCustomer().Where(P => P.Status == PetStatus.ForRescue && P.IsApproved == true).Select(P =>
@@ -206,7 +195,6 @@ namespace PetConnect.BLL.Services.Classes
 
             return petDto;
         }
-
         public IEnumerable<PetDataDto> GetAllPetsByCountForAdoption(int count)
         {
             List<PetDataDto> petDatas = new List<PetDataDto>();
@@ -269,8 +257,6 @@ namespace PetConnect.BLL.Services.Classes
             _unitOfWork.PetRepository.Update(pet);
             return _unitOfWork.SaveChanges();
         }
-
-
         public int DeletePet(int id)
         {
             var Pet = _unitOfWork.PetRepository.GetByID(id);
@@ -280,10 +266,7 @@ namespace PetConnect.BLL.Services.Classes
                 return _unitOfWork.SaveChanges();
             }
             return 0;
-        }
-       
-
-
+        }  
         public IEnumerable<PetDetailsDto> GetPetsForCustomer(string CustomerId)
         {
             ICollection<PetDetailsDto> customerPets = new List<PetDetailsDto>();
