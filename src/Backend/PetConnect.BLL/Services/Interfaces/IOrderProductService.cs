@@ -14,5 +14,7 @@ namespace PetConnect.BLL.Services.Interfaces
         int? ShippingOrDenyingOrderProductInOrder(string SellerId, ShipOrDenyOrderProductDto shipOrDenyOrderProductDto);
 
         bool CheckIfThereIsAnyOrderProductWithStatusPendingForSpecificProduct(int OrderId);
+
+        bool DecreaseQuantityOfProduct(int ProductId,int QuantityNeedsToDecrease);
     }
 }
