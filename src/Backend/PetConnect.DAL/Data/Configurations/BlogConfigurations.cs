@@ -19,6 +19,8 @@ namespace PetConnect.DAL.Data.Configurations
             builder.Property(B => B.ID).ValueGeneratedNever();
             builder.Property(b => b.PostDate).HasDefaultValueSql("GetUtcDate()");
             builder.Property(B => B.Content).HasColumnType("varchar(max)");
+            builder.Property(B => B.Title).HasColumnType("varchar(200)");
+            builder.Property(B => B.excerpt).HasColumnType("varchar(500)");
             builder.Property(B => B.Media).HasColumnType("varchar(200)");
             builder.Property(B => B.BlogType)
              .HasConversion(

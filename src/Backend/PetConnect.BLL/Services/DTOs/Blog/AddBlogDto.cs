@@ -17,5 +17,10 @@ namespace PetConnect.BLL.Services.DTOs.Blog
 
         [Required(ErrorMessage ="Blog Type Is Required")]
         public BlogType BlogType { get; set; }
+        [Required]
+        public string Title { get; set; } = null!;
+        [Required]
+        public string excerpt { get; set; } = null!;
+       
     }
 }

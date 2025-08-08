@@ -21,15 +21,16 @@ namespace PetConnect.DAL.Data.Repositories.Classes
         }
 
 
-        public IQueryable<Blog> GetAllReadBlogs() { 
-        
-        return _context.Blogs.Include(B=>B.Doctor).Include(B=>B.UserBlogComments).Include(B=>B.UserBlogLikes).Where(B => B.BlogType == BlogType.Read);
-        }
-        public IQueryable<Blog> GetAllReadWriteBlogs()
+
+        public IQueryable<Blog> GetAllBlogsWithAuthorDataAndSomeStatistics()
         {
 
-            return _context.Blogs.Include(B => B.Doctor).Include(B => B.UserBlogComments).Include(B => B.UserBlogLikes).Where(B => B.BlogType == BlogType.ReadWrite);
+            return _context.Blogs.Include(B => B.Doctor).Include(B => B.UserBlogComments).Include(B => B.UserBlogLikes);
         }
 
+        public Blog? GetBlogByIdWithAuthorDataAndSomeStatistics(Guid BlogId)
+        {
+            return _context.Blogs.Include(B => B.Doctor).Include(B => B.UserBlogComments).Include(B => B.UserBlogLikes).FirstOrDefault(B=>B.ID==BlogId);
+        }
     }
 }
