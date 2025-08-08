@@ -35,7 +35,7 @@ export class DoctorCustomerAppointment implements OnInit {
   doctorId: string = '';
   user: JwtUser = {} as JwtUser;
   alertService = inject(AlertService);
-
+  loading: boolean = true;
   appointmentForm!: FormGroup;
   ngOnInit(): void {
     this.doctor = history.state.doctor;
@@ -67,6 +67,7 @@ export class DoctorCustomerAppointment implements OnInit {
     this.doctorCustomerAppService.getPetsForCustomer().subscribe({
       next: (resp) => {
         this.pets = resp.data;
+        this.loading = false;
         // console.log(this.pets)
         // console.log(this.doctor);
         // console.log(this.slot);

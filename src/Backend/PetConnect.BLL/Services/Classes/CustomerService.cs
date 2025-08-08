@@ -144,7 +144,8 @@ namespace PetConnect.BLL.Services.Classes
             {
                 CustomerAdoptionsRecord.Status = AdoptionStatus.Approved;
                 result = AdoptionStatus.Approved.ToString();
-
+                pet.Status = PetStatus.Owned;
+                _petService.UpdatePetStatus(pet.Id, PetStatus.Owned);
                 var CAPRecord = _unitOfWork.CustomerAddedPetsRepository.DeleteCustomerAddedPetRecord(approveORCancelCustomerRequestDto.PetId, RecuserId);
                 _customerAddedPetsService.RegisterCustomerPetAddition(approveORCancelCustomerRequestDto.ReqCustomerId, approveORCancelCustomerRequestDto.PetId);
                 _unitOfWork.CustomerPetAdpotionsRepository.RemoveSingleReq(RecuserId, approveORCancelCustomerRequestDto.ReqCustomerId, approveORCancelCustomerRequestDto.PetId);

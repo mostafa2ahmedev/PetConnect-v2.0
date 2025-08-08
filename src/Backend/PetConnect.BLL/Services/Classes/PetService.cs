@@ -130,7 +130,7 @@ namespace PetConnect.BLL.Services.Classes
                 Status = P.Status,
                 Id = P.Id,
                 Age = P.Age,
-                CategoryName = P!.Name,
+                CategoryName = P!.Breed.Category.Name,
                 CustomerId = P.CustomerAddedPets.CustomerId,
                 CustomerName = P.CustomerAddedPets.Customer.FName + " " + P.CustomerAddedPets.Customer.LName,
                 CustomerCity = P.CustomerAddedPets.Customer.Address.City,
@@ -155,7 +155,7 @@ namespace PetConnect.BLL.Services.Classes
                 Status = P.Status,
                 Id = P.Id,
                 Age = P.Age,
-                CategoryName = P!.Name,
+                CategoryName = P!.Breed.Category.Name,
                 CustomerId = P.CustomerAddedPets.CustomerId,
                 CustomerName = P.CustomerAddedPets.Customer.FName + " " + P.CustomerAddedPets.Customer.LName,
                 CustomerCity = P.CustomerAddedPets.Customer.Address.City,
@@ -268,6 +268,20 @@ namespace PetConnect.BLL.Services.Classes
             return _unitOfWork.SaveChanges();
         }
 
+
+        public  int UpdatePetStatus(int petId, PetStatus newStatus)
+        {
+            var pet = _unitOfWork.PetRepository.GetByID(petId);
+            if (pet == null)
+            {
+                return 0;
+            }
+
+            pet.Status = newStatus;
+
+            _unitOfWork.PetRepository.Update(pet);
+            return  _unitOfWork.SaveChanges();
+        }
 
         public int DeletePet(int id)
         {

@@ -373,7 +373,7 @@
                         class="badge"
                         [ngClass]="{
                           'bg-warning text-dark': appt.status === 'Pending',
-                          'bg-success': appt.status === 'Approved',
+                          'bg-info': appt.status === 'Confirmed',
                           'bg-danger': appt.status === 'Cancelled'
                         }"
                       >

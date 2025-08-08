@@ -2817,3 +2817,8 @@ section,
   color: #fff;
   border-color: #dee2e6;
 }
+.alert.alert-info a {
+  color: #fff;
+  border-bottom: 1px solid #efefef;
+}
+/* HTML: <div class="loader"></div> */
