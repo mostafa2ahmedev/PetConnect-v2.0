@@ -47,7 +47,7 @@ namespace PetConnect.BLL.Services.Classes
                       DoctorImgUrl = B.Doctor.ImgUrl,
                       Comments = B.UserBlogComments.Count,
                       Topic = B.Topic.ToString(),
-                      PetCategoryName = B.PetCategory.Name,
+                      CategoryName = B.PetCategory.Name,
 
 
 
@@ -74,7 +74,7 @@ namespace PetConnect.BLL.Services.Classes
                 Comments = Blog.UserBlogComments.Count,
                 IsLikedByUser = Blog.UserBlogLikes.Any(like => like.UserId == UserId), // ✅
                 Topic = Blog.Topic.ToString(),
-                PetCategoryName = Blog.PetCategory.Name,
+                CategoryName = Blog.PetCategory.Name,
 
             };
         }

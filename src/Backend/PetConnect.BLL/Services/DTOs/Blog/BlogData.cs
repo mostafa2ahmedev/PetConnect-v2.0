@@ -22,6 +22,6 @@ namespace PetConnect.BLL.Services.DTOs.Blog
         public string DoctorImgUrl { get; set; } = null!;
 
         public string? Topic { get; set; } = null!;
-        public string? PetCategoryName  { get; set; } = null!;
+        public string? CategoryName  { get; set; } = null!;
     }
 }
