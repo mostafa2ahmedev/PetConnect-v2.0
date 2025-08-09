@@ -27,5 +27,10 @@ namespace PetConnect.DAL.Data.Repositories.Classes
         {
             return context.UserBlogCommentReplies.Where(UBCR=>UBCR.BlogCommentId==CommentId).Count();
         }
+        public IEnumerable<UserBlogCommentReply> GetAllUserCommentRepliesByCommentId(Guid CommentId)
+        {
+            return context.UserBlogCommentReplies.Where(UBCR => UBCR.BlogCommentId == CommentId);
+        }
+
     }
 }

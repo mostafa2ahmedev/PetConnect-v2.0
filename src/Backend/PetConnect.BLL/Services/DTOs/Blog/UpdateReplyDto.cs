@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace PetConnect.BLL.Services.DTOs.Blog
 {
-    public class AddCommentDto
+    public class UpdateReplyDto
     {
-        public Guid BlogId { get; set; }
-        public string? Comment { get; set; } = null!;
+        [Required]
+        public Guid ReplyId { get; set; }
+        public string? Reply { get; set; } = null!;
         public IFormFile? Media { get; set; } = null!;
-
     }
 }

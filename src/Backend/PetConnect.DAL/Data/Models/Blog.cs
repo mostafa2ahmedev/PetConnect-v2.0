@@ -22,6 +22,7 @@ namespace PetConnect.DAL.Data.Models
         public string DoctorId { get; set; } = null!;
         public Doctor Doctor { get; set; } = null!;
 
+        public bool IsDeleted { get; set; }
 
 
         public ICollection<UserBlogComment> UserBlogComments { get; set; } = new HashSet<UserBlogComment>();

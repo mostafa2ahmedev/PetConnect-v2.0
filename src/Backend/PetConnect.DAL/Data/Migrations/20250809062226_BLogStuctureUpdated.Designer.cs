@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetConnect.DAL.Data;
 
@@ -11,9 +12,11 @@ using PetConnect.DAL.Data;
 namespace PetConnect.DAL.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250809062226_BLogStuctureUpdated")]
+    partial class BLogStuctureUpdated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -372,9 +375,6 @@ namespace PetConnect.DAL.Data.Migrations
                     b.Property<bool>("IsApproved")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Media")
                         .HasColumnType("varchar(200)");
 
@@ -403,6 +403,7 @@ namespace PetConnect.DAL.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Comment")
+                        .IsRequired()
                         .HasColumnType("varchar(max)");
 
                     b.Property<string>("CommentORReplyType")
@@ -410,6 +411,7 @@ namespace PetConnect.DAL.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Media")
+                        .IsRequired()
                         .HasColumnType("varchar(200)");
 
                     b.HasKey("ID");
@@ -427,9 +429,11 @@ namespace PetConnect.DAL.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CommentReply")
+                        .IsRequired()
                         .HasColumnType("varchar(max)");
 
                     b.Property<string>("Media")
+                        .IsRequired()
                         .HasColumnType("varchar(200)");
 
                     b.HasKey("ID");

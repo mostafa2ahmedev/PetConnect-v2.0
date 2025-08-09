@@ -10,8 +10,8 @@ namespace PetConnect.DAL.Data.Models
     public class BlogComment
     {
         public Guid ID { get; set; }
-        public string Comment { get; set; } = null!;
-        public string Media { get; set; } = null!;
+        public string? Comment { get; set; } = null!;
+        public string? Media { get; set; } = null!;
 
         public UserBlogComment UserBlogComment { get; set; } = null!;
         public ICollection<UserBlogCommentReply> UserBlogCommentReplies { get; set; } = new HashSet<UserBlogCommentReply>();

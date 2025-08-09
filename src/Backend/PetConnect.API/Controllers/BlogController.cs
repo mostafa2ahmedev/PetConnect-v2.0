@@ -9,6 +9,7 @@ using PetConnect.BLL.Services.Interfaces;
 using PetConnect.DAL.Data.Models;
 using System.Diagnostics.Eventing.Reader;
 using System.Security.Claims;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PetConnect.API.Controllers
 {
@@ -52,7 +53,7 @@ namespace PetConnect.API.Controllers
 
         [HttpGet("ReadWriteBlogs/Comments/{BlogId}")]
         [ProducesResponseType(typeof(List<CommentDataDto>), StatusCodes.Status200OK)]
-        [EndpointSummary("Get All {{{{{Comments}}}}} For ReadWrite Blogs")]
+        [EndpointSummary("Get All {{{{{Comments}}}}} For Blogs")]
         public ActionResult GetAllCommentsForReadWriteBlogs(Guid BlogId)
         {
             var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -197,7 +198,7 @@ namespace PetConnect.API.Controllers
                 return Ok(new GeneralResponse(200, result));
 
         }
-        [HttpPut("Edit")]
+        [HttpPut("EditBlog")]
         [EndpointSummary("Update Blog Data")]
         [Authorize()]
         public async Task<ActionResult> EditBlog([FromForm] UpdateBlogDto updateBlogDto)
@@ -219,7 +220,95 @@ namespace PetConnect.API.Controllers
             if (!result)
                 return NotFound(new GeneralResponse(400, "Not Found"));
             else
-                return Ok(new GeneralResponse(200, "Data Updated Successfully"));
+                return Ok(new GeneralResponse(200, "Blog Updated Successfully"));
+
+        }
+        [HttpPut("EditComment")]
+        [EndpointSummary("Update Comment Data")]
+        [Authorize()]
+        public async Task<ActionResult> EditComment([FromForm] UpdateCommentDto updateCommentDto)
+        {
+
+            if ((updateCommentDto.Comment == null && updateCommentDto.Media == null) || !ModelState.IsValid)
+            {
+              
+
+                return BadRequest(new GeneralResponse(400, "You Should Provide Media Or Content"));
+            }
+
+            var result = await _blogService.UpdateComment(updateCommentDto);
+            if (!result)
+                return NotFound(new GeneralResponse(400, "Not Found"));
+            else
+                return Ok(new GeneralResponse(200, "Comment Updated Successfully"));
+
+        }
+        [HttpPut("EditReply")]
+        [EndpointSummary("Update Reply Data")]
+        [Authorize()]
+        public async Task<ActionResult> EditReply([FromForm] UpdateReplyDto updateReplyDto)
+        {
+
+            if ((updateReplyDto.Reply == null && updateReplyDto.Media == null) || !ModelState.IsValid)
+            {
+
+
+                return BadRequest(new GeneralResponse(400, "You Should Provide Media Or Content"));
+            }
+
+            var result = await _blogService.UpdateReply(updateReplyDto);
+            if (!result)
+                return NotFound(new GeneralResponse(400, "Not Found"));
+            else
+                return Ok(new GeneralResponse(200, "Reply Updated Successfully"));
+
+        }
+        [HttpDelete("DeleteBlog/{BLogId}")]
+        [EndpointSummary("Delete Blog")]
+        [Authorize()]
+        public  ActionResult DeleteBlog(Guid? BLogId)
+        {
+
+          if(BLogId == null)
+                return BadRequest(new GeneralResponse(400, "Blog ID Can't be null"));
+
+            var result =  _blogService.DeleteBlog(BLogId.Value);
+            if (!result)
+                return NotFound(new GeneralResponse(400, "Not Found"));
+            else
+                return Ok(new GeneralResponse(200, "Blog Deleted Successfully"));
+
+        }
+        [HttpDelete("DeleteComment/{CommentId}")]
+        [EndpointSummary("Delete Comment")]
+        [Authorize()]
+        public ActionResult DeleteComment(Guid? CommentId)
+        {
+
+            if (CommentId == null)
+                return BadRequest(new GeneralResponse(400, "Comment ID Can't be null"));
+
+            var result = _blogService.DeleteComment(CommentId.Value);
+            if (!result)
+                return NotFound(new GeneralResponse(400, "Not Found"));
+            else
+                return Ok(new GeneralResponse(200, "Comment Deleted Successfully"));
+
+        }
+        [HttpDelete("DeleteReply/{ReplyId}")]
+        [EndpointSummary("Delete Reply")]
+        [Authorize()]
+        public ActionResult DeleteReply(Guid? ReplyId)
+        {
+
+            if (ReplyId == null)
+                return BadRequest(new GeneralResponse(400, "Reply ID Can't be null"));
+
+            var result = _blogService.DeleteReply(ReplyId.Value);
+            if (!result)
+                return NotFound(new GeneralResponse(400, "Not Found"));
+            else
+                return Ok(new GeneralResponse(200, "Reply Deleted Successfully"));
 
         }
     }

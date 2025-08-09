@@ -10,7 +10,6 @@ namespace PetConnect.BLL.Services.DTOs.Blog
 {
     public class AddReplyDto
     {
-        [Required]
         public Guid CommentId { get; set; }
         public string? Reply { get; set; } = null!;
         public IFormFile? Media { get; set; } = null!;

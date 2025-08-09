@@ -24,10 +24,11 @@ namespace PetConnect.BLL.Services.Interfaces
         string? ToggleCommentLike(string UserId, Guid CommentId);
         string? ToggleReplyLike(string UserId, Guid ReplyId);
         Task<bool> UpdateBlog(UpdateBlogDto UpdateBlogDto);
-
+        Task<bool> UpdateComment(UpdateCommentDto UpdateCommentDto);
+        Task<bool> UpdateReply(UpdateReplyDto UpdateReplyDto);
         bool DeleteBlog(Guid BlogId);
-
-
+        bool DeleteComment(Guid CommentId);
+        bool DeleteReply(Guid ReplyId);
 
 
     }

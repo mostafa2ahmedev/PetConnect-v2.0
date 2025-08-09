@@ -12,5 +12,6 @@ namespace PetConnect.DAL.Data.Repositories.Interfaces
     {
         public IQueryable<UserBlogCommentReply> GetAllRepliesByCommentId(Guid CommentId);
         public int GetNumberOfRepliesByCommentId(Guid CommentId);
+        public IEnumerable<UserBlogCommentReply> GetAllUserCommentRepliesByCommentId(Guid CommentId);
     }
 }

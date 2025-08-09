@@ -10,6 +10,7 @@ namespace PetConnect.DAL.Data.Repositories.Interfaces
 {
     public interface IUserBlogCommentRepository :IGenericRepository<UserBlogComment>
     {
-        public IQueryable<UserBlogComment> GetAllCommentsByBlogId(Guid BlogId);
+        public IQueryable<UserBlogComment> GetAllCommentsByBlogIdWithAuthorAndBlogData(Guid BlogId);
+        public IEnumerable<UserBlogComment> GetAllUserCommentsByBlogId(Guid BlogId);
     }
 }

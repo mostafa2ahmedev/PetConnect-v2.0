@@ -73,9 +73,10 @@ namespace PetConnect.BLL.Services.Classes
         }
         public IEnumerable<CommentDataDto> GetAllCommentsForSpecificBlog(Guid BlogId, string UserId)
         {
-            return _unitOfWork.UserBlogCommentRepository.GetAllCommentsByBlogId(BlogId)
+            return _unitOfWork.UserBlogCommentRepository.GetAllCommentsByBlogIdWithAuthorAndBlogData(BlogId)
                 .Select(UBC => new CommentDataDto()
                 {
+                    IsDeleted = UBC.IsDeleted,
                     Comment = UBC.BlogComment.Comment,
                     ID = UBC.BlogCommentId,
                     Media = UBC.BlogComment.Media,
@@ -95,6 +96,7 @@ namespace PetConnect.BLL.Services.Classes
             return _unitOfWork.UserBlogCommentReplyRepository.GetAllRepliesByCommentId(CommentId)
                    .Select(UBCR => new ReplyDataDto()
                    {
+                       IsDeleted = UBCR.IsDeleted,
                        Reply = UBCR.BlogCommentReply.CommentReply,
                        ID = UBCR.BlogCommentReplyId,
                        Media = UBCR.BlogCommentReply.Media,
@@ -102,6 +104,8 @@ namespace PetConnect.BLL.Services.Classes
                        PosterName = UBCR.User.FName + " " + UBCR.User.LName,
                        NumberOfLikes = _unitOfWork.UserBlogCommentReplyLikeRepository.GetNumberOfLikesForSpecificReply(UBCR.BlogCommentReplyId),
                        IsLikedByUser = _unitOfWork.UserBlogCommentReplyLikeRepository
+                  
+                       
                 .IsCommentLikedByUser(UBCR.BlogCommentReplyId, UserId)
                    });
         }
@@ -127,6 +131,7 @@ namespace PetConnect.BLL.Services.Classes
                 Media = fileName != null ? $"/assets/img/blogs/{fileName}" : null,
                 excerpt = AddedBlogDto.excerpt,
                 Title = AddedBlogDto.Title,
+                IsDeleted = false
                 
             };
             _unitOfWork.BlogRepository.Add(Blog);
@@ -135,19 +140,6 @@ namespace PetConnect.BLL.Services.Classes
             return result >= 1? true:false;
         }
 
-
-
-        public bool DeleteBlog(Guid BlogId)
-        {
-            var Blog = _unitOfWork.BlogRepository.GetByID(BlogId.ToString());
-            bool result = false;
-            if (Blog != null) {
-                _unitOfWork.BlogRepository.Delete(Blog);
-             result=  _unitOfWork.SaveChanges() > 1?true : false;
-            }
-
-            return result;
-        }
 
         public async Task<bool> AddBlogComment(string UserId, AddCommentDto AddCommentDto)
         {
@@ -162,13 +154,16 @@ namespace PetConnect.BLL.Services.Classes
             var BlogComment = new BlogComment() {
             Comment = AddCommentDto.Comment?? string.Empty,
             Media = fileName != null ? $"/assets/img/blogs/comments/{fileName}" : string.Empty,
+        
 
             };
             Console.WriteLine(BlogComment.ID);
             var UserBlogComment = new UserBlogComment() { 
             BlogCommentId = BlogComment.ID,
-            BlogId = AddCommentDto.BLogId,
-            UserId = UserId,
+            BlogId = AddCommentDto.BlogId,
+             UserId = UserId,
+            IsDeleted = false,
+            
             };
             _unitOfWork.BlogCommentRepository.Add(BlogComment);
             _unitOfWork.UserBlogCommentRepository.Add(UserBlogComment);
@@ -191,16 +186,17 @@ namespace PetConnect.BLL.Services.Classes
             {
                 CommentReply = AddReplyDto.Reply ?? string.Empty,
                 Media = fileName != null ? $"/assets/img/blogs/comments/replies/{fileName}" : string.Empty,
-
+              
 
 
 
             };
             var UserBlogCommentReply = new UserBlogCommentReply()
             {
-                 BlogCommentId= AddReplyDto.CommentId,
-                 BlogCommentReplyId = BlogCommentReply.ID,
+                BlogCommentId = AddReplyDto.CommentId,
+                BlogCommentReplyId = BlogCommentReply.ID,
                  UserId = UserId,
+                 IsDeleted=false,
             };
             _unitOfWork.BlogCommentReplyRepository.Add(BlogCommentReply);
             _unitOfWork.UserBlogCommentReplyRepository.Add(UserBlogCommentReply);
@@ -318,6 +314,110 @@ namespace PetConnect.BLL.Services.Classes
             return  await _unitOfWork.SaveChangesAsync()>=1?true:false;
         }
 
-   
+        public async Task<bool> UpdateComment(UpdateCommentDto UpdateCommentDto)
+        {
+            var CommentRecord = _unitOfWork.BlogCommentRepository.GetByID(UpdateCommentDto.CommentId);
+            if (CommentRecord == null)
+                return false;
+
+            if (UpdateCommentDto.Media != null)
+            {
+                var fileName = await _attachmentService.UploadAsync(UpdateCommentDto.Media, Path.Combine("img", "blogs", "comments"));
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    CommentRecord.Media = $"/assets/img/blogs/comments/{fileName}";
+                }
+            }
+
+          CommentRecord.Comment = UpdateCommentDto.Comment;   
+         
+
+
+
+
+            _unitOfWork.BlogCommentRepository.Update(CommentRecord);
+            return await _unitOfWork.SaveChangesAsync() >= 1 ? true : false;
+        }
+
+        public async Task<bool> UpdateReply(UpdateReplyDto UpdateReplyDto)
+        {
+            var ReplyRecord = _unitOfWork.BlogCommentReplyRepository.GetByID(UpdateReplyDto.ReplyId);
+            if (ReplyRecord == null)
+                return false;
+
+            if (UpdateReplyDto.Media != null)
+            {
+                var fileName = await _attachmentService.UploadAsync(UpdateReplyDto.Media, Path.Combine("img", "blogs", "comments", "replies"));
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    ReplyRecord.Media = $"/assets/img/blogs/comments/replies/{fileName}";
+                }
+            }
+
+            ReplyRecord.CommentReply = UpdateReplyDto.Reply;
+
+
+
+
+
+            _unitOfWork.BlogCommentReplyRepository.Update(ReplyRecord);
+            return await _unitOfWork.SaveChangesAsync() >= 1 ? true : false;
+        }
+        public bool DeleteBlog(Guid BlogId)
+        {
+            bool result = false;
+            var Blog = _unitOfWork.BlogRepository.GetByID(BlogId);
+
+            if (Blog == null)
+                return false;
+
+            var UserBlogComments = _unitOfWork.UserBlogCommentRepository.GetAllUserCommentsByBlogId(BlogId);
+
+            foreach (var Comment in UserBlogComments)
+            {
+                Comment.IsDeleted = true;
+                _unitOfWork.UserBlogCommentRepository.Update(Comment);
+                var UserBlogCommentReplies = _unitOfWork.UserBlogCommentReplyRepository.GetAllUserCommentRepliesByCommentId(Comment.BlogCommentId);
+                foreach (var Reply in UserBlogCommentReplies)
+                {
+                    Reply.IsDeleted = true;
+                    _unitOfWork.UserBlogCommentReplyRepository.Update(Reply);
+                }
+
+            }
+
+            Blog.IsDeleted = true;
+            _unitOfWork.BlogRepository.Update(Blog);
+            result = _unitOfWork.SaveChanges() >= 1 ? true : false;
+
+            return result;
+        }
+        public bool DeleteComment(Guid CommentId)
+        {
+            var Comment = _unitOfWork.UserBlogCommentRepository.GetByID(CommentId);
+            bool result = false;
+            if (Comment == null)
+                return false;
+
+            Comment.IsDeleted= true;
+            _unitOfWork.UserBlogCommentRepository.Update(Comment);
+            result = _unitOfWork.SaveChanges() >= 1 ? true : false;
+
+            return result;
+        }
+
+        public bool DeleteReply(Guid ReplyId)
+        {
+            var Reply = _unitOfWork.UserBlogCommentReplyRepository.GetByID(ReplyId);
+            bool result = false;
+            if (Reply == null)
+                return false;
+
+            Reply.IsDeleted = true;
+            _unitOfWork.UserBlogCommentReplyRepository.Update(Reply);
+            result = _unitOfWork.SaveChanges() >= 1 ? true : false;
+
+            return result;
+        }
     }
 }

@@ -24,5 +24,7 @@ namespace PetConnect.DAL.Data.Models
         public DateTime ReplyDate { get; set; }
 
         public CommentORReplyORLikeType UserType { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }
