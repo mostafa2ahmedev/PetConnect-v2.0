@@ -25,7 +25,7 @@ namespace PetConnect.PL.Controllers
 
         // GET: api/doctors
         [HttpGet]
-        [Authorize("Doctor")]
+    
         public IActionResult GetAll(string? name, decimal? maxPrice, PetSpecialty? specialty)
         {
             var doctors = doctorService.GetAll();
@@ -57,7 +57,7 @@ namespace PetConnect.PL.Controllers
 
         // GET: api/doctors/{id}
         [HttpGet("{id}")]
-        [Authorize("Doctor")]
+
         public IActionResult GetById(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -73,7 +73,7 @@ namespace PetConnect.PL.Controllers
 
         // PUT: api/doctors/{id}
         [HttpPut("{id}")]
-        [Authorize("Doctor")]
+    
         public async Task<IActionResult> Edit(string id, [FromForm] DoctorDetailsDTO dto)
         {
             if (id != dto.Id)
@@ -137,7 +137,7 @@ namespace PetConnect.PL.Controllers
 
       
         [HttpGet("Blogs")]
-        [Authorize(Roles ="Doctor")]
+    
         [EndpointSummary("Get Blogs Posted By Doctor")]
         public IActionResult GetDoctorBlogs()
         {
