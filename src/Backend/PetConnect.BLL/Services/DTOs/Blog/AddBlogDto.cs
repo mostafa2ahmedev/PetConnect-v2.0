@@ -11,7 +11,8 @@ namespace PetConnect.BLL.Services.DTOs.Blog
 {
     public class AddBlogDto
     {
-
+        [Required]
+        public BlogTopic Topic { get; set; }
         [Required]
         public string Content { get; set; } = null!;
         public IFormFile? Media { get; set; } = null!;
@@ -21,6 +22,9 @@ namespace PetConnect.BLL.Services.DTOs.Blog
         public string? excerpt { get; set; } = null!;
         [Required]
         public BlogType BlogType { get; set; }
+
+        [Required]
+        public int PetCategoryId { get; set; } 
 
     }
 }

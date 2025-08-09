@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetConnect.DAL.Data;
 
@@ -11,9 +12,11 @@ using PetConnect.DAL.Data;
 namespace PetConnect.DAL.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250809110849_BlogStructureModified2")]
+    partial class BlogStructureModified2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -378,9 +381,6 @@ namespace PetConnect.DAL.Data.Migrations
                     b.Property<string>("Media")
                         .HasColumnType("varchar(200)");
 
-                    b.Property<int?>("PetCategoryId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("PostDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -400,9 +400,25 @@ namespace PetConnect.DAL.Data.Migrations
 
                     b.HasIndex("DoctorId");
 
+                    b.ToTable("Blogs");
+                });
+
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.BlogCategory", b =>
+                {
+                    b.Property<Guid>("BlogId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("PetCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("BlogId", "PetCategoryId");
+
                     b.HasIndex("PetCategoryId");
 
-                    b.ToTable("Blogs");
+                    b.ToTable("BlogCategory");
                 });
 
             modelBuilder.Entity("PetConnect.DAL.Data.Models.BlogComment", b =>
@@ -1270,11 +1286,24 @@ namespace PetConnect.DAL.Data.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("PetConnect.DAL.Data.Models.PetCategory", "PetCategory")
-                        .WithMany("Blogs")
-                        .HasForeignKey("PetCategoryId");
-
                     b.Navigation("Doctor");
+                });
+
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.BlogCategory", b =>
+                {
+                    b.HasOne("PetConnect.DAL.Data.Models.Blog", "Blog")
+                        .WithMany("BlogCategories")
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("PetConnect.DAL.Data.Models.PetCategory", "PetCategory")
+                        .WithMany("BlogCategories")
+                        .HasForeignKey("PetCategoryId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Blog");
 
                     b.Navigation("PetCategory");
                 });
@@ -1759,6 +1788,8 @@ namespace PetConnect.DAL.Data.Migrations
 
             modelBuilder.Entity("PetConnect.DAL.Data.Models.Blog", b =>
                 {
+                    b.Navigation("BlogCategories");
+
                     b.Navigation("UserBlogComments");
 
                     b.Navigation("UserBlogLikes");
@@ -1811,7 +1842,7 @@ namespace PetConnect.DAL.Data.Migrations
 
             modelBuilder.Entity("PetConnect.DAL.Data.Models.PetCategory", b =>
                 {
-                    b.Navigation("Blogs");
+                    b.Navigation("BlogCategories");
 
                     b.Navigation("Breeds");
                 });

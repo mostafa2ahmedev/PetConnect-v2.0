@@ -27,8 +27,13 @@ namespace PetConnect.DAL.Data.Configurations
              BlogType => BlogType.ToString(),
              returnBlogType => (BlogType)Enum.Parse(typeof(BlogType), returnBlogType)
              );
-
-            builder.HasOne(B => B.Doctor).WithMany(D => D.DoctorBlogs).HasForeignKey(B => B.DoctorId).OnDelete(DeleteBehavior.NoAction);
+            builder.Property(B => B.Topic)
+             .HasConversion(
+            BlogTopic => BlogTopic.ToString(),
+             returnBlogTopic => (BlogTopic)Enum.Parse(typeof(BlogTopic), returnBlogTopic)
+             );
+           builder.HasOne(B => B.Doctor).WithMany(D => D.DoctorBlogs).HasForeignKey(B => B.DoctorId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(B => B.PetCategory).WithMany(PC => PC.Blogs).HasForeignKey(B => B.PetCategoryId);
         }
     }
 }

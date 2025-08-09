@@ -15,10 +15,13 @@ namespace PetConnect.BLL.Services.DTOs.Blog
         public string? Media { get; set; } = null!;
         public int Likes { get; set; }
         public int Comments { get; set; }
-        public BlogType BlogType { get; set; }
+        public BlogType? BlogType { get; set; }
         public DateTime PostDate { get; set; }
         public string DoctorId { get; set; } = null!;
         public string DoctorName { get; set; } = null!;
         public string DoctorImgUrl { get; set; } = null!;
+
+        public string? Topic { get; set; } = null!;
+        public string? PetCategoryName  { get; set; } = null!;
     }
 }

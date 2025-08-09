@@ -37,6 +37,7 @@ namespace PetConnect.DAL.Data
         public DbSet<UserBlogCommentLike> UserBlogCommentLikes { get; set; }
   
         public DbSet<UserBlogCommentReplyLike> UserBlogCommentReplyLikes { get; set; }
+
         public AppDbContext(DbContextOptions<AppDbContext> contextOptions) : base(contextOptions)
         {
             

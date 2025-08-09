@@ -29,10 +29,10 @@ namespace PetConnect.API.Controllers
 
         [HttpGet("AllBlogs")]
         [ProducesResponseType(typeof(List<BlogData>), StatusCodes.Status200OK)]
-        [EndpointSummary("Get All {{{{{Blogs}}}}} Blog Data")]
-        public ActionResult GetAllBlogs()
+        [EndpointSummary("Get All Blogs Blog Data")]
+        public ActionResult GetAllBlogs([FromQuery] int? Topic = null, [FromQuery] int? CategoryId = null)
         {
-            var Blogs = _blogService.GetAllBlogs();
+            var Blogs = _blogService.GetAllBlogs(Topic, CategoryId);
             return Ok(new GeneralResponse(200, Blogs));
         }
 

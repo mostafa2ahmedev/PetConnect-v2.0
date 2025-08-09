@@ -2,6 +2,7 @@
 using PetConnect.BLL.Services.DTO.Account;
 using PetConnect.BLL.Services.DTOs.Blog;
 using PetConnect.BLL.Services.Interfaces;
+using PetConnect.DAL.Data.Enums;
 using PetConnect.DAL.Data.Models;
 using PetConnect.DAL.Data.Repositories.Classes;
 using PetConnect.DAL.UnitofWork;
@@ -20,16 +21,18 @@ namespace PetConnect.BLL.Services.Classes
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAttachmentService _attachmentService;
 
+
         public BlogService(IUnitOfWork unitOfWork,IAttachmentService attachmentService)
         {
             _unitOfWork = unitOfWork;
             _attachmentService = attachmentService;
+  
         }
 
 
-        public IEnumerable<BlogData> GetAllBlogs()
+        public IEnumerable<BlogData> GetAllBlogs(int? Topic, int? PetCategoryId)
         {
-            return _unitOfWork.BlogRepository.GetAllBlogsWithAuthorDataAndSomeStatistics()
+            return _unitOfWork.BlogRepository.GetAllBlogsWithAuthorDataAndSomeStatistics(Topic , PetCategoryId)
                   .Select(B => new BlogData()
                   {
                       ID = B.ID,
@@ -42,8 +45,11 @@ namespace PetConnect.BLL.Services.Classes
                       Likes = B.UserBlogLikes.Count,
                       DoctorName = B.Doctor.FName + " " + B.Doctor.LName,
                       DoctorImgUrl = B.Doctor.ImgUrl,
-                      Comments = B.UserBlogComments.Count
-                     
+                      Comments = B.UserBlogComments.Count,
+                      Topic = B.Topic.ToString(),
+                      PetCategoryName = B.PetCategory.Name,
+
+
 
 
                   });
@@ -66,8 +72,9 @@ namespace PetConnect.BLL.Services.Classes
                 DoctorName = Blog.Doctor.FName + " " + Blog.Doctor.LName,
                 DoctorImgUrl = Blog.Doctor.ImgUrl,
                 Comments = Blog.UserBlogComments.Count,
-                IsLikedByUser = Blog.UserBlogLikes.Any(like => like.UserId == UserId) // ✅
-
+                IsLikedByUser = Blog.UserBlogLikes.Any(like => like.UserId == UserId), // ✅
+                Topic = Blog.Topic.ToString(),
+                PetCategoryName = Blog.PetCategory.Name,
 
             };
         }
@@ -131,9 +138,12 @@ namespace PetConnect.BLL.Services.Classes
                 Media = fileName != null ? $"/assets/img/blogs/{fileName}" : null,
                 excerpt = AddedBlogDto.excerpt,
                 Title = AddedBlogDto.Title,
-                IsDeleted = false
-                
+                IsDeleted = false,
+                Topic = AddedBlogDto.Topic,
+                PetCategoryId = AddedBlogDto.PetCategoryId
+
             };
+            
             _unitOfWork.BlogRepository.Add(Blog);
            var result= _unitOfWork.SaveChanges();
 
@@ -306,6 +316,8 @@ namespace PetConnect.BLL.Services.Classes
             Blog.excerpt = UpdateBlogDto.excerpt;
             Blog.Content = UpdateBlogDto.Content;
             Blog.BlogType = UpdateBlogDto.BlogType;
+            Blog.Topic = UpdateBlogDto.Topic;
+            Blog.PetCategoryId = UpdateBlogDto.PetCategoryId;
 
 
 
@@ -419,5 +431,7 @@ namespace PetConnect.BLL.Services.Classes
 
             return result;
         }
+
+    
     }
 }

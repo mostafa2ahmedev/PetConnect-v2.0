@@ -22,12 +22,28 @@ namespace PetConnect.DAL.Data.Repositories.Classes
 
 
 
-        public IQueryable<Blog> GetAllBlogsWithAuthorDataAndSomeStatistics()
+        public IQueryable<Blog> GetAllBlogsWithAuthorDataAndSomeStatistics(int? Topic, int? PetCategoryId)
         {
+            var query = _context.Blogs
+                .Include(B => B.Doctor)
+                .Include(B => B.UserBlogComments)
+                .Include(B => B.UserBlogLikes)
+                .Where(B => !B.IsDeleted);
 
-            return _context.Blogs.Include(B => B.Doctor).Include(B => B.UserBlogComments).Include(B => B.UserBlogLikes).Where(B=>B.IsDeleted == false);
+        
+            if (Topic.HasValue)
+            {
+                query = query.Where(B => B.Topic == (BlogTopic)Topic.Value);
+            }
+
+            
+            if (PetCategoryId.HasValue)
+            {
+                query = query.Include(B=>B.PetCategory).Where(B => B.PetCategoryId==PetCategoryId);
+            }
+
+            return query;
         }
-
         public IQueryable<Blog> GetAllBlogsWithAuthorDataAndSomeStatisticsByDoctorId(string DoctorId)
         {
             return _context.Blogs.Include(B => B.Doctor).Include(B => B.UserBlogComments).Include(B => B.UserBlogLikes).Where(B => B.IsDeleted == false && B.DoctorId ==DoctorId);
