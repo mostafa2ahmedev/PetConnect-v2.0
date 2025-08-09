@@ -120,7 +120,7 @@ namespace PetConnect.BLL.Services.Classes
                     Status = pet.Status,
                     IsApproved = pet.IsApproved
                 };
-               await notificationService.CreateAndSendNotification(userId, new NotificationDTO()
+                await notificationService.CreateAndSendNotification(userId, new NotificationDTO()
                 {
                     Message = $"Your Pet {pet.Name} With Id {pet.Id} Has Been Approved.",
                     Type = NotificationType.Approval
@@ -161,7 +161,7 @@ namespace PetConnect.BLL.Services.Classes
                     PricePerHour = doctor.PricePerHour,
                     IsDeleted = doctor.IsDeleted
                 };
-               await  notificationService.CreateAndSendNotification(id, new NotificationDTO
+                await notificationService.CreateAndSendNotification(id, new NotificationDTO
                 {
                     Message = "You Account Has Been Rejected.",
                     Type = NotificationType.Rejection,
@@ -226,7 +226,7 @@ namespace PetConnect.BLL.Services.Classes
             var totalUsers = await unitOfWork.ApplicationUserRepository.GetAllQueryable().Where(U => U.IsDeleted == false).CountAsync();
 
             var totalDoctors = await unitOfWork.DoctorRepository.GetAllQueryable().CountAsync();
-            var approvedDoctors = await unitOfWork.DoctorRepository.GetAllQueryable().Where(U => U.IsApproved == true ).CountAsync();
+            var approvedDoctors = await unitOfWork.DoctorRepository.GetAllQueryable().Where(U => U.IsApproved == true).CountAsync();
             var rejectedDoctors = await unitOfWork.DoctorRepository.GetAllQueryable().Where(U => U.IsApproved == false && U.IsDeleted == true).CountAsync();
             var pendingDoctors = await unitOfWork.DoctorRepository.GetAllQueryable().Where(U => U.IsApproved == false && U.IsDeleted == false).CountAsync();
 
@@ -235,9 +235,9 @@ namespace PetConnect.BLL.Services.Classes
             AdminStatisticsDTO stats = new AdminStatisticsDTO()
             {
                 TotalPets = totalPets,
-                ApprovedPets= approvedPets,
+                ApprovedPets = approvedPets,
                 PendingPets = pendingPets,
-                RejectedPets=rejectedPets,
+                RejectedPets = rejectedPets,
                 PetsForAdoption = totalPetsForAdpotion,
                 PetsForRescue = totalPetsForRescue,
                 TotalUsers = totalUsers,
@@ -245,7 +245,7 @@ namespace PetConnect.BLL.Services.Classes
                 TotalDoctors = totalDoctors,
                 ApprovedDoctors = approvedDoctors,
                 RejectedDoctors = rejectedDoctors,
-                PendingDoctors=pendingDoctors
+                PendingDoctors = pendingDoctors
             };
             return stats;
         }

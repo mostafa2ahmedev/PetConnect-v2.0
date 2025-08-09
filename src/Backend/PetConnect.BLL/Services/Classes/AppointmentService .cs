@@ -119,8 +119,6 @@ namespace PetConnect.BLL.Services.Classes
             };
         }
 
-
-
         public IEnumerable<AppointmentDoctorProfileViewDTO> GetAppointmentsForDoctorProfile(string doctorId)
         {
             var appointment = _unitOfWork.AppointmentsRepository.GetAllQueryable()
@@ -153,7 +151,7 @@ namespace PetConnect.BLL.Services.Classes
         public async Task<bool> CancelAppointmentAsync(Guid id)
         {
             var appointment = await _unitOfWork.AppointmentsRepository.GetByGuidAsync(id);
-            if (appointment == null && appointment.Status == AppointmentStatus.Cancelled) return false;
+            if (appointment == null || appointment.Status == AppointmentStatus.Cancelled) return false;
 
             appointment.Status = AppointmentStatus.Cancelled;
 

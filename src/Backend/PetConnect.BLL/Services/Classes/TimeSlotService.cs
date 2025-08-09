@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace PetConnect.BLL.Services.Classes
 {
-    class TimeSlotService : ITimeSlotService
+    public class TimeSlotService : ITimeSlotService
     {
         private readonly IUnitOfWork _unitOfWork;
         public TimeSlotService(IUnitOfWork unitOfWork)
