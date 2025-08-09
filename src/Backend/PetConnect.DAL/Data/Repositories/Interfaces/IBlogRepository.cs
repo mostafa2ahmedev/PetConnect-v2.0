@@ -11,6 +11,7 @@ namespace PetConnect.DAL.Data.Repositories.Interfaces
     public interface IBlogRepository : IGenericRepository<Blog>
     {
         IQueryable<Blog> GetAllBlogsWithAuthorDataAndSomeStatistics();
+        IQueryable<Blog> GetAllBlogsWithAuthorDataAndSomeStatisticsByDoctorId(string DoctorId);
         Blog? GetBlogByIdWithAuthorDataAndSomeStatistics(Guid BlogId);
        
     }
