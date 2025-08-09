@@ -10,6 +10,7 @@
   font-weight: 500;
 }
 
+
 .status-pending {
   background-color: #fef3c7;
   color: #92400e;
@@ -20,9 +21,9 @@
   color: #1e40af;
 }
 
-.status-delivered {
-  background-color: #d1fae5;
-  color: #065f46;
+.status-deny {
+  background-color: #f50c0c;
+  color: #f3f4f6;
 }
 
 .status-default {

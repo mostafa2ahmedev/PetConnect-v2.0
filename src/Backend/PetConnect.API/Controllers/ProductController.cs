@@ -65,7 +65,7 @@ namespace PetConnect.API.Controllers
         [HttpPut]
         [EndpointSummary("Update Product")]
         [Authorize(Roles = "Seller")]
-        public async Task<ActionResult> Edit([FromForm] UpdatedProductDTO updatedProductDTO)
+        public async Task<ActionResult> Edit([FromBody] UpdatedProductDTO updatedProductDTO)
         {
             if (!ModelState.IsValid)
             {

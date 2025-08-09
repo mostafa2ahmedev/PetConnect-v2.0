@@ -121,7 +121,9 @@
 
       <!-- Products Grid -->
       <div class="products-grid" *ngIf="products.length > 0">
-        <div class="product-card" *ngFor="let product of products; let i = index">
+        @for(product of products; track product.id; let i = $index) {
+        <div class="product-card" >
+        <!-- <div class="product-card" *ngFor="let product of products; let i = index"> -->
           <div class="product-image">
             
             <img *ngIf="product.imgUrl"
@@ -142,6 +144,14 @@
             <div class="product-details">
               <span class="price">Price: ${{ product.price }}</span>
               <span class="stock">Stock: {{ product.quantity }}</span>
+
+               <div class="add-stock">
+      <input type="number" min="1" [(ngModel)]="product.addQuantity" placeholder="+" class="form-control w-50"/>
+      <button class="btn btn-add" (click)="addToStock(product)">
+        <i class="icon-plus"></i>
+        Add To Stock
+      </button>
+    </div>
             </div>
             <div class="product-actions">
               <!-- <button class="btn btn-edit" (click)="editProduct(product)">
@@ -155,6 +165,7 @@
             </div>
           </div>
         </div>
+      }
       </div>
 
       <!-- Empty State -->
@@ -184,7 +195,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let order of orders">
+            @for(order of orders;track order.orderId){
+            <tr >
               <td>{{ order.orderId }}</td>
               <td>{{ order.customerName }}</td>
               <td>{{ order.productName }}</td>
@@ -207,15 +219,17 @@
                   <i class="icon-eye"></i>
                   Ship Order
                 </button>
-                }
-              @if(order.orderProductStatus === 0) {
-                <button class="btn btn-view" (click)="arrivedOrder({orderId:order.orderId,productId:order.productId,orderProductStatus:order.orderProductStatus})">
+                <button class="btn btn-view" (click)="denyOrder({orderId:order.orderId,productId:order.productId,orderProductStatus:order.orderProductStatus})">
                   <i class="icon-eye"></i>
                    Deny Order 
                 </button>
                 }
+                @else {
+                  <span>No Actions Required</span>
+                }
               </td>
             </tr>
+          }
           </tbody>
         </table>
       </div>

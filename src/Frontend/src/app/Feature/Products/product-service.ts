@@ -34,8 +34,8 @@ export class ProductService {
     });
   }
 
-  update(id: number, product: Product): Observable<any> {
-    return this.http.put(`${this.baseUrl}/${id}`, product, {
+  update( product: {Id:number ,Quantity:number}): Observable<any> {
+    return this.http.put(`${this.baseUrl}`, product, {
       headers: this.getAuthHeaders()
     });
   }

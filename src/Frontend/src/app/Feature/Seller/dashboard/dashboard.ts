@@ -16,15 +16,7 @@ import { SellerOrderProduct } from './seller-order-product';
 import { OrderStatusEnum } from './order-status-enum';
 import { OrderSellerAction } from './order-seller-action';
 
-// interface OrderModel {
-//   id: string;
-//   customerName: string;
-//   productName: string;
-//   quantity: number;
-//   total: number;
-//   status: string;
-//   date: string;
-// }
+
 
 @Component({
   selector: 'app-dashboard',
@@ -46,44 +38,15 @@ export class Dashboard implements OnInit {
   activeTab: string = 'products';
   seller: SellerModel= {}as SellerModel;
   products: Array<SellerProductsModel> =[];
-  // orders: OrderModel[] = [];
   showAddForm: boolean = false;
   selectedImageFile: File | null = null;
 
   addProductGroup!:FormGroup;
   productTypes:any[]=[];
   orders:SellerOrderProduct[] = [];
+  
   constructor() {
- 
-    // this.orders = [
-    //   {
-    //     id: 'ORD-001',
-    //     customerName: 'Alice Johnson',
-    //     productName: 'Wireless Headphones',
-    //     quantity: 2,
-    //     total: 199.98,
-    //     status: 'Processing',
-    //     date: '2024-01-15'
-    //   },
-    //   {
-    //     id: 'ORD-002',
-    //     customerName: 'Bob Wilson',
-    //     productName: 'Cotton T-Shirt',
-    //     quantity: 3,
-    //     total: 59.97,
-    //     status: 'Shipped',
-    //     date: '2024-01-14'
-    //   },
-    //   {
-    //     id: 'ORD-003',
-    //     customerName: 'Carol Davis',
-    //     productName: 'Coffee Mug',
-    //     quantity: 1,
-    //     total: 12.50,
-    //     status: 'Delivered',
-    //     date: '2024-01-13'
-    //   }
-    // ];
+
   }
 
   ngOnInit(): void {
@@ -142,9 +105,9 @@ export class Dashboard implements OnInit {
     }
 
     this.productsService.addWithImage(formData).subscribe({next:resp=>{
-      console.log(resp);
       this.alertService.success('Product added successfully');
-
+      this.showAddForm = false;
+      this.getToSellerDashboard()
     },
   error: err=>{
     console.log(formData.values())
@@ -153,19 +116,18 @@ export class Dashboard implements OnInit {
   }
 
   editProduct(product: SellerProductsModel): void {
-    // In a real app, this would open an edit modal/form
     this.router.navigateByUrl('products/edit', { state: { product } });
+    
 
   }
 
   deleteProduct(productId: number): void {
-    console.log(productId);
     this.sellerDashboardService.deleteProduct(productId).subscribe({
       next: res => {
         this.alertService.success('Product deleted successfully');
+        this.getToSellerDashboard()
       },
       error: err => {
-        console.log(err);
         this.alertService.error('Failed to delete product');
       }
     });
@@ -181,7 +143,6 @@ export class Dashboard implements OnInit {
   }
   onFileSelected(event: any) {
   const file = event.target.files[0];
-  console.log(file);
   if (!file) {
     return;
   }
@@ -204,7 +165,7 @@ export class Dashboard implements OnInit {
     switch (status) {
       case 'Pending': return 'status-pending';
       case 'Shipped': return 'status-shipped';
-      case 'Delivered': return 'status-delivered';
+      case 'Deny': return 'status-deny';
       default: return 'status-default';
     }
   }
@@ -226,17 +187,57 @@ export class Dashboard implements OnInit {
     
     this.sellerDashboardService.changeOrderStatus(orderAction).subscribe({next:resp=>{
       this.alertService.success(resp.data);
+      this.getToSellerDashboardOrder();
+      this.activeTab='orders';
     }});
   }
 
-    arrivedOrder(orderAction:OrderSellerAction){
+    denyOrder(orderAction:OrderSellerAction){
     orderAction.orderProductStatus= 2 ;
     this.sellerDashboardService.changeOrderStatus(orderAction).subscribe({next:resp=>{
       this.alertService.success(resp.data);
+            this.getToSellerDashboardOrder();
     }});
   }
   getProfileImage(fileName:string){
     return `https://localhost:7102${fileName}`;
     
   }
+  getToSellerDashboard(){
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+  this.router.navigate(['seller']);
+});
+  }
+    getToSellerDashboardOrder(){
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+  this.router.navigate(['seller']);
+  this.activeTab='orders'
+});
+  }
+
+  addToStock(product: SellerProductsModel): void {
+  const qtyToAdd = Number(product.addQuantity);
+
+  if (qtyToAdd > 0) {
+
+    this.alertService.confirm(`are you sure you want to add ${product.quantity} to ${product.productName}?`).then(confirmed=>{
+      if(confirmed){
+        product.quantity += qtyToAdd;
+
+        const mappedProduct = {Id: product.id,Quantity: product.quantity,
+          Description:product.productDescription,
+        Price:product.price,ProductTypeId:product.productType.id}
+        this.productsService.update(mappedProduct).subscribe({next:
+          rep=>{
+            this.alertService.success("Added successfully")
+            this.getToSellerDashboard();
+          }
+        })
+
+      }
+    })
+
+    // this.productService.updateStock(product.id, product.quantity).subscribe(...)
+  }
+}
 }

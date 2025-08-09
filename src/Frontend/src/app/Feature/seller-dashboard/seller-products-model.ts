@@ -9,4 +9,5 @@ export interface SellerProductsModel {
   price: number;
   imgUrl?: string; // optional
   productDescription?: string; // optional
+  addQuantity?: number; // optional
 }

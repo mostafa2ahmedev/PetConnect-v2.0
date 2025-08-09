@@ -81,7 +81,7 @@ getStatusClass(status: string): string {
     switch (status) {
       case 'Pending': return 'status-pending';
       case 'Shipped': return 'status-shipped';
-      case 'Delivered': return 'status-delivered';
+      case 'Deny': return 'status-deny';
       default: return 'status-default';
     }
   }
