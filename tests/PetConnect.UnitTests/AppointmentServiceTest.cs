@@ -146,6 +146,22 @@ namespace PetConnect.UnitTests
         }
 
         [Fact]
+        public async Task CompleteAppointmentAsync_ShouldReturnFalse_WhenAppointmentIsNotFound()
+        {
+            // Arrange
+            var appointmentId = Guid.NewGuid();
+
+            _unitOfWorkMock.Setup(u => u.AppointmentsRepository.GetByGuidAsync(appointmentId))
+                .ReturnsAsync((Appointment)null);
+
+            // Act
+            var result = await _appointmentService.CompleteAppointmentAsync(appointmentId);
+
+            // Assert
+            result.Should().BeFalse(); //Flent Assertion 
+        }
+
+        [Fact]
         public void GetAppointmentsForDoctorProfile_ShouldReturnDoctorAppointments()
         {
             // Arrange
