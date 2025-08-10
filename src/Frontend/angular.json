@@ -30,6 +30,7 @@
               "node_modules/bootstrap-icons/font/bootstrap-icons.css",
               "node_modules/sweetalert2/dist/sweetalert2.min.css",
               "node_modules/@ctrl/ngx-emoji-mart/picker.css",
+              "node_modules/quill/dist/quill.snow.css",
               "src/styles.css"
             ],
             "scripts": [

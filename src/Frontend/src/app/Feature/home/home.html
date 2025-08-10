@@ -319,38 +319,19 @@
     </p>
   </div>
   <!-- End Section Title -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"
+  />
 
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
   <div
     class="container aos-init aos-animate"
     data-aos="fade-up"
     data-aos-delay="100"
   >
     <div class="testimonials-slider swiper init-swiper">
-      <script type="application/json" class="swiper-config">
-        {
-          "loop": true,
-          "speed": 800,
-          "autoplay": {
-            "delay": 5000
-          },
-          "slidesPerView": 1,
-          "spaceBetween": 30,
-          "pagination": {
-            "el": ".swiper-pagination",
-            "type": "bullets",
-            "clickable": true
-          },
-          "breakpoints": {
-            "768": {
-              "slidesPerView": 2
-            },
-            "1200": {
-              "slidesPerView": 3
-            }
-          }
-        }
-      </script>
-
       <div class="swiper-wrapper">
         <!-- Testimonial 1 -->
         <div class="swiper-slide">
@@ -513,6 +494,35 @@
       ></div>
     </div>
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      console.log("Swiper initializing...");
+
+      new Swiper(".testimonials-slider", {
+        loop: true,
+        speed: 800,
+        autoplay: {
+          delay: 5000,
+        },
+        slidesPerView: 1,
+        spaceBetween: 30,
+        pagination: {
+          el: ".swiper-pagination",
+          type: "bullets",
+          clickable: true,
+        },
+        breakpoints: {
+          768: {
+            slidesPerView: 2,
+          },
+          1200: {
+            slidesPerView: 3,
+          },
+        },
+      });
+    });
+  </script>
 </section>
 
 <style>
@@ -618,3 +628,17 @@
     </div>
   </div>
 </section> -->
+<section class="d-flex justify-content-center pb-0 mb-0">
+  <div class="col-md-2 d-flex justify-content-center mb-0">
+    <img
+      src="assets/img/image.png"
+      alt="Footer Image"
+      class="img-fluid w-100"
+    />
+    <img
+      src="assets/img/Beige And Orange Illustrative Playful Pet Care Presentation (1).png"
+      alt="Footer Image"
+      class="img-fluid w-100"
+    />
+  </div>
+</section>

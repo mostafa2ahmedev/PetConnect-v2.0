@@ -1,4 +1,5 @@
 ﻿using PetConnect.BLL.Services.DTO.Doctor;
+using PetConnect.BLL.Services.DTOs.Blog;
 using PetConnect.BLL.Services.DTOs.Doctor;
 using PetConnect.DAL.Data.GenericRepository;
 using PetConnect.DAL.Data.Models;
@@ -17,6 +18,8 @@ namespace PetConnect.BLL.Services.Interfaces
         void Add(Doctor doctor);
         void Update(DoctorDetailsDTO doctor);
         void Delete(string id);
+
+        IEnumerable<BlogData> GetBlogsForDoctorById(string DoctorId);
 
 
 

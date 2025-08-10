@@ -352,6 +352,99 @@ namespace PetConnect.DAL.Data.Migrations
                     b.ToTable("Appointments");
                 });
 
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.Blog", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("BlogType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("varchar(max)");
+
+                    b.Property<string>("DoctorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Media")
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<int?>("PetCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("PostDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GetUtcDate()");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Topic")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("excerpt")
+                        .HasColumnType("varchar(500)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("PetCategoryId");
+
+                    b.ToTable("Blogs");
+                });
+
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.BlogComment", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("varchar(max)");
+
+                    b.Property<string>("CommentORReplyType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Media")
+                        .HasColumnType("varchar(200)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("BlogComments");
+                });
+
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.BlogCommentReply", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CommentORReplyORLikeType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CommentReply")
+                        .HasColumnType("varchar(max)");
+
+                    b.Property<string>("Media")
+                        .HasColumnType("varchar(200)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("BlogCommentReplies");
+                });
+
             modelBuilder.Entity("PetConnect.DAL.Data.Models.CustomerAddedPets", b =>
                 {
                     b.Property<int>("PetId")
@@ -789,6 +882,133 @@ namespace PetConnect.DAL.Data.Migrations
                     b.ToTable("TimeSlots");
                 });
 
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.UserBlogComment", b =>
+                {
+                    b.Property<Guid>("BlogCommentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BlogId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CommentDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GetUtcDate()");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("UserType")
+                        .HasColumnType("int");
+
+                    b.HasKey("BlogCommentId");
+
+                    b.HasIndex("BlogId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserBlogComments");
+                });
+
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.UserBlogCommentLike", b =>
+                {
+                    b.Property<Guid>("BlogCommentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserType")
+                        .HasColumnType("int");
+
+                    b.HasKey("BlogCommentId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserBlogCommentLikes");
+                });
+
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.UserBlogCommentReply", b =>
+                {
+                    b.Property<Guid>("BlogCommentReplyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BlogCommentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("ReplyDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GetUtcDate()");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("UserType")
+                        .HasColumnType("int");
+
+                    b.HasKey("BlogCommentReplyId");
+
+                    b.HasIndex("BlogCommentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserBlogCommentReplies");
+                });
+
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.UserBlogCommentReplyLike", b =>
+                {
+                    b.Property<Guid>("BlogCommentReplyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserType")
+                        .HasColumnType("int");
+
+                    b.HasKey("BlogCommentReplyId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserBlogCommentReplyLikes");
+                });
+
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.UserBlogLike", b =>
+                {
+                    b.Property<Guid>("BlogId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserType")
+                        .HasColumnType("int");
+
+                    b.HasKey("BlogId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserBlogLikes");
+                });
+
             modelBuilder.Entity("PetConnect.DAL.Data.Models.UserConnection", b =>
                 {
                     b.Property<string>("ConnectionId")
@@ -1040,6 +1260,23 @@ namespace PetConnect.DAL.Data.Migrations
                     b.Navigation("Pet");
 
                     b.Navigation("TimeSlot");
+                });
+
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.Blog", b =>
+                {
+                    b.HasOne("PetConnect.DAL.Data.Models.Doctor", "Doctor")
+                        .WithMany("DoctorBlogs")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("PetConnect.DAL.Data.Models.PetCategory", "PetCategory")
+                        .WithMany("Blogs")
+                        .HasForeignKey("PetCategoryId");
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("PetCategory");
                 });
 
             modelBuilder.Entity("PetConnect.DAL.Data.Models.CustomerAddedPets", b =>
@@ -1313,6 +1550,117 @@ namespace PetConnect.DAL.Data.Migrations
                     b.Navigation("Doctor");
                 });
 
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.UserBlogComment", b =>
+                {
+                    b.HasOne("PetConnect.DAL.Data.Models.BlogComment", "BlogComment")
+                        .WithOne("UserBlogComment")
+                        .HasForeignKey("PetConnect.DAL.Data.Models.UserBlogComment", "BlogCommentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("PetConnect.DAL.Data.Models.Blog", "Blog")
+                        .WithMany("UserBlogComments")
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("PetConnect.DAL.Data.Identity.ApplicationUser", "User")
+                        .WithMany("UserBlogComments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Blog");
+
+                    b.Navigation("BlogComment");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.UserBlogCommentLike", b =>
+                {
+                    b.HasOne("PetConnect.DAL.Data.Models.BlogComment", "BlogComment")
+                        .WithMany("UserBlogCommentLikes")
+                        .HasForeignKey("BlogCommentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("PetConnect.DAL.Data.Identity.ApplicationUser", "User")
+                        .WithMany("UserBlogCommentLikes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("BlogComment");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.UserBlogCommentReply", b =>
+                {
+                    b.HasOne("PetConnect.DAL.Data.Models.BlogComment", "BlogComment")
+                        .WithMany("UserBlogCommentReplies")
+                        .HasForeignKey("BlogCommentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("PetConnect.DAL.Data.Models.BlogCommentReply", "BlogCommentReply")
+                        .WithOne("UserBlogCommentReply")
+                        .HasForeignKey("PetConnect.DAL.Data.Models.UserBlogCommentReply", "BlogCommentReplyId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("PetConnect.DAL.Data.Identity.ApplicationUser", "User")
+                        .WithMany("UserBlogCommentReplies")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("BlogComment");
+
+                    b.Navigation("BlogCommentReply");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.UserBlogCommentReplyLike", b =>
+                {
+                    b.HasOne("PetConnect.DAL.Data.Models.BlogCommentReply", "BlogCommentReply")
+                        .WithMany("UserBlogCommentReplyLikes")
+                        .HasForeignKey("BlogCommentReplyId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("PetConnect.DAL.Data.Identity.ApplicationUser", "User")
+                        .WithMany("UserBlogCommentReplyLikes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("BlogCommentReply");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.UserBlogLike", b =>
+                {
+                    b.HasOne("PetConnect.DAL.Data.Models.Blog", "Blog")
+                        .WithMany("UserBlogLikes")
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("PetConnect.DAL.Data.Identity.ApplicationUser", "User")
+                        .WithMany("UserBlogLikes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Blog");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("PetConnect.DAL.Data.Models.UserConnection", b =>
                 {
                     b.HasOne("PetConnect.DAL.Data.Identity.ApplicationUser", "ApplicationUser")
@@ -1396,7 +1744,42 @@ namespace PetConnect.DAL.Data.Migrations
 
                     b.Navigation("SentMessages");
 
+                    b.Navigation("UserBlogCommentLikes");
+
+                    b.Navigation("UserBlogCommentReplies");
+
+                    b.Navigation("UserBlogCommentReplyLikes");
+
+                    b.Navigation("UserBlogComments");
+
+                    b.Navigation("UserBlogLikes");
+
                     b.Navigation("UserConnections");
+                });
+
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.Blog", b =>
+                {
+                    b.Navigation("UserBlogComments");
+
+                    b.Navigation("UserBlogLikes");
+                });
+
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.BlogComment", b =>
+                {
+                    b.Navigation("UserBlogComment")
+                        .IsRequired();
+
+                    b.Navigation("UserBlogCommentLikes");
+
+                    b.Navigation("UserBlogCommentReplies");
+                });
+
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.BlogCommentReply", b =>
+                {
+                    b.Navigation("UserBlogCommentReply")
+                        .IsRequired();
+
+                    b.Navigation("UserBlogCommentReplyLikes");
                 });
 
             modelBuilder.Entity("PetConnect.DAL.Data.Models.Order", b =>
@@ -1428,6 +1811,8 @@ namespace PetConnect.DAL.Data.Migrations
 
             modelBuilder.Entity("PetConnect.DAL.Data.Models.PetCategory", b =>
                 {
+                    b.Navigation("Blogs");
+
                     b.Navigation("Breeds");
                 });
 
@@ -1477,6 +1862,8 @@ namespace PetConnect.DAL.Data.Migrations
                     b.Navigation("AdminMessages");
 
                     b.Navigation("Appointments");
+
+                    b.Navigation("DoctorBlogs");
 
                     b.Navigation("TimeSlots");
                 });

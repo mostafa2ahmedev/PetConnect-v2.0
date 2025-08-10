@@ -56,34 +56,33 @@ namespace PetConnect.BLL.Services.Classes
 
 
 
-        public IEnumerable<UserBannerDto> LoadUserMessengersBySenderId(string SenderId)
+        public IEnumerable<UserBannerDto> LoadUserMessengersBySenderId(string userId)
         {
-
-            var messengers =
-                 (from m in _unitOfWork.UserMessagesRepository.GetAllQueryable()
-                 where m.SenderId == SenderId
-                 select m)
-                .AsEnumerable() 
-                .GroupBy(m => new { m.SenderId, m.RecieverId })
+            var messages = _unitOfWork.UserMessagesRepository.GetAllQueryable()
+                .Where(m => m.SenderId == userId || m.RecieverId == userId) // sent OR received
+                .AsEnumerable()
+                .GroupBy(m => m.SenderId == userId ? m.RecieverId : m.SenderId) // group by other user's id
                 .Select(group =>
                 {
-                    var lastMsg = group.LastOrDefault();
-                    var user = GetUserData(lastMsg.RecieverId);
+                    var lastMsg = group.OrderBy(m => m.SentDate).LastOrDefault();
+                    var otherUserId = group.Key; // the ID of the other person in the conversation
+                    var user = GetUserData(otherUserId);
+
                     return new UserBannerDto
                     {
                         LastMessage = lastMsg?.Message,
                         LastMessageDate = lastMsg.SentDate,
                         ReceiverName = user.FullName,
-                        IsOnline = IsOnline(lastMsg.RecieverId),
+                        IsOnline = IsOnline(otherUserId),
                         ImageURL = user.ImgUrl,
-                        IsRead = lastMsg.IsRead,
+                        IsRead = lastMsg?.IsRead ?? false,
                         UserId = user.UserId
-                        
                     };
-                    })
-                    .ToList();
+                })
+                .OrderByDescending(u => u.LastMessageDate) // newest conversations first
+                .ToList();
 
-            return messengers;
+            return messages;
         }
 
         public UserDataDto GetUserData(string UserId)

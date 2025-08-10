@@ -3,6 +3,10 @@ using PetConnect.BLL.Services.Interfaces;
 using PetConnect.BLL.Services.DTO.Doctor;
 using PetConnect.DAL.Data.Enums;
 using PetConnect.BLL.Common.AttachmentServices;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using PetConnect.BLL.Services.DTOs;
+using System.Xml.Linq;
 
 namespace PetConnect.PL.Controllers
 {
@@ -21,6 +25,7 @@ namespace PetConnect.PL.Controllers
 
         // GET: api/doctors
         [HttpGet]
+    
         public IActionResult GetAll(string? name, decimal? maxPrice, PetSpecialty? specialty)
         {
             var doctors = doctorService.GetAll();
@@ -52,6 +57,7 @@ namespace PetConnect.PL.Controllers
 
         // GET: api/doctors/{id}
         [HttpGet("{id}")]
+
         public IActionResult GetById(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -67,6 +73,7 @@ namespace PetConnect.PL.Controllers
 
         // PUT: api/doctors/{id}
         [HttpPut("{id}")]
+    
         public async Task<IActionResult> Edit(string id, [FromForm] DoctorDetailsDTO dto)
         {
             if (id != dto.Id)
@@ -127,6 +134,19 @@ namespace PetConnect.PL.Controllers
         }
 
 
+
+      
+        [HttpGet("Blogs")]
+    
+        [EndpointSummary("Get Blogs Posted By Doctor")]
+        public IActionResult GetDoctorBlogs()
+        {
+            var DoctorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            
+            var result = doctorService.GetBlogsForDoctorById(DoctorId!);
+
+            return Ok(new GeneralResponse(200, result));
+        }
 
     }
 }

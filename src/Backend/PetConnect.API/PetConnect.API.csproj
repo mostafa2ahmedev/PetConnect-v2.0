@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\assets\chatimages\" />
+    <Folder Include="wwwroot\assets\img\blogs\comments\replies\" />
   </ItemGroup>
 
 </Project>
