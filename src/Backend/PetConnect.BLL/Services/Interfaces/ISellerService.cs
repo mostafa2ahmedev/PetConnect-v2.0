@@ -1,6 +1,7 @@
 ﻿using PetConnect.BLL.Services.DTO.Doctor;
 using PetConnect.BLL.Services.DTOs.Customer;
 using PetConnect.BLL.Services.DTOs.OrderProduct;
+using PetConnect.BLL.Services.DTOs.Product;
 using PetConnect.BLL.Services.DTOs.Seller;
 using PetConnect.DAL.Data.GenericRepository;
 using PetConnect.DAL.Data.Models;
@@ -20,7 +21,10 @@ namespace PetConnect.BLL.Services.Interfaces
          int Delete(string id);
         Task<int> UpdateProfile(string SellerId,UpdateSellerProfileDto customerProfileDTO);
 
-     
+        IEnumerable<SellerProductsDto> GetAllProducts(string sellerId);
+
+
+
 
 
     }

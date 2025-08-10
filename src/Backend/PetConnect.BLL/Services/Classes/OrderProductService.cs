@@ -44,25 +44,32 @@ namespace PetConnect.BLL.Services.Classes
 
         public int? ShippingOrDenyingOrderProductInOrder(string SellerId, ShipOrDenyOrderProductDto shipOrDenyOrderProductDto)
         {
-         var OrderProduct=  _unitOfWork.orderProductRepository.GetOrderProductForSeller(SellerId,shipOrDenyOrderProductDto.ProductId,shipOrDenyOrderProductDto.OrderId);
+
+
+            var OrderProduct=  _unitOfWork.orderProductRepository.GetOrderProductForSeller(SellerId,shipOrDenyOrderProductDto.ProductId,shipOrDenyOrderProductDto.OrderId);
             if (OrderProduct == null)
                 return null;
 
             OrderProduct.OrderProductStatus=shipOrDenyOrderProductDto.OrderProductStatus;
 
-         var result=   _unitOfWork.SaveChanges();
+            if (OrderProduct.OrderProductStatus == OrderProductStatus.Shipped)
+                DecreaseQuantityOfProduct(OrderProduct.ProductId, OrderProduct.Quantity);
 
-          var IsAnyProductPending=  CheckIfThereIsAnyOrderProductWithStatusPendingForSpecificProduct(shipOrDenyOrderProductDto.OrderId);
+            var result= _unitOfWork.SaveChanges();
 
+
+            
+            var IsAnyProductPending=  CheckIfThereIsAnyOrderProductWithStatusPendingForSpecificProduct(shipOrDenyOrderProductDto.OrderId);
+          
             if (!IsAnyProductPending) {
                     Order? order = _unitOfWork.OrderRepository.GetByID(shipOrDenyOrderProductDto.OrderId);
 
-                if (order is { })
-                {
-                    order.OrderStatus = OrderStatus.Shipped;
-                    _unitOfWork.OrderRepository.Update(order);
-                    _unitOfWork.SaveChanges();
-                }
+                if (order is { })                                                    
+                {                                                                    
+                    order.OrderStatus = OrderStatus.Shipped;                         
+                    _unitOfWork.OrderRepository.Update(order);                       
+                    _unitOfWork.SaveChanges();                                       
+                }                                                                    
                 
             }
             return result;
@@ -74,6 +81,22 @@ namespace PetConnect.BLL.Services.Classes
         public bool CheckIfThereIsAnyOrderProductWithStatusPendingForSpecificProduct(int OrderId)
         {
         return  _unitOfWork.orderProductRepository.CheckStatusOfOrderProductsInOrder(OrderId);
+        }
+
+
+        public bool DecreaseQuantityOfProduct(int ProductId, int QuantityNeedsToDecrease)
+        {
+            var Product = _unitOfWork.ProductRepository.GetByID(ProductId);
+            if (Product == null) return false;
+
+            if (Product.Quantity >= QuantityNeedsToDecrease) {
+                Product.Quantity -= QuantityNeedsToDecrease;
+                return true;
+            }
+            return false;
+
+     
+               
         }
     }
 }

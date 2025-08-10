@@ -60,8 +60,8 @@ namespace PetConnect.BLL.Services.Classes
                 {
                     Name = productType.Name,
                     BreedId = productType.PetPreedId,
-                    BreedName = breed?.Name?? "Unknown"
-                    
+                    BreedName = breed?.Name?? "Unknown",
+                    Id= productType.Id
 
                 });
             }

@@ -1,0 +1,48 @@
+<h2 class="seller-name text-2xl font-bold mb-4" *ngIf="seller">
+  <!-- Welcome, {{ seller.name }} -->
+</h2>
+
+<div >
+
+  <!-- 🛠️ Form to Add or Edit Product -->
+  <div class="bg-white p-6 rounded shadow mb-6">
+    <h2 class="text-xl font-bold mb-4">{{ isEditing ? 'Edit Product' : 'Add New Product' }}</h2>
+    
+    <div class="grid grid-cols-6 gap-4">
+      <input [(ngModel)]="newProduct.name" placeholder="Name" />
+      <input [(ngModel)]="newProduct.description" placeholder="Description" />
+      <input [(ngModel)]="newProduct.price" type="number" placeholder="Price" />
+      <input [(ngModel)]="newProduct.quantity" type="number" placeholder="Quantity" />
+      
+      <select [(ngModel)]="newProduct.productTypeName">
+        <option value="">Select Category</option>
+        <option *ngFor="let cat of categories">{{ cat }}</option>
+      </select>
+      
+      <input type="file" (change)="onFileSelected($event)" />
+    </div>
+
+    <div class="mt-4">
+      <button *ngIf="!isEditing" (click)="addProduct()">Add Product</button>
+      <button (click)="addProduct()">Add Product</button>
+      <button *ngIf="isEditing" (click)="saveChanges()">Save Changes</button>
+    </div>
+  </div>
+
+  <!-- 🛍️ Product List -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div *ngFor="let product of products" class="border rounded-lg p-4 shadow">
+      <img [src]="product.imgUrl" class="w-full h-48 object-cover rounded mb-2" alt="Product Image" />
+      <h3 class="text-lg font-bold">{{ product.name }}</h3>
+      <p class="text-sm">{{ product.description }}</p>
+      <p class="text-sm text-gray-600">${{ product.price }}</p>
+      <p class="text-sm text-gray-500">{{ product.productTypeName }}</p>
+      
+      <div class="flex gap-2 mt-2">
+        <button (click)="editProduct(product)">Edit</button>
+        <button (click)="deleteProduct(product.id)">Delete</button>
+      </div>
+    </div>
+  </div>
+
+</div>

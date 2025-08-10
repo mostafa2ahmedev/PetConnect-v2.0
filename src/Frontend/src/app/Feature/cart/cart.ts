@@ -6,11 +6,12 @@ import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';       
 import { AlertService } from '../../core/services/alert-service';
 import { CartService } from './cart-service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule , RouterModule],
+  imports: [CommonModule , RouterModule , FormsModule],
   templateUrl: './cart.html',
   styleUrls: ['./cart.css']
 })
@@ -56,8 +57,8 @@ export class CartComponent implements OnInit {
       products: this.cartItems.map(item => ({
         orderId: 0,
         productId: item.id,
-        quantity: 1, 
-        unitPrice: item.price
+        quantity: item.quantity, 
+        unitPrice: item.price,
       }))
     };
 

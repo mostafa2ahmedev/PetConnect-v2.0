@@ -18,7 +18,11 @@ export class CartService {
 
   addToCart(product: Product): void {
     const cart = this.getCartFromStorage();
-    cart.push(product);
+    if(cart.some(e=>e.id == product.id)) {
+      cart.find(e=>e.id == product.id)!.quantity += 1;
+    } else {
+      cart.push({...product, quantity: 1 , maxQuantity: product.quantity}); // Ensure quantity is set
+    }
     localStorage.setItem(this.cartKey, JSON.stringify(cart));
     this.cartSubject.next(cart); // Notify subscribers of the update
   }

@@ -1,0 +1,246 @@
+
+
+<div class="dashboard-container">
+  <div class="sidebar">
+    <div class="seller-info">
+      <img [src]="getProfileImage(seller.imgUrl)" [alt]="sellerName" class="seller-avatar">
+      <div class="seller-details">
+        <h2 class="seller-name">Welcome, {{ seller.fName }}</h2>
+        <p class="seller-location">{{ seller.city }}, {{ seller.country }}</p>
+      </div>
+    </div>
+
+    <nav class="nav-tabs">
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'products'" 
+        (click)="activeTab = 'products'"
+      >
+        <i class="icon-package"></i>
+        Products
+      </button>
+
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'orders'" 
+        (click)="activeTab = 'orders'"
+      >
+        <i class="icon-shopping-cart"></i>
+        Orders
+      </button>
+    </nav>
+  </div>
+
+  <div class="main-content">
+    <!-- Products Tab -->
+    <div *ngIf="activeTab === 'products'" class="products-section">
+      <div class="section-header">
+        <h2>My Products</h2>
+        <button class="btn btn-primary" (click)="showAddForm = true">
+          <i class="icon-plus"></i>
+          Add Product
+        </button>
+      </div>
+      <!-- Add Product Form -->
+      <form *ngIf="showAddForm" class="add-product-form" [formGroup]="addProductGroup" (ngSubmit)="addProduct()">
+        <h3>Add New Product</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="productName">Product Name</label>
+            <input 
+              type="text" 
+              id="productName"
+              class="form-control"
+              required
+              formControlName="Name"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="productType">Product Type</label>
+            <select 
+              id="productType"
+              class="form-control"
+              formControlName="ProductTypeId"
+            >
+              <option *ngFor="let type of productTypes" [value]="type.id">{{ type.name }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <input 
+              type="number" 
+              id="quantity"
+              formControlName="Quantity"
+              class="form-control"
+              min="0"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="price">Price ($)</label>
+            <input 
+              type="number" 
+              id="price"
+              formControlName="Price"
+              class="form-control"
+              min="0"
+              step="0.01"
+              required
+            >
+          </div>
+
+          <div class="form-group full-width">
+            <label for="imgUrl">Image URL</label>
+            <input 
+              type="file" 
+              id="imgUrl"
+            (change)="onFileSelected($event)"
+              class="form-control"
+            >
+          </div>
+
+          <div class="form-group full-width">
+            <label for="description">Description</label>
+            <textarea 
+              id="description"
+              formControlName="Description"
+              class="form-control"
+              rows="3"
+            ></textarea>
+          </div>
+
+          <div class="form-actions full-width">
+            <button class="btn btn-success"  type="submit">Add Product</button>
+            <button class="btn btn-secondary" (click)="cancelAdd()">Cancel</button>
+          </div>
+        </div>
+    </form>
+
+      <!-- Products Grid -->
+      <div class="products-grid" *ngIf="products.length > 0">
+        @for(product of products; track product.id; let i = $index) {
+        <div class="product-card" >
+        <!-- <div class="product-card" *ngFor="let product of products; let i = index"> -->
+          <div class="product-image">
+            
+            <img *ngIf="product.imgUrl"
+              [src]="getFullImageUrl(product.imgUrl)" 
+              [alt]="product.productName"
+              (error)="onImageError($event)"
+            >
+            <div class="image-placeholder">
+              <i class="icon-package"></i>
+            </div>
+          </div>
+          <div class="product-info">
+            <h3>Name: {{ product.productName }}</h3>
+            <p class="product-type">Type: {{ product.productType.name }}</p>
+            <p class="product-description" *ngIf="product.productDescription">
+              Description: {{ product.productDescription }}
+            </p>
+            <div class="product-details">
+              <span class="price">Price: ${{ product.price }}</span>
+              <span class="stock">Stock: {{ product.quantity }}</span>
+
+               <div class="add-stock">
+      <input type="number" min="1" [(ngModel)]="product.addQuantity" placeholder="+" class="form-control w-50"/>
+      <button class="btn btn-add" (click)="addToStock(product)">
+        <i class="icon-plus"></i>
+        Add To Stock
+      </button>
+    </div>
+            </div>
+            <div class="product-actions">
+              <!-- <button class="btn btn-edit" (click)="editProduct(product)">
+                <i class="icon-edit"></i>
+                Edit
+              </button> -->
+              <button class="btn btn-delete" (click)="deleteProduct(product.id)">
+                <i class="icon-trash"></i>
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" *ngIf="products.length === 0">
+        <i class="icon-package"></i>
+        <h3>No products yet</h3>
+        <p>Add your first product to get started!</p>
+      </div>
+    </div>
+
+    <!-- Orders Tab -->
+    <div *ngIf="activeTab === 'orders'" class="orders-section">
+      <h2>My Orders</h2>
+      
+      <div class="orders-table" *ngIf="orders.length > 0">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for(order of orders;track order.orderId){
+            <tr >
+              <td>{{ order.orderId }}</td>
+              <td>{{ order.customerName }}</td>
+              <td>{{ order.productName }}</td>
+              <td>{{ order.quantity }}</td>
+              <td class="price">${{ order.unitPrice * order.quantity }}</td>
+              <td>
+                <!-- <span class="status" [ngClass]="getStatusClass(order.orderProductStatus)"> -->
+                <span class="status" [ngClass]="getStatusClass(getOrderStatusEnum(order.orderProductStatus))">
+                  {{ getOrderStatusEnum(order.orderProductStatus) }}
+                </span>
+              </td>
+              <td>{{ order.orderDate }}</td>
+              <td>
+                <!-- <button class="btn btn-view">
+                  <i class="icon-eye"></i>
+                  View
+                </button> -->
+                @if(order.orderProductStatus === 0) {
+                <button class="btn btn-view" (click)="shipOrder({orderId:order.orderId,productId:order.productId,orderProductStatus:order.orderProductStatus})">
+                  <i class="icon-eye"></i>
+                  Ship Order
+                </button>
+                <button class="btn btn-view" (click)="denyOrder({orderId:order.orderId,productId:order.productId,orderProductStatus:order.orderProductStatus})">
+                  <i class="icon-eye"></i>
+                   Deny Order 
+                </button>
+                }
+                @else {
+                  <span>No Actions Required</span>
+                }
+              </td>
+            </tr>
+          }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" *ngIf="orders.length === 0">
+        <i class="icon-shopping-cart"></i>
+        <h3>No orders yet</h3>
+        <p>Orders will appear here when customers make purchases.</p>
+      </div>
+    </div>
+  </div>
+</div>
+

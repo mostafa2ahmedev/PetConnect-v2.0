@@ -14,6 +14,7 @@ namespace PetConnect.BLL.Services.DTOs.OrderProduct
 
         public int Quantity { get; set; }
         public string? ProductImageUrl { get; set; }
+        public string Status { get; set; }
 
     }
 }

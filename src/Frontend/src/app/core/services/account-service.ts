@@ -26,6 +26,9 @@ export class AccountService {
     return this.http.post(API_URL + '/register/doctor', formData);
   }
 
+  public PostSellerRegister(formData: FormData): Observable<any> {
+    return this.http.post(API_URL + '/register/Seller', formData);
+  }
   public PostLogin(credentials: {
     email: string;
     password: string;
@@ -85,6 +88,10 @@ export class AccountService {
   isDoctor(): boolean {
     const user = this.jwtTokenDecoder();
     return user?.userRole == 'Doctor' ? true : false;
+  }
+   isSeller(): boolean {
+    const user = this.jwtTokenDecoder();
+    return user?.userRole == 'Seller' ? true : false;
   }
 
   getCustomerData(): Observable<{ statusCode: number; data: CustomerDto }> {

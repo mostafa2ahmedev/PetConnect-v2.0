@@ -92,7 +92,19 @@ namespace PetConnect.API.Controllers
 
         }
 
-
+        [HttpGet("Products")]
+        [ProducesResponseType(typeof(List<SellerDataDto>), StatusCodes.Status200OK)]
+        [EndpointSummary("Get All Products for Current Seller")]
+        [Authorize(Roles = "Seller")]
+        public ActionResult GetAllProducts()
+        {
+            var SellerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //var Seller = _sellerService.GetProfile(SellerId!);
+            if (SellerId == null)
+                return NotFound(new GeneralResponse(statusCode: 404, "Seller Not Found"));
+            var SellerProducts = _sellerService.GetAllProducts(SellerId);
+            return Ok(new GeneralResponse(200, SellerProducts));
+        }
 
     }
 }

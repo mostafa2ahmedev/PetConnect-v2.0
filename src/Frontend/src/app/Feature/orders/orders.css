@@ -3,3 +3,31 @@
   margin: auto;
   padding: 20px;
 }
+.status {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+
+.status-pending {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.status-shipped {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.status-deny {
+  background-color: #f50c0c;
+  color: #f3f4f6;
+}
+
+.status-default {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+

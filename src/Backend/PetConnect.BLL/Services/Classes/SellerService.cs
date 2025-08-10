@@ -1,6 +1,8 @@
-﻿using PetConnect.BLL.Common.AttachmentServices;
+﻿using Microsoft.EntityFrameworkCore;
+using PetConnect.BLL.Common.AttachmentServices;
 using PetConnect.BLL.Services.DTOs.Customer;
 using PetConnect.BLL.Services.DTOs.OrderProduct;
+using PetConnect.BLL.Services.DTOs.Product;
 using PetConnect.BLL.Services.DTOs.Seller;
 using PetConnect.BLL.Services.Interfaces;
 using PetConnect.DAL.Data.Models;
@@ -98,7 +100,24 @@ namespace PetConnect.BLL.Services.Classes
             return _unitOfWork.SaveChanges();
         }
 
+        public IEnumerable<SellerProductsDto> GetAllProducts(string sellerId)
+        {
+           var sellerWithProducts = _unitOfWork.ProductRepository.GetAll().Where(e=>e.SellerId==sellerId);
+            List<SellerProductsDto> result = new List<SellerProductsDto>();
+            foreach(var sWP in sellerWithProducts)
+            {
+                var producttype = _unitOfWork.ProductTypeRepository.GetByID(sWP.ProductTypeId);
 
-        
+                SellerProductsDto SPD = new SellerProductsDto()
+                { ImgUrl = sWP.ImgUrl, Price = sWP.Price ,
+                    SellerId=sWP.SellerId , ProductDescription = sWP.Description,
+                    ProductName=sWP.Name, ProductType = producttype,
+                    Quantity=sWP.Quantity,
+                Id=sWP.Id};
+                result.Add(SPD);
+            }
+
+            return result;
+        }
     }
 }

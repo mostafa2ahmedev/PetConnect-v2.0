@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; // DatePipe & CurrencyPipe موجودين فيه
+import { CommonModule, Location } from '@angular/common'; // DatePipe & CurrencyPipe موجودين فيه
 
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth';
+import { OrderStatusEnum } from '../Seller/dashboard/order-status-enum';
 
 @Component({
   selector: 'app-orders',
@@ -16,11 +17,12 @@ import { AuthService } from '../../services/auth';
 export class OrdersComponent implements OnInit {
   orders: any[] = [];
  server = "https://localhost:7102/assets/ProductImages";
+ orderStatusEnum = OrderStatusEnum;
 
 currentPage: number = 1;
 pageSize: number = 2;
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient, private authService: AuthService, private location:Location) {}
 
   ngOnInit() {
     const customerId = this.authService.getCustomerIdFromToken();
@@ -29,6 +31,7 @@ pageSize: number = 2;
         .subscribe({
           next: (res) => {
             this.orders = res;
+            console.log('Orders fetched successfully:', this.orders);
           },
           error: (err) => {
             console.error('Error fetching orders:', err);
@@ -71,5 +74,15 @@ get pagedOrders() {
     }
   }
 
-
+  goBack(){
+    this.location.back();
+  }
+getStatusClass(status: string): string {
+    switch (status) {
+      case 'Pending': return 'status-pending';
+      case 'Shipped': return 'status-shipped';
+      case 'Deny': return 'status-deny';
+      default: return 'status-default';
+    }
+  }
 }

@@ -22,6 +22,7 @@ import { OrdersComponent } from './Feature/orders/orders';
 import { ProductsComponent } from './Feature/Products/all-products/all-products';
 import { ProductDetailsComponent } from './Feature/Products/product-details/product-details';
 import { CartComponent } from './Feature/cart/cart';
+import {SellerDashboardComponent} from './Feature/seller-dashboard/seller-dashboard';
 
 import { DoctorCustomerAppointment } from './Feature/Doctor/doctor-customer-appointment/doctor-customer-appointment';
 import { Doctor } from './Feature/profile/doctor/doctor';
@@ -39,6 +40,9 @@ import { AdminInsights } from './Feature/admin-dashboard/admin-dashboard/admin-i
 import { ChatComponent } from './Feature/chat/chat/chat';
 import { doctorGuardGuard } from './core/guards/doctor-guard-guard';
 import { CustomerGuard } from './core/guards/customer-guard';
+import { SellerRegisterForm } from './Feature/seller-register-form/seller-register-form';
+import { Dashboard } from './Feature/Seller/dashboard/dashboard';
+import { EditProduct } from './Feature/edit-product/edit-product';
 import { DoctorAddTimeslot } from './Feature/profile/doctor/doctor-add-timeslot/doctor-add-timeslot';
 import { DoctorLearnMore } from './Feature/Doctor/doctor-learn-more/doctor-learn-more';
 import { DoctorEditProfile } from './Feature/Doctor/doctor-edit-profile/doctor-edit-profile';
@@ -152,14 +156,21 @@ export const routes: Routes = [
   { path: 'register', component: Register, children: [] },
   { path: 'register/doctor', component: DoctorRegisterForm },
   { path: 'register/customer', component: CustomerRegisterForm },
-  { path: 'register', component: Register, children: [] },
-  { path: 'register/doctor', component: DoctorRegisterForm },
-  { path: 'register/customer', component: CustomerRegisterForm },
-  { path: 'notfound/doctor', component: NotFoundDoctor },
-  { path: 'orders', component: OrdersComponent },
-  { path: 'all-products', component: ProductsComponent },
-  { path: 'products/:id', component: ProductDetailsComponent },
+  { path: 'register', component: Register ,children: []},
+  {path:"register/doctor", component:DoctorRegisterForm},
+  {path:"register/customer", component:CustomerRegisterForm},
+  {path: 'register/seller', component:SellerRegisterForm},
+
+  {path:"notfound/doctor",component:NotFoundDoctor},
+ { path: 'orders', component: OrdersComponent },
+ { path: 'all-products', component: ProductsComponent },
+ {path: 'products/edit', component: EditProduct },
+ { path: 'products/:id', component: ProductDetailsComponent },
   { path: 'cart', component: CartComponent },
+  // {path: 'seller', component: SellerDashboardComponent },
+  {path: 'seller', component: Dashboard },
+
+
 
   { path: 'register', component: Register, children: [] },
 
@@ -172,7 +183,7 @@ export const routes: Routes = [
     component: AdminDashboardComponent,
     canActivate: [authGuard, AdminGuard],
     children: [
-      { path: '', component: AdminInsights },
+      { path: '', component: AdminInsights},
 
       { path: 'categories', component: Categories },
       {
