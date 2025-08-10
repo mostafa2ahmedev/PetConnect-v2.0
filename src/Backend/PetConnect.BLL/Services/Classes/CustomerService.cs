@@ -50,8 +50,8 @@ namespace PetConnect.BLL.Services.Classes
                 PetId = adoptionDto.PetId,
                 Status = AdoptionStatus.Pending,
                 AdoptionDate = DateTime.Now,
-
             };
+
             _unitOfWork.CustomerPetAdpotionsRepository.Add(CusReqAdoption);
             _unitOfWork.SaveChanges();
             await notificationService.CreateAndSendNotification(adoptionDto.RecCustomerId, new NotificationDTO()

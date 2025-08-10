@@ -27,6 +27,7 @@ namespace PetConnect.DAL.Data
         public DbSet<Notification> Notifications { get; set; }
 
         public DbSet<OrderProduct> orderProducts { get; set; }
+        public DbSet<Customer> Customers{ get; set; }
 
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<BlogComment> BlogComments { get; set; }
