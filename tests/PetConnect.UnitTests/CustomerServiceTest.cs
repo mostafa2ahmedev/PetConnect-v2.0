@@ -27,6 +27,7 @@ namespace PetConnect.UnitTests
         private readonly Mock<INotificationService> _notificationServiceMock;
         private readonly Mock<ICustomerAddedPetsService> _customerPetsServiceMock;
         private readonly Mock<IPetService> _PetServiceMock;
+        private readonly Mock<IEmailService> _emailServiceMock;
         private readonly CustomerService _customerService;
         private readonly IFixture _fixture;
 
@@ -37,7 +38,9 @@ namespace PetConnect.UnitTests
             _attachmentServiceMock = new Mock<IAttachmentService>();
             _notificationServiceMock = new Mock<INotificationService>();
             _customerPetsServiceMock = new Mock<ICustomerAddedPetsService>();
-            _customerService = new CustomerService(_unitOfWorkMock.Object,_PetServiceMock.Object,_attachmentServiceMock.Object,_customerPetsServiceMock.Object, _notificationServiceMock.Object);
+            _emailServiceMock = new Mock<IEmailService>();
+            _customerService = new CustomerService(_unitOfWorkMock.Object,_PetServiceMock.Object,_attachmentServiceMock.Object,
+                _customerPetsServiceMock.Object, _notificationServiceMock.Object,_emailServiceMock.Object);
             _fixture = new Fixture();
         }
 

@@ -136,7 +136,7 @@ namespace PetConnect.UnitTests
                 .Returns(pets.AsQueryable());
 
             // Act
-            var result = _petService.GetAllPetsWithBelongsToCustomer().ToList();
+            var result = _petService.GetAllPetsWithCustomerData().ToList();
 
             // Assert
             result.Should().NotBeNull();
@@ -178,7 +178,7 @@ namespace PetConnect.UnitTests
                 .Returns(pets.AsQueryable());
 
             // Act
-            var result = _petService.GetAllApprovedPetsWithBelongsToCustomer().ToList();
+            var result = _petService.GetAllApprovedPetsWithCustomerData().ToList();
 
             // Assert
             result.Should().NotBeNull();
