@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 namespace PetConnect.BLL.Services.Interfaces
 {
     public interface IBlogService
-    {  
-        
+    {
+
         IEnumerable<BlogData> GetAllBlogs(int? Topic, int? PetCategoryId);
+        public IEnumerable<BlogData> GetBlogsByUserId(string userId);
+
         BlogDetails? GetBlogById(Guid BlogId, string UserId);
         public IEnumerable<CommentDataDto> GetAllCommentsForSpecificBlog(Guid BlogId, string UserId);
 

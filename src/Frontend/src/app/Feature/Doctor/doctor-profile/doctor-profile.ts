@@ -18,6 +18,8 @@ import { AlertService } from '../../../core/services/alert-service';
 import { TimeSlotsWithStatusDTO } from './time-slots-with-status-dto';
 import { TimeSlotsCustomerService } from './time-slots-customer-service';
 import { TimeSlotsWithCustomerIdStatusBookingDTO } from './time-slots-with-customer-id-status-booking-dto';
+import { Blog } from '../../Blog/blog-models';
+import { BlogService } from '../../Blog/blog-service';
 @Component({
   selector: 'app-doctor-profile',
   imports: [CurrencyPipe, DatePipe, CommonModule, RouterModule],
@@ -30,6 +32,7 @@ export class DoctorProfile implements OnInit {
   doctorsService = inject(DoctorsService);
   accountService = inject(AccountService);
   timeSlotCustService = inject(TimeSlotsCustomerService);
+  blogService = inject(BlogService);
   router = inject(Router);
   doctorProfileService = inject(DoctorProfileService);
   appointmentService = inject(AppointmentService);
@@ -43,7 +46,11 @@ export class DoctorProfile implements OnInit {
   userRole = undefined;
   user: JwtUser = { found: false, userRole: '', userId: '' };
   appointments: AppointmentDto[] = [];
-
+  blogs: Blog[] = [];
+  loadingBlogs = true;
+  // userId: string = '12345'; // Replace with real user id from auth
+  topicId?: number;
+  categoryId?: number;
   // State for loading dates and the data itself
   readonly loadingDates = signal<boolean>(true);
   availableDates: Date[] = [];
@@ -139,6 +146,7 @@ export class DoctorProfile implements OnInit {
           }
         },
       });
+    this.loadUserBlogs();
   }
 
   CustomerHasThisAppointmentSlot(slot: TimeSlotsWithStatusDTO) {
@@ -218,5 +226,24 @@ export class DoctorProfile implements OnInit {
 
   getPages(): number[] {
     return Array.from({ length: this.totalPages() }, (_, i) => i + 1);
+  }
+
+  loadUserBlogs() {
+    this.blogService
+      .getBlogsByUserId(this.id, this.topicId, this.categoryId)
+      .subscribe({
+        next: (data) => {
+          this.blogs = data;
+          console.log(this.blogs);
+          this.loadingBlogs = false;
+        },
+        error: (err) => {
+          console.error('Error loading blogs', err);
+          this.loadingBlogs = true;
+        },
+      });
+  }
+  getFullImageUrl(relativePath: string): string {
+    return `${this.server}/${relativePath}`;
   }
 }

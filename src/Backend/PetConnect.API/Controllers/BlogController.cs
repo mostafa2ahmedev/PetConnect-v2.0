@@ -35,7 +35,14 @@ namespace PetConnect.API.Controllers
             var Blogs = _blogService.GetAllBlogs(Topic, CategoryId);
             return Ok(new GeneralResponse(200, Blogs));
         }
-
+        [HttpGet("UserBlogs/{userId}")]
+        [ProducesResponseType(typeof(List<BlogData>), StatusCodes.Status200OK)]
+        [EndpointSummary("Get Blogs by UserId")]
+        public ActionResult GetBlogsByUserId(string userId)
+        {
+            var blogs = _blogService.GetBlogsByUserId(userId);
+            return Ok(new GeneralResponse(200, blogs));
+        }
         [HttpGet("Blog/{BlogId}")]
         [ProducesResponseType(typeof(List<BlogDetails>), StatusCodes.Status200OK)]
         [EndpointSummary("Get Blog Details by ID")]

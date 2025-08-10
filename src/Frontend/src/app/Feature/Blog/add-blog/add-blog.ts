@@ -8,6 +8,7 @@ import { AttachmentService } from '../../../core/services/attachment-service';
 import { CommonModule } from '@angular/common';
 import { forkJoin } from 'rxjs';
 import { CategoryService } from '../../categories/category-service';
+import { AlertService } from '../../../core/services/alert-service';
 
 @Component({
   selector: 'app-add-blog',
@@ -36,7 +37,8 @@ export class AddBlog implements OnInit {
   constructor(
     private blogService: BlogService,
     private attachmentService: AttachmentService,
-    private categroyService: CategoryService
+    private categroyService: CategoryService,
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -78,7 +80,7 @@ export class AddBlog implements OnInit {
       console.log(this.blog);
 
       await this.blogService.addBlog(this.blog).toPromise();
-      this.successMsg = 'Blog post created successfully!';
+      this.alertService.success('Post Added successfully!!');
 
       // Reset form
       this.blog = {

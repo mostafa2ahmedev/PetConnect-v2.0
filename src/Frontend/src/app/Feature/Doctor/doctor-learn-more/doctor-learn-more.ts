@@ -4,6 +4,8 @@ import { DoctorsService } from '../../doctors/doctors-service';
 import { IDoctor } from '../../doctors/idoctor';
 import { AlertService } from '../../../core/services/alert-service';
 import { CommonModule } from '@angular/common';
+import { BlogService } from '../../Blog/blog-service';
+import { Blog } from '../../Blog/blog-models';
 
 @Component({
   selector: 'app-doctor-learn-more',
@@ -20,6 +22,9 @@ export class DoctorLearnMore implements OnInit {
   doctor: IDoctor = {} as IDoctor;
   alertSerive = inject(AlertService);
   router = inject(Router);
+
+  constructor(private blogService: BlogService) {}
+
   ngOnInit(): void {
     this.activateRoute.params.subscribe({
       next: (e) => {

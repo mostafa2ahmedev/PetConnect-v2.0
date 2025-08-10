@@ -26,6 +26,8 @@ import { DoctorCustomerAppointmentService } from '../../Doctor/doctor-customer-a
 import { DoctorProfileAppointmentView } from '../../Doctor/doctor-customer-appointment/doctor-profile-appointment-view';
 import { AppointmentService } from '../../Doctor/doctor-profile/appointment-service';
 import { DoctorsService } from '../../doctors/doctors-service';
+import { Blog } from '../../Blog/blog-models';
+import { BlogService } from '../../Blog/blog-service';
 
 @Component({
   selector: 'app-doctor',
@@ -98,6 +100,7 @@ export class Doctor implements OnInit {
   statusArr: string[] = [];
   server = 'https://localhost:7102';
 
+  constructor(private blogServie: BlogService) {}
   ngOnInit(): void {
     const user = this.accountService.jwtTokenDecoder();
     this.doctorService.getById(user.userId).subscribe({
@@ -109,7 +112,6 @@ export class Doctor implements OnInit {
       },
     });
     this.loadingProfile.set(false);
-
     this.doctorAppointmentService
       .getAppointmentsForDoctorProfileView()
       .subscribe({

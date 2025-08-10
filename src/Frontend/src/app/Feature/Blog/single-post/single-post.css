@@ -55,3 +55,14 @@
     background-position: 50% 0, 50% 0, 0 50%, 100% 50%, 50% 100%, 50% 100%;
   }
 }
+.blog-content-container {
+  max-width: 100%; /* Keep it responsive */
+  overflow-wrap: break-word; /* Break long words/URLs */
+  word-break: break-word; /* Fallback for some browsers */
+  white-space: normal; /* Allow wrapping */
+}
+
+.blog-content-container img {
+  max-width: 100%; /* Prevent images from overflowing */
+  height: auto;
+}

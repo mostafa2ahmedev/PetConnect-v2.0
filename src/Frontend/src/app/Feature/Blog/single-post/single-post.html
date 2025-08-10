@@ -33,7 +33,7 @@
 
         <div class="d-flex align-items-center flex-wrap text-muted">
           <a
-            [routerLink]="['/doctor-details', blogPost.doctorId]"
+            [routerLink]="['/doctors', blogPost.doctorId]"
             class="d-flex align-items-center text-decoration-none me-3"
           >
             <img
@@ -64,7 +64,10 @@
       <!-- <p class="lead text-center mt-5 mb-5">
         {{ blogPost.content }}
       </p> -->
-      <div [innerHTML]="blogPost.content" class="mb-5 fs-5 lh-lg"></div>
+      <div
+        class="blog-content-container mb-5 fs-5 lh-lg"
+        [innerHTML]="blogPost.content"
+      ></div>
 
       <!-- Likes -->
       <div class="d-flex align-items-center my-4">
@@ -232,7 +235,10 @@
 
       <!-- Comment Form -->
 
-      <div class="comment-box d-flex align-items-center gap-2 mt-2">
+      <div
+        class="comment-box d-flex align-items-center gap-2 mt-2"
+        *ngIf="isAuth"
+      >
         <!-- Comment Input -->
         <input
           type="text"

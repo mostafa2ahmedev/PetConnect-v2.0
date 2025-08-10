@@ -100,9 +100,58 @@ export class BlogService {
 
     return this.http.post(`${this.apiUrl}/blog/NewBlog`, formData);
   }
-  deleteBlog(blogId: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/blog/DeleteBlog/${blogId}`);
+  getBlogsByUserId(
+    userId: string,
+    topic?: number | null,
+    categoryId?: number | null
+  ): Observable<Blog[]> {
+    let params = new HttpParams();
+
+    if (topic !== undefined && topic !== null) {
+      params = params.set('Topic', topic.toString());
+    }
+    if (categoryId !== undefined && categoryId !== null) {
+      params = params.set('CategoryId', categoryId.toString());
+    }
+
+    return this.http
+      .get<ApiResponse<Blog[]>>(`${this.apiUrl}/Blog/UserBlogs/${userId}`, {
+        params,
+      })
+      .pipe(map((res) => res.data));
   }
+  deleteBlog(blogId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/Blog/DeleteBlog/${blogId}`);
+  }
+  editBlog(blog: {
+    blogId: string;
+    content: string;
+    topic: number;
+    media?: File | null;
+    title: string;
+    excerpt?: string;
+    blogType: number;
+    petCategoryId: number;
+  }): Observable<any> {
+    const formData = new FormData();
+
+    formData.append('BlogId', blog.blogId);
+    formData.append('Content', blog.content);
+    formData.append('Topic', blog.topic.toString());
+    formData.append('Title', blog.title);
+    formData.append('BlogType', blog.blogType.toString());
+    formData.append('PetCategoryId', blog.petCategoryId.toString());
+
+    if (blog.excerpt) {
+      formData.append('Excerpt', blog.excerpt);
+    }
+    if (blog.media) {
+      formData.append('Media', blog.media);
+    }
+
+    return this.http.put(`${this.apiUrl}/Blog/EditBlog`, formData);
+  }
+
   // Add new comment
   addComment(request: AddCommentRequest) {
     const formData = new FormData();

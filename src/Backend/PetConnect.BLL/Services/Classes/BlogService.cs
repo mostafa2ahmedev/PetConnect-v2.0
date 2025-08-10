@@ -56,7 +56,8 @@ namespace PetConnect.BLL.Services.Classes
             var Blog = _unitOfWork.BlogRepository.GetBlogByIdWithAuthorDataAndSomeStatistics(BlogId);
             if (Blog == null)
                 return null;
-            return new BlogDetails() {
+            return new BlogDetails()
+            {
                 ID = Blog.ID,
                 BlogType = Blog.BlogType,
                 excerpt = Blog.excerpt,
@@ -68,7 +69,7 @@ namespace PetConnect.BLL.Services.Classes
                 Likes = Blog.UserBlogLikes.Count,
                 DoctorName = Blog.Doctor.FName + " " + Blog.Doctor.LName,
                 DoctorImgUrl = Blog.Doctor.ImgUrl,
-                Comments = Blog.UserBlogComments.Where(b=> b.IsDeleted == false).Count(),
+                Comments = Blog.UserBlogComments.Where(b => b.IsDeleted == false).Count(),
                 IsLikedByUser = !string.IsNullOrEmpty(UserId) &&
                         Blog.UserBlogLikes?.Any(like => like.UserId == UserId) == true,
                 Topic = Blog.Topic?.ToString(),
@@ -76,6 +77,30 @@ namespace PetConnect.BLL.Services.Classes
 
             };
         }
+
+
+        public IEnumerable<BlogData> GetBlogsByUserId(string userId)
+        {
+            return _unitOfWork.BlogRepository.GetAllBlogsWithAuthorDataAndSomeStatisticsByDoctorId(userId)
+                .Where(b => b.DoctorId == userId)
+                .Select(B => new BlogData()
+                {
+                    ID = B.ID,
+                    BlogType = B.BlogType,
+                    excerpt = B.excerpt,
+                    Title = B.Title,
+                    Media = B.Media,
+                    PostDate = B.PostDate,
+                    DoctorId = B.DoctorId,
+                    Likes = B.UserBlogLikes.Count,
+                    DoctorName = B.Doctor.FName + " " + B.Doctor.LName,
+                    DoctorImgUrl = B.Doctor.ImgUrl,
+                    Comments = B.UserBlogComments.Count(c => c.IsDeleted == false),
+                    Topic = B.Topic.ToString(),
+                    CategoryName = B.PetCategory.Name,
+                });
+        }
+
         public IEnumerable<CommentDataDto> GetAllCommentsForSpecificBlog(Guid BlogId, string UserId)
         {
             return _unitOfWork.UserBlogCommentRepository.GetAllCommentsByBlogIdWithAuthorAndBlogData(BlogId)

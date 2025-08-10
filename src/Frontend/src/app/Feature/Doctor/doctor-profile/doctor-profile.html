@@ -232,3 +232,79 @@
     </div>
   </div>
 </div>
+
+<section
+  *ngIf="blogs.length > 0 && typeof doctor !== 'string'"
+  class="container p-5"
+>
+  <h3 class="text-center my-4">Posts by Dr. {{ doctor.fName }}</h3>
+  <!-- Loading Spinner -->
+  <div *ngIf="loadingBlogs" class="text-center my-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2">Loading blogs...</p>
+  </div>
+
+  <!-- Blog Cards -->
+  <div *ngIf="!loadingBlogs && blogs.length > 0" class="row g-4">
+    <div class="col-md-4" *ngFor="let blog of blogs">
+      <div class="card h-100 shadow-lg mx-2 mb-5">
+        <a [routerLink]="`/blog/post/${blog.id}`">
+          <img
+            *ngIf="blog.media"
+            [src]="getFullImageUrl(blog.media)"
+            class="card-img-top"
+            style="max-height: 300px; object-fit: cover"
+            alt="Blog Media"
+          />
+        </a>
+
+        <div class="card-body d-flex flex-column">
+          <a
+            [routerLink]="`/blog/post/${blog.id}`"
+            class="text-decoration-none"
+          >
+            <h5 class="card-title">{{ blog.title }}</h5>
+          </a>
+
+          <!-- Category & Topic row -->
+          <div class="mb-2 text-muted small">
+            <ng-container *ngIf="blog.categoryName">
+              <i class="fas fa-folder-open me-1" style="color: #5d57f4"></i>
+              {{ blog.categoryName }}
+            </ng-container>
+
+            <ng-container *ngIf="blog.categoryName && blog.topic">
+              <span class="mx-2">|</span>
+            </ng-container>
+
+            <ng-container *ngIf="blog.topic">
+              <i class="fas fa-tag me-1" style="color: #5d57f4"></i>
+              {{ blog.topic }}
+            </ng-container>
+          </div>
+
+          <!-- Post date -->
+          <!-- <small class="text-muted mb-2">
+            <i class="far fa-calendar-alt me-1"></i>
+            {{ blog.postDate | date : "medium" }}
+          </small> -->
+
+          <!-- Excerpt -->
+          <p class="card-text" [innerHTML]="blog.excerpt"></p>
+
+          <!-- Likes & Comments -->
+          <div class="mt-auto">
+            <span class="badge bg-primary me-2">
+              <i class="fas fa-thumbs-up me-1"></i>
+              {{ blog.likes }} Likes
+            </span>
+            <span class="badge bg-secondary">
+              <i class="fas fa-comments me-1"></i>
+              {{ blog.comments }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
