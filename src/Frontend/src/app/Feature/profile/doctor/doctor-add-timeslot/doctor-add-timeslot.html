@@ -1,0 +1,61 @@
+<form
+  [formGroup]="scheduleForm"
+  (ngSubmit)="submitSchedule()"
+  class="schedule-form bg-white p-5"
+>
+  <h5 class="mb-4 text-center">Add Timeslot</h5>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Date</mat-label>
+    <input
+      matInput
+      [matDatepicker]="picker"
+      formControlName="scheduleDate"
+      class="form-control"
+    />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Start Time</mat-label>
+    <input
+      matInput
+      type="time"
+      formControlName="startTime"
+      class="form-control"
+    />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>End Time</mat-label>
+    <input
+      matInput
+      type="time"
+      formControlName="endTime"
+      class="form-control"
+    />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Max Capacity</mat-label>
+    <input
+      matInput
+      type="number"
+      formControlName="maxCapacity"
+      min="1"
+      class="form-control"
+    />
+  </mat-form-field>
+
+  <mat-checkbox formControlName="isActive">Active</mat-checkbox>
+
+  <button
+    mat-raised-button
+    color="primary"
+    type="submit"
+    class="btn btn-primary mx-2"
+  >
+    Save Schedule
+  </button>
+</form>

@@ -286,7 +286,7 @@
                     <td>{{ request.adoptionDate | date : "mediumDate" }}</td>
                     <td>
                       <button
-                        class="btn btn-outline-success btn-sm"
+                        class="btn btn-outline-dark btn-sm"
                         (click)="request.showPhone = !request.showPhone"
                       >
                         <i class="bi bi-whatsapp me-1"></i> Contact
@@ -300,7 +300,7 @@
 
                       <button
                         *ngIf="request.adoptionStatus === 1"
-                        class="btn btn-outline-success btn-sm me-2"
+                        class="btn btn-outline-primary btn-sm me-2"
                         (click)="approveOrCancel(request, 0)"
                       >
                         Approve
@@ -308,7 +308,7 @@
 
                       <button
                         *ngIf="request.adoptionStatus === 1"
-                        class="btn btn-outline-success btn-sm me-2"
+                        class="btn btn-outline-danger btn-sm me-2"
                         (click)="approveOrCancel(request, 2)"
                       >
                         Cancel
@@ -329,6 +329,72 @@
             </div>
           </div>
         </div>
+
+        <div>
+          <div class="mb-5">
+            <h5 class="mb-4">My Appointment History</h5>
+
+            <!-- ❌ No Appointments -->
+            <div *ngIf="appointments.length === 0" class="alert alert-info">
+              No appointments match your filter.
+            </div>
+
+            <!-- ✅ Appointments Table -->
+            <div *ngIf="appointments.length > 0" class="table-responsive">
+              <table class="table table-bordered table-hover align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th>Pet</th>
+                    <th>Doctor</th>
+                    <th>Time Slot</th>
+                    <th>Status</th>
+                    <!-- <th>Created At</th> -->
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let appt of appointments">
+                    <td class="d-flex align-items-center gap-2">
+                      {{ appt.petimg }}
+                      <img
+                        [src]="
+                          'https://localhost:7102/assets/PetImages/' +
+                          appt.petImg
+                        "
+                        alt="Pet"
+                        class="rounded-circle m-1"
+                        width="33"
+                        height="33"
+                      />
+                      <span>{{ appt.petName }}</span>
+                    </td>
+                    <td>{{ appt.doctorName }}</td>
+                    <td>
+                      {{ appt.slotStartTime | date : "shortTime" }} -
+                      {{ appt.slotEndTime | date : "shortTime" }}
+                      <br />
+                      <small class="text-muted">
+                        {{ appt.slotStartTime | date : "mediumDate" }}
+                      </small>
+                    </td>
+                    <td>
+                      <span
+                        class="badge"
+                        [ngClass]="{
+                          'bg-warning text-dark': appt.status === 'Pending',
+                          'bg-info': appt.status === 'Confirmed',
+                          'bg-danger': appt.status === 'Cancelled'
+                        }"
+                      >
+                        {{ appt.status }}
+                      </span>
+                    </td>
+                    <!-- <td>{{ appt.createdAt | date : "medium" }}</td> -->
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -337,11 +403,7 @@
 <!--0000000000000000000000000000000000000000000000000000000000-->
 
 <!--0000000000000000000000000000000000000000000000000000000000-->
-<!--0000000000000000000000000000000000000000000000000000000000-->
-<!--0000000000000000000000000000000000000000000000000000000000-->
-<!--0000000000000000000000000000000000000000000000000000000000-->
-<!--0000000000000000000000000000000000000000000000000000000000-->
-<!--0000000000000000000000000000000000000000000000000000000000-->
+
 <div class="container-fluid p-5">
   <div class="row px-5">
     <!-- 🔸 Right Content (Scrollable Sections) -->

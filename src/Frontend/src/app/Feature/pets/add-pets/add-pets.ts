@@ -76,7 +76,7 @@ export class AddPets {
         return;
       }
     }
-
+    console.log('PPP', this.pet);
     this.petService.addPet(this.pet).subscribe({
       next: () => {
         this.alert.success('Pet added successfully!');

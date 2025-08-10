@@ -5,6 +5,7 @@ using PetConnect.BLL.Services.DTOs.AppointmentDto;
 using System;
 using System.Threading.Tasks;
 using PetConnect.BLL.Services.DTOs;
+using System.Security.Claims;
 
 namespace PetConnect.API.Controllers
 {
@@ -44,7 +45,19 @@ namespace PetConnect.API.Controllers
             var appointments = await _appointmentService.GetAppointmentsByCustomerAsync(customerId);
             return Ok(appointments);
         }
+        // GET: api/Appointment/Customer-details/{customerId}
+        [HttpGet("Customer-details")]
+        public async Task<IActionResult> GetDetailedAppointmentsByCustomer()
+        {
+            var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(customerId))
+            {
+                return Unauthorized("Customer ID not found in token.");
+            }
 
+            var appointments =  _appointmentService.GetAppointmentsForCustomerProfile(customerId);
+            return Ok(appointments);
+        }
         // GET: api/Appointment/Doctor/{doctorId}
         [HttpGet("Doctor/{doctorId}")]
         public async Task<IActionResult> GetAppointmentsByDoctor(string doctorId)

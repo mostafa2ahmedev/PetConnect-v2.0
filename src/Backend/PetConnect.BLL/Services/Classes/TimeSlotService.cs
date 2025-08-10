@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace PetConnect.BLL.Services.Classes
 {
-    class TimeSlotService : ITimeSlotService
+    public class TimeSlotService : ITimeSlotService
     {
         private readonly IUnitOfWork _unitOfWork;
         public TimeSlotService(IUnitOfWork unitOfWork)
@@ -60,7 +60,8 @@ namespace PetConnect.BLL.Services.Classes
 
         public IEnumerable<TimeSlotsViewDTOcs> GetAllTimeSlotsIncludingStatus(string doctorId)
         {
-            IEnumerable<TimeSlot> activeTimeSlots = _unitOfWork.TimeSlotsRepository.GetAllQueryable().Include(e => e.Appointments).Where(e=>e.DoctorId==doctorId && e.IsActive==true);
+            DateTime today = DateTime.Today;
+            IEnumerable<TimeSlot> activeTimeSlots = _unitOfWork.TimeSlotsRepository.GetAllQueryable().Include(e => e.Appointments).Where(e=>e.DoctorId==doctorId && e.IsActive== true && e.StartTime.Date >= today);
             ICollection<TimeSlotsViewDTOcs> newReturnedTS = new List<TimeSlotsViewDTOcs>();
             foreach(var ts in activeTimeSlots)
             {

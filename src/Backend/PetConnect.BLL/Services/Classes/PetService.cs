@@ -27,10 +27,8 @@ namespace PetConnect.BLL.Services.Classes
             _unitOfWork = unitOfWork;
             _attachmentService = attachmentService;
             _customerAddedPetsService = customerAddedPetsService;
+    
         }
-
-        
-
         public async Task <int> AddPet(AddedPetDto addedPet ,string CustomerId)
         {
             var Image = await _attachmentService.UploadAsync(addedPet.ImgURL, "PetImages");
@@ -49,20 +47,13 @@ namespace PetConnect.BLL.Services.Classes
             }
             return result;
         }
-
-
-
-        public IEnumerable<PetDataDto> GetAllPetsWithBelongsToCustomer()
+        public IEnumerable<PetDataDto> GetAllPetsWithCustomerData()
         {
             List<PetDataDto> petDatas = new List<PetDataDto>();
             IEnumerable<Pet> PetList = _unitOfWork.PetRepository.GetPetBreadCategoryDataWithCustomer();
 
-
-
             foreach (var Pet in PetList)
             {
-
-
                 petDatas.Add(new PetDataDto()
                 {
                     Name = Pet.Name,
@@ -77,24 +68,17 @@ namespace PetConnect.BLL.Services.Classes
                     CustomerCountry = Pet.CustomerAddedPets.Customer.Address.Country,
                     CustomerStreet = Pet.CustomerAddedPets.Customer.Address.Street,
                     Notes = Pet.Notes
-
-
-
-
                 });
             }
             return petDatas;
         }
-
-
-
-        public IEnumerable<PetDataDto> GetAllApprovedPetsWithBelongsToCustomer()
+        public IEnumerable<PetDataDto> GetAllApprovedPetsWithCustomerData()
         {
             List<PetDataDto> petDatas = new List<PetDataDto>();
             IEnumerable<Pet> PetList = _unitOfWork.PetRepository.GetApprovedPetBreadCategoryDataWithCustomer();
 
 
-
+                
             foreach (var Pet in PetList)
             {
 
@@ -130,7 +114,7 @@ namespace PetConnect.BLL.Services.Classes
                 Status = P.Status,
                 Id = P.Id,
                 Age = P.Age,
-                CategoryName = P!.Name,
+                CategoryName = P!.Breed.Category.Name,
                 CustomerId = P.CustomerAddedPets.CustomerId,
                 CustomerName = P.CustomerAddedPets.Customer.FName + " " + P.CustomerAddedPets.Customer.LName,
                 CustomerCity = P.CustomerAddedPets.Customer.Address.City,
@@ -144,7 +128,6 @@ namespace PetConnect.BLL.Services.Classes
 
             return PetList;
         }
-
         public IEnumerable<PetDataDto> GetAllForRescuePetsWithCustomerData()
         {
             var PetList = _unitOfWork.PetRepository.GetPetBreadCategoryDataWithCustomer().Where(P => P.Status == PetStatus.ForRescue && P.IsApproved == true).Select(P =>
@@ -155,7 +138,7 @@ namespace PetConnect.BLL.Services.Classes
                 Status = P.Status,
                 Id = P.Id,
                 Age = P.Age,
-                CategoryName = P!.Name,
+                CategoryName = P!.Breed.Category.Name,
                 CustomerId = P.CustomerAddedPets.CustomerId,
                 CustomerName = P.CustomerAddedPets.Customer.FName + " " + P.CustomerAddedPets.Customer.LName,
                 CustomerCity = P.CustomerAddedPets.Customer.Address.City,
@@ -173,7 +156,7 @@ namespace PetConnect.BLL.Services.Classes
             var pet = _unitOfWork.PetRepository.GetPetDetails(id);
             if (pet == null)
                 return null;
-
+                
             var breed = _unitOfWork.PetBreedRepository.GetByID(pet.BreedId);
             var category = breed != null
                 ? _unitOfWork.PetCategoryRepository.GetByID(breed.CategoryId)
@@ -204,7 +187,6 @@ namespace PetConnect.BLL.Services.Classes
 
             return petDto;
         }
-
         public IEnumerable<PetDataDto> GetAllPetsByCountForAdoption(int count)
         {
             List<PetDataDto> petDatas = new List<PetDataDto>();
@@ -269,6 +251,22 @@ namespace PetConnect.BLL.Services.Classes
         }
 
 
+
+        public  int UpdatePetStatus(int petId, PetStatus newStatus)
+        {
+            var pet = _unitOfWork.PetRepository.GetByID(petId);
+            if (pet == null)
+            {
+                return 0;
+            }
+
+            pet.Status = newStatus;
+
+            _unitOfWork.PetRepository.Update(pet);
+            return  _unitOfWork.SaveChanges();
+        }
+
+
         public int DeletePet(int id)
         {
             var Pet = _unitOfWork.PetRepository.GetByID(id);
@@ -278,10 +276,7 @@ namespace PetConnect.BLL.Services.Classes
                 return _unitOfWork.SaveChanges();
             }
             return 0;
-        }
-       
-
-
+        }  
         public IEnumerable<PetDetailsDto> GetPetsForCustomer(string CustomerId)
         {
             ICollection<PetDetailsDto> customerPets = new List<PetDetailsDto>();

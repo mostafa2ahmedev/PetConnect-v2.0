@@ -15,69 +15,76 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let pet of pets">
-        <!-- Pet Image + Name -->
-        <td>
-          <div class="d-flex align-items-center p-2">
-            <img
-              [src]="pet.imgUrl || 'assets/default-pet.jpg'"
-              class="rounded-circle me-2"
-              style="width: 33px; height: 33px; object-fit: cover"
-              [alt]="pet.name"
-            />
-            <div>
-              <div>{{ pet.name }}</div>
+      <div *ngIf="loading" class="text-center p-5 mx-auto">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-3">Loading profile...</p>
+      </div>
+
+      <ng-container *ngIf="!loading && pets.length > 0">
+        <tr *ngFor="let pet of pets">
+          <!-- Pet Image + Name -->
+          <td>
+            <div class="d-flex align-items-center p-2">
+              <img
+                [src]="pet.imgUrl || 'assets/default-pet.jpg'"
+                class="rounded-circle me-2"
+                style="width: 33px; height: 33px; object-fit: cover"
+                [alt]="pet.name"
+              />
+              <div>
+                <div>{{ pet.name }}</div>
+              </div>
             </div>
-          </div>
-        </td>
+          </td>
 
-        <!-- Other Fields -->
-        <td>{{ pet.categoryName }}</td>
-        <!-- <td>{{ pet.customerName }}</td> -->
-        <td>{{ pet.breadName }}</td>
-        <!-- <td>{{ pet.age }} y</td> -->
+          <!-- Other Fields -->
+          <td>{{ pet.categoryName }}</td>
+          <!-- <td>{{ pet.customerName }}</td> -->
+          <td>{{ pet.breadName }}</td>
+          <!-- <td>{{ pet.age }} y</td> -->
 
-        <!-- Status Badge -->
-        <td>
-          <span
-            class="badge"
-            [ngClass]="{
-              'bg-secondary': pet.status === 0,
-              'bg-info': pet.status === 1,
-              'bg-danger': pet.status === 2
-            }"
-          >
-            {{
-              pet.status === 0
-                ? "Owned"
-                : pet.status === 1
-                ? "For Addoption"
-                : "For Rescue"
-            }}
-          </span>
-        </td>
+          <!-- Status Badge -->
+          <td>
+            <span
+              class="badge"
+              [ngClass]="{
+                'bg-secondary': pet.status === 0,
+                'bg-info': pet.status === 1,
+                'bg-danger': pet.status === 2
+              }"
+            >
+              {{
+                pet.status === 0
+                  ? "Owned"
+                  : pet.status === 1
+                  ? "For Addoption"
+                  : "For Rescue"
+              }}
+            </span>
+          </td>
 
-        <!-- Approve/Reject Icons -->
-        <td class="text-center">
-          <button
-            class="btn btn-sm btn-primary me-1"
-            (click)="approvePet(pet.id)"
-            title="Approve"
-          >
-            <i class="bi bi-check-lg"></i>
-          </button>
-          <button
-            class="btn btn-sm btn-outline-danger"
-            (click)="openRejectionModal(rejectionModal, pet.id, 'pet')"
-            title="Reject"
-          >
-            <i class="bi bi-trash"></i>
-          </button>
-        </td>
-      </tr>
+          <!-- Approve/Reject Icons -->
+          <td class="text-center">
+            <button
+              class="btn btn-sm btn-primary me-1"
+              (click)="approvePet(pet.id)"
+              title="Approve"
+            >
+              <i class="bi bi-check-lg"></i>
+            </button>
+            <button
+              class="btn btn-sm btn-outline-danger"
+              (click)="openRejectionModal(rejectionModal, pet.id, 'pet')"
+              title="Reject"
+            >
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-container>
     </tbody>
   </table>
-  <div class="text-center py-4" *ngIf="pets.length === 0">
+  <div class="text-center py-4" *ngIf="!loading && pets.length === 0">
     <i
       class="fas fa-paw text-muted mb-2"
       style="font-size: 2.5rem; opacity: 0.3"

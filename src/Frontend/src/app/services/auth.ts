@@ -3,14 +3,13 @@ import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 
 export interface JwtPayload {
-  "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier": string;
+  'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier': string;
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
   getToken(): string | null {
     return localStorage.getItem('token');
   }
@@ -21,7 +20,11 @@ export class AuthService {
 
     try {
       const decoded = jwtDecode<JwtPayload>(token);
-      return decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"] || null;
+      return (
+        decoded[
+          'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'
+        ] || null
+      );
     } catch (error) {
       console.error('Error decoding token:', error);
       return null;
@@ -36,7 +39,6 @@ export class AuthService {
     localStorage.removeItem('token');
   }
   login(token: string) {
-  localStorage.setItem('token', token);
-}
-
+    localStorage.setItem('token', token);
+  }
 }

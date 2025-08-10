@@ -13,32 +13,80 @@
       <!-- Desktop Nav -->
       <ul class="nav d-none d-xl-flex align-items-center mb-0 me-3">
         <li class="nav-item">
-          <a class="nav-link text-dark" routerLink="/" routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }">Home</a>
+          <a
+            class="nav-link text-dark"
+            routerLink="/"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            >Home</a
+          >
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" routerLink="/doctors" routerLinkActive="active">Doctors</a>
+          <a
+            class="nav-link text-dark"
+            routerLink="/doctors"
+            routerLinkActive="active"
+            >Doctors</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link text-dark"
+            routerLink="/blog"
+            routerLinkActive="active"
+            >Blog</a
+          >
         </li>
         <li class="nav-item dropdown" routerLinkActive="active">
-          <a class="nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown" href="#">Pets</a>
+          <a
+            class="nav-link dropdown-toggle text-dark"
+            data-bs-toggle="dropdown"
+            href="#"
+            >Pets</a
+          >
           <ul class="dropdown-menu shadow">
             <li>
-              <a class="dropdown-item" routerLink="/pets" routerLinkActive="active"
-                [routerLinkActiveOptions]="{ exact: true }">All Pets</a>
+              <a
+                class="dropdown-item"
+                routerLink="/pets"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                >All Pets</a
+              >
             </li>
             <li>
-              <a class="dropdown-item" routerLink="/pets/adopt" routerLinkActive="active">Adopt a Pet</a>
+              <a
+                class="dropdown-item"
+                routerLink="/pets/adopt"
+                routerLinkActive="active"
+                >Adopt a Pet</a
+              >
             </li>
             <li>
-              <a class="dropdown-item" routerLink="/pets/rescue" routerLinkActive="active">Rescue a Pet</a>
+              <a
+                class="dropdown-item"
+                routerLink="/pets/rescue"
+                routerLinkActive="active"
+                >Rescue a Pet</a
+              >
             </li>
             <li *ngIf="isAuthenticated()">
-              <a class="dropdown-item" routerLink="/add-pet" routerLinkActive="active">Add a New Pet</a>
+              <a
+                class="dropdown-item"
+                routerLink="/add-pet"
+                routerLinkActive="active"
+                >Add a New Pet</a
+              >
             </li>
           </ul>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" routerLink="/contact" routerLinkActive="active">Contact</a>
+          <a
+            class="nav-link text-dark"
+            routerLink="/contact"
+            routerLinkActive="active"
+            >Contact</a
+          >
         </li>
         <li *ngIf="!isAuthenticated()">
           <a class="nav-link text-black" routerLink="/login">Login</a>
@@ -47,11 +95,18 @@
           <a class="nav-link text-black" routerLink="/register">Register</a>
         </li>
         <li *ngIf="isAuthenticated()">
-        <a class="nav-link text-dark fw-semibold pointer" routerLink="/all-products">Shop</a>
+          <a
+            class="nav-link text-dark fw-semibold pointer"
+            routerLink="/all-products"
+            >Shop</a
+          >
         </li>
 
         <li *ngIf="isAuthenticated()">
-          <a [routerLink]="['/cart']" class="btn btn-outline-primary position-relative">
+          <a
+            [routerLink]="['/cart']"
+            class="position-relative nav-link text-dark fw-semibold fs-5"
+          >
             <i class="fas fa-shopping-cart"></i>
             @if(cartLength>0){
             <span class="cart-badge">{{ cartLength }}</span>
@@ -60,42 +115,76 @@
         </li>
       </ul>
       <!-- Hamburger (mobile) -->
-      <button class="btn d-xl-none ms-3" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu">
+      <button
+        class="btn d-xl-none ms-3"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#mobileMenu"
+      >
         <i class="bi bi-list fs-4 text-dark"></i>
       </button>
 
-      <a *ngIf="!isAuthenticated()" class="nav-link d-xl-none" routerLink="/login">Login</a>
+      <a
+        *ngIf="!isAuthenticated()"
+        class="nav-link d-xl-none"
+        routerLink="/login"
+        >Login</a
+      >
 
       <!-- Notifications -->
-      <div #notificationPanel class="position-relative me-3" *ngIf="isAuthenticated()">
-        <button class="btn btn-link position-relative p-0" (click)="isOpen = !isOpen">
-          <i [ngClass]="
+      <div
+        #notificationPanel
+        class="position-relative me-3"
+        *ngIf="isAuthenticated()"
+      >
+        <button
+          class="btn btn-link position-relative p-0"
+          (click)="isOpen = !isOpen"
+        >
+          <i
+            [ngClass]="
               isOpen ? 'bi bi-bell-fill text-primary' : 'bi bi-bell text-dark'
-            " class="fs-4"></i>
-          <span *ngIf="unreadCount > 0" class="position-absolute translate-middle badge rounded-pill bg-danger"
-            style="top: 16%; font-size: 0.65rem; right: -17px">
+            "
+            class="fs-4"
+          ></i>
+          <span
+            *ngIf="unreadCount > 0"
+            class="position-absolute translate-middle badge rounded-pill bg-danger"
+            style="top: 16%; font-size: 0.65rem; right: -17px"
+          >
             {{ unreadCount }}
           </span>
         </button>
 
         <!-- Notification Dropdown -->
-        <div [@slideToggle]="slideState" class="card shadow position-absolute mt-4" style="
+        <div
+          [@slideToggle]="slideState"
+          class="card shadow position-absolute mt-4"
+          style="
             width: 300px;
             z-index: 1000;
             right: -15px;
             max-height: 70vh;
             overflow-y: auto;
-          ">
+          "
+        >
           <div class="card-header py-3 text-center">
             <h6 class="fw-semibold mb-0">Notifications</h6>
           </div>
           <div class="card-body p-0">
-            <div *ngFor="let notif of notifications"
+            <div
+              *ngFor="let notif of notifications"
               class="px-3 py-3 border-bottom d-flex align-items-start gap-2 notification-item position-relative"
-              [ngClass]="{ unread: !notif.isRead }" (click)="markAsRead(notif)" style="cursor: pointer">
+              [ngClass]="{ unread: !notif.isRead }"
+              (click)="markAsRead(notif)"
+              style="cursor: pointer"
+            >
               <!-- Close Icon -->
-              <i class="bi bi-x-lg position-absolute top-0 end-0 me-2 mt-2 text-muted" style="cursor: pointer"
-                (click)="deleteNotification(notif, $event)"></i>
+              <i
+                class="bi bi-x-lg position-absolute top-0 end-0 me-2 mt-2 text-muted"
+                style="cursor: pointer"
+                (click)="deleteNotification(notif, $event)"
+              ></i>
 
               <!-- Icon -->
               <i class="bi bi-bell-fill text-black-50 fs-5"></i>
@@ -109,7 +198,10 @@
               </div>
             </div>
 
-            <div *ngIf="notifications.length === 0" class="text-center text-muted py-3">
+            <div
+              *ngIf="notifications.length === 0"
+              class="text-center text-muted py-3"
+            >
               No notifications
             </div>
           </div>
@@ -118,13 +210,23 @@
 
       <!-- Profile Dropdown -->
       <div class="dropdown" *ngIf="isAuthenticated()">
-        <a class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" href="#"
-          data-bs-toggle="dropdown">
-          <img [src]="
+        <a
+          class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle"
+          href="#"
+          data-bs-toggle="dropdown"
+        >
+          <img
+            [src]="
               getFullImageUrl(
-                profileData?.imgUrl || 'assets/images/default-avatar.png'
+                profileData?.imgUrl ||
+                  doctor?.imgUrl ||
+                  '/assets/img/person/bb44c151-ae0d-4067-a271-148e2ad415ec.png'
               )
-            " class="rounded-circle me-2" width="32" height="32" />
+            "
+            class="rounded-circle me-2"
+            width="32"
+            height="32"
+          />
           <!-- <span>Paula Wilson</span> -->
         </a>
         <ul class="dropdown-menu dropdown-menu-end shadow">
@@ -141,10 +243,17 @@
             <a class="dropdown-item" routerLink="/seller">Dashboard</a>
           </li>
           <li>
-            <a class="dropdown-item" routerLink="/chat">Messages</a>
+            <a
+              class="dropdown-item"
+              routerLink="/chat"
+              *ngIf="accountService.isCustomer()"
+              >Messages</a
+            >
           </li>
           <li>
-            <a class="dropdown-item pointer" (click)="logout()">Logout <i class="bi bi-box-arrow-right ms-2"></i></a>
+            <a class="dropdown-item pointer" (click)="logout()"
+              >Logout <i class="bi bi-box-arrow-right ms-2"></i
+            ></a>
           </li>
         </ul>
       </div>
@@ -155,21 +264,37 @@
   <div id="mobileMenu" class="collapse bg-white border-top">
     <ul class="nav flex-column p-3">
       <li>
-        <a class="nav-link" routerLink="/" routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }">Home</a>
+        <a
+          class="nav-link"
+          routerLink="/"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >Home</a
+        >
       </li>
       <li>
-        <a class="nav-link" routerLink="/doctors" routerLinkActive="active">Doctors</a>
+        <a class="nav-link" routerLink="/doctors" routerLinkActive="active"
+          >Doctors</a
+        >
       </li>
       <li>
-        <a class="nav-link" routerLink="/pets" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">All
-          Pets</a>
+        <a
+          class="nav-link"
+          routerLink="/pets"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >All Pets</a
+        >
       </li>
       <li *ngIf="isAuthenticated()">
-        <a class="nav-link" routerLink="/add-pet" routerLinkActive="active">Add Pet</a>
+        <a class="nav-link" routerLink="/add-pet" routerLinkActive="active"
+          >Add Pet</a
+        >
       </li>
       <li>
-        <a class="nav-link" routerLink="/contact" routerLinkActive="active">Contact</a>
+        <a class="nav-link" routerLink="/contact" routerLinkActive="active"
+          >Contact</a
+        >
       </li>
       <li *ngIf="!isAuthenticated()">
         <a class="nav-link" routerLink="/login">Login</a>
@@ -187,4 +312,3 @@
     </ul>
   </div>
 </header>
-

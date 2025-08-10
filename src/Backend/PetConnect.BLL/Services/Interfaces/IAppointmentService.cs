@@ -14,6 +14,8 @@ namespace PetConnect.BLL.Services.Interfaces
         Task<AppointmentViewDTO?> GetAppointmentByIdAsync(Guid id);
         Task<IEnumerable<AppointmentViewDTO>> GetAppointmentsByDoctorAsync(string doctorId);
         Task<IEnumerable<AppointmentViewDTO>> GetAppointmentsByCustomerAsync(string customerId);
+        public IEnumerable<AppointmentDoctorProfileViewDTO> GetAppointmentsForCustomerProfile(string customerId);
+
         Task<AppointmentViewDTO> AddAppointmentAsync(AppointmentCreateDTO dto);
         Task<bool> CancelAppointmentAsync(Guid id);
         Task<bool> ConfirmAppointmentAsync(Guid id);

@@ -1,7 +1,9 @@
 <section id="hero" class="hero section mb-0 pb-0">
-  <div class="container section-title aos-init aos-animate pb-0" data-aos="fade-up">
+  <div
+    class="container section-title aos-init aos-animate pb-0"
+    data-aos="fade-up"
+  >
     <h2>Sign Up</h2>
-    <p>*****************</p>
   </div>
 </section>
 
@@ -24,16 +26,21 @@
           </select>
         </div>
 
-
         <div class="d-grid mt-4">
-          <button type="button" class="btn btn-primary" (click)="navigateToForm()">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="navigateToForm()"
+          >
             Continue
           </button>
         </div>
       </form>
 
       <div class="mt-4 text-center">
-        <a class="text-muted" [routerLink]="['/login']">Already have an account?</a>
+        <a class="text-muted" [routerLink]="['/login']"
+          >Already have an account?</a
+        >
       </div>
     </div>
   </div>

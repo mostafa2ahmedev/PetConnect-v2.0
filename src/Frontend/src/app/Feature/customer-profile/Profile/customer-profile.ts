@@ -12,6 +12,7 @@ import { AdoptionDecision } from '../../../models/adoption-decision';
 import { AccountService } from '../../../core/services/account-service';
 import { Subscription } from 'rxjs';
 import { NotificationService } from '../../../core/services/notification-service';
+import { AppointmentService } from '../../Doctor/doctor-profile/appointment-service';
 
 @Component({
   selector: 'app-customer-profile',
@@ -32,13 +33,14 @@ export class CustomerProfile implements OnInit, OnDestroy {
   sentRequests: AdoptionResponse[] = [];
   requestedPetIds: number[] = [];
   private notifSub!: Subscription;
-
+  appointments: any[] = [];
   constructor(
     private adoptionService: AdoptionService,
     private customerService: CustomerService,
     private alert: AlertService,
     private cdRef: ChangeDetectorRef,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private appointmentService: AppointmentService
   ) {}
 
   ngOnInit(): void {
@@ -46,6 +48,7 @@ export class CustomerProfile implements OnInit, OnDestroy {
     this.loadCustomerPets();
     this.loadReceivedRequests();
     this.loadProfile();
+    this.loadCustomerAppointments();
 
     this.notifSub = this.notificationService.newNotification$.subscribe(
       (notif) => {
@@ -182,6 +185,18 @@ export class CustomerProfile implements OnInit, OnDestroy {
       },
       error: () => {
         this.alert.error('Failed to update request.');
+      },
+    });
+  }
+
+  loadCustomerAppointments(): void {
+    this.appointmentService.getDetailedCustomerAppointments().subscribe({
+      next: (res) => {
+        this.appointments = res;
+        console.log('appointments', this.appointments);
+      },
+      error: (err) => {
+        console.error('Failed to load owned pets', err);
       },
     });
   }
