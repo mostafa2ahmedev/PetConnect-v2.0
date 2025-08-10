@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetConnect.BLL", "src\Backe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetConnect.DAL", "src\Backend\PetConnect.DAL\PetConnect.DAL.csproj", "{862F9729-7958-0990-1E5D-2403A08D3794}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetConnect.UnitTests", "tests\PetConnect.UnitTests\PetConnect.UnitTests.csproj", "{35F0A81A-656D-AFD4-BC27-82FC4CFDEB4C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetConnect.Tests", "tests\PetConnect.UnitTests\PetConnect.Tests.csproj", "{35F0A81A-656D-AFD4-BC27-82FC4CFDEB4C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
