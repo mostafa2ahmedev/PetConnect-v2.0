@@ -276,35 +276,33 @@ namespace PetConnect.UnitTests
             int petId = 3;
 
             // Create a mock pet with a valid BreedId
-            var pet = _fixture.Build<Pet>()
-                .With(p => p.BreedId, 10)
-                .Without(p => p.AdminPetMessages)
-                .Without(p => p.CustomerAddedPets)
-                .Without(p => p.CustomerPetAdoptions)
-                .Without(p => p.ShelterAddedPets)
-                .Without(p => p.ShelterPetAdoptions)
-                .Without(p => p.Breed)
-                .Create();
+            var pet = new Pet()
+            {
+                BreedId = 10,
+                Name = "coco",
+                Id = 20
+            };
 
             _unitOfWorkMock.Setup(u => u.PetRepository.GetPetDetails(petId))
                 .Returns(pet);
 
-            // Create a mock breed with a CategoryId that is not found 
-            var breed = _fixture.Build<PetBreed>()
-                .With(b => b.Id, pet.BreedId)
-                .With(b => b.CategoryId, 30) //existing category id
-                .Without(b => b.Category)
-                .Without(b => b.Pets)
-                .Without(b => b.PetPreedProducts)
-                .Create();
+            // Create a mock breed with a CategoryId 
+            var breed = new PetBreed()
+            {
+                Name = "Baladi",
+                Id = pet.BreedId,
+                CategoryId = 30
+            };
 
             // Mock BreedRepository to return the breed
             _unitOfWorkMock.Setup(u => u.PetBreedRepository.GetByID(pet.BreedId))
                 .Returns(breed);
 
-            var cat = _fixture.Build<PetCategory>()
-                .With(c => c.Id, breed.CategoryId)
-                .Without(c => c.Breeds).Create();
+            var cat = new PetCategory()
+            {
+                Name = "Dog",
+                Id = breed.CategoryId
+            };
 
             // Mock CategoryRepository to category 
             _unitOfWorkMock.Setup(u => u.PetCategoryRepository.GetByID(breed.CategoryId))

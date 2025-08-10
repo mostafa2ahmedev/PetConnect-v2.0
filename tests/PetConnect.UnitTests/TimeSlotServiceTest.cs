@@ -102,9 +102,11 @@ namespace PetConnect.UnitTests
                     Id = slotId,
                     DoctorId = doctorId,
                     IsActive = true,
+                    StartTime = DateTime.Today.AddHours(10), // ✅ Passes date filter
+                    EndTime = DateTime.Today.AddHours(11),
                     Appointments = new List<Appointment>
                     {
-                        new Appointment { SlotId = slotId, Status = AppointmentStatus.Confirmed }
+                        new Appointment { SlotId = slotId, Status = AppointmentStatus.Confirmed } // ✅ Matches expected
                     }
                 }
             };

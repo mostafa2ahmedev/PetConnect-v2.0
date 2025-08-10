@@ -49,7 +49,7 @@ namespace PetConnect.UnitTests
             // Arrange
             var doctors = new List<Doctor>
 {
-                // ✅ VALID Doctor 1
+                // VALID Doctor 1
                 new Doctor
                 {
                     Id = "doc1",
@@ -72,7 +72,7 @@ namespace PetConnect.UnitTests
                     }
                 },
 
-                // ✅ VALID Doctor 2
+                //  VALID Doctor 2
                 new Doctor
                 {
                     Id = "doc2",
@@ -95,7 +95,7 @@ namespace PetConnect.UnitTests
                     }
                 },
 
-                // ❌ INVALID Doctor 3 - Not approved
+                //  INVALID Doctor 3 - Not approved
                 new Doctor
                 {
                     Id = "doc3",
@@ -118,7 +118,7 @@ namespace PetConnect.UnitTests
                     }
                 },
 
-                // ❌ INVALID Doctor 4 - Deleted
+                //  INVALID Doctor 4 - Deleted
                 new Doctor
                 {
                     Id = "doc4",
@@ -201,10 +201,12 @@ namespace PetConnect.UnitTests
         public void Add_ShouldCallRepositoryAddAndSaveChanges()
         {
             // Arrange
-            var doctor = _fixture.Build<Doctor>()
-                .Without(d => d.TimeSlots)
-                .Without(d => d.Appointments)
-                .Without(d => d.AdminMessages).Create();
+            var doctor = new Doctor
+            {
+                PricePerHour = 100,
+                CertificateUrl = "test.pdf",
+                PetSpecialty = PetSpecialty.Cat
+            };
 
             _unitOfWorkMock.Setup(u => u.DoctorRepository.Add(doctor));
             // Act
@@ -219,12 +221,13 @@ namespace PetConnect.UnitTests
         public void Update_ShouldUpdateDoctorDetails_WhenDoctorExists()
         {
             // Arrange
-            var doctor = _fixture.Build<Doctor>()
-                .With(d => d.Id, "123")
-                .With(d => d.Address, new Address())
-                .Without(d => d.TimeSlots)
-                .Without(d => d.Appointments)
-                .Without(d => d.AdminMessages).Create();
+            var doctor = new Doctor
+            {
+                Id="123",
+                PricePerHour = 100,
+                CertificateUrl = "test.pdf",
+                PetSpecialty = PetSpecialty.Cat
+            };
 
             var dto = new DoctorDetailsDTO
             {
@@ -283,11 +286,13 @@ namespace PetConnect.UnitTests
         public void Delete_ShouldCallDeleteAndSaveChanges_WhenDoctorExists()
         {
             // Arrange
-            var doctor = _fixture.Build<Doctor>()
-                .With(d => d.Id, "delete123")
-                .Without(d => d.TimeSlots)
-                .Without(d => d.Appointments)
-                .Without(d => d.AdminMessages).Create();
+            var doctor = new Doctor
+            {
+                Id =  "delete123",
+                PricePerHour = 100,
+                CertificateUrl = "test.pdf",
+                PetSpecialty = PetSpecialty.Cat
+            };
 
             _unitOfWorkMock.Setup(u => u.DoctorRepository.GetByID("delete123")).Returns(doctor);
 
