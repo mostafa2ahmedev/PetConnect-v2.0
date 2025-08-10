@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { QuillModule } from 'ngx-quill';
@@ -6,6 +6,8 @@ import { BlogService } from '../blog-service';
 import { AddBlogRequest } from '../blog-models';
 import { AttachmentService } from '../../../core/services/attachment-service';
 import { CommonModule } from '@angular/common';
+import { forkJoin } from 'rxjs';
+import { CategoryService } from '../../categories/category-service';
 
 @Component({
   selector: 'app-add-blog',
@@ -13,11 +15,13 @@ import { CommonModule } from '@angular/common';
   templateUrl: './add-blog.html',
   styleUrl: './add-blog.css',
 })
-export class AddBlog {
+export class AddBlog implements OnInit {
   blog: AddBlogRequest = {
     content: '',
     title: '',
-    blogType: 0, // you can set default or bind from UI
+    blogType: 0,
+    topic: undefined,
+    petCategoryId: undefined,
   };
 
   mediaFile?: File | null;
@@ -26,10 +30,27 @@ export class AddBlog {
   errorMsg = '';
   successMsg = '';
 
+  categories: any[] = [];
+  blogTopics: any[] = [];
+
   constructor(
     private blogService: BlogService,
-    private attachmentService: AttachmentService
+    private attachmentService: AttachmentService,
+    private categroyService: CategoryService
   ) {}
+
+  ngOnInit(): void {
+    forkJoin({
+      categories: this.categroyService.getCategories(), // or categoryService.getCategories()
+      topics: this.blogService.getBlogTopics(),
+    }).subscribe({
+      next: ({ categories, topics }) => {
+        this.categories = categories;
+        this.blogTopics = topics;
+      },
+      error: (err) => console.error('Error loading categories or topics', err),
+    });
+  }
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
@@ -41,26 +62,32 @@ export class AddBlog {
   async submitBlog() {
     this.errorMsg = '';
     this.successMsg = '';
+
     if (!this.blog.title.trim() || !this.blog.content.trim()) {
-      this.errorMsg = 'Title and content are required.';
+      this.errorMsg = 'Title, content, category, and topic are required.';
       return;
     }
 
     this.isSubmitting = true;
 
     try {
-      // Optional: Upload media file first if exists
       if (this.mediaFile) {
-        // Assuming your attachment service has an upload method returning the media URL string
         const uploadedUrl = await this.attachmentService.upload(this.mediaFile);
-        // Quill content and media are separate, so here media is file attached to blog post.
-        this.blog.media = this.mediaFile; // keep File in AddBlogRequest for backend multipart upload
+        this.blog.media = this.mediaFile; // keep file for backend multipart upload
       }
+      console.log(this.blog);
 
       await this.blogService.addBlog(this.blog).toPromise();
       this.successMsg = 'Blog post created successfully!';
+
       // Reset form
-      this.blog = { content: '', title: '', blogType: 0 };
+      this.blog = {
+        content: '',
+        title: '',
+        blogType: 0,
+        topic: undefined,
+        petCategoryId: undefined,
+      };
       this.mediaFile = null;
     } catch (error) {
       this.errorMsg = 'Error creating blog post. Please try again.';

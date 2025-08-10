@@ -1,10 +1,36 @@
 <div *ngIf="blogPost" class="container py-5 min-vh-100">
-  <div class="row justify-content-center">
+  <div class="row justify-content-center" style="min-height: 100vh">
     <div class="col-lg-8">
-      <div class="loader" *ngIf="loading"></div>
+      <div *ngIf="loading" class="text-center my-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-2">Loading blogs...</p>
+      </div>
       <!-- Header -->
+
       <div class="mb-3 p-4 bg-light rounded shadow-sm">
+        <div class="my-2">
+          <ng-container *ngIf="blogPost.categoryName">
+            <a [routerLink]="['/blog/category', blogPost.categoryName]">
+              <span class="badge border text-secondary small">
+                {{ blogPost.categoryName }}
+              </span>
+            </a>
+          </ng-container>
+
+          <ng-container *ngIf="blogPost.categoryName && blogPost.topic">
+            <span class="mx-1"></span>
+          </ng-container>
+
+          <ng-container *ngIf="blogPost.topic">
+            <a [routerLink]="['/blog/topic', blogPost.topic]">
+              <span class="badge border text-secondary small">
+                {{ blogPost.topic }}
+              </span></a
+            >
+          </ng-container>
+        </div>
         <h1 class="fw-bold mb-3">{{ blogPost.title }}</h1>
+
         <div class="d-flex align-items-center flex-wrap text-muted">
           <a
             [routerLink]="['/doctor-details', blogPost.doctorId]"
@@ -14,7 +40,7 @@
               [src]="getFullImageUrl(blogPost.doctorImgUrl)"
               alt="Doctor"
               class="rounded-circle me-2 border"
-              style="width: 50px; height: 50px; object-fit: cover"
+              style="width: 40px; height: 40px; object-fit: cover"
             />
             <span class="fw-semibold text-dark"
               >Dr. {{ blogPost.doctorName }}</span
@@ -61,7 +87,14 @@
 
       <!-- Comments List -->
       <div *ngFor="let comment of comments" class="text-start">
-        <div class="mb-3 p-3 border rounded">
+        <div class="mb-3 p-3 border rounded position-relative">
+          <!-- Delete icon for comment -->
+          <i
+            *ngIf="comment.posterId === userId"
+            class="fas fa-close text-secondary position-absolute"
+            style="top: 8px; right: 8px; cursor: pointer"
+            (click)="deleteComment(comment.id)"
+          ></i>
           <div class="d-flex align-items-center mb-2">
             <img
               [src]="getFullImageUrl(comment.posterImage)"
@@ -77,6 +110,16 @@
               </small> -->
             </div>
           </div>
+          <ng-container
+            *ngIf="comment.media && attachmentService.isImage(comment.media)"
+          >
+            <img
+              [src]="getFullImageUrl(comment.media)"
+              alt="Comment Media"
+              class="img-fluid rounded mb-2"
+              style="max-width: 200px; max-height: 200px; object-fit: cover"
+            />
+          </ng-container>
           <p class="mb-2">{{ comment.comment }}</p>
 
           <!-- Like button -->
@@ -85,6 +128,7 @@
               class="like-btn py-1 px-2 me-2"
               [class.active]="comment.isLikedByUser"
               (click)="likeComment(comment.id)"
+              *ngIf="isAuth"
             >
               <i class="fas fa-thumbs-up me-1 small"></i>
               <span class="small">
@@ -105,8 +149,15 @@
           <div *ngIf="comment.replies.length > 0; else noReplies">
             <div
               *ngFor="let reply of comment.replies"
-              class="border p-2 mb-2 rounded"
+              class="border p-2 mb-2 rounded position-relative"
             >
+              <!-- Delete icon for comment -->
+              <i
+                *ngIf="comment.posterId === userId"
+                class="fas fa-close text-black-50 position-absolute"
+                style="top: 8px; right: 8px; cursor: pointer"
+                (click)="deleteReply(comment.id, reply.id)"
+              ></i>
               <img
                 [src]="getFullImageUrl(reply.posterImage)"
                 class="rounded-circle me-2"
@@ -121,6 +172,7 @@
                 class="like-btn btn-sm me-2"
                 [class.active]="reply.isLikedByUser"
                 (click)="likeReply(reply.id, comment.id)"
+                *ngIf="isAuth"
               >
                 <i class="fas fa-thumbs-up me-1 small"></i>
                 <span class="small">{{
@@ -135,7 +187,7 @@
           </ng-template>
 
           <!-- Reply input -->
-          <div class="d-flex mt-2">
+          <div class="d-flex mt-2" *ngIf="isAuth">
             <input
               type="text"
               [(ngModel)]="newReply.reply"
@@ -152,28 +204,68 @@
         </div>
       </div>
       <!-- Comment Form -->
-      <form class="mb-4 text-start" *ngIf="isAuth" (ngSubmit)="addComment()">
-        <div class="mb-3">
-          <textarea
-            [(ngModel)]="newComment.comment"
-            name="comment"
-            class="form-control"
-            rows="3"
-            placeholder="Add a comment..."
-            required
-          ></textarea>
-        </div>
+      <div *ngIf="imagePreview" class="position-relative d-inline-block mt-2">
+        <img
+          [src]="imagePreview"
+          alt="Preview"
+          style="max-height: 100px; border-radius: 8px"
+        />
+        <button
+          type="button"
+          class="btn btn-sm btn-danger position-absolute"
+          style="
+            top: 0;
+            right: 0;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            line-height: 14px;
+            padding: 0;
+          "
+          (click)="clearImage()"
+          aria-label="Remove image"
+          title="Remove image"
+        >
+          &times;
+        </button>
+      </div>
 
-        <!-- <div class="mb-3">
-          <input
-            type="file"
-            (change)="newComment.media = $event.target.files[0]"
-            class="form-control"
-          />
-        </div> -->
+      <!-- Comment Form -->
 
-        <button type="submit" class="btn btn-primary">Post Comment</button>
-      </form>
+      <div class="comment-box d-flex align-items-center gap-2 mt-2">
+        <!-- Comment Input -->
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Write a comment..."
+          [(ngModel)]="newComment.comment"
+        />
+
+        <!-- File Upload Icon -->
+        <label
+          for="fileUpload"
+          class="btn btn-light p-2 rounded-circle"
+          style="cursor: pointer"
+        >
+          <i class="bi bi-paperclip"></i>
+        </label>
+        <input
+          type="file"
+          id="fileUpload"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+          style="display: none"
+        />
+
+        <!-- Submit Button -->
+        <button class="btn btn-primary" (click)="addComment()">
+          <i class="bi bi-send"></i>
+        </button>
+      </div>
+
+      <span class="text-muted flex-sm-shrink-0" *ngIf="!isAuth"
+        >Login to comment, like and reply</span
+      >
     </div>
   </div>
 </div>

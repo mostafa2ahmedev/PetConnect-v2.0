@@ -11,7 +11,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from '../../../core/services/account-service';
-import { CustomerService } from '../../profile/customer-service';
+import { AttachmentService } from '../../../core/services/attachment-service';
 
 @Component({
   selector: 'app-single-post',
@@ -22,6 +22,7 @@ import { CustomerService } from '../../profile/customer-service';
 export class SinglePost {
   blogPost!: BlogPost;
   isAuth: boolean = false;
+  userId: string = '';
   blogId: string | null = '';
   comments: BlogComment[] = [];
   newComment: AddCommentRequest = {
@@ -35,16 +36,20 @@ export class SinglePost {
     media: null,
   };
   loading: boolean = true;
+  imagePreview: string | null = null;
+
   constructor(
     private route: ActivatedRoute,
     private blogService: BlogService,
-    private accountService: AccountService
+    private accountService: AccountService,
+    public attachmentService: AttachmentService
   ) {}
 
   ngOnInit(): void {
     // Get ID from URL
     this.blogId = this.route.snapshot.paramMap.get('id');
     this.isAuth = this.accountService.isAuthenticated();
+    this.userId = this.accountService.getUserId();
     if (this.blogId) {
       this.newComment.blogId = this.blogId;
       this.getPostDetails(this.blogId);
@@ -178,21 +183,54 @@ export class SinglePost {
     }
     return null;
   }
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.newComment.media = file;
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+  clearImage() {
+    this.imagePreview = null;
+    this.newComment.media = null;
+
+    // Optionally reset the file input element value as well to allow re-selecting the same file
+    const fileInput = document.getElementById(
+      'fileUpload'
+    ) as HTMLInputElement | null;
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  }
 
   addComment() {
-    // Ensure comment is not empty
     if (!this.newComment.comment.trim()) {
       console.error('Comment is required');
       return;
     }
 
+    // Ensure blogId is attached
+    if (typeof this.blogId === 'string') {
+      this.loadComments(this.blogId);
+    }
     this.blogService.addComment(this.newComment).subscribe({
       next: (res) => {
         console.log('New comment added:', res);
+        this.clearImage();
         if (typeof this.blogId === 'string') {
           this.loadComments(this.blogId);
         }
-        this.newComment.comment = ''; // Clear the textarea after posting
+
+        // Reset form
+        this.newComment.comment = '';
+        this.newComment.media = null;
       },
       error: (err) => console.error('Error adding comment:', err),
     });
@@ -230,7 +268,33 @@ export class SinglePost {
       error: (err) => console.error('Error adding reply:', err),
     });
   }
+  deleteComment(commentId: string) {
+    this.blogService.deleteComment(commentId).subscribe({
+      next: () => {
+        console.log('Comment deleted:', commentId);
 
+        // Remove from local list
+        this.comments = this.comments.filter((c) => c.id !== commentId);
+      },
+      error: (err) => console.error('Error deleting comment:', err),
+    });
+  }
+
+  deleteReply(commentId: string, replyId: string) {
+    this.blogService.deleteReply(replyId).subscribe({
+      next: () => {
+        console.log('Reply deleted:', replyId);
+
+        // Find the comment and update its replies list
+        const comment = this.comments.find((c) => c.id === commentId);
+        if (comment) {
+          comment.replies = comment.replies.filter((r) => r.id !== replyId);
+          comment.numberOfReplies = Math.max(0, comment.numberOfReplies - 1);
+        }
+      },
+      error: (err) => console.error('Error deleting reply:', err),
+    });
+  }
   getFullImageUrl(relativePath: string): string {
     return `https://localhost:7102${relativePath}`;
   }

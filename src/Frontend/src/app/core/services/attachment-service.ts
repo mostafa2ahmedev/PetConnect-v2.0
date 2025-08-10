@@ -19,4 +19,9 @@ export class AttachmentService {
       .toPromise()
       .then((res) => res ?? '');
   }
+  isImage(filePath: string): boolean {
+    if (!filePath) return false;
+    const ext = filePath.split('.').pop()?.toLowerCase();
+    return ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext || '');
+  }
 }

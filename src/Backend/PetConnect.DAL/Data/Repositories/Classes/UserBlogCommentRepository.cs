@@ -22,11 +22,11 @@ namespace PetConnect.DAL.Data.Repositories.Classes
         public IQueryable<UserBlogComment> GetAllCommentsByBlogIdWithAuthorAndBlogData(Guid BlogId)
         {
 
-            return context.UserBlogComments.Include(UBC=>UBC.BlogComment).Include(UBC => UBC.User).Where(UBC => UBC.BlogId == BlogId);
+            return context.UserBlogComments.Include(UBC=>UBC.BlogComment).Include(UBC => UBC.User).Where(UBC => UBC.BlogId == BlogId && UBC.IsDeleted == false);
         }
         public IEnumerable<UserBlogComment> GetAllUserCommentsByBlogId(Guid BlogId)
         {
-            return context.UserBlogComments.Where(UBCR => UBCR.BlogId == BlogId);
+            return context.UserBlogComments.Where(UBCR => UBCR.BlogId == BlogId && UBCR.IsDeleted);
         }
     }
 }

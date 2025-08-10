@@ -21,15 +21,15 @@ namespace PetConnect.DAL.Data.Repositories.Classes
         public IQueryable<UserBlogCommentReply> GetAllRepliesByCommentId(Guid CommentId)
         {
 
-            return context.UserBlogCommentReplies.Include(UBCR=>UBCR.BlogCommentReply).Where(UBCR => UBCR.BlogCommentId == CommentId); ;
+            return context.UserBlogCommentReplies.Include(UBCR=>UBCR.BlogCommentReply).Where(UBCR => UBCR.BlogCommentId == CommentId && UBCR.IsDeleted == false);
         }
         public int GetNumberOfRepliesByCommentId(Guid CommentId)
         {
-            return context.UserBlogCommentReplies.Where(UBCR=>UBCR.BlogCommentId==CommentId).Count();
+            return context.UserBlogCommentReplies.Where(UBCR=>UBCR.BlogCommentId==CommentId && UBCR.IsDeleted==false).Count();
         }
         public IEnumerable<UserBlogCommentReply> GetAllUserCommentRepliesByCommentId(Guid CommentId)
         {
-            return context.UserBlogCommentReplies.Where(UBCR => UBCR.BlogCommentId == CommentId);
+            return context.UserBlogCommentReplies.Where(UBCR => UBCR.BlogCommentId == CommentId && UBCR.IsDeleted == false);
         }
 
     }

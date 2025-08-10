@@ -11,6 +11,8 @@ export interface Blog {
   doctorId: string;
   doctorName: string;
   doctorImgUrl: string;
+  topic?: string;
+  categoryName?: string;
 }
 export interface BlogPost {
   id: string;
@@ -26,6 +28,8 @@ export interface BlogPost {
   doctorName: string;
   doctorImgUrl: string;
   isLikedByUser: boolean;
+  topic?: string;
+  categoryName?: string;
 }
 export interface BlogComment {
   id: string; // UUID
@@ -33,6 +37,7 @@ export interface BlogComment {
   media: string; // Optional media URL
   posterName: string; // Name of commenter
   posterImage: string; // Profile image URL of commenter
+  posterId: string;
   numberOfLikes: number; // Likes on comment
   numberOfReplies: number; // Replies to comment
   isLikedByUser: boolean;
@@ -46,6 +51,7 @@ export interface BlogCommentReply {
   media: 'string';
   posterName: 'string';
   posterImage: 'string';
+  posterId: string;
   numberOfLikes: number;
   isLikedByUser: boolean;
 }
@@ -55,6 +61,8 @@ export interface AddBlogRequest {
   title: string; // required
   excerpt?: string; // optional
   blogType: number; // required, integer
+  topic?: number;
+  petCategoryId?: number;
 }
 
 // add-comment.model.ts

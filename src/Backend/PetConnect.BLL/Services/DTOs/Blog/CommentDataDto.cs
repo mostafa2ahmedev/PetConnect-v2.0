@@ -13,10 +13,12 @@ namespace PetConnect.BLL.Services.DTOs.Blog
         public string Media { get; set; } = null!;
         public string PosterName { get; set; } = null!;
         public string PosterImage { get; set; } = null!;
+        public string PosterId { get; set; } = null!;
         public int NumberOfLikes { get; set; }
         public int NumberOfReplies { get; set; }
         public bool IsDeleted { get; set; }
         public Boolean IsLikedByUser { get; set; }
+
 
     }
 }

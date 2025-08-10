@@ -51,7 +51,12 @@ namespace PetConnect.DAL.Data.Repositories.Classes
 
         public Blog? GetBlogByIdWithAuthorDataAndSomeStatistics(Guid BlogId)
         {
-            return _context.Blogs.Include(B => B.Doctor).Include(B => B.UserBlogComments).Include(B => B.UserBlogLikes).FirstOrDefault(B=>B.ID==BlogId);
+            return _context.Blogs
+                  .Include(B => B.Doctor)
+                  .Include(B => B.UserBlogComments)
+                  .Include(B => B.UserBlogLikes)
+                  .Include(B => B.PetCategory)
+                  .FirstOrDefault(B => B.ID == BlogId);
         }
     }
 }

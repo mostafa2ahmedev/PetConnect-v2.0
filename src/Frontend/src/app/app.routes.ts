@@ -121,7 +121,21 @@ export const routes: Routes = [
   },
   { path: 'blog', component: AllBlogs, children: [] },
   { path: 'blog/post/:id', component: SinglePost, children: [] },
-  { path: 'blog/add', component: AddBlog, children: [] },
+  {
+    path: 'blog/add',
+    component: AddBlog,
+    children: [],
+    canActivate: [doctorGuardGuard],
+  },
+
+  {
+    path: 'blog/category/:categorySlug',
+    component: AllBlogs,
+  },
+  {
+    path: 'blog/topic/:topicSlug',
+    component: AllBlogs,
+  },
   { path: 'register', component: Register, children: [] },
   { path: 'register/doctor', component: DoctorRegisterForm },
   { path: 'register/customer', component: CustomerRegisterForm },

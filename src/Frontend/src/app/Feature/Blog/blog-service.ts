@@ -10,7 +10,7 @@ import {
   BlogCommentReply,
   BlogPost,
 } from './blog-models';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { ApiResponse } from '../../models/api-response';
 
 @Injectable({
@@ -20,9 +20,21 @@ export class BlogService {
   private apiUrl = environment.apiBaseUrl; // e.g. "https://localhost:7102"
 
   constructor(private http: HttpClient) {}
-  getAllBlogs(): Observable<Blog[]> {
+  getAllBlogs(
+    topic?: number | null,
+    categoryId?: number | null
+  ): Observable<Blog[]> {
+    let params = new HttpParams();
+
+    if (topic !== undefined && topic !== null) {
+      params = params.set('Topic', topic.toString());
+    }
+    if (categoryId !== undefined && categoryId !== null) {
+      params = params.set('CategoryId', categoryId.toString());
+    }
+
     return this.http
-      .get<ApiResponse<Blog[]>>(`${this.apiUrl}/Blog/AllBlogs`)
+      .get<ApiResponse<Blog[]>>(`${this.apiUrl}/Blog/AllBlogs`, { params })
       .pipe(map((res) => res.data));
   }
 
@@ -70,12 +82,27 @@ export class BlogService {
     formData.append('Title', blog.title);
     formData.append('BlogType', blog.blogType.toString());
 
-    if (blog.excerpt) formData.append('excerpt', blog.excerpt);
-    if (blog.media) formData.append('Media', blog.media);
+    if (blog.excerpt) {
+      formData.append('Excerpt', blog.excerpt);
+    }
+
+    if (blog.media) {
+      formData.append('Media', blog.media);
+    }
+
+    if (blog.petCategoryId !== undefined && blog.petCategoryId !== null) {
+      formData.append('PetCategoryId', blog.petCategoryId.toString());
+    }
+
+    if (blog.topic !== undefined && blog.topic !== null) {
+      formData.append('Topic', blog.topic.toString());
+    }
 
     return this.http.post(`${this.apiUrl}/blog/NewBlog`, formData);
   }
-
+  deleteBlog(blogId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/blog/DeleteBlog/${blogId}`);
+  }
   // Add new comment
   addComment(request: AddCommentRequest) {
     const formData = new FormData();
@@ -95,5 +122,19 @@ export class BlogService {
     if (replyData.media) formData.append('Media', replyData.media);
 
     return this.http.post(`${this.apiUrl}/Blog/NewReply`, formData);
+  }
+  deleteComment(commentId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/blog/DeleteComment/${commentId}`);
+  }
+
+  // Delete reply
+  deleteReply(replyId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/blog/DeleteReply/${replyId}`);
+  }
+
+  getBlogTopics(): Observable<{ key: number; value: string }[]> {
+    return this.http.get<{ key: number; value: string }[]>(
+      `${this.apiUrl}/Enums/blog-topics`
+    );
   }
 }

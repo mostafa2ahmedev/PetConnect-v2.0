@@ -8,6 +8,111 @@
       Explore inspiring pet stories and practical advice to nurture your beloved
       companions.
     </p>
+    <!-- <div
+      class="blog-categories-header d-flex justify-content-center gap-4 py-3 mt-4"
+    >
+      <div *ngFor="let cat of categories" class="text-center category-block">
+        <a [routerLink]="['/blogs/', cat.name]" class="text-decoration-none">
+          <img
+            src="
+            https://localhost:7102/assets/chatimages/fdc6a7e3-d72d-4798-b62b-082671ec6406.png
+            "
+            [alt]="cat.name"
+            class="rounded-circle category-img"
+            style="max-width: 80px"
+          />
+          <div class="mt-2 category-name">{{ cat.name }}</div>
+        </a>
+      </div>
+    </div> -->
+    <!-- Category filter -->
+    <!-- Toggle Filter Button -->
+    <!-- Toggle Button -->
+
+    <!-- Sidebar -->
+    <div class="filter-sidebar" [class.open]="showFilters">
+      <!-- Close Button -->
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        style="position: absolute; top: 10px; right: 10px"
+        (click)="showFilters = !showFilters"
+      ></button>
+      <h5 class="mb-3"><i class="fas fa-sliders-h"></i> Filter Blogs</h5>
+
+      <!-- Category Filter -->
+      <div class="mb-3">
+        <label for="categorySelect" class="form-label">Category</label>
+        <select
+          id="categorySelect"
+          class="form-select"
+          [(ngModel)]="filters.categoryId"
+          name="categoryId"
+          (change)="onBackendFilterChange()"
+        >
+          <option [ngValue]="''">All Categories</option>
+          <option *ngFor="let cat of categories" [ngValue]="cat.id.toString()">
+            {{ cat.name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Topic Filter -->
+      <div class="mb-3">
+        <label for="topicSelect" class="form-label">Topic</label>
+        <select
+          id="topicSelect"
+          class="form-select"
+          [(ngModel)]="filters.topicKey"
+          name="topicKey"
+          (change)="onBackendFilterChange()"
+        >
+          <option [ngValue]="''">All Topics</option>
+          <option
+            *ngFor="let topic of blogTopics"
+            [ngValue]="topic.key.toString()"
+          >
+            {{ topic.value }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Search Title (frontend) -->
+      <div class="mb-3">
+        <label for="nameSearch" class="form-label">Search by Title</label>
+        <input
+          id="nameSearch"
+          type="text"
+          class="form-control"
+          placeholder="Enter blog title..."
+          [(ngModel)]="filters.searchTerm"
+          name="searchTerm"
+          (input)="applyClientFilters()"
+        />
+      </div>
+
+      <!-- Sort by Date (frontend) -->
+      <div class="mb-3">
+        <label for="sortDate" class="form-label">Sort by Date</label>
+        <select
+          id="sortDate"
+          class="form-select"
+          [(ngModel)]="filters.sortOrder"
+          name="sortOrder"
+          (change)="applyClientFilters()"
+        >
+          <option [ngValue]="''">Default</option>
+          <option [ngValue]="'desc'">Newest First</option>
+          <option [ngValue]="'asc'">Oldest First</option>
+        </select>
+      </div>
+
+      <!-- Reset Filters -->
+      <button class="btn btn-sm btn-secondary w-100" (click)="resetFilters()">
+        <i class="fas fa-undo"></i> Reset Filters
+      </button>
+    </div>
 
     <!-- <div
       class="mt-3 d-flex justify-content-center gap-3"
@@ -37,6 +142,18 @@
 
   <!-- Blog Cards -->
   <div *ngIf="!loading && blogs.length > 0" class="row g-4">
+    <div class="row">
+      <button
+        class="btn btn-primary m-3 z-3 dis"
+        style="width: auto"
+        (click)="showFilters = !showFilters"
+      >
+        <i
+          class="fas"
+          [ngClass]="showFilters ? 'fa-times' : 'fa-sliders-h'"
+        ></i>
+      </button>
+    </div>
     <div class="col-md-4" *ngFor="let blog of blogs">
       <div class="card h-100 shadow-lg mx-2 mb-5">
         <a [routerLink]="`/blog/post/${blog.id}`">
@@ -46,18 +163,53 @@
             class="card-img-top"
             style="max-height: 300px; object-fit: cover"
             alt="Blog Media"
-        /></a>
+          />
+        </a>
+
         <div class="card-body d-flex flex-column">
-          <a [routerLink]="`/blog/post/${blog.id}`">
+          <a
+            [routerLink]="`/blog/post/${blog.id}`"
+            class="text-decoration-none"
+          >
             <h5 class="card-title">{{ blog.title }}</h5>
-            <small class="text-muted mb-2">
-              {{ blog.postDate | date : "medium" }}
-            </small>
           </a>
+
+          <!-- Category & Topic row -->
+          <div class="mb-2 text-muted small">
+            <ng-container *ngIf="blog.categoryName">
+              <i class="fas fa-folder-open me-1" style="color: #5d57f4"></i>
+              {{ blog.categoryName }}
+            </ng-container>
+
+            <ng-container *ngIf="blog.categoryName && blog.topic">
+              <span class="mx-2">|</span>
+            </ng-container>
+
+            <ng-container *ngIf="blog.topic">
+              <i class="fas fa-tag me-1" style="color: #5d57f4"></i>
+              {{ blog.topic }}
+            </ng-container>
+          </div>
+
+          <!-- Post date -->
+          <!-- <small class="text-muted mb-2">
+            <i class="far fa-calendar-alt me-1"></i>
+            {{ blog.postDate | date : "medium" }}
+          </small> -->
+
+          <!-- Excerpt -->
           <p class="card-text" [innerHTML]="blog.excerpt"></p>
+
+          <!-- Likes & Comments -->
           <div class="mt-auto">
-            <span class="badge bg-primary me-2">{{ blog.likes }} Likes</span>
-            <span class="badge bg-secondary">Comments {{ blog.comments }}</span>
+            <span class="badge bg-primary me-2">
+              <i class="fas fa-thumbs-up me-1"></i>
+              {{ blog.likes }} Likes
+            </span>
+            <span class="badge bg-secondary">
+              <i class="fas fa-comments me-1"></i>
+              {{ blog.comments }}
+            </span>
           </div>
         </div>
       </div>

@@ -45,12 +45,9 @@ namespace PetConnect.BLL.Services.Classes
                       Likes = B.UserBlogLikes.Count,
                       DoctorName = B.Doctor.FName + " " + B.Doctor.LName,
                       DoctorImgUrl = B.Doctor.ImgUrl,
-                      Comments = B.UserBlogComments.Count,
+                      Comments = B.UserBlogComments.Where(b => b.IsDeleted == false).Count(),
                       Topic = B.Topic.ToString(),
                       CategoryName = B.PetCategory.Name,
-
-
-
 
                   });
         }
@@ -71,10 +68,11 @@ namespace PetConnect.BLL.Services.Classes
                 Likes = Blog.UserBlogLikes.Count,
                 DoctorName = Blog.Doctor.FName + " " + Blog.Doctor.LName,
                 DoctorImgUrl = Blog.Doctor.ImgUrl,
-                Comments = Blog.UserBlogComments.Count,
-                IsLikedByUser = Blog.UserBlogLikes.Any(like => like.UserId == UserId), // ✅
-                Topic = Blog.Topic.ToString(),
-                CategoryName = Blog.PetCategory.Name,
+                Comments = Blog.UserBlogComments.Where(b=> b.IsDeleted == false).Count(),
+                IsLikedByUser = !string.IsNullOrEmpty(UserId) &&
+                        Blog.UserBlogLikes?.Any(like => like.UserId == UserId) == true,
+                Topic = Blog.Topic?.ToString(),
+                CategoryName = Blog.PetCategory?.Name,
 
             };
         }
@@ -89,11 +87,12 @@ namespace PetConnect.BLL.Services.Classes
                     Media = UBC.BlogComment.Media,
                     PosterImage = UBC.User.ImgUrl,
                     PosterName = UBC.User.FName + " " + UBC.User.LName,
+                    PosterId = UBC.UserId,
                     NumberOfLikes = _unitOfWork.UserBlogCommentLikeRepository.GetNumberOfLikesForSpecificComment(UBC.BlogCommentId),
                     NumberOfReplies = _unitOfWork.UserBlogCommentReplyRepository.GetNumberOfRepliesByCommentId(UBC.BlogCommentId),
 
                     IsLikedByUser = _unitOfWork.UserBlogCommentLikeRepository
-                .IsCommentLikedByUser(UBC.BlogCommentId, UserId)
+                .IsCommentLikedByUser(UBC.BlogCommentId, UserId),
                 });
         }
 
@@ -109,10 +108,11 @@ namespace PetConnect.BLL.Services.Classes
                        Media = UBCR.BlogCommentReply.Media,
                        PosterImage = UBCR.User.ImgUrl,
                        PosterName = UBCR.User.FName + " " + UBCR.User.LName,
+                       PosterId = UBCR.UserId,
                        NumberOfLikes = _unitOfWork.UserBlogCommentReplyLikeRepository.GetNumberOfLikesForSpecificReply(UBCR.BlogCommentReplyId),
                        IsLikedByUser = _unitOfWork.UserBlogCommentReplyLikeRepository
-                  
-                       
+
+
                 .IsCommentLikedByUser(UBCR.BlogCommentReplyId, UserId)
                    });
         }

@@ -41,7 +41,7 @@ namespace PetConnect.API.Controllers
         [EndpointSummary("Get Blog Details by ID")]
         public ActionResult GetBlogDetails(Guid BlogId)
         {
-            var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var UserId = User?.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var Blog = _blogService.GetBlogById(BlogId, UserId);
             if(Blog == null)
@@ -56,7 +56,7 @@ namespace PetConnect.API.Controllers
         [EndpointSummary("Get All {{{{{Comments}}}}} For Blogs")]
         public ActionResult GetAllCommentsForReadWriteBlogs(Guid BlogId)
         {
-            var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var UserId = User?.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var Comments = _blogService.GetAllCommentsForSpecificBlog(BlogId, UserId);
             return Ok(new GeneralResponse(200, Comments));
@@ -69,7 +69,7 @@ namespace PetConnect.API.Controllers
         [EndpointSummary("Get All {{{{{Replies}}}}} For Specific Comment")]
         public ActionResult GetAllRepliesForComment(Guid CommentId)
         {
-            var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var UserId = User?.FindFirstValue(ClaimTypes.NameIdentifier);
             var Replies = _blogService.GetAllRepliesForSpecificComment(CommentId, UserId);
             return Ok(new GeneralResponse(200, Replies));
         }
