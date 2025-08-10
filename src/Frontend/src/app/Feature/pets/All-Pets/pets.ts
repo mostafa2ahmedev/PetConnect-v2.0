@@ -202,7 +202,7 @@ export class Pets implements OnInit {
     const categoryName = this.getCategoryNameById(+this.filters.categoryId);
 
     let result = this.pets;
-
+    console.log(categoryName, this.pets);
     // Filter by category
     if (this.filters.categoryId) {
       result = result.filter((pet) => pet.categoryName === categoryName);

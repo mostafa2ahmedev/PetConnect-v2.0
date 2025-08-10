@@ -1,0 +1,281 @@
+<div class="container my-5">
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+    <!-- Global Errors -->
+    <div *ngIf="generalErrors.length > 0" class="alert alert-danger">
+      <ul>
+        <li *ngFor="let error of generalErrors">{{ error }}</li>
+      </ul>
+    </div>
+
+    <div class="row">
+      <!-- First Name -->
+      <div class="col-md-6 mb-3">
+        <label for="fName" class="form-label">First Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="fName"
+          formControlName="fName"
+        />
+        <div
+          class="text-danger"
+          *ngIf="(fName?.touched || isSubmitted) && fName?.errors?.['required']"
+        >
+          First Name can't be blank
+        </div>
+      </div>
+
+      <!-- Last Name -->
+      <div class="col-md-6 mb-3">
+        <label for="lName" class="form-label">Last Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="lName"
+          formControlName="lName"
+        />
+        <div
+          class="text-danger"
+          *ngIf="(lName?.touched || isSubmitted) && lName?.errors?.['required']"
+        >
+          Last Name can't be blank
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="col-md-6 mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          formControlName="email"
+        />
+        <div
+          class="text-danger"
+          *ngIf="(email?.touched || isSubmitted) && email?.errors?.['required']"
+        >
+          Email can't be blank
+        </div>
+        <div
+          class="text-danger"
+          *ngIf="(email?.touched || isSubmitted) && email?.errors?.['email']"
+        >
+          Please enter a valid email
+        </div>
+      </div>
+
+      <!-- Phone Number -->
+      <div class="col-md-6 mb-3">
+        <label for="phoneNumber" class="form-label">Phone Number</label>
+        <input
+          type="text"
+          class="form-control"
+          id="phoneNumber"
+          formControlName="phoneNumber"
+        />
+        <div
+          class="text-danger"
+          *ngIf="(phoneNumber?.touched || isSubmitted) && phoneNumber?.errors?.['required']"
+        >
+          Phone Number can't be blank
+        </div>
+        <div
+          class="text-danger"
+          *ngIf="(phoneNumber?.touched || isSubmitted) && phoneNumber?.errors?.['pattern']"
+        >
+          Please enter only numbers
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="col-md-6 mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          formControlName="password"
+        />
+        <div
+          class="text-danger"
+          *ngIf="(password?.touched || isSubmitted) && password?.errors?.['required']"
+        >
+          Password can't be blank
+        </div>
+        <div
+          class="text-danger"
+          *ngIf="(password?.touched || isSubmitted) && password?.errors?.['pattern']"
+        >
+          Password must be at least 6 characters long, contain at least one
+          letter and one special character.
+        </div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="col-md-6 mb-3">
+        <label for="confirmationPassword" class="form-label"
+          >Confirm Password</label
+        >
+        <input
+          type="password"
+          class="form-control"
+          id="confirmationPassword"
+          formControlName="confirmationPassword"
+        />
+        <div
+          class="text-danger"
+          *ngIf="(confirmationPassword?.touched || isSubmitted) && confirmationPassword?.errors?.['required']"
+        >
+          Confirm Password can't be blank
+        </div>
+        <div
+          class="text-danger"
+          *ngIf="(confirmationPassword?.touched || isSubmitted) && confirmationPassword?.errors?.['compareValidator']"
+        >
+          Passwords do not match
+        </div>
+      </div>
+
+      <!-- Gender -->
+      <div class="col-md-6 mb-3">
+        <label for="gender" class="form-label">Gender</label>
+        <select class="form-select" id="gender" formControlName="gender">
+          <option value="" disabled>Select gender</option>
+          <option *ngFor="let option of genderOptions" [ngValue]="option.id">
+            {{ option.name }}
+          </option>
+        </select>
+        <div
+          class="text-danger"
+          *ngIf="(gender?.touched || isSubmitted) && gender?.errors?.['required']"
+        >
+          Gender is required
+        </div>
+      </div>
+
+      <!-- Pet Specialty -->
+      <div class="col-md-6 mb-3">
+        <label for="petSpecialty" class="form-label">Pet Specialty</label>
+        <select
+          class="form-select"
+          id="petSpecialty"
+          formControlName="petSpecialty"
+        >
+          <option value="" disabled>Select pet specialty</option>
+          <option
+            *ngFor="let option of petSpecialtyOptions"
+            [ngValue]="option.id"
+          >
+            {{ option.name }}
+          </option>
+        </select>
+        <div
+          class="text-danger"
+          *ngIf="(petSpecialty?.touched || isSubmitted) && petSpecialty?.errors?.['required']"
+        >
+          Pet Specialty is required
+        </div>
+      </div>
+
+      <!-- Image -->
+      <div class="col-md-6 mb-3">
+        <label for="image" class="form-label">Image</label>
+        <input
+          type="file"
+          class="form-control"
+          id="image"
+          (change)="onImageSelected($event)"
+        />
+        <div *ngIf="imageError" class="text-danger mt-1">{{ imageError }}</div>
+      </div>
+
+      <!-- Certificate -->
+      <div class="col-md-6 mb-3">
+        <label for="certificate" class="form-label">Certificate</label>
+        <input
+          type="file"
+          class="form-control"
+          id="certificate"
+          (change)="onCertificateSelected($event)"
+        />
+        <div *ngIf="certificateError" class="text-danger mt-1">
+          {{ certificateError }}
+        </div>
+      </div>
+
+      <!-- Price Per Hour -->
+      <div class="col-md-6 mb-3">
+        <label for="pricePerHour" class="form-label">Price Per Hour</label>
+        <input
+          type="number"
+          class="form-control"
+          id="pricePerHour"
+          formControlName="pricePerHour"
+        />
+        <div
+          class="text-danger"
+          *ngIf="(pricePerHour?.touched || isSubmitted) && pricePerHour?.errors?.['required']"
+        >
+          Price Per Hour can't be blank
+        </div>
+      </div>
+
+      <!-- Country -->
+      <div class="col-md-6 mb-3">
+        <label for="country" class="form-label">Country</label>
+        <input
+          type="text"
+          class="form-control"
+          id="country"
+          formControlName="country"
+        />
+        <div
+          class="text-danger"
+          *ngIf="(country?.touched || isSubmitted) && country?.errors?.['required']"
+        >
+          Country can't be blank
+        </div>
+      </div>
+
+      <!-- City -->
+      <div class="col-md-6 mb-3">
+        <label for="city" class="form-label">City</label>
+        <input
+          type="text"
+          class="form-control"
+          id="city"
+          formControlName="city"
+        />
+        <div
+          class="text-danger"
+          *ngIf="(city?.touched || isSubmitted) && city?.errors?.['required']"
+        >
+          City can't be blank
+        </div>
+      </div>
+
+      <!-- Street -->
+      <div class="col-md-6 mb-3">
+        <label for="street" class="form-label">Street</label>
+        <input
+          type="text"
+          class="form-control"
+          id="street"
+          formControlName="street"
+        />
+        <div
+          class="text-danger"
+          *ngIf="(street?.touched || isSubmitted) && street?.errors?.['required']"
+        >
+          Street can't be blank
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="d-flex justify-content-end mt-3">
+      <button type="submit" class="btn btn-primary px-4">Register</button>
+    </div>
+  </form>
+</div>

@@ -89,7 +89,6 @@ namespace PetConnect.BLL.Services.Classes
 
             });
         }
-
         public async Task<AppointmentViewDTO> AddAppointmentAsync(AppointmentCreateDTO dto)
         {
             var appointment = new Appointment
@@ -150,6 +149,37 @@ namespace PetConnect.BLL.Services.Classes
             }
             return appointments;
         }
+
+        public IEnumerable<AppointmentDoctorProfileViewDTO> GetAppointmentsForCustomerProfile(string customerId)
+        {
+            var appointment = _unitOfWork.AppointmentsRepository.GetAllQueryable()
+                .Include(e => e.Customer).Include(e => e.Doctor).Include(e => e.Pet).Include(e => e.TimeSlot)
+                .Where(e => e.CustomerId == customerId);
+
+            ICollection<AppointmentDoctorProfileViewDTO> appointments = new List<AppointmentDoctorProfileViewDTO>();
+            foreach (var app in appointment)
+            {
+                appointments.Add(new AppointmentDoctorProfileViewDTO()
+                {
+                    Id = app.Id,
+                    CreatedAt = app.CreatedAt,
+                    CustomerName = $"{app.Customer.FName} {app.Customer.LName}",
+                    MaxCapacity = app.TimeSlot.MaxCapacity,
+                    Notes = "",
+                    PetName = app.Pet.Name,
+                    Status = app.Status.ToString(),
+                    SlotStartTime = app.TimeSlot.StartTime,
+                    SlotEndTime = app.TimeSlot.EndTime,
+                    DoctorName = $"{app.Doctor.FName} {app.Doctor.LName}",
+                    PetImg = app.Pet.ImgUrl,
+                    CustomerImg = app.Customer.ImgUrl,
+                    CustomerPhone = app.Customer.PhoneNumber
+                });
+            }
+            return appointments;
+        }
+
+
         public async Task<bool> CancelAppointmentAsync(Guid id)
         {
             var appointment = await _unitOfWork.AppointmentsRepository.GetByGuidAsync(id);

@@ -1,0 +1,25 @@
+.filter-sidebar {
+  position: fixed;
+  top: 0;
+  left: -300px; /* hidden */
+  width: 300px;
+  height: 100vh;
+  background-color: #f8f9fa;
+  border-right: 1px solid #dee2e6;
+  padding: 1rem;
+  overflow-y: auto;
+  transition: left 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.filter-sidebar.open {
+  left: 0;
+}
+
+.filter-sidebar h5 {
+  font-weight: bold;
+}
+
+.filter-sidebar .form-label {
+  font-size: 0.9rem;
+}

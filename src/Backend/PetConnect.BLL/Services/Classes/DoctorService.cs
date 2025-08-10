@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetConnect.BLL.Services.DTO.Doctor;
+using PetConnect.BLL.Services.DTOs.Blog;
 using PetConnect.BLL.Services.DTOs.Doctor;
 using PetConnect.BLL.Services.Interfaces;
 using PetConnect.DAL.Data.Enums;
@@ -58,7 +59,9 @@ namespace PetConnect.BLL.Services.Classes
                 PricePerHour = doctor.PricePerHour,
                 CertificateUrl = doctor.CertificateUrl,
                 Street = doctor.Address.Street,
-                City = doctor.Address.City
+                City = doctor.Address.City,
+                IsApproved = doctor.IsApproved,
+                PhoneNumber = doctor.PhoneNumber
             };
         }
 
@@ -82,7 +85,7 @@ namespace PetConnect.BLL.Services.Classes
             doctor.PricePerHour = dto.PricePerHour;
             doctor.CertificateUrl = dto.CertificateUrl;
             doctor.IsDeleted = false;
-
+            doctor.IsApproved = false;
             // Enum and complex object parsing
             if (Enum.TryParse(dto.PetSpecialty, out PetSpecialty specialty))
                 doctor.PetSpecialty = specialty;
@@ -113,6 +116,24 @@ namespace PetConnect.BLL.Services.Classes
 
         }
 
+        public IEnumerable<BlogData> GetBlogsForDoctorById(string DoctorId)
+        {
+            return  UOW.BlogRepository.GetAllBlogsWithAuthorDataAndSomeStatisticsByDoctorId(DoctorId).Select(B => new BlogData()
+            {
+                ID = B.ID,
+                BlogType = B.BlogType,
+                excerpt = B.excerpt,
+                Title = B.Title,
+                Media = B.Media,
+                PostDate = B.PostDate,
+                DoctorId = B.DoctorId,
+                Likes = B.UserBlogLikes.Count,
+                DoctorName = B.Doctor.FName + " " + B.Doctor.LName,
+                DoctorImgUrl = B.Doctor.ImgUrl,
+                Comments = B.UserBlogComments.Count
 
+            });
+
+        }
     }
 }

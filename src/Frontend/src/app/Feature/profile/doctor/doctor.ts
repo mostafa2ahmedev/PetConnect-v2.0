@@ -1,33 +1,42 @@
-import { Component, OnInit, signal, computed, inject, Signal } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  signal,
+  computed,
+  inject,
+  Signal,
+} from '@angular/core';
 import { IDoctor } from '../../doctors/idoctor';
-import { CommonModule, CurrencyPipe, DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import {
+  CommonModule,
+  CurrencyPipe,
+  DatePipe,
+  DecimalPipe,
+  NgFor,
+  NgIf,
+} from '@angular/common';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 // Assume these services and interfaces exist
 import { AlertService } from '../../../core/services/alert-service';
 import { AccountService } from '../../../core/services/account-service';
-import { DoctorCustomerAppointmentService } from '../../doctor-customer-appointment/doctor-customer-appointment-service';
-import { DoctorProfileAppointmentView } from '../../doctor-customer-appointment/doctor-profile-appointment-view';
-import { AppointmentService } from '../../doctor-profile/appointment-service';
+import { DoctorCustomerAppointmentService } from '../../Doctor/doctor-customer-appointment/doctor-customer-appointment-service';
+import { DoctorProfileAppointmentView } from '../../Doctor/doctor-customer-appointment/doctor-profile-appointment-view';
+import { AppointmentService } from '../../Doctor/doctor-profile/appointment-service';
 import { DoctorsService } from '../../doctors/doctors-service';
+import { Blog } from '../../Blog/blog-models';
+import { BlogService } from '../../Blog/blog-service';
 
 @Component({
   selector: 'app-doctor',
   standalone: true,
-  imports: [
-    RouterLink,
-    DatePipe,
-    CommonModule,
-    FormsModule,
-    RouterModule,
-  ],
+  imports: [RouterLink, CommonModule, FormsModule, RouterModule, RouterOutlet],
   templateUrl: './doctor.html',
-  styleUrl: './doctor.css'
+  styleUrl: './doctor.css',
 })
 export class Doctor implements OnInit {
-
   // --- Services Injected (good practice) ---
   private alert = inject(AlertService);
   private appointmentService = inject(AppointmentService);
@@ -44,7 +53,7 @@ export class Doctor implements OnInit {
   sortOrder = signal<'asc' | 'desc'>('desc');
   currentPage = signal<number>(1);
   itemsPerPage = signal<number>(6);
-
+  loading = true;
   // --- Computed Signals for Reactive Filtering and Pagination ---
 
   // 1. Filtered and Sorted list (re-runs whenever requests, status, or sort order changes)
@@ -54,7 +63,9 @@ export class Doctor implements OnInit {
 
     // Apply status filter
     if (this.selectedStatusFilter()) {
-      filtered = filtered.filter(r => r.status === this.selectedStatusFilter());
+      filtered = filtered.filter(
+        (r) => r.status === this.selectedStatusFilter()
+      );
     }
 
     // Apply sorting
@@ -74,40 +85,47 @@ export class Doctor implements OnInit {
   });
 
   // 3. Computed for total pages (re-runs whenever filteredRequests or itemsPerPage changes)
-  totalPages = computed(() => Math.ceil(this.filteredRequests().length / this.itemsPerPage()));
+  totalPages = computed(() =>
+    Math.ceil(this.filteredRequests().length / this.itemsPerPage())
+  );
   totalItems = computed(() => this.filteredRequests().length);
 
   // --- Other Component Properties & Methods ---
   loadingAppointments = signal<boolean>(true);
   loadingProfile = signal<boolean>(true);
   doctor = signal<IDoctor>({} as IDoctor);
-  profileData: Signal<IDoctor> = computed(() => this.doctor() ? this.doctor() : {} as IDoctor);
+  profileData: Signal<IDoctor> = computed(() =>
+    this.doctor() ? this.doctor() : ({} as IDoctor)
+  );
   statusArr: string[] = [];
-  server = "https://localhost:7102";
+  server = 'https://localhost:7102';
 
+  constructor(private blogServie: BlogService) {}
   ngOnInit(): void {
     const user = this.accountService.jwtTokenDecoder();
     this.doctorService.getById(user.userId).subscribe({
-      next: resp => {
+      next: (resp) => {
         if (typeof resp !== 'string') {
           this.doctor.set(resp);
+          this.loading = false;
         }
-      }
+      },
     });
     this.loadingProfile.set(false);
-
-    this.doctorAppointmentService.getAppointmentsForDoctorProfileView().subscribe({
-      next: resp => {
-        this.appointmentRequests.set(resp);
-        this.statusArr = Array.from(new Set(resp.map(e => e.status)));
-        this.loadingAppointments.set(false);
-        // We no longer need to call a function here, as computed signals handle the flow automatically.
-      },
-      error: err => {
-        this.alert.error('Failed to load appointments.');
-        this.loadingAppointments.set(false);
-      }
-    });
+    this.doctorAppointmentService
+      .getAppointmentsForDoctorProfileView()
+      .subscribe({
+        next: (resp) => {
+          this.appointmentRequests.set(resp);
+          this.statusArr = Array.from(new Set(resp.map((e) => e.status)));
+          this.loadingAppointments.set(false);
+          // We no longer need to call a function here, as computed signals handle the flow automatically.
+        },
+        error: (err) => {
+          this.alert.error('Failed to load appointments.');
+          this.loadingAppointments.set(false);
+        },
+      });
   }
 
   // --- Pagination Methods (now just update the signal) ---
@@ -119,13 +137,13 @@ export class Doctor implements OnInit {
 
   nextPage(): void {
     if (this.currentPage() < this.totalPages()) {
-      this.currentPage.update(val => val + 1);
+      this.currentPage.update((val) => val + 1);
     }
   }
 
   previousPage(): void {
     if (this.currentPage() > 1) {
-      this.currentPage.update(val => val - 1);
+      this.currentPage.update((val) => val - 1);
     }
   }
 
@@ -137,40 +155,40 @@ export class Doctor implements OnInit {
     }
     return pages;
   }
-  
+
   // --- Other methods remain largely unchanged, but now update signals ---
   getFullImageUrl(relativePath: string): string {
-    if(typeof relativePath == 'string')
-    return `${this.server}/${relativePath}`;
-    return "";
+    if (typeof relativePath == 'string')
+      return `${this.server}/${relativePath}`;
+    return '';
   }
 
   cancelRequest(appointmentId: string) {
     this.appointmentService.cancelAppointment(appointmentId).subscribe({
-      next: resp => {
+      next: (resp) => {
         this.alert.success(resp.data);
         // Find and update the request in the signal
-        this.appointmentRequests.update(requests => {
-          const index = requests.findIndex(r => r.id === appointmentId);
+        this.appointmentRequests.update((requests) => {
+          const index = requests.findIndex((r) => r.id === appointmentId);
           if (index !== -1) {
             requests[index].status = 'Cancelled';
           }
           return [...requests]; // Return a new array to trigger signal update
         });
       },
-      error: err => {
+      error: (err) => {
         console.log(err);
         this.alert.error(err.data);
-      }
+      },
     });
   }
 
   confirmRequest(appointmentId: string) {
     this.appointmentService.confirmAppointment(appointmentId).subscribe({
-      next: resp => {
+      next: (resp) => {
         this.alert.success(resp.data);
-        this.appointmentRequests.update(requests => {
-          const index = requests.findIndex(r => r.id === appointmentId);
+        this.appointmentRequests.update((requests) => {
+          const index = requests.findIndex((r) => r.id === appointmentId);
           if (index !== -1) {
             requests[index].status = 'Confirmed';
             requests[index].bookedCount += 1;
@@ -178,29 +196,29 @@ export class Doctor implements OnInit {
           return [...requests];
         });
       },
-      error: err => {
+      error: (err) => {
         console.log(err);
         this.alert.error(err.data);
-      }
+      },
     });
   }
 
   completeRequest(appointmentId: string) {
     this.appointmentService.completeAppointment(appointmentId).subscribe({
-      next: resp => {
+      next: (resp) => {
         this.alert.success(resp.data);
-        this.appointmentRequests.update(requests => {
-          const index = requests.findIndex(r => r.id === appointmentId);
+        this.appointmentRequests.update((requests) => {
+          const index = requests.findIndex((r) => r.id === appointmentId);
           if (index !== -1) {
             requests[index].status = 'Completed';
           }
           return [...requests];
         });
       },
-      error: err => {
+      error: (err) => {
         console.log(err);
         this.alert.error(err.data);
-      }
-    });
-  }
+      },
+    });
+  }
 }

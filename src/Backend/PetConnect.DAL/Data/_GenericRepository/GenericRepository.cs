@@ -52,14 +52,15 @@ namespace PetConnect.DAL.Data.GenericRepository
         {
             return context.Set<T>().Find(id);
         }
-
+        public T? GetByID(Guid Id)
+        {
+            return context.Set<T>().Find(Id);
+        }
         public void Update(T entity)
         {
             context.Set<T>().Update(entity);
         }
 
-        
-
-
+   
     }
 }

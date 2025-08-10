@@ -28,6 +28,15 @@ namespace PetConnect.DAL.Data
 
         public DbSet<OrderProduct> orderProducts { get; set; }
 
+        public DbSet<Blog> Blogs { get; set; }
+        public DbSet<BlogComment> BlogComments { get; set; }
+        public DbSet<BlogCommentReply> BlogCommentReplies { get; set; }
+        public DbSet<UserBlogComment> UserBlogComments { get; set; }
+        public DbSet<UserBlogCommentReply> UserBlogCommentReplies { get; set; }
+        public DbSet<UserBlogLike> UserBlogLikes { get; set; }
+        public DbSet<UserBlogCommentLike> UserBlogCommentLikes { get; set; }
+  
+        public DbSet<UserBlogCommentReplyLike> UserBlogCommentReplyLikes { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> contextOptions) : base(contextOptions)
         {

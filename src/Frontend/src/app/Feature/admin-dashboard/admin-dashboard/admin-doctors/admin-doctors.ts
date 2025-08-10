@@ -24,7 +24,6 @@ export class AdminDoctors {
   selectedRejectionId: string | number | null = null;
   rejectionTarget: 'doctor' | 'pet' | null = null;
   rejectionMessage: string = '';
-
   constructor(
     private adminService: AdminService,
     private modalService: NgbModal,
@@ -43,6 +42,7 @@ export class AdminDoctors {
     this.adminService.getPendingData().subscribe({
       next: (data) => {
         this.doctors = data.pendingDoctors;
+        console.log(this.doctors);
         this.pets = data.pendingPets;
         console.log(this.pets);
         this.loading = false;

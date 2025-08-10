@@ -127,7 +127,7 @@ namespace PetConnect.API.Controllers
             return Ok(values);
         }
 
-        // ✅ OrderStatus
+        
         [HttpGet("order-statuses")]
         [EndpointSummary("Get Order Status")]
         public IActionResult GetOrderStatuses()
@@ -142,5 +142,38 @@ namespace PetConnect.API.Controllers
 
             return Ok(values);
         }
+
+      
+        [HttpGet("blog-topics")]
+        [EndpointSummary("Get Blog Topics")]
+        public IActionResult GetBlogTopics()
+        {
+            var values = Enum.GetValues(typeof(BlogTopic))
+                .Cast<BlogTopic>()
+                .Select(e => new
+                {
+                    key = (int)e,
+                    value = e.ToString()
+                });
+
+            return Ok(values);
+        }
+
+  
+        [HttpGet("blog-types")]
+        [EndpointSummary("Get Blog Types")]
+        public IActionResult GetBlogTypes()
+        {
+            var values = Enum.GetValues(typeof(BlogType))
+                .Cast<BlogType>()
+                .Select(e => new
+                {
+                    key = (int)e,
+                    value = e.ToString()
+                });
+
+            return Ok(values);
+        }
+
     }
 }
