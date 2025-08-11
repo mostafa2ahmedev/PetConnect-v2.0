@@ -1,41 +1,81 @@
 <div class="container">
   <div class="card">
     <h2>Doctor Registration: Step 1 of 2</h2>
-    <p>Please upload the following documents to verify your identity before proceeding.</p>
+    <p>
+      Please upload the following documents to verify your identity before
+      proceeding.
+    </p>
 
     <!-- منطقة رفع الملفات -->
     <div class="upload-section">
       <!-- ID Card -->
       <div class="file-upload-wrapper">
         <label for="idCardInput">1. National ID Card Image</label>
-        <input id="idCardInput" type="file" class="form-control" (change)="onFileSelected($event, 'idCard')" accept="image/*">
-        <img *ngIf="image1Preview" [src]="image1Preview" alt="ID Card Preview" class="preview-image">
+        <input
+          id="idCardInput"
+          type="file"
+          class="form-control"
+          (change)="onFileSelected($event, 'idCard')"
+          accept="image/*"
+        />
+        <img
+          *ngIf="image1Preview"
+          [src]="image1Preview"
+          alt="ID Card Preview"
+          class="preview-image"
+        />
       </div>
 
       <!-- Profile Image -->
       <div class="file-upload-wrapper">
         <label for="profileImageInput">2. Clear Profile Image</label>
-        <input id="profileImageInput" type="file" class="form-control" (change)="onFileSelected($event, 'profile')" accept="image/*">
-        <img *ngIf="image2Preview" [src]="image2Preview" alt="Profile Image Preview" class="preview-image">
+        <input
+          id="profileImageInput"
+          type="file"
+          class="form-control"
+          (change)="onFileSelected($event, 'profile')"
+          accept="image/*"
+        />
+        <img
+          *ngIf="image2Preview"
+          [src]="image2Preview"
+          alt="Profile Image Preview"
+          class="preview-image"
+        />
       </div>
 
       <!-- Certificate -->
       <div class="file-upload-wrapper">
         <label for="certificateInput">3. Practice Certificate (PDF)</label>
-        <input id="certificateInput" type="file" class="form-control" (change)="onFileSelected($event, 'certificate')" accept=".pdf">
+        <input
+          id="certificateInput"
+          type="file"
+          class="form-control"
+          (change)="onFileSelected($event, 'certificate')"
+          accept=".pdf"
+        />
         <!-- يمكن إضافة أيقونة أو نص لتأكيد رفع ملف الـ PDF -->
-        <span *ngIf="certificateFile" class="file-confirmation">✅ Certificate Uploaded: {{ certificateFile.name }}</span>
+        <span *ngIf="certificateFile" class="file-confirmation"
+          >✅ Certificate Uploaded: {{ certificateFile.name }}</span
+        >
       </div>
     </div>
 
     <!-- زر التحقق والمتابعة -->
     <button
       (click)="verifyAndContinue()"
-      [disabled]="isLoading || !idCardFile || !profileImageFile || !certificateFile"
+      [disabled]="
+        isLoading || !idCardFile || !profileImageFile || !certificateFile
+      "
       class="btn btn-primary w-100 mt-3"
     >
-      <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-      {{ isLoading ? 'Verifying...' : 'Verify & Continue to Next Step' }}
+      <span
+        *ngIf="isLoading"
+        class="spinner-border spinner-border-sm"
+        role="status"
+        aria-hidden="true"
+      ></span>
+      {{ isLoading ? "Verifying..." : "Verify & Continue to Next Step" }}
     </button>
 
     <!-- رسالة الخطأ -->
