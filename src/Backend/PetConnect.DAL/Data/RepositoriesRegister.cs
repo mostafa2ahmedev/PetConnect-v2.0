@@ -50,7 +50,9 @@ namespace PetConnect.DAL.Data
             services.AddScoped<IUserBlogCommentRepository, UserBlogCommentRepository>();
             services.AddScoped<IUserBlogCommentReplyLikeRepository, UserBlogCommentReplyLikeRepository>();
             services.AddScoped<IUserBlogCommentReplyRepository, UserBlogCommentReplyRepository>();
+            services.AddScoped<ISupportRequestRepository, SupportRequestRepository>();
 
+            services.AddScoped<ISupportResponseRepository, SupportResponseRepository>();
             return services;
         }
     }
