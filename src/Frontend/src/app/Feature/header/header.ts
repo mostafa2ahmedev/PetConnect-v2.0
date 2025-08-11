@@ -31,6 +31,7 @@ import { Subscription } from 'rxjs';
 import { NotificationService } from '../../core/services/notification-service';
 import { CustomerService } from '../customer-profile/customer-service';
 import { CustomerPofileDetails } from '../../models/customer-pofile-details';
+declare var bootstrap: any; // for Bootstrap Collapse API
 
 @Component({
   selector: 'app-header',
@@ -60,6 +61,7 @@ export class Header implements OnInit, OnDestroy {
   isOpen = false;
   cartLength: number = 0;
   routerEventsSub!: Subscription;
+
   constructor(
     public accountService: AccountService,
     private router: Router,
@@ -250,5 +252,20 @@ export class Header implements OnInit, OnDestroy {
       toastEl.classList.add('fade-out');
       setTimeout(() => toastEl.remove(), 500);
     }, 5000);
+  }
+  closeMobileMenu() {
+    const menuEl = document.getElementById('mobileMenu');
+    if (menuEl && bootstrap) {
+      const bsCollapse =
+        bootstrap.Collapse.getInstance(menuEl) ||
+        new bootstrap.Collapse(menuEl, { toggle: false });
+      bsCollapse.hide();
+    }
+  }
+  @HostListener('window:resize')
+  onResize() {
+    if (window.innerWidth >= 1200) {
+      this.closeMobileMenu();
+    }
   }
 }

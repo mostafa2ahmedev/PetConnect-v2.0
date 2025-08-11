@@ -9,12 +9,14 @@
     <div class="card-body">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
-          <span class="fw-semibold">Order Date:</span> {{ order.orderDate | date:'shortDate' }}
-          <span class="ms-3 fw-semibold">Total Price:</span> {{ order.totalPrice | currency:'USD' }}
+          <span class="fw-semibold">Order Date:</span>
+          {{ order.orderDate | date : "shortDate" }}
+          <span class="ms-3 fw-semibold">Total Price:</span>
+          {{ order.totalPrice | currency : "USD" }}
         </div>
-        <button class="btn btn-danger btn-sm" (click)="deleteOrder(order.id)">
+        <!-- <button class="btn btn-danger btn-sm" (click)="deleteOrder(order.id)">
           Delete
-        </button>
+        </button> -->
       </div>
 
       <div *ngIf="order.products?.length > 0" class="table-responsive">
@@ -25,26 +27,27 @@
               <th>Price</th>
               <th>Quantity</th>
               <th>Image</th>
-               <th>Status</th> 
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let product of order.products">
               <td>{{ product.productName }}</td>
-              <td>{{ product.price | currency:'USD' }}</td>
+              <td>{{ product.price | currency : "USD" }}</td>
               <td>{{ product.quantity }}</td>
               <td>
-                <img 
-                  [src]="server + '/' + product.productImageUrl" 
-                  alt="Product image" 
-                  class="img-thumbnail" 
-                  style="width: 80px; height: 80px; object-fit: contain;">
+                <img
+                  [src]="server + '/' + product.productImageUrl"
+                  alt="Product image"
+                  class="img-thumbnail"
+                  style="width: 80px; height: 80px; object-fit: contain"
+                />
               </td>
-       <td class="d-flex justify-content-center align-items-center ">
-        <span class=" status " [ngClass]="getStatusClass(product.status)">
-           {{ product.status }}
-        </span>
-        </td>
+              <td class="d-flex justify-content-center align-items-center">
+                <span class="status" [ngClass]="getStatusClass(product.status)">
+                  {{ product.status }}
+                </span>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -53,19 +56,23 @@
   </div>
 
   <div *ngIf="totalPages > 1" class="d-flex justify-content-center mt-3">
-    <button 
+    <button
       class="btn btn-outline-secondary me-2"
       (click)="prevPage()"
-      [disabled]="currentPage === 1">
+      [disabled]="currentPage === 1"
+    >
       Previous
     </button>
 
-    <span class="align-self-center">Page {{ currentPage }} of {{ totalPages }}</span>
+    <span class="align-self-center"
+      >Page {{ currentPage }} of {{ totalPages }}</span
+    >
 
-    <button 
+    <button
       class="btn btn-outline-secondary ms-2"
       (click)="nextPage()"
-      [disabled]="currentPage === totalPages">
+      [disabled]="currentPage === totalPages"
+    >
       Next
     </button>
   </div>

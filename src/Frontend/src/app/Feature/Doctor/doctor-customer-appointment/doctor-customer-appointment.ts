@@ -80,6 +80,7 @@ export class DoctorCustomerAppointment implements OnInit {
       },
       error: (err) => {
         // this.alertService.error('Something Wrong Happened');
+        this.loading = false;
       },
     });
   }

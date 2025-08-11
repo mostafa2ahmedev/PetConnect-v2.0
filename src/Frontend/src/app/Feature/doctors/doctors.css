@@ -1,0 +1,41 @@
+.doctor-card {
+  transition: all 0.3s ease;
+  background-color: #fff;
+  position: relative;
+  overflow: visible;
+  border: 1px solid #5c57f43a;
+}
+
+.doctor-card:hover {
+  background-color: #f0f8ff;
+  transform: translateY(-10px);
+  box-shadow: 0 8px 20px rgba(0, 123, 255, 0.1) !important;
+  border-color: #5d57f4 !important;
+}
+
+/* Make sure the content is above after */
+.doctor-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Button animation */
+.btn-animated {
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-animated i {
+  transition: transform 0.3s ease;
+}
+
+.btn-animated:hover,
+.doctor-card:hover .btn-animated {
+  background-color: #0056b3 !important; /* darker blue on hover */
+  color: #fff !important;
+}
+
+.btn-animated:hover i {
+  transform: translateX(5px);
+}

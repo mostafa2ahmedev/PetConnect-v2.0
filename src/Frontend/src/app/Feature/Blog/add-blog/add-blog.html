@@ -33,9 +33,8 @@
         [(ngModel)]="blog.blogType"
         #blogType="ngModel"
       >
-        <option [value]="0">General</option>
-        <option [value]="1">Read</option>
-        <option [value]="2">Read & Write</option>
+        <option [value]="0">Read</option>
+        <option [value]="1">Read & Write</option>
       </select>
       <div *ngIf="blogType.invalid && blogType.touched" class="text-danger">
         Blog type is required.

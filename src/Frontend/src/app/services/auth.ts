@@ -11,7 +11,7 @@ export interface JwtPayload {
 })
 export class AuthService {
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return localStorage.getItem('token') || sessionStorage.getItem('token');
   }
 
   getCustomerIdFromToken(): string | null {

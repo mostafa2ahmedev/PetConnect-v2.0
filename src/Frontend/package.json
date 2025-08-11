@@ -32,7 +32,6 @@
     "@angular/router": "^20.1.4",
     "@auth0/angular-jwt": "^5.2.0",
     "@ctrl/ngx-emoji-mart": "^9.2.0",
-
     "@kolkov/angular-editor": "^3.0.0-beta.2",
     "@microsoft/signalr": "^8.0.7",
     "@ng-bootstrap/ng-bootstrap": "^19.0.1",
@@ -43,7 +42,6 @@
     "bootstrap-icons": "^1.13.1",
     "glightbox": "^3.3.1",
     "jwt-decode": "^4.0.0",
-
     "ng-apexcharts": "^1.17.0",
     "ngx-quill": "^28.0.1",
     "quill": "^2.0.3",

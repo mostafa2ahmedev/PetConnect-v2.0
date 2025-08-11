@@ -126,11 +126,11 @@
         (change)="onFileSelected($event)"
       />
       <div *ngIf="isEditMode && blog.media && !mediaFile" class="mt-2">
-        <small>Current Media:</small><br />
+        <!-- <small>Current Media:</small><br />
         <img
           [src]="getFullImageUrl(blog.media)"
           style="max-width: 150px; border: 1px solid #ddd"
-        />
+        /> -->
       </div>
     </div>
 
