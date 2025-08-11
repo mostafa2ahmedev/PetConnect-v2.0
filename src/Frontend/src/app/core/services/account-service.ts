@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import { Router } from '@angular/router';
 
 const API_URL = environment.apiBaseUrl + '/account';
 
@@ -12,18 +11,16 @@ const API_URL = environment.apiBaseUrl + '/account';
 export class AccountService {
   constructor(private http: HttpClient) {}
 
+  
+  public PostDoctorRegister(formData: FormData): Observable<any> {
+    return this.http.post<any>(API_URL + '/register/doctor', formData);
+  }
+
   public PostCustomerRegister(formData: FormData): Observable<any> {
     return this.http.post(API_URL + '/register/customer', formData);
   }
 
-  public PostDoctorRegister(formData: FormData): Observable<any> {
-    return this.http.post(API_URL + '/register/doctor', formData);
-  }
-
-  public PostLogin(credentials: {
-    email: string;
-    password: string;
-  }): Observable<any> {
+  public PostLogin(credentials: { email: string; password: string; }): Observable<any> {
     return this.http.post(API_URL + '/login', credentials);
   }
 
@@ -32,7 +29,6 @@ export class AccountService {
   }
 
   logout(): void {
-    // Clear all auth-related storage
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('userRoles');

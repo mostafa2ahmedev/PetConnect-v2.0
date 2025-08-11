@@ -1,1 +1,10 @@
-<p>producttype-details works!</p>
+<h2>Product Type Details</h2>
+
+<div *ngIf="productType">
+  <p><strong>Name:</strong> {{ productType.name }}</p>
+  <p><strong>Breed:</strong> {{ productType.breedName || 'Not Set' }}</p>
+</div>
+
+<div *ngIf="!productType">
+  <p>Loading...</p>
+</div>

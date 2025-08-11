@@ -1,16 +1,11 @@
-import { Component } from '@angular/core';
-import {
-  FormGroup,
-  FormControl,
-  Validators,
-  ReactiveFormsModule,
-  FormsModule,
-} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AccountService } from '../../core/services/account-service';
-import { Gender, GENDER_OPTIONS } from '../../core/models/gender';
+import { RegisterationDataService } from '../../core/services/registeration-data.service';
 import { ComparePasswordValidation } from '../../core/validators/custom-validators';
+import { GENDER_OPTIONS } from '../../core/models/gender';
 import { PET_SPECIALTY_OPTIONS } from '../../core/models/pet-specialalty';
 
 @Component({
@@ -18,24 +13,21 @@ import { PET_SPECIALTY_OPTIONS } from '../../core/models/pet-specialalty';
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, CommonModule, RouterModule],
   templateUrl: './doctor-register-form.html',
-  styleUrl: './doctor-register-form.css',
+  styleUrls: ['./doctor-register-form.css'],
 })
-export class DoctorRegisterForm {
+export class DoctorRegisterForm implements OnInit {
   registerForm: FormGroup;
   isSubmitted = false;
-
-  selectedImageFile: File | null = null;
-  selectedCertificateFile: File | null = null;
+  generalErrors: string[] = [];
 
   genderOptions = GENDER_OPTIONS;
   petSpecialtyOptions = PET_SPECIALTY_OPTIONS;
 
-  generalErrors: string[] = [];
-
-  certificateError = "" ;
-  imageError = "";
-
-  constructor(private accountService: AccountService, private router: Router) {
+  constructor(
+    private accountService: AccountService,
+    private router: Router,
+    private registrationDataService: RegisterationDataService
+  ) {
     this.registerForm = new FormGroup(
       {
         fName: new FormControl('', Validators.required),
@@ -47,159 +39,118 @@ export class DoctorRegisterForm {
         ]),
         password: new FormControl('', [
           Validators.required,
-          Validators.pattern(
-            /^(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{6,}$/
-          ),
+          Validators.pattern(/^(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{6,}$/),
         ]),
         confirmationPassword: new FormControl('', Validators.required),
-        gender: new FormControl("", Validators.required),
-        pricePerHour: new FormControl('', [
-          Validators.required,
-          Validators.min(0),
-        ]),
+        gender: new FormControl('', Validators.required),
+        pricePerHour: new FormControl('', [Validators.required, Validators.min(0)]),
         petSpecialty: new FormControl('', Validators.required),
         country: new FormControl('', Validators.required),
         city: new FormControl('', Validators.required),
         street: new FormControl('', Validators.required),
       },
       {
-        validators: [
-          ComparePasswordValidation('password', 'confirmationPassword'),
-        ],
+        validators: [ComparePasswordValidation('password', 'confirmationPassword')],
       }
     );
   }
 
-  // Getters for Cleaner HTML
-  get fName() {
-    return this.registerForm.get('fName');
-  }
-  get lName() {
-    return this.registerForm.get('lName');
-  }
-  get email() {
-    return this.registerForm.get('email');
-  }
-  get phoneNumber() {
-    return this.registerForm.get('phoneNumber');
-  }
-  get password() {
-    return this.registerForm.get('password');
-  }
-  get confirmationPassword() {
-    return this.registerForm.get('confirmationPassword');
-  }
-  get gender() {
-    return this.registerForm.get('gender');
-  }
-  get pricePerHour() {
-    return this.registerForm.get('pricePerHour');
-  }
-  get petSpecialty() {
-    return this.registerForm.get('petSpecialty');
-  }
-  get country() {
-    return this.registerForm.get('country');
-  }
-  get city() {
-    return this.registerForm.get('city');
-  }
-  get street() {
-    return this.registerForm.get('street');
+  ngOnInit(): void {
+    if (!this.registrationDataService.profileImage || !this.registrationDataService.idCardImage || !this.registrationDataService.certificateFile) {
+      console.error("Files are missing, redirecting back to upload page.");
+      this.router.navigate(['/auth/face-compare']);
+    }
   }
 
-
+  // Getters for easy access in template
+  get fName() { return this.registerForm.get('fName'); }
+  get lName() { return this.registerForm.get('lName'); }
+  get email() { return this.registerForm.get('email'); }
+  get phoneNumber() { return this.registerForm.get('phoneNumber'); }
+  get password() { return this.registerForm.get('password'); }
+  get confirmationPassword() { return this.registerForm.get('confirmationPassword'); }
+  get gender() { return this.registerForm.get('gender'); }
+  get pricePerHour() { return this.registerForm.get('pricePerHour'); }
+  get petSpecialty() { return this.registerForm.get('petSpecialty'); }
+  get country() { return this.registerForm.get('country'); }
+  get city() { return this.registerForm.get('city'); }
+  get street() { return this.registerForm.get('street'); }
 
   onSubmit() {
     this.isSubmitted = true;
-    this.generalErrors = []; // Clear previous errors
+    this.generalErrors = [];
 
-    if (
-      this.registerForm.invalid ||
-      !this.selectedImageFile ||
-      !this.selectedCertificateFile
-    ) {
-      if (!this.selectedImageFile) {
-        this.imageError = "Image Is Required";
-      }
-      if (!this.selectedCertificateFile) {
-        this.certificateError="Certificate Is Required";
-      }
+    if (this.registerForm.invalid) {
       return;
+    }
+
+    const profileImage = this.registrationDataService.profileImage;
+    const idCardImage = this.registrationDataService.idCardImage;
+    const certificateFile = this.registrationDataService.certificateFile;
+
+    if (!profileImage || !idCardImage || !certificateFile) {
+        this.generalErrors.push('Required files are missing. Please go back and upload them again.');
+        this.router.navigate(['/register/doctor-verification']);
+        return;
     }
 
     const formData = new FormData();
 
-    Object.keys(this.registerForm.controls).forEach((key) => {
-      const value = this.registerForm.get(key)?.value;
-      formData.append(key, value?.toString());
-    });
+    // إضافة كل حقول الفورم النصية
+    formData.append('FName', this.registerForm.get('fName')?.value);
+    formData.append('LName', this.registerForm.get('lName')?.value);
+    formData.append('Email', this.registerForm.get('email')?.value);
+    formData.append('PhoneNumber', this.registerForm.get('phoneNumber')?.value);
+    formData.append('Password', this.registerForm.get('password')?.value);
+    formData.append('ConfirmationPassword', this.registerForm.get('confirmationPassword')?.value);
+    formData.append('Gender', this.registerForm.get('gender')?.value);
+    formData.append('PricePerHour', this.registerForm.get('pricePerHour')?.value);
+    formData.append('PetSpecialty', this.registerForm.get('petSpecialty')?.value);
+    formData.append('Country', this.registerForm.get('country')?.value);
+    formData.append('City', this.registerForm.get('city')?.value);
+    formData.append('Street', this.registerForm.get('street')?.value);
 
-    formData.append('Image', this.selectedImageFile);
-    formData.append('Certificate', this.selectedCertificateFile);
+    // إضافة الملفات
+    formData.append('ProfileImage', profileImage, profileImage.name);
+    formData.append('IdCardImage', idCardImage, idCardImage.name);
+    formData.append('Certificate', certificateFile, certificateFile.name);
 
+    // إرسال الطلب
     this.accountService.PostDoctorRegister(formData).subscribe({
       next: (res) => {
-        if (res.success) {
+        if (res && res.success) {
+          alert('Registration successful! Your application is under review.');
+          this.registrationDataService.clearData();
+          sessionStorage.removeItem('registration_step_1_complete');
           this.router.navigate(['/login']);
         } else {
-          this.generalErrors = res.errors || ['Registration failed'];
+          
+          if (res && res.errors) {
+            
+            if (typeof res.errors === 'object' && !Array.isArray(res.errors)) {
+          
+              const errorMessages = [];
+              for (const key in res.errors) {
+                if (res.errors.hasOwnProperty(key) && Array.isArray(res.errors[key])) {
+                  errorMessages.push(...res.errors[key]);
+                }
+              }
+              this.generalErrors = errorMessages;
+            } else {
+              
+              this.generalErrors = res.errors;
+            }
+          } else {
+            this.generalErrors = [res?.message ?? 'An unknown registration error occurred.'];
+          }
+        
         }
       },
       error: (err) => {
         console.error('Doctor registration failed', err);
-
-        if (err.error?.errors) {
-          // Handle array of errors from backend
-          this.generalErrors = Array.isArray(err.error.errors)
-            ? err.error.errors
-            : [err.error.errors];
-        } else if (err.message) {
-          // Handle HTTP errors
-          this.generalErrors = [err.message];
-        } else {
-          this.generalErrors = ['An unknown error occurred'];
-        }
-      },
+        this.generalErrors = ['An unexpected error occurred. Please try again later.'];
+      }
     });
   }
 
-  onImageSelected(event: any) {
-  const file = event.target.files[0];
-  if (!file) {
-    this.imageError = 'Image is required.';
-    return;
   }
-
-  // Example: validate file type and size
-  const allowedTypes = ['image/png', 'image/jpeg'];
-  if (!allowedTypes.includes(file.type)) {
-    this.imageError = 'Only JPEG and PNG images are allowed.';
-  } else if (file.size > 2 * 1024 * 1024) { // 2MB limit
-    this.imageError = 'Image must be less than 2MB.';
-  } else {
-    this.imageError = "";
-    // Save the file to a property for submission
-    this.selectedImageFile = file;
-  }
-}
-
-onCertificateSelected(event: any) {
-  const file = event.target.files[0];
-  if (!file) {
-    this.certificateError = 'Certificate is required.';
-    return;
-  }
-
-  const allowedTypes = ['application/pdf'];
-  if (!allowedTypes.includes(file.type)) {
-    this.certificateError = 'Only PDF files are allowed.';
-  } else if (file.size > 5 * 1024 * 1024) { // 5MB limit
-    this.certificateError = 'Certificate must be less than 5MB.';
-  } else {
-    this.certificateError = "";
-    this.selectedCertificateFile = file;
-  }
-}
-
-}

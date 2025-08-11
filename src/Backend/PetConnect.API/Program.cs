@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PetConnect.BLL.Common.AttachmentServices;
 using PetConnect.BLL.Services.Classes;
@@ -17,7 +17,8 @@ namespace PetConnect.API
     {
         public static void Main(string[] args)
         {
-            string AngularCorsPolicy = "_angularCorsPolicy";
+            // -->> 1. تعريف اسم السياسة الجديدة <<--
+            string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
             var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,7 @@ namespace PetConnect.API
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddHttpClient();
 
             builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
                .AddEntityFrameworkStores<AppDbContext>()
@@ -38,8 +40,6 @@ namespace PetConnect.API
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
-            //Repositories Services register
-
 
             // Repositories Services register
             RepositoriesCollectionExtensions.AddDalRepositories(builder.Services);
@@ -52,16 +52,17 @@ namespace PetConnect.API
             builder.Services.AddScoped<IAppointmentService, AppointmentService>();
             builder.Services.AddTransient<IJwtService, JwtService>();
 
+            // -->> 2. تعديل سياسة CORS لتكون أكثر قوة <<--
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy(AngularCorsPolicy,
-                    builder =>
-                    {
-                        builder
-                            .WithOrigins("http://localhost:4200")
-                            .AllowAnyMethod()
-                            .AllowAnyHeader();
-                    });
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  policy =>
+                                  {
+                                      policy.WithOrigins("http://localhost:4200", "https://localhost:4200") // مصدر الـ Frontend
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod();
+                                      //AllowCredentials();
+                                  });
             });
 
             builder.Services.AddAuthentication(options =>
@@ -73,7 +74,6 @@ namespace PetConnect.API
             {
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    
                     ValidateAudience = true,
                     ValidAudience = builder.Configuration["Jwt:Audience"],
                     ValidateIssuer = true,
@@ -109,7 +109,6 @@ namespace PetConnect.API
                         return context.Response.WriteAsync(result);
                     }
                 };
-
             });
 
             var app = builder.Build();
@@ -123,11 +122,15 @@ namespace PetConnect.API
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseRouting();
-            app.UseCors(AngularCorsPolicy);
-            app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
+
+            // -->> 3. التأكد من الترتيب الصحيح وتطبيق السياسة الجديدة <<--
+            app.UseRouting(); // <-- هذا يجب أن يأتي أولاً
+
+            app.UseCors(MyAllowSpecificOrigins); // <-- طبق السياسة الجديدة هنا
+
+            app.UseAuthentication(); // <-- ثم المصادقة
+            app.UseAuthorization(); // <-- ثم التفويض
+
             app.MapControllers();
             app.Run();
         }

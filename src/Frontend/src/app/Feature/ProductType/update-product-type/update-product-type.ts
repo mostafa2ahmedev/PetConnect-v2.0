@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -14,7 +14,7 @@ import { Breed } from '../../../models/breed';
 @Component({
   selector: 'app-update-product-type',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule , RouterModule],
   templateUrl: './update-product-type.html',
   styleUrls: ['./update-product-type.css'],
 })
@@ -45,10 +45,10 @@ export class UpdateProductTypeComponent implements OnInit {
       next: (data) => {
         console.log('ProductType data from API:', data);
 
-        // this.form.patchValue({
-        //   name: data.name,
-        //   breedId: data.BreedId
-        // });
+        this.form.patchValue({
+          name: data.name,
+          breedId: data.breedid
+        });
       },
       error: (err) => console.error('Error loading product type:', err),
     });

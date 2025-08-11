@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,12 +22,13 @@ namespace PetConnect.BLL.Services.Classes
         private readonly SignInManager<ApplicationUser> signinManager;
         private readonly IAttachmentService attachmentService;
         private readonly IJwtService jwtService;
+        private readonly IFaceComparisonService faceComparisonService;
 
         public AccountService(IUnitOfWork _unitOfWork,
             UserManager<ApplicationUser> _userManager,
             RoleManager<ApplicationRole> _roleManager,
             SignInManager<ApplicationUser> _signinManager,
-            IAttachmentService _attachmentService,IJwtService _jwtService)
+            IAttachmentService _attachmentService,IJwtService _jwtService , IFaceComparisonService _faceComparisonService)
         {
             unitOfWork = _unitOfWork;
             userManager = _userManager;
@@ -34,6 +36,7 @@ namespace PetConnect.BLL.Services.Classes
             signinManager = _signinManager;
             attachmentService = _attachmentService;
             jwtService = _jwtService;
+            faceComparisonService = _faceComparisonService;
         }
         public async Task<List<string>> GetAllRolesAsync()
         {
@@ -47,61 +50,73 @@ namespace PetConnect.BLL.Services.Classes
             if (result.Succeeded)
             {
                 var user = await userManager.FindByEmailAsync(model.Email);
-                return user; // need to be seeeen 
+                return user; 
             }
             else
-                return null; // need to be seeeen 
+                return null; 
         }
+
+
 
         public async Task<RegistrationResult> DoctorRegister(DoctorRegisterDTO registerDTO)
         {
+            var response = new RegistrationResult();
+
+            
+            if (registerDTO.ProfileImage == null || registerDTO.IdCardImage == null || registerDTO.Certificate == null)
+            {
+                response.Errors.Add("Profile image, ID card, and Certificate are all required.");
+                return response;
+            }
+
+            
+            bool facesMatch = await faceComparisonService.AreFacesMatchingAsync(
+                registerDTO.ProfileImage.OpenReadStream(),
+                registerDTO.IdCardImage.OpenReadStream()
+            );
+
+            if (!facesMatch)
+            {
+                response.Errors.Add("Face verification failed. The images do not appear to be of the same person.");
+                return response;
+            }
+
+            
+            string imageName = await attachmentService.UploadAsync(registerDTO.ProfileImage, "img/doctors");
+            string certificateName = await attachmentService.UploadAsync(registerDTO.Certificate, "img/certificates");
+
             var doctor = new Doctor
             {
-                Email = registerDTO.Email,
                 UserName = registerDTO.Email,
+                Email = registerDTO.Email,
                 FName = registerDTO.FName,
                 LName = registerDTO.LName,
                 Gender = registerDTO.Gender,
+                PetSpecialty = registerDTO.PetSpecialty,
                 PhoneNumber = registerDTO.PhoneNumber,
                 IsApproved = false,
-                CertificateUrl = "",
                 PricePerHour = registerDTO.PricePerHour,
-                PetSpecialty = registerDTO.PetSpecialty,
                 Address = new Address
                 {
                     City = registerDTO.City,
                     Country = registerDTO.Country,
                     Street = registerDTO.Street
-                }
+                },
+         
+                ImgUrl = $"/assets/img/doctors/{imageName}",
+                CertificateUrl = $"/assets/img/certificates/{certificateName}"
             };
 
+         
             var result = await userManager.CreateAsync(doctor, registerDTO.Password);
-            var response = new RegistrationResult();
+
 
             if (result.Succeeded)
             {
-                string? imageName;
-                string certificateName;
-
-                if (registerDTO.Image != null && registerDTO.Certificate != null )
-                {
-                    imageName = await attachmentService.UploadAsync(registerDTO.Image, "img/doctors");
-                    certificateName = await attachmentService.UploadAsync(registerDTO.Certificate, "img/certificates");
-                    doctor.CertificateUrl = $"/assets/img/certificates/{certificateName}";
-
-                }
-                else
-                {
-                    imageName = registerDTO.Gender == DAL.Data.Enums.Gender.Male ? "0baf3fbe-4277-4199-aaaa-ba3e396c8c43.png" : "29b209e7-32aa-4669-8209-c113b968b527.png";
-                }
-
-                doctor.ImgUrl = $"/assets/img/doctors/{imageName}";
-
-                await userManager.UpdateAsync(doctor);
                 await userManager.AddToRoleAsync(doctor, "Doctor");
-                //await signinManager.SignInAsync(doctor, isPersistent: false);
 
                 response.Succeeded = true;
+                response.UserId = doctor.Id;
             }
             else
             {
@@ -111,6 +126,11 @@ namespace PetConnect.BLL.Services.Classes
 
             return response;
         }
+
+
+
+
+
 
 
         public async Task<RegistrationResult> CustomerRegister(CustomerRegisterDTO registerDTO)

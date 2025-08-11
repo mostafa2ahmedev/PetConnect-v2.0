@@ -19,7 +19,7 @@ namespace PetConnect.BLL.Services.Classes
         {
             UOW = _UOW;
         }
-        // Return list of doctor DTOs 
+        
         public IEnumerable<DoctorDetailsDTO> GetAll()
         {
             return UOW.DoctorRepository.GetAll()
@@ -38,11 +38,11 @@ namespace PetConnect.BLL.Services.Classes
                 });
         }
 
-        // Get single doctor details by id
+       
         public DoctorDetailsDTO? GetByID(string id)
         {
             var doctor = UOW.DoctorRepository.GetByID(id);
-            if (doctor == null)
+            if (doctor == null || !doctor.IsApproved)
                 return null;
 
             return new DoctorDetailsDTO
@@ -70,31 +70,31 @@ namespace PetConnect.BLL.Services.Classes
         {
             var doctor = UOW.DoctorRepository.GetByID(dto.Id);
 
-            if (doctor == null)
+            if (doctor == null || !doctor.IsApproved)
                 throw new Exception("Doctor not found");
 
-            // Map DTO values to entity
+         
             doctor.FName = dto.FName;
             doctor.LName = dto.LName;
             doctor.ImgUrl = dto.ImgUrl;
             doctor.PricePerHour = dto.PricePerHour;
             doctor.CertificateUrl = dto.CertificateUrl;
 
-            // Enum and complex object parsing
+           
             if (Enum.TryParse(dto.PetSpecialty, out PetSpecialty specialty))
                 doctor.PetSpecialty = specialty;
 
             if (Enum.TryParse(dto.Gender, out Gender gender))
                 doctor.Gender = gender;
 
-            // Address might already be initialized in the entity
+          
             if (doctor.Address == null)
                 doctor.Address = new Address();
 
             doctor.Address.Street = dto.Street;
             doctor.Address.City = dto.City;
 
-            // Update via repository
+            
             UOW.DoctorRepository.Update(doctor);
             UOW.SaveChanges();
         }
