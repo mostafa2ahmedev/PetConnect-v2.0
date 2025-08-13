@@ -1,0 +1,49 @@
+<section id="testimonials" class="testimonials section">
+  <div class="container section-title" data-aos="fade-up">
+    <h2>Testimonial</h2>
+    <p>Testimonial Written from customers to {{ doctorName }}</p>
+  </div>
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="testimonials-slider swiper init-swiper">
+      <div class="swiper-wrapper">
+        @for (testimonial of testimonials; track testimonial.id) {
+        <div class="swiper-slide">
+          <div class="testimonial-card">
+            <div class="testimonial-content">
+              <p>
+                <i class="bi bi-quote quote-icon"></i>
+                {{ testimonial.content }}
+              </p>
+            </div>
+            <div class="testimonial-profile">
+              <div class="rating">
+                @for (star of testimonial.stars; track $index) {
+                <i class="bi bi-star-fill text-dark-yellow"></i>
+                }
+                @if (testimonial.halfStar) {
+                <i class="bi bi-star-half text-dark-yellow"></i>
+                }
+              </div>
+              <div class="profile-info">
+                <img [src]="testimonial.imgSrc" alt="Profile Image" />
+                <div>
+                  <h3>{{ testimonial.name }}</h3>
+                  <h4>{{ testimonial.role }}</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+
+      <div class="swiper-pagination"></div>
+    </div>
+
+    <div>
+        <button class="btn btn-outline-primary" (click)="bookAppointment()">Book Now</button>
+        <button class=" btn btn-outline-warning ms-2" (click)="goBack()">Make a Review</button>
+        <button class=" btn btn-outline-danger ms-2" (click)="goBack()">Go Back</button>
+    </div>
+  </div>
+</section>

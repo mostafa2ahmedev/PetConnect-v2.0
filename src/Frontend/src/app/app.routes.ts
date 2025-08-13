@@ -52,6 +52,7 @@ import { SinglePost } from './Feature/Blog/single-post/single-post';
 import { AddBlog } from './Feature/Blog/add-blog/add-blog';
 import { Blogs } from './Feature/profile/doctor/blogs/blogs';
 import { UpdateBlog } from './Feature/Blog/update-blog/update-blog';
+import { ReviewMainPage } from './Feature/Review/review-main-page/review-main-page';
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'home', component: Home },
@@ -61,6 +62,7 @@ export const routes: Routes = [
     component: DoctorCustomerAppointment,
     canActivate: [authGuard],
   },
+  {path:'doctors/review',component:ReviewMainPage}  ,
   {
     path: 'doctors/timeslots',
     component: ShowAllDoctorTimeslots,

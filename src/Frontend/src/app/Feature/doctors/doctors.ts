@@ -10,7 +10,7 @@ import { DoctorsService } from './doctors-service';
 import { FormsModule } from '@angular/forms';
 import { IDoctor } from './idoctor';
 import { CurrencyPipe } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ISpeciality } from './ispeciality';
 import { AccountService } from '../../core/services/account-service';
 
@@ -25,6 +25,7 @@ export class Doctors implements OnInit {
   doctorsAreLoading = signal(true);
   doctorService = inject(DoctorsService);
   accounterService = inject(AccountService);
+  router = inject(Router)
   name: string = '';
   maxPrice: number | null = null;
   allDoctors: string | IDoctor[] = [];
@@ -58,5 +59,8 @@ export class Doctors implements OnInit {
           console.log(this.errorMesseage);
         },
       });
+  }
+  addReview(docId:string){
+    this.router.navigate(['/doctors','review'],{state:{doctorId:docId}});
   }
 }
