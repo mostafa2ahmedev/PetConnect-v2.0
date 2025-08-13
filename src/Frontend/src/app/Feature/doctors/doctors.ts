@@ -30,9 +30,11 @@ export class Doctors implements OnInit {
   allDoctors: string | IDoctor[] = [];
   specialty: number | null = 0;
   specialities: ISpeciality[] = [
-    { specialityName: 'Dog', value: 1 },
-    { specialityName: 'Cat', value: 2 },
+    { specialityName: 'Dog', value: 0 },
+    { specialityName: 'Cat', value: 1 },
+    {specialityName:'Bird',value:2}
   ];
+  city:string ="";
   isCustomerLogginIn = false;
   errorFound: boolean = false;
   errorMesseage: string = '';
@@ -43,7 +45,7 @@ export class Doctors implements OnInit {
 
   search() {
     this.doctorService
-      .getAll(this.name, this.maxPrice, this.specialty)
+      .getAll(this.name, this.maxPrice, this.specialty,this.city)
       .subscribe({
         next: (e) => {
           this.errorFound = false;
