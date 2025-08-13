@@ -94,7 +94,7 @@ export class DoctorCustomerAppointment implements OnInit {
         .subscribe({
           next: (resp) => {
             // console.log(resp);
-            this.alertService.confirm('successfully created appointment');
+            this.alertService.success('successfully created appointment');
             this.router.navigateByUrl(`/doctors/${this.doctorId}`);
             this.doctorCustomerAppService
               .increaseBookedCountByOne(this.slot, this.doctorObj.id)
