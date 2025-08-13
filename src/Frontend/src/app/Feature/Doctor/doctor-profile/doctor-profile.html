@@ -1,62 +1,140 @@
-<div class="container my-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-10">
-      <!-- Doctor Profile Card -->
-      <div class="card p-4 mb-5" *ngIf="!profileLoading()">
-        <div class="row align-items-center">
-          <div class="col-md-3 text-center">
-            <img
-              *ngIf="typeof doctor !== 'string'"
-              [src]="
-                server + doctor.imgUrl ||
-                'https://localhost:7102/assets/img/defaultperson.png'
-              "
-              alt="Doctor's Profile Picture"
-              class="profile-image mb-3"
-            />
-          </div>
-          <div class="col-md-9">
-            <ng-container *ngIf="typeof doctor !== 'string'">
-              <h3 class="mb-4">Dr. {{ doctor.fName }} {{ doctor.lName }}</h3>
-              <p><strong>Pet Specialty:</strong> {{ doctor.petSpecialty }}</p>
-              <p><strong>Gender:</strong> {{ doctor.gender }}</p>
-              <p>
-                <strong>Price Per Hour:</strong>
-                {{ doctor.pricePerHour | currency : "EGP" : true }}
-              </p>
-              <p>
-                <strong>Certificate:</strong>
-                <a [href]="doctor.certificateUrl" target="_blank"
-                  >View Certificate</a
-                >
-              </p>
-              <p>
-                <strong>Address:</strong> {{ doctor.street }}, {{ doctor.city }}
-              </p>
-            </ng-container>
+<section
+  id="hero"
+  class="hero section pb-0 min-vh-100 align-items-center justify-content-center d-flex flex-column"
+>
+  <div
+    class="container section-title aos-init aos-animate pb-0"
+    data-aos="fade-up"
+  >
+    <h2>Our Vets</h2>
+    <p>
+      Meet the trusted professionals dedicated to keeping your pets safe,
+      healthy, and happy.
+    </p>
+  </div>
+  <div class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-10 card p-2 mb-5">
+        <!-- Doctor Profile Card -->
+        <div *ngIf="typeof doctor !== 'string' && !profileLoading()">
+          <div class="row g-0 align-items-stretch mx-auto">
+            <!-- Image Column -->
+            <div
+              class="col-md-4 d-flex justify-content-center align-items-center p-5"
+            >
+              <img
+                *ngIf="typeof doctor !== 'string'"
+                [src]="
+                  server + doctor.imgUrl ||
+                  'https://localhost:7102/assets/img/defaultperson.png'
+                "
+                alt="Doctor's Profile Picture"
+                class="img-fluid rounded-start"
+                style="height: 100%; object-fit: cover"
+              />
+            </div>
+
+            <!-- Data Column -->
+            <div class="col-md-8">
+              <div
+                class="card-body h-100 d-flex flex-column justify-content-center"
+              >
+                <h3 class="mb-4">Dr. {{ doctor.fName }} {{ doctor.lName }}</h3>
+                <div class="row">
+                  <!-- Left: Icons and Titles (1/3 width) -->
+                  <div
+                    class="col-4 d-flex flex-column justify-content-start gap-3"
+                  >
+                    <div class="d-flex align-items-center">
+                      <i
+                        class="fas fa-stethoscope me-2 text-primary"
+                        style="min-width: 20px"
+                      ></i>
+                      <strong>Pet Specialty:</strong>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <i
+                        class="fas fa-venus-mars me-2 text-primary"
+                        style="min-width: 20px"
+                      ></i>
+                      <strong>Gender:</strong>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <i
+                        class="fas fa-dollar-sign me-2 text-primary"
+                        style="min-width: 20px"
+                      ></i>
+                      <strong>Price Per Hour:</strong>
+                    </div>
+                    <!-- <div class="d-flex align-items-center">
+                      <i
+                        class="fas fa-certificate me-2 text-primary"
+                        style="min-width: 20px"
+                      ></i>
+                      <strong>Certificate:</strong>
+                    </div> -->
+                    <div class="d-flex align-items-center">
+                      <i
+                        class="fas fa-map-marker-alt me-2 text-primary"
+                        style="min-width: 20px"
+                      ></i>
+                      <strong>Address:</strong>
+                    </div>
+                  </div>
+
+                  <!-- Right: Values (2/3 width) -->
+                  <div
+                    class="col-8 d-flex flex-column justify-content-start gap-3"
+                  >
+                    <div>{{ doctor.petSpecialty }}</div>
+                    <div>{{ doctor.gender }}</div>
+                    <div>
+                      {{ doctor.pricePerHour | currency : " EGP " : true }}
+                    </div>
+                    <!-- <div>
+                      <a
+                        [href]="doctor.certificateUrl"
+                        target="_blank"
+                        class="text-decoration-none"
+                        >View Certificate</a
+                      >
+                    </div> -->
+                    <div>{{ doctor.street }}, {{ doctor.city }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
       <ng-container *ngIf="!loadingDates() && paginatedDates().length === 0">
-        <div class="card p-5 text-center">
+        <div class="card p-5 text-center col-lg-10 card mb-5">
           <h4>No available appoinments</h4>
-          <p *ngIf="typeof doctor !== 'string'" class="fs-5 py-3 mb-0">
-            Dr.{{ doctor.fName }} has no available appoitments soon. Please,
-            come back later <br />
-            or, contact another<a routerLink="doctors"> vet</a> near you.
+          <p *ngIf="typeof doctor !== 'string'" class="fs-6 py-3 mb-0">
+            Dr.{{ doctor.fName }} has no available appoitments soon.
+            <br />Please, come back later or, contact another<a
+              routerLink="/doctors"
+              class="fw-semibold"
+            >
+              vet</a
+            >
+            near you.
           </p>
         </div>
       </ng-container>
       <!-- Appointment Booking Section -->
-      <div
-        class="card p-4"
-        *ngIf="!loadingDates() && paginatedDates().length > 0"
-      >
-        <h3 class="mb-4 text-center text-primary">Book an Appointment</h3>
 
+      <div class="" *ngIf="!loadingDates() && paginatedDates().length > 0">
+        <div
+          class="container section-title aos-init aos-animate pb-0 mb-5"
+          data-aos="fade-up"
+        >
+          <h2>Book an Appointment</h2>
+        </div>
         <!-- Message Display -->
         <div
-          class="alert alert-{{ messageType }} alert-message mb-4"
+          class="alert alert-{{ messageType }} alert-message mb-4 "
           role="alert"
           *ngIf="message"
         >
@@ -72,239 +150,243 @@
         <!--  -->
 
         <!-- Available Dates Section -->
-        <ng-container *ngIf="!loadingDates() && paginatedDates().length > 0">
-          <h4 class="mb-3">Select a Date:</h4>
-          <ng-container *ngIf="paginatedDates().length > 0">
-            <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-3 mb-4">
-              <div class="col" *ngFor="let date of paginatedDates()">
-                <div
-                  class="card date-card text-center p-3"
-                  [class.active]="isSelected(date)"
-                  (click)="selectDate(date)"
-                >
-                  <h5 class="card-title mb-0">{{ date | date : "EEE" }}</h5>
-                  <p class="card-text text-muted mb-0">
-                    {{ date | date : "fullDate" }}
-                  </p>
+        <div class="card p-4 col-lg-10 mb-5 mx-auto">
+          <ng-container *ngIf="!loadingDates() && paginatedDates().length > 0">
+            <h4 class="mb-3">Schedule:</h4>
+            <ng-container *ngIf="paginatedDates().length > 0">
+              <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-3 mb-4">
+                <div class="col" *ngFor="let date of paginatedDates()">
+                  <div
+                    class="card date-card text-center p-3"
+                    [class.active]="isSelected(date)"
+                    (click)="selectDate(date)"
+                  >
+                    <h5 class="card-title mb-0">{{ date | date : "EEE" }}</h5>
+                    <p class="card-text text-muted mb-0">
+                      {{ date | date : "fullDate" }}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <!-- Pagination Controls for Dates -->
-            <nav
-              aria-label="Dates Pagination"
-              class="mt-4"
-              *ngIf="!loadingDates() && paginatedDates().length > 1"
-            >
-              <ul class="pagination justify-content-center">
-                <li class="page-item" [class.disabled]="currentPage() === 1">
-                  <button
-                    class="page-link"
-                    (click)="previousPage()"
-                    aria-label="Previous"
-                  >
-                    <span aria-hidden="true">&laquo;</span>
-                  </button>
-                </li>
-                <li
-                  class="page-item"
-                  [class.active]="currentPage() === page"
-                  *ngFor="let page of getPages()"
-                >
-                  <button class="page-link" (click)="goToPage(page)">
-                    {{ page }}
-                  </button>
-                </li>
-                <li
-                  class="page-item"
-                  [class.disabled]="currentPage() === totalPages()"
-                >
-                  <button
-                    class="page-link"
-                    (click)="nextPage()"
-                    aria-label="Next"
-                  >
-                    <span aria-hidden="true">&raquo;</span>
-                  </button>
-                </li>
-              </ul>
-            </nav>
-          </ng-container>
-          <p
-            class="text-center text-muted"
-            *ngIf="paginatedDates().length === 0"
-          >
-            No dates available for booking.
-          </p>
-        </ng-container>
-
-        <!-- Time Slots Section -->
-        <h4 class="mb-3 mt-5">
-          Available Time Slots for
-          <span class="text-primary" *ngIf="selectedDate">{{
-            selectedDate | date : "longDate"
-          }}</span>
-          <span class="text-muted" *ngIf="!selectedDate"
-            >(Please select a date)</span
-          >
-        </h4>
-
-        <div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-2">
-          <div class="col" *ngFor="let slot of getSlotsForSelectedDate()">
-            <button
-              class="btn time-slot-btn"
-              [ngClass]="{
-                'btn-outline-primary': !CustomerHasThisAppointmentSlot(slot),
-                'btn-secondary': CustomerHasThisAppointmentSlot(slot)
-              }"
-              [disabled]="
-                CustomerHasThisAppointmentSlot(slot) ||
-                slot.isFull ||
-                !slot.isActive
-              "
-              (click)="bookAppointment(slot)"
-            >
-              {{ slot.startTime | date : "shortTime" }} -
-              {{ slot.endTime | date : "shortTime" }}
-              <span
-                class="badge bg-danger ms-2"
-                *ngIf="CustomerHasThisAppointmentSlot(slot)"
-                >Booked</span
+              <!-- Pagination Controls for Dates -->
+              <nav
+                aria-label="Dates Pagination"
+                class="mt-4"
+                *ngIf="!loadingDates() && totalPages() > 1"
               >
-              <span
-                class="badge bg-success ms-2"
-                *ngIf="!CustomerHasThisAppointmentSlot(slot)"
-                >Open</span
-              >
-            </button>
-          </div>
-          <div
-            class="col-12"
-            *ngIf="getSlotsForSelectedDate().length === 0 && selectedDate"
-          >
-            <p class="text-center text-muted">
-              No time slots available for this date.
+                <ul class="pagination justify-content-center">
+                  <li class="page-item" [class.disabled]="currentPage() === 1">
+                    <button
+                      class="page-link"
+                      (click)="previousPage()"
+                      aria-label="Previous"
+                    >
+                      <span aria-hidden="true">&laquo;</span>
+                    </button>
+                  </li>
+                  <li
+                    class="page-item"
+                    [class.active]="currentPage() === page"
+                    *ngFor="let page of getPages()"
+                  >
+                    <button class="page-link" (click)="goToPage(page)">
+                      {{ page }}
+                    </button>
+                  </li>
+                  <li
+                    class="page-item"
+                    [class.disabled]="currentPage() === totalPages()"
+                  >
+                    <button
+                      class="page-link"
+                      (click)="nextPage()"
+                      aria-label="Next"
+                    >
+                      <span aria-hidden="true">&raquo;</span>
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+            </ng-container>
+            <p
+              class="text-center text-muted"
+              *ngIf="paginatedDates().length === 0"
+            >
+              No dates available for booking.
             </p>
+          </ng-container>
+
+          <!-- Time Slots Section -->
+          <h4 class="mb-3 mt-5">
+            Available Visit Hours for
+            <span class="text-primary" *ngIf="selectedDate">{{
+              selectedDate | date : "longDate"
+            }}</span>
+            <span class="text-muted" *ngIf="!selectedDate"
+              >(Please select a date)</span
+            >
+          </h4>
+
+          <div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-2">
+            <div class="col" *ngFor="let slot of getSlotsForSelectedDate()">
+              <button
+                class="btn time-slot-btn"
+                [ngClass]="{
+                  'btn-outline-primary': !CustomerHasThisAppointmentSlot(slot),
+                  'btn-secondary': CustomerHasThisAppointmentSlot(slot)
+                }"
+                [disabled]="
+                  CustomerHasThisAppointmentSlot(slot) ||
+                  slot.isFull ||
+                  !slot.isActive
+                "
+                (click)="bookAppointment(slot)"
+              >
+                {{ slot.startTime | date : "shortTime" }} -
+                {{ slot.endTime | date : "shortTime" }}
+                <span
+                  class="badge bg-danger ms-2"
+                  *ngIf="CustomerHasThisAppointmentSlot(slot)"
+                  >Booked</span
+                >
+                <span
+                  class="badge bg-success ms-2"
+                  *ngIf="!CustomerHasThisAppointmentSlot(slot)"
+                  >Open</span
+                >
+              </button>
+            </div>
+            <div
+              class="col-12"
+              *ngIf="getSlotsForSelectedDate().length === 0 && selectedDate"
+            >
+              <p class="text-center text-muted">
+                No time slots available for this date.
+              </p>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Modal for booking confirmation - kept as is -->
-<div
-  class="modal fade"
-  id="bookingModal"
-  tabindex="-1"
-  aria-labelledby="bookingModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="bookingModalLabel">
-          Confirm Your Appointment
-        </h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div *ngIf="typeof doctor !== 'string'" class="modal-body">
-        <p>
-          You are about to book an appointment with
-          <strong>Dr. {{ doctor.fName }} {{ doctor.lName }}</strong
-          >.
-        </p>
-        <div class="d-grid gap-2">
-          <button type="submit" class="btn btn-primary">Confirm Booking</button>
+  <!-- Modal for booking confirmation - kept as is -->
+  <div
+    class="modal fade"
+    id="bookingModal"
+    tabindex="-1"
+    aria-labelledby="bookingModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="bookingModalLabel">
+            Confirm Your Appointment
+          </h5>
           <button
             type="button"
-            class="btn btn-secondary"
+            class="btn-close"
             data-bs-dismiss="modal"
-          >
-            Cancel
-          </button>
+            aria-label="Close"
+          ></button>
+        </div>
+        <div *ngIf="typeof doctor !== 'string'" class="modal-body">
+          <p>
+            You are about to book an appointment with
+            <strong>Dr. {{ doctor.fName }} {{ doctor.lName }}</strong
+            >.
+          </p>
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary">
+              Confirm Booking
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<section
-  *ngIf="blogs.length > 0 && typeof doctor !== 'string'"
-  class="container p-5"
->
-  <h3 class="text-center my-4">Posts by Dr. {{ doctor.fName }}</h3>
-  <!-- Loading Spinner -->
-  <div *ngIf="loadingBlogs" class="text-center my-5">
-    <div class="spinner-border text-primary" role="status"></div>
-    <p class="mt-2">Loading blogs...</p>
-  </div>
+  <section
+    *ngIf="blogs.length > 0 && typeof doctor !== 'string'"
+    class="container p-5"
+  >
+    <h3 class="text-center my-4">Posts by Dr. {{ doctor.fName }}</h3>
+    <!-- Loading Spinner -->
+    <div *ngIf="loadingBlogs" class="text-center my-5">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="mt-2">Loading blogs...</p>
+    </div>
 
-  <!-- Blog Cards -->
-  <div *ngIf="!loadingBlogs && blogs.length > 0" class="row g-4">
-    <div class="col-md-4" *ngFor="let blog of blogs">
-      <div class="card h-100 shadow-lg mx-2 mb-5">
-        <a [routerLink]="`/blog/post/${blog.id}`">
-          <img
-            *ngIf="blog.media"
-            [src]="getFullImageUrl(blog.media)"
-            class="card-img-top"
-            style="max-height: 300px; object-fit: cover"
-            alt="Blog Media"
-          />
-        </a>
-
-        <div class="card-body d-flex flex-column">
-          <a
-            [routerLink]="`/blog/post/${blog.id}`"
-            class="text-decoration-none"
-          >
-            <h5 class="card-title">{{ blog.title }}</h5>
+    <!-- Blog Cards -->
+    <div *ngIf="!loadingBlogs && blogs.length > 0" class="row g-4">
+      <div class="col-md-4" *ngFor="let blog of blogs">
+        <div class="card h-100 shadow-lg mx-2 mb-5">
+          <a [routerLink]="`/blog/post/${blog.id}`">
+            <img
+              *ngIf="blog.media"
+              [src]="getFullImageUrl(blog.media)"
+              class="card-img-top"
+              style="max-height: 300px; object-fit: cover"
+              alt="Blog Media"
+            />
           </a>
 
-          <!-- Category & Topic row -->
-          <div class="mb-2 text-muted small">
-            <ng-container *ngIf="blog.categoryName">
-              <i class="fas fa-folder-open me-1" style="color: #5d57f4"></i>
-              {{ blog.categoryName }}
-            </ng-container>
+          <div class="card-body d-flex flex-column">
+            <a
+              [routerLink]="`/blog/post/${blog.id}`"
+              class="text-decoration-none"
+            >
+              <h5 class="card-title">{{ blog.title }}</h5>
+            </a>
 
-            <ng-container *ngIf="blog.categoryName && blog.topic">
-              <span class="mx-2">|</span>
-            </ng-container>
+            <!-- Category & Topic row -->
+            <div class="mb-2 text-muted small">
+              <ng-container *ngIf="blog.categoryName">
+                <i class="fas fa-folder-open me-1" style="color: #5d57f4"></i>
+                {{ blog.categoryName }}
+              </ng-container>
 
-            <ng-container *ngIf="blog.topic">
-              <i class="fas fa-tag me-1" style="color: #5d57f4"></i>
-              {{ blog.topic }}
-            </ng-container>
-          </div>
+              <ng-container *ngIf="blog.categoryName && blog.topic">
+                <span class="mx-2">|</span>
+              </ng-container>
 
-          <!-- Post date -->
-          <!-- <small class="text-muted mb-2">
+              <ng-container *ngIf="blog.topic">
+                <i class="fas fa-tag me-1" style="color: #5d57f4"></i>
+                {{ blog.topic }}
+              </ng-container>
+            </div>
+
+            <!-- Post date -->
+            <!-- <small class="text-muted mb-2">
             <i class="far fa-calendar-alt me-1"></i>
             {{ blog.postDate | date : "medium" }}
           </small> -->
 
-          <!-- Excerpt -->
-          <p class="card-text" [innerHTML]="blog.excerpt"></p>
+            <!-- Excerpt -->
+            <p class="card-text" [innerHTML]="blog.excerpt"></p>
 
-          <!-- Likes & Comments -->
-          <div class="mt-auto">
-            <span class="badge bg-primary me-2">
-              <i class="fas fa-thumbs-up me-1"></i>
-              {{ blog.likes }} Likes
-            </span>
-            <span class="badge bg-secondary">
-              <i class="fas fa-comments me-1"></i>
-              {{ blog.comments }}
-            </span>
+            <!-- Likes & Comments -->
+            <!-- <div class="mt-auto">
+              <span class="badge bg-primary me-2">
+                <i class="fas fa-thumbs-up me-1"></i>
+                {{ blog.likes }} Likes
+              </span>
+              <span class="badge bg-secondary">
+                <i class="fas fa-comments me-1"></i>
+                {{ blog.comments }}
+              </span>
+            </div> -->
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </section>

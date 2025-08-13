@@ -75,11 +75,15 @@ export class AdminDoctors {
     this.rejectionMessage = '';
     this.modalService.open(content, { size: 'md' });
   }
+  // isPdf: boolean = false;
 
-  openImageModal(content: TemplateRef<any>, imageUrl: string) {
-    this.currentImageUrl = imageUrl;
-    this.modalService.open(content, { size: 'xl', centered: true });
-  }
+  // openImageModal(content: TemplateRef<any>, imageUrl: string) {
+  //   console.log('got', imageUrl);
+  //   this.isPdf = imageUrl.toLowerCase().endsWith('.pdf');
+  //   this.currentImageUrl = imageUrl;
+  //   console.log('gossssssssst', this.currentImageUrl);
+  //   this.modalService.open(content, { size: 'xl', centered: true });
+  // }
 
   confirmRejection(modalRef: any): void {
     if (!this.rejectionMessage.trim()) {

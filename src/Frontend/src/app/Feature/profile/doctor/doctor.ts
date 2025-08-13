@@ -55,7 +55,7 @@ export class Doctor implements OnInit {
   itemsPerPage = signal<number>(6);
   loading = true;
   // --- Computed Signals for Reactive Filtering and Pagination ---
-
+  sidebarVisible = false;
   // 1. Filtered and Sorted list (re-runs whenever requests, status, or sort order changes)
   filteredRequests = computed(() => {
     const requests = this.appointmentRequests();
@@ -126,6 +126,11 @@ export class Doctor implements OnInit {
           this.loadingAppointments.set(false);
         },
       });
+
+    if (window.innerWidth >= 768) {
+      // md breakpoint in px
+      this.sidebarVisible = true;
+    }
   }
 
   // --- Pagination Methods (now just update the signal) ---

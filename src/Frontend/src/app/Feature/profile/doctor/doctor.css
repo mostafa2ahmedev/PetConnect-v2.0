@@ -1,11 +1,17 @@
-.scaler{
-  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+.scaler {
+  transition: transform 0.3s ease, background-color 0.3s ease,
+    box-shadow 0.3s ease;
   padding: 1em;
   border-radius: 0.5em;
   background-color: #fff;
-  cursor: pointer;}
-.scaler:hover{
+  cursor: pointer;
+}
+.scaler:hover {
   transform: scale(1.03);
   background-color: #f2f2f2;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+.list-group-item.active * {
+  color: #fff !important;
+  background-color: #4b46d6 !important;
 }
