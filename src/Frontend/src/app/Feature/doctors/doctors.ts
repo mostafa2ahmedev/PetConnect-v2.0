@@ -9,7 +9,7 @@ import {
 import { DoctorsService } from './doctors-service';
 import { FormsModule } from '@angular/forms';
 import { IDoctor } from './idoctor';
-import { CurrencyPipe } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 
 import { ISpeciality } from './ispeciality';
