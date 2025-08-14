@@ -9,12 +9,13 @@ using PetConnect.DAL.Data.Models;
 using PetConnect.DAL.Data.Repositories.Classes;
 using PetConnect.DAL.Data.Repositories.Interfaces;
 using PetConnect.DAL.UnitofWork;
+using StackExchange.Redis;
 
 namespace PetConnect.DAL.Data
 {
     public static class RepositoriesCollectionExtensions
     {
-        public static IServiceCollection AddDalRepositories(this IServiceCollection services)
+        public static IServiceCollection AddDalRepositories(this IServiceCollection services,IConfiguration configuration)
         {
             // Repositories / Unit of Work
             services.AddScoped<IAdminRepository, AdminRepository>();
@@ -50,7 +51,10 @@ namespace PetConnect.DAL.Data
             services.AddScoped<IUserBlogCommentRepository, UserBlogCommentRepository>();
             services.AddScoped<IUserBlogCommentReplyLikeRepository, UserBlogCommentReplyLikeRepository>();
             services.AddScoped<IUserBlogCommentReplyRepository, UserBlogCommentReplyRepository>();
-
+            services.AddScoped(typeof(IConnectionMultiplexer), (serviceProvider) => {
+                return ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis")!);
+            });
+            services.AddScoped<IBasketRepository, BasketRepository>();
             return services;
         }
     }

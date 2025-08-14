@@ -21,14 +21,14 @@ namespace PetConnect.DAL.Data.Repositories.Classes
         }
         public IEnumerable<OrderProduct> GetProductsByOrderId(int orderId)
         {
-            return context.orderProducts
+            return context.OrderProducts
                 .Include(op => op.product)
                 .Where(op => op.OrderId == orderId)
                 .ToList();
         }
         public IEnumerable<OrderProduct> GetOrderProductWithProduct_Order_CustomerData(string SellerId)
         {
-            return context.orderProducts.Include(P => P.product)
+            return context.OrderProducts.Include(P => P.product)
                  .Include(O => O.order)
                  .ThenInclude(C => C.customer)
                  .Where(OP => OP.SellerId == SellerId).ToList();
@@ -36,12 +36,12 @@ namespace PetConnect.DAL.Data.Repositories.Classes
 
         public OrderProduct? GetOrderProductForSeller(string SellerId, int ProductId, int OrderId)
         {
-            return context.orderProducts.SingleOrDefault(OP => OP.SellerId == SellerId && OP.ProductId == ProductId && OP.OrderId == OrderId);
+            return context.OrderProducts.SingleOrDefault(OP => OP.SellerId == SellerId && OP.ProductId == ProductId && OP.OrderId == OrderId);
         }
 
         public bool CheckStatusOfOrderProductsInOrder(int orderId)
         {
-       return  context.orderProducts.Where(OP=>OP.OrderId==orderId).Any(OP=>OP.OrderProductStatus==OrderProductStatus.Pending);
+       return  context.OrderProducts.Where(OP=>OP.OrderId==orderId).Any(OP=>OP.OrderProductStatus==OrderProductStatus.Pending);
         }
     }
 }
