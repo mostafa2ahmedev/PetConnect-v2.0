@@ -12,12 +12,14 @@ export class DoctorsService {
   getAll(
     name: any,
     maxPrice: any,
-    speciality: any
+    speciality: any,
+    city:string
   ): Observable<IDoctor[] | string> {
     let params = new HttpParams();
     if (name) params = params.set('name', name);
     if (maxPrice) params = params.set('maxPrice', maxPrice);
     if (speciality) params = params.set('specialty', speciality);
+    if (city) params = params.set('city', city);
     return this.httpClient.get<IDoctor[] | string>(
       'https://localhost:7102/api/Doctors',
       { params }
