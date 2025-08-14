@@ -23,6 +23,24 @@ namespace PetConnect.DAL.Data.Configurations
               OrderStatus => OrderStatus.ToString(),
               returnOrderStatus => (OrderStatus)Enum.Parse(typeof(OrderStatus), returnOrderStatus)
               );
+
+
+            builder.OwnsOne(u => u.ShippingAddress, ShippingAddress =>
+            {
+                ShippingAddress.Property(a => a.Street)
+                       .HasColumnName("Street")
+                 .HasColumnType("varchar(20)");
+
+                ShippingAddress.Property(a => a.City)
+                       .HasColumnName("City")
+                 .HasColumnType("varchar(20)");
+
+                ShippingAddress.Property(a => a.Country)
+                       .HasColumnName("Country")
+                   .HasColumnType("varchar(20)");
+            });
+
+            builder.HasOne(o => o.DeliveryMethod).WithOne().HasForeignKey<Order>(o => o.DeliveryMethodId);
         }
     }
 }

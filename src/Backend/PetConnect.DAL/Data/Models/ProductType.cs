@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PetConnect.DAL.Data.Models
 {
-    public  class ProductType
+    public class ProductType
     {
         public int Id { get; set; }
         public string Name { get; set; }
