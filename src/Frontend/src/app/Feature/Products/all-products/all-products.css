@@ -1,0 +1,18 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--heading-color);
+  font-family: "Nunito Sans", sans-serif;
+}
+.card {
+  overflow: hidden;
+}
+.card img {
+  transition: all 0.5s;
+}
+.card:hover img {
+  transform: scale(1.1);
+}

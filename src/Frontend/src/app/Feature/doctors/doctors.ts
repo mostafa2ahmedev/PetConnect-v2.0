@@ -11,12 +11,13 @@ import { FormsModule } from '@angular/forms';
 import { IDoctor } from './idoctor';
 import { CurrencyPipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+
 import { ISpeciality } from './ispeciality';
 import { AccountService } from '../../core/services/account-service';
 
 @Component({
   selector: 'app-doctors',
-  imports: [FormsModule, CurrencyPipe, RouterLink],
+  imports: [FormsModule, CurrencyPipe, RouterLink, CommonModule],
   templateUrl: './doctors.html',
   styleUrl: './doctors.css',
 })

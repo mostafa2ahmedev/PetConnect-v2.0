@@ -7,6 +7,7 @@ using FluentAssertions;
 using Moq;
 using PetConnect.BLL.Services.Classes;
 using PetConnect.BLL.Services.DTOs.AppointmentDto;
+using PetConnect.BLL.Services.Interfaces;
 using PetConnect.DAL.Data.Enums;
 using PetConnect.DAL.Data.Models;
 using PetConnect.DAL.UnitofWork;
@@ -16,12 +17,14 @@ namespace PetConnect.UnitTests
     public class AppointmentServiceTest
     {
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        private readonly Mock<INotificationService> _notificationService;
         private readonly AppointmentService _appointmentService;
 
         public AppointmentServiceTest()
         {
             _unitOfWorkMock = new Mock<IUnitOfWork>();
-            _appointmentService = new AppointmentService(_unitOfWorkMock.Object);
+            _notificationService = new Mock<INotificationService>();
+            _appointmentService = new AppointmentService(_unitOfWorkMock.Object , _notificationService.Object);
         }
 
         [Fact]

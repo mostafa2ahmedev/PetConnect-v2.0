@@ -498,6 +498,34 @@ namespace PetConnect.DAL.Data.Migrations
                     b.ToTable("CustomerPetAdoptions");
                 });
 
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.DeliveryMethod", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Cost")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DeliveryTime")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DeliveryMethod");
+                });
+
             modelBuilder.Entity("PetConnect.DAL.Data.Models.Notification", b =>
                 {
                     b.Property<Guid>("Id")
@@ -543,10 +571,17 @@ namespace PetConnect.DAL.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int?>("DeliveryMethodId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OrderStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentIntentId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -556,6 +591,10 @@ namespace PetConnect.DAL.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("DeliveryMethodId")
+                        .IsUnique()
+                        .HasFilter("[DeliveryMethodId] IS NOT NULL");
 
                     b.ToTable("Orders");
                 });
@@ -587,7 +626,7 @@ namespace PetConnect.DAL.Data.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.ToTable("orderProducts");
+                    b.ToTable("OrderProducts");
                 });
 
             modelBuilder.Entity("PetConnect.DAL.Data.Models.Pet", b =>
@@ -1343,6 +1382,42 @@ namespace PetConnect.DAL.Data.Migrations
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("PetConnect.DAL.Data.Models.DeliveryMethod", "DeliveryMethod")
+                        .WithOne()
+                        .HasForeignKey("PetConnect.DAL.Data.Models.Order", "DeliveryMethodId");
+
+                    b.OwnsOne("PetConnect.DAL.Data.Models.Address", "ShippingAddress", b1 =>
+                        {
+                            b1.Property<int>("OrderId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("City")
+                                .IsRequired()
+                                .HasColumnType("varchar(20)")
+                                .HasColumnName("City");
+
+                            b1.Property<string>("Country")
+                                .IsRequired()
+                                .HasColumnType("varchar(20)")
+                                .HasColumnName("Country");
+
+                            b1.Property<string>("Street")
+                                .IsRequired()
+                                .HasColumnType("varchar(20)")
+                                .HasColumnName("Street");
+
+                            b1.HasKey("OrderId");
+
+                            b1.ToTable("Orders");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderId");
+                        });
+
+                    b.Navigation("DeliveryMethod");
+
+                    b.Navigation("ShippingAddress");
 
                     b.Navigation("customer");
                 });

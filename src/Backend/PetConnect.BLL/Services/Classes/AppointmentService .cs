@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetConnect.BLL.Services.DTOs.AppointmentDto;
+using PetConnect.BLL.Services.DTOs.Notification;
 using PetConnect.BLL.Services.Interfaces;
 using PetConnect.DAL.Data.Enums;
 using PetConnect.DAL.Data.Models;
@@ -16,10 +17,12 @@ namespace PetConnect.BLL.Services.Classes
     public class AppointmentService : IAppointmentService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly INotificationService _notificationService;
 
-        public AppointmentService(IUnitOfWork unitOfWork)
+        public AppointmentService(IUnitOfWork unitOfWork, INotificationService notificationService)
         {
             _unitOfWork = unitOfWork;
+            _notificationService = notificationService;
         }
 
         public async Task<IEnumerable<AppointmentViewDTO>> GetAllAppointmentsAsync()
@@ -101,10 +104,14 @@ namespace PetConnect.BLL.Services.Classes
                 Status = AppointmentStatus.Pending,
                 CreatedAt = DateTime.UtcNow,
             };
-
+         
             _unitOfWork.AppointmentsRepository.Add(appointment);
             await _unitOfWork.SaveChangesAsync();
-
+            await _notificationService.CreateAndSendNotification(dto.DoctorId, new NotificationDTO()
+            {
+                Message = $"You've got a new appointment!! ",
+                Type = NotificationType.Approval
+            });
             return new AppointmentViewDTO
             {
                 Id = appointment.Id,
@@ -184,7 +191,11 @@ namespace PetConnect.BLL.Services.Classes
             if (appointment == null || appointment.Status == AppointmentStatus.Cancelled) return false;
 
             appointment.Status = AppointmentStatus.Cancelled;
-
+            await _notificationService.CreateAndSendNotification(appointment.CustomerId, new NotificationDTO()
+            {
+                Message = $"Your appointment was cancelled ): ",
+                Type = NotificationType.Approval
+            });
             _unitOfWork.AppointmentsRepository.Update(appointment);
             await _unitOfWork.SaveChangesAsync();
 
@@ -198,8 +209,12 @@ namespace PetConnect.BLL.Services.Classes
 
             if (appointment == null || appointment.TimeSlot.IsFull || appointment.Status != AppointmentStatus.Pending)
                 return false;
+            await _notificationService.CreateAndSendNotification(appointment.CustomerId, new NotificationDTO()
+            {
+                Message = $"Your appointment was confirmed ",
+                Type = NotificationType.Approval
+            }); appointment.TimeSlot.BookedCount += 1;
 
-            appointment.TimeSlot.BookedCount += 1;
 
             appointment.Status = AppointmentStatus.Confirmed;
 
@@ -215,7 +230,11 @@ namespace PetConnect.BLL.Services.Classes
             if (appointment == null || appointment.Status == AppointmentStatus.Completed) return false;
 
             appointment.Status = AppointmentStatus.Completed;
-
+            await _notificationService.CreateAndSendNotification(appointment.CustomerId, new NotificationDTO()
+            {
+                Message = $"Your appointment is complete. Let us know your feedback! ",
+                Type = NotificationType.Approval
+            });
             _unitOfWork.AppointmentsRepository.Update(appointment);
             await _unitOfWork.SaveChangesAsync();
 
@@ -241,7 +260,11 @@ namespace PetConnect.BLL.Services.Classes
 
             if (conflictExists)
                 return false;
-
+            await _notificationService.CreateAndSendNotification(appointmentByCustomer.DoctorId, new NotificationDTO()
+            {
+                Message = $"You've got a new appointment!!'",
+                Type = NotificationType.Approval
+            });
             appointmentByCustomer.Status = AppointmentStatus.Pending;
             _unitOfWork.AppointmentsRepository.Update(appointmentByCustomer);
             await _unitOfWork.SaveChangesAsync();

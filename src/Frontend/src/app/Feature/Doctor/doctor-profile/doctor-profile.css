@@ -1,4 +1,4 @@
-* {
+*:not(.fas) {
   font-family: "Inter", sans-serif;
 }
 .card {
@@ -10,7 +10,7 @@
   height: 150px;
   object-fit: cover;
   border-radius: 50%; /* Circular image */
-  border: 3px solid #007bff; /* Blue border */
+  border: 3px solid#5D57F4; /* Blue border */
 }
 .date-card {
   cursor: pointer;
@@ -22,9 +22,9 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 .date-card.active {
-  background-color: #007bff;
+  background-color: #5d57f4;
   color: white;
-  border-color: #007bff;
+  border-color: #5d57f4;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 .date-card.active .text-muted {
@@ -42,7 +42,7 @@
   transition: background-color 0.2s ease;
 }
 .time-slot-btn.btn-outline-primary:hover:not(:disabled) {
-  background-color: #007bff;
+  background-color: #5d57f4;
   color: white;
 }
 .time-slot-btn:disabled {
@@ -53,6 +53,6 @@
   border-radius: 0.5rem;
 }
 
-i.fas {
+/* i.fas {
   display: none;
-}
+} */
