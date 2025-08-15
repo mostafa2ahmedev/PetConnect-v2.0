@@ -10,5 +10,6 @@ namespace PetConnect.DAL.Data.Repositories.Interfaces
 {
     public interface ISupportResponseRepository  :IGenericRepository<SupportResponse>
     {
+        public SupportRequest? GetUesrByRequestId(int SuppRquestId);
     }
 }

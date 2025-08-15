@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { SupportRequest } from '../../../support/support-models';
-import { SupportServie } from '../../../support/support-servie';
+import {
+  CreateSupportResponseDto,
+  SupportRequest,
+} from '../../../support/support-models';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { SupportServie } from '../../../support/support-servie';
+import { AlertService } from '../../../../core/services/alert-service';
 
 @Component({
   selector: 'app-support-center',
@@ -13,28 +17,37 @@ import { FormsModule } from '@angular/forms';
 export class SupportCenter implements OnInit {
   supportRequests: SupportRequest[] = [];
   loading = true;
-
+  showFilters = false;
   // Map numeric type to readable text & badge color
-  typeMap: { [key: number]: { text: string; color: string } } = {
-    0: { text: 'Support', color: 'primary' },
-    1: { text: 'Consulting', color: 'info' },
-    2: { text: 'Marketing', color: 'warning' },
-    3: { text: 'Issue', color: 'danger' },
+  typeMap: { [key: string]: { text: string; color: string } } = {
+    Support: { text: 'Support', color: 'primary' },
+    Consulting: { text: 'Consulting', color: 'info' },
+    Marketing: { text: 'Marketing', color: 'dark' },
+    Issue: { text: 'Issue', color: 'danger' },
   };
 
-  // Map numeric status to readable text & badge color
-  statusMap: { [key: number]: { text: string; color: string } } = {
-    0: { text: 'Open', color: 'success' },
-    1: { text: 'Waiting Reply', color: 'warning' },
-    2: { text: 'Closed', color: 'secondary' },
+  statusMap: { [key: string]: { text: string; color: string } } = {
+    Open: { text: 'Open', color: 'primary' },
+    WaitingReply: { text: 'Waiting Reply', color: 'dark' },
+    Closed: { text: 'Closed', color: 'secondary' },
   };
 
-  constructor(private supportService: SupportServie) {}
+  // Keys for looping
+  typeKeys: string[] = Object.keys(this.typeMap);
+  statusKeys: string[] = Object.keys(this.statusMap);
+  constructor(
+    private supportService: SupportServie,
+    private alertService: AlertService
+  ) {}
 
   ngOnInit(): void {
+    this.loadTickets();
+  }
+  loadTickets() {
     this.supportService.getSupportRequests().subscribe({
       next: (data) => {
         this.supportRequests = data;
+        console.log('supportRequests', this.supportRequests);
         this.filteredRequests = data;
         this.loading = false;
       },
@@ -44,15 +57,11 @@ export class SupportCenter implements OnInit {
       },
     });
   }
-
   filters = {
     username: '',
     type: '',
     status: '',
   };
-
-  typeKeys = Object.keys(this.typeMap).map((k) => Number(k));
-  statusKeys = Object.keys(this.statusMap).map((k) => Number(k));
 
   filteredRequests: SupportRequest[] = [];
 
@@ -63,8 +72,10 @@ export class SupportCenter implements OnInit {
           req.userName
             .toLowerCase()
             .includes(this.filters.username.toLowerCase())) &&
-        (!this.filters.type || req.type.toString() == this.filters.type) &&
-        (!this.filters.status || req.status.toString() == this.filters.status)
+        (!this.filters.type ||
+          req.supportRequestType.toString() == this.filters.type) &&
+        (!this.filters.status ||
+          req.supportRequestStatus.toString() == this.filters.status)
       );
     });
   }
@@ -72,5 +83,43 @@ export class SupportCenter implements OnInit {
   resetFilters() {
     this.filters = { username: '', type: '', status: '' };
     this.filteredRequests = [...this.supportRequests];
+  }
+
+  replyFormVisible: { [key: number]: boolean } = {};
+  replyData: { [key: number]: CreateSupportResponseDto } = {};
+
+  toggleReplyForm(requestId: number) {
+    this.replyFormVisible[requestId] = !this.replyFormVisible[requestId];
+    if (!this.replyData[requestId]) {
+      this.replyData[requestId] = {
+        message: '',
+        subject: '',
+        supportRequestId: requestId,
+        status: 2, // default status, change if needed
+      };
+    }
+  }
+
+  sendReply(requestId: number) {
+    const payload = this.replyData[requestId];
+    payload.status = this.statusKeys.indexOf(payload.status.toString());
+    console.log(payload);
+
+    if (!payload.message.trim() || !payload.subject.trim()) {
+      this.alertService.error('Please fill out both subject and message.');
+      return;
+    }
+
+    this.supportService.createSupportResponse(payload).subscribe({
+      next: () => {
+        this.alertService.success('Reply sent successfully!');
+        this.replyFormVisible[requestId] = false;
+        this.loadTickets();
+      },
+      error: (err) => {
+        console.error(err);
+        this.alertService.error('Failed to send reply.');
+      },
+    });
   }
 }

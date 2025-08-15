@@ -1,4 +1,5 @@
-﻿using PetConnect.BLL.Services.DTOs.Support;
+﻿using Microsoft.AspNetCore.Mvc;
+using PetConnect.BLL.Services.DTOs.Support;
 using PetConnect.BLL.Services.Interfaces;
 using PetConnect.DAL.Data.Models;
 using PetConnect.DAL.UnitofWork;
@@ -14,32 +15,38 @@ namespace PetConnect.BLL.Services.Classes
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly ISupportRequestService supportRequestService;
-    
+        private readonly IEmailService _emailService;
 
-        public SupportResponseService(IUnitOfWork unitOfWork,ISupportRequestService supportRequestService)
+        public SupportResponseService(IUnitOfWork unitOfWork, ISupportRequestService supportRequestService, IEmailService emailService)
         {
             this.unitOfWork = unitOfWork;
             this.supportRequestService = supportRequestService;
-
+            _emailService = emailService;
         }
-        public bool CreateSupportResponse(CreateSupportResponseDto supportResponseDto)
+        public bool CreateSupportResponse([FromBody]CreateSupportResponseDto supportResponseDto)
         {
-            var SuppResponse = new SupportResponse() {
-            Message = supportResponseDto.Message,
-            SupportRequestId = supportResponseDto.SupportRequestId,
-            
+            var SuppResponse = new SupportResponse()
+            {
+                Message = supportResponseDto.Message,
+                SupportRequestId = supportResponseDto.SupportRequestId,
+
             };
             unitOfWork.SupportResponseRepository.Add(SuppResponse);
 
-            supportRequestService.UpdateSupportRequestStatus(new UpdateSupportRequestDto() {
-            SupportRequestId = supportResponseDto.SupportRequestId,
-            SupportRequestStatus = supportResponseDto.Status,
-            
+            supportRequestService.UpdateSupportRequestStatus(new UpdateSupportRequestDto()
+            {
+                SupportRequestId = supportResponseDto.SupportRequestId,
+                SupportRequestStatus = supportResponseDto.Status,
+
 
             });
+            var SuppRequestRecord = unitOfWork.SupportResponseRepository.GetUesrByRequestId(supportResponseDto.SupportRequestId);
+            if (SuppRequestRecord is null)
+                return false;
 
-
-           return unitOfWork.SaveChanges()>=1;
+            var User = unitOfWork.UserRepository.GetByID(SuppRequestRecord.UserId);
+            _emailService.SendEmailAsync(User!.Email!, supportResponseDto.Subject, supportResponseDto.Message);
+            return unitOfWork.SaveChanges() >= 1;
         }
     }
 }

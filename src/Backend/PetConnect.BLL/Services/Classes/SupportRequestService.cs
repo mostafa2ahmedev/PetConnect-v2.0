@@ -15,48 +15,52 @@ namespace PetConnect.BLL.Services.Classes
     {
         private readonly IUnitOfWork unitOfWork;
 
+
         public SupportRequestService(IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
+
         }
-        public bool CreateSupportRequest(string UserId,CreateSupportRequestDto supportRequestDto)
+        public bool CreateSupportRequest(string UserId, CreateSupportRequestDto supportRequestDto)
         {
-            var SuppRequest = new SupportRequest() { 
-            Message = supportRequestDto.Message,    
-            Status = SupportRequestStatus.Open, 
-            UserId = UserId,
-            Type = supportRequestDto.Type,
-            
+            var SuppRequest = new SupportRequest()
+            {
+                Message = supportRequestDto.Message,
+                Status = SupportRequestStatus.Open,
+                UserId = UserId,
+                Type = supportRequestDto.Type,
+
             };
 
             unitOfWork.SupportRequestRepository.Add(SuppRequest);
-            return unitOfWork.SaveChanges()>=1;
-           
+            return unitOfWork.SaveChanges() >= 1;
+
         }
 
         public IEnumerable<SupportRequestDto> GetSupportRequests()
         {
-          return unitOfWork.SupportRequestRepository.GetSupportRequestsWithUserData().Select(SR=>new SupportRequestDto() { 
-          Id = SR.Id,
-          Message = SR.Message,
-          Status= SR.Status,
-          Type = SR.Type,
-          UserId= SR.UserId,
-          UserName = SR.User.FName +" "+ SR.User.LName!,
-          UserEmail =SR.User.Email!
-          });
+            return unitOfWork.SupportRequestRepository.GetSupportRequestsWithUserData().Select(SR => new SupportRequestDto()
+            {
+                Id = SR.Id,
+                Message = SR.Message,
+                SupportRequestStatus = SR.Status.ToString(),
+                SupportRequestType = SR.Type.ToString(),
+                UserId = SR.UserId,
+                UserName = SR.User.FName + " " + SR.User.LName!,
+                UserEmail = SR.User.Email!
+            });
         }
 
         public bool UpdateSupportRequestStatus(UpdateSupportRequestDto updateSupportRequestDto)
         {
             var SupportRequest = unitOfWork.SupportRequestRepository.GetByID(updateSupportRequestDto.SupportRequestId);
 
-            if(SupportRequest is null)
+            if (SupportRequest is null)
                 return false;
-            
+
             SupportRequest.Status = updateSupportRequestDto.SupportRequestStatus;
             unitOfWork.SupportRequestRepository.Update(SupportRequest);
-            unitOfWork.SaveChanges();
+
             return true;
         }
     }

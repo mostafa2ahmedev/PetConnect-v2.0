@@ -10,9 +10,9 @@ namespace PetConnect.BLL.Services.DTOs.Support
     public class SupportRequestDto
     {
         public int Id { get; set; }
-        public SupportRequestType Type { get; set; }
+        public string SupportRequestType { get; set; } = null!;
 
-        public SupportRequestStatus Status { get; set; }
+        public string SupportRequestStatus { get; set; } = null!;
 
         public string Message { get; set; } = null!;
 

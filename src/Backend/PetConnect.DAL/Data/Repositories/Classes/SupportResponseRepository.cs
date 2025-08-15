@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetConnect.DAL.Data.GenericRepository;
+using PetConnect.DAL.Data.Identity;
 using PetConnect.DAL.Data.Models;
 using PetConnect.DAL.Data.Repositories.Interfaces;
 using System;
@@ -19,7 +20,11 @@ namespace PetConnect.DAL.Data.Repositories.Classes
             context = _context;
         }
 
+        public SupportRequest? GetUesrByRequestId(int SuppRquestId)
+        {
 
-     
+            return context.SupportRequests.SingleOrDefault(SR => SR.Id == SuppRquestId);
+        }
+
     }
 }

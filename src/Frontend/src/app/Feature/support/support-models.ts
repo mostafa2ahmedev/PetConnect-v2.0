@@ -8,8 +8,8 @@ export interface CreateSupportRequestDto {
 
 export interface SupportRequest {
   id: number;
-  type: number;
-  status: number;
+  supportRequestType: number;
+  supportRequestStatus: string;
   message: string;
   userId: string;
   userName: string;
@@ -18,6 +18,7 @@ export interface SupportRequest {
 
 export interface CreateSupportResponseDto {
   message: string;
+  subject: string;
   supportRequestId: number;
   status: number;
 }

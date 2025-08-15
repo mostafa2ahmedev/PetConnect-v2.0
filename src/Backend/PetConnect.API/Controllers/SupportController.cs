@@ -17,7 +17,7 @@ namespace PetConnect.API.Controllers
         private readonly ISupportRequestService supportRequestService;
         private readonly ISupportResponseService supportResponseService;
 
-        public SupportController(ISupportRequestService supportRequestService,ISupportResponseService supportResponseService)
+        public SupportController(ISupportRequestService supportRequestService, ISupportResponseService supportResponseService)
         {
             this.supportRequestService = supportRequestService;
             this.supportResponseService = supportResponseService;
@@ -30,7 +30,7 @@ namespace PetConnect.API.Controllers
         {
             var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var result= supportRequestService.CreateSupportRequest(UserId!, supportRequestDto);
+            var result = supportRequestService.CreateSupportRequest(UserId!, supportRequestDto);
             if (result)
                 return Ok(new GeneralResponse(200, "Support Request Created Successfully"));
             else
@@ -41,7 +41,7 @@ namespace PetConnect.API.Controllers
         [HttpGet("SupportRequests")]
         [ProducesResponseType(typeof(List<SupportRequestDto>), StatusCodes.Status200OK)]
         [EndpointSummary("Get Support Requests that need action From Admin")]
-        [Authorize(Roles = "Admin")]
+
 
         public ActionResult GetSupportRequests()
         {
@@ -53,14 +53,14 @@ namespace PetConnect.API.Controllers
 
         [HttpPost(template: "CreateSupportResponse")]
         [EndpointSummary("Create a Support Response")]
-        [Authorize(Roles = "Admin")]
+
         public ActionResult CreateSupportResponse(CreateSupportResponseDto supportRequestDto)
         {
-         
+
 
             var result = supportResponseService.CreateSupportResponse(supportRequestDto);
             if (result)
-                return Ok(new GeneralResponse(200, "Support Request Created Successfully"));
+                return Ok(new GeneralResponse(200, "Support Response Created Successfully"));
             else
                 return BadRequest("Error");
 

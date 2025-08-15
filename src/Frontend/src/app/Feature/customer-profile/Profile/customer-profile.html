@@ -383,6 +383,7 @@
                         [ngClass]="{
                           'bg-warning text-dark': appt.status === 'Pending',
                           'bg-info': appt.status === 'Confirmed',
+                          'bg-primary': appt.status === 'Completed',
                           'bg-danger': appt.status === 'Cancelled'
                         }"
                       >
@@ -390,7 +391,13 @@
                       </span>
                     </td>
                     <td>
-                      <button [disabled]="appt.status !== 'Confirmed'" class="review-button" (click)="writeReview(appt.id)">Write a Review</button>
+                      <button
+                        [disabled]="appt.status !== 'Confirmed'"
+                        class="review-button"
+                        (click)="writeReview(appt.id)"
+                      >
+                        Write a Review
+                      </button>
                     </td>
                     <!-- <td>{{ appt.createdAt | date : "medium" }}</td> -->
                   </tr>
@@ -446,9 +453,9 @@
                 <h4>{{ pet.name }}</h4>
                 <h6>
                   {{
-                    pet.status === "0"
+                    pet.status === 0
                       ? "Owned"
-                      : pet.status === "1"
+                      : pet.status === 1
                       ? "For Adoption"
                       : "For Rescue"
                   }}
