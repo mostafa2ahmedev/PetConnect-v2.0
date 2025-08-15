@@ -19,6 +19,6 @@ namespace PetConnect.DAL.Data.Repositories.Interfaces
         Task<Order?> GetOrderDetailsWithDeliveryMethod(string BuyerEmail, int id);
         Task<IEnumerable<Order>> GetOrderDetailsWithDeliveryMethodBuUserEmail(string BuyerEmail);
 
-
+        public  Task<Order?> GetOrderByPaymentIntentId(string paymentIntent);
     }
 }

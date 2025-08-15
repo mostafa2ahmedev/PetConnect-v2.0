@@ -39,6 +39,8 @@ namespace PetConnect.DAL.Services
             services.AddScoped<IBlogService, BlogService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IBasketService, BasketService>();
+            services.AddScoped<IPaymentService, PaymentService>();
+
             return services;
         } 
     }

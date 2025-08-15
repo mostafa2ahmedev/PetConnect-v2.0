@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using PetConnect.BLL.Services.DTOs.Basket;
 using PetConnect.BLL.Services.Interfaces;
+using PetConnect.DAL.Data.Repositories.Classes;
 using PetConnect.DAL.Data.Repositories.Interfaces;
 using PetConnect.DAL.UnitofWork;
 using Stripe;
@@ -17,13 +18,15 @@ namespace PetConnect.BLL.Services.Classes
         private readonly IConfiguration _configuration;
         private readonly IBasketRepository _basketRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IDeliveryMethodRepository _deliveryMethodRepository;
 
         public PaymentService(IConfiguration configuration,
-            IBasketRepository basketRepository,IUnitOfWork unitOfWork,IDel)
+            IBasketRepository basketRepository,IUnitOfWork unitOfWork,IDeliveryMethodRepository deliveryMethodRepository)
         {
             _configuration = configuration;
             _basketRepository = basketRepository;
             _unitOfWork = unitOfWork;
+            _deliveryMethodRepository = deliveryMethodRepository;
         }
         public async Task<CustomerBasketDto> CreateOrUpdatePaymentIntentAsync(string BasketId)
         {
@@ -40,7 +43,54 @@ namespace PetConnect.BLL.Services.Classes
 
             }
             ArgumentNullException.ThrowIfNull(Basket.deliveryMethodId);
-            var DeliveryMethod = 
+            var DeliveryMethod = _deliveryMethodRepository.GetByID(Basket.deliveryMethodId.Value) ?? throw new Exception(); ;
+
+            Basket.shippingPrice = DeliveryMethod.Cost;
+
+            var BasketAmount =(long) (Basket.Items.Sum(item => item.Quantity * item.Price) * DeliveryMethod.Cost)*100;
+
+
+            var PaymentService = new PaymentIntentService();
+            if (Basket.paymentIntentId is null)
+            {
+                var Options = new PaymentIntentCreateOptions()
+                {
+                    Amount = BasketAmount,
+                    Currency = "USD",
+                    PaymentMethodTypes = ["cards"]
+                };
+
+            }
+            else {
+                var Options = new PaymentIntentUpdateOptions() { Amount=BasketAmount};
+                await PaymentService.UpdateAsync(Basket.paymentIntentId,Options);
+            }
+            await _basketRepository.UpdateAsync(Basket, TimeSpan.FromDays(double.Parse(_configuration.GetSection("RedisSettings")["TimeToLiveInDays"])));
+           
+            List<BasketItemDto> basketItemDtos = new List<BasketItemDto>();
+
+            foreach (var item in Basket.Items)
+            {
+                basketItemDtos.Add( new BasketItemDto() {
+                ProductName= item.ProductName,
+                Brand = item.Brand,
+                Category =item.Category,
+                Id = item.Id,
+                PictureUrl=item.PictureUrl,
+                Price = item.Price,
+                Quantity = item.Quantity
+                });
+            }
+            
+            return new CustomerBasketDto() { 
+            
+            clientSecret = Basket.clientSecret,
+            deliveryMethodId = Basket.deliveryMethodId,
+            Id = Basket.Id,
+            Items = basketItemDtos,
+            paymentIntentId = Basket.paymentIntentId,
+            shippingPrice = Basket.shippingPrice
+            };
         }
     }
 }

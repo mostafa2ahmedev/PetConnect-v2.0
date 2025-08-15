@@ -81,5 +81,10 @@ namespace PetConnect.DAL.Data.Repositories.Classes
             return orders;
 
         }
+
+        public async Task<Order?> GetOrderByPaymentIntentId(string paymentIntent)
+        {
+            return await _context.Orders.SingleOrDefaultAsync(O => O.PaymentIntentId == paymentIntent);
+        }
     }
 }

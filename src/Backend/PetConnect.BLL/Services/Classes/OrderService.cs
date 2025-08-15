@@ -32,11 +32,15 @@ namespace PetConnect.BLL.Services.Classes
         public async Task<OrderToReturnDto> CreateOrderAsync(string UserId, string buyerEmail, OrderToCreateDto order)
         {
             // 1 . Get Basket From baskets Repo (Redis)
-            var basket = await _basketService.GetCustomerBasketAsync(order.BasketId);
-            var orderItems = new List<OrderProduct>();
+            var basket = await _basketService.GetCustomerBasketAsync(order.BasketId)?? throw new Exception();
+
+            ArgumentNullException.ThrowIfNullOrEmpty(basket.paymentIntentId);
+            var OrderRepo = _unitOfWork.OrderRepository;
+            var ExistingOrder =await _unitOfWork.OrderRepository.GetOrderByPaymentIntentId(basket.paymentIntentId);
+            if (ExistingOrder is not null) OrderRepo.Delete(ExistingOrder);
 
             // 2. Get Selected Items at Basket From Products Repo
-
+            var orderItems = new List<OrderProduct>();
             if (basket.Items.Count > 0)
             {
 
@@ -82,10 +86,11 @@ namespace PetConnect.BLL.Services.Classes
                         City = User.Address.City,
                         Country = User.Address.Country,
                         Street = User.Address.Street,
-                    }
-
+                    },
+                    PaymentIntentId = basket.paymentIntentId
+                    
                 };
-                _unitOfWork.OrderRepository.Add(orderToCreate);
+                OrderRepo.Add(orderToCreate);
 
                 var created = await _unitOfWork.SaveChangesAsync() > 0;
 
