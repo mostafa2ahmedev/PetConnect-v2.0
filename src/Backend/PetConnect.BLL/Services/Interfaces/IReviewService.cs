@@ -1,0 +1,19 @@
+﻿using PetConnect.BLL.Services.DTOs.Review;
+using PetConnect.DAL.Data.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace PetConnect.BLL.Services.Interfaces
+{
+    public interface IReviewService
+    {
+        IEnumerable<Review> GetByCustomerId(string customerId);
+        IEnumerable<Review> GetByDoctorId(string doctorId);
+        bool AnyByAppointment(Guid appointmentId);
+        Review AddReview(Review review);
+        bool DeleteReview(Guid reviewId);
+    }
+}

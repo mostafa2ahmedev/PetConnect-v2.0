@@ -40,6 +40,8 @@ namespace PetConnect.DAL.Data
         public DbSet<UserBlogCommentReplyLike> UserBlogCommentReplyLikes { get; set; }
         public DbSet<SupportRequest> SupportRequests { get; set; }
         public DbSet<SupportResponse> SupportResponses { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+
         public AppDbContext(DbContextOptions<AppDbContext> contextOptions) : base(contextOptions)
         {
             
