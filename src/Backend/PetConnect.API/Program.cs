@@ -42,7 +42,7 @@ namespace PetConnect.API
 
 
             // Repositories Services register
-            RepositoriesCollectionExtensions.AddDalRepositories(builder.Services);
+            RepositoriesCollectionExtensions.AddDalRepositories(builder.Services,builder.Configuration);
             ServicesCollectionExtensions.AddBLLRepositories(builder.Services);
 
             builder.Services.AddScoped<IAccountService, AccountService>();

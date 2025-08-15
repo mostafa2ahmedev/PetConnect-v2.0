@@ -22,7 +22,7 @@ import { OrdersComponent } from './Feature/orders/orders';
 import { ProductsComponent } from './Feature/Products/all-products/all-products';
 import { ProductDetailsComponent } from './Feature/Products/product-details/product-details';
 import { CartComponent } from './Feature/cart/cart';
-import {SellerDashboardComponent} from './Feature/seller-dashboard/seller-dashboard';
+import { SellerDashboardComponent } from './Feature/seller-dashboard/seller-dashboard';
 
 import { DoctorCustomerAppointment } from './Feature/Doctor/doctor-customer-appointment/doctor-customer-appointment';
 import { Doctor } from './Feature/profile/doctor/doctor';
@@ -52,15 +52,21 @@ import { SinglePost } from './Feature/Blog/single-post/single-post';
 import { AddBlog } from './Feature/Blog/add-blog/add-blog';
 import { Blogs } from './Feature/profile/doctor/blogs/blogs';
 import { UpdateBlog } from './Feature/Blog/update-blog/update-blog';
+
+import { NotFound } from './Feature/not-found/not-found';
+import { ReviewMainPage } from './Feature/Review/review-main-page/review-main-page';
+import { AddReview } from './Feature/Review/add-review/add-review';
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'home', component: Home },
+  {path:'review', component:AddReview},
   { path: 'doctors', component: Doctors },
   {
     path: 'doctors/appointment',
     component: DoctorCustomerAppointment,
-    canActivate: [authGuard],
+    canActivate: [authGuard, CustomerGuard],
   },
+  {path:'doctors/review',component:ReviewMainPage}  ,
   {
     path: 'doctors/timeslots',
     component: ShowAllDoctorTimeslots,
@@ -76,7 +82,6 @@ export const routes: Routes = [
   {
     path: 'doctors/update/:id',
     component: DoctorEditProfile,
-    canActivate: [doctorGuardGuard],
   },
   { path: 'pets', component: Pets },
   { path: 'pets/:mode', component: Pets },
@@ -156,21 +161,19 @@ export const routes: Routes = [
   { path: 'register', component: Register, children: [] },
   { path: 'register/doctor', component: DoctorRegisterForm },
   { path: 'register/customer', component: CustomerRegisterForm },
-  { path: 'register', component: Register ,children: []},
-  {path:"register/doctor", component:DoctorRegisterForm},
-  {path:"register/customer", component:CustomerRegisterForm},
-  {path: 'register/seller', component:SellerRegisterForm},
+  { path: 'register', component: Register, children: [] },
+  { path: 'register/doctor', component: DoctorRegisterForm },
+  { path: 'register/customer', component: CustomerRegisterForm },
+  { path: 'register/seller', component: SellerRegisterForm },
 
-  {path:"notfound/doctor",component:NotFoundDoctor},
- { path: 'orders', component: OrdersComponent },
- { path: 'all-products', component: ProductsComponent },
- {path: 'products/edit', component: EditProduct },
- { path: 'products/:id', component: ProductDetailsComponent },
+  { path: 'notfound/doctor', component: NotFoundDoctor },
+  { path: 'orders', component: OrdersComponent },
+  { path: 'all-products', component: ProductsComponent },
+  { path: 'products/edit', component: EditProduct },
+  { path: 'products/:id', component: ProductDetailsComponent },
   { path: 'cart', component: CartComponent },
   // {path: 'seller', component: SellerDashboardComponent },
-  {path: 'seller', component: Dashboard },
-
-
+  { path: 'seller', component: Dashboard },
 
   { path: 'register', component: Register, children: [] },
 
@@ -183,7 +186,7 @@ export const routes: Routes = [
     component: AdminDashboardComponent,
     canActivate: [authGuard, AdminGuard],
     children: [
-      { path: '', component: AdminInsights},
+      { path: '', component: AdminInsights },
 
       { path: 'categories', component: Categories },
       {
@@ -228,4 +231,5 @@ export const routes: Routes = [
     component: ChatComponent,
     canActivate: [authGuard, CustomerGuard],
   },
+  { path: '**', component: NotFound },
 ];

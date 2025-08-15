@@ -269,11 +269,16 @@
           routerLink="/"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
+          (click)="closeMobileMenu()"
           >Home</a
         >
       </li>
       <li>
-        <a class="nav-link" routerLink="/doctors" routerLinkActive="active"
+        <a
+          class="nav-link"
+          routerLink="/doctors"
+          routerLinkActive="active"
+          (click)="closeMobileMenu()"
           >Doctors</a
         >
       </li>
@@ -283,31 +288,57 @@
           routerLink="/pets"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
+          (click)="closeMobileMenu()"
           >All Pets</a
         >
       </li>
       <li *ngIf="isAuthenticated()">
-        <a class="nav-link" routerLink="/add-pet" routerLinkActive="active"
+        <a
+          class="nav-link"
+          routerLink="/add-pet"
+          routerLinkActive="active"
+          (click)="closeMobileMenu()"
           >Add Pet</a
         >
       </li>
       <li>
-        <a class="nav-link" routerLink="/contact" routerLinkActive="active"
+        <a
+          class="nav-link"
+          routerLink="/blog"
+          routerLinkActive="active"
+          (click)="closeMobileMenu()"
+          >Blog</a
+        >
+      </li>
+      <li>
+        <a
+          class="nav-link"
+          routerLink="/contact"
+          routerLinkActive="active"
+          (click)="closeMobileMenu()"
           >Contact</a
         >
       </li>
       <li *ngIf="!isAuthenticated()">
-        <a class="nav-link" routerLink="/login">Login</a>
+        <a class="nav-link" routerLink="/login" (click)="closeMobileMenu()"
+          >Login</a
+        >
       </li>
       <li *ngIf="!isAuthenticated()">
-        <a class="nav-link" routerLink="/register">Register</a>
+        <a class="nav-link" routerLink="/register" (click)="closeMobileMenu()"
+          >Register</a
+        >
       </li>
       <li *ngIf="isAuthenticated() && accountService.isAdmin()">
-        <a class="btn mt-2" routerLink="/admin">Dashboard</a>
+        <a class="btn mt-2" routerLink="/admin" (click)="closeMobileMenu()"
+          >Dashboard</a
+        >
       </li>
 
       <li *ngIf="isAuthenticated()">
-        <button class="btn mt-2" (click)="logout()">Logout</button>
+        <button class="btn mt-2" (click)="logout()" (click)="closeMobileMenu()">
+          Logout
+        </button>
       </li>
     </ul>
   </div>

@@ -1,0 +1,89 @@
+.testimonials-carousel {
+  max-width: 1200px;
+  margin: auto;
+}
+
+.testimonial-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgb(0 0 0 / 0.1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.testimonial-content p {
+  font-style: italic;
+  color: #555;
+  position: relative;
+  padding-left: 30px;
+}
+
+.testimonial-content .quote-icon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 30px;
+  color: #ff6f61;
+}
+
+.testimonial-profile {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.rating i {
+  color: #ff6f61;
+  margin-right: 4px;
+  font-size: 18px;
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-left: 15px;
+}
+
+.profile-info img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ff6f61;
+}
+
+.profile-info h3 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.profile-info h4 {
+  margin: 0;
+  font-weight: 400;
+  font-size: 14px;
+  color: #888;
+}
+.testimonial-group {
+  gap: 20px;
+}
+
+.testimonial-card {
+  flex: 1;
+  margin: 0 10px;
+}
+::ng-deep ngb-carousel .carousel-control-prev,
+::ng-deep ngb-carousel .carousel-control-next {
+  display: none !important;
+}
+.text-dark-yellow {
+  color: #c28800 !important;
+}
+.bg-orange {
+  background-color: #ff6f61;
+}

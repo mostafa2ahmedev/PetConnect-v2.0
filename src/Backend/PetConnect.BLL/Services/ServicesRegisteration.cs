@@ -40,6 +40,8 @@ namespace PetConnect.DAL.Services
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<ISupportRequestService, SupportRequestService>();
             services.AddScoped<ISupportResponseService, SupportResponseService>();
+
+            services.AddScoped<IBasketService, BasketService>();
             return services;
         } 
     }

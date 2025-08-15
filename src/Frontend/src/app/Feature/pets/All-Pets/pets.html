@@ -96,7 +96,7 @@
         data-aos="zoom-in"
         data-aos-delay="100"
       >
-        <div class="team-card text-center">
+        <div class="team-card">
           <a [routerLink]="['/pet-details', pet.id]">
             <div class="team-image">
               <img
@@ -105,9 +105,13 @@
                 [alt]="pet.name"
               /></div
           ></a>
-          <div class="team-content pet-info">
+          <div class="team-content pet-info text-start">
             <h4>{{ pet.name }}</h4>
-            <span>Age: {{ pet.age }} years</span>
+            <span class="fw-sem">
+              <i class="fas fa-birthday-cake me-2 text-primary"></i>
+              <span class="fw-semibold d-inline">Age:</span>
+              {{ pet.age }} years</span
+            >
             <span>{{ statusMap[pet.status] }}</span>
             <span
               class="text-success"
@@ -116,14 +120,19 @@
             >
 
             <span *ngIf="accountService.getUserId() !== pet.customerId"
-              ><span class="fw-semibold d-inline">Posted By:</span>
+              ><span class="fw-semibold d-inline">
+                <i class="fas fa-paw me-2 text-primary"></i>Owner:</span
+              >
               {{ pet.customerName }}</span
             >
             <span *ngIf="accountService.getUserId() !== pet.customerId"
-              ><span class="fw-semibold d-inline">From:</span>
+              ><span class="fw-semibold d-inline"
+                ><i class="fas fa-map-marker-alt me-2 text-primary"></i
+                >From:</span
+              >
               {{ pet.customerCity }}</span
             >
-            <div class="mt-3 d-flex justify-content-center gap-2">
+            <div class="mt-3 d-flex gap-2">
               <a
                 [routerLink]="['/pet-details', pet.id]"
                 class="btn btn-outline-primary btn-sm"
@@ -162,5 +171,107 @@
 
   <div *ngIf="error && !loading" class="alert alert-danger text-center mt-4">
     {{ error }}
+  </div>
+</section>
+<section
+  id="call-to-action-blog"
+  class="call-to-action-2 section light-background"
+  style="background-color: #5d57f4; color: #fff !important"
+>
+  <div
+    class="container aos-init aos-animate"
+    data-aos="fade-up"
+    data-aos-delay="100"
+  >
+    <div class="row g-5 align-items-center">
+      <!-- Content on the Left -->
+      <div
+        class="col-lg-6 aos-init aos-animate"
+        data-aos="fade-right"
+        data-aos-delay="300"
+      >
+        <div class="cta-content">
+          <h2 class="text-white">Adopt. Rescue. Love.<br /></h2>
+          <h3 class="text-white">
+            Your Guide to Giving Pets a Second Chance.<br />
+          </h3>
+
+          <p class="text-white" class="mt-3">
+            Every pet deserves a loving home. Whether you’re opening your heart
+            to a new companion or helping a stray find safety, you’re changing
+            lives — including your own. Our adoption and rescue guides are here
+            to make your journey smoother, kinder, and more rewarding.
+          </p>
+          <p class="text-white">
+            From understanding adoption procedures to preparing your home and
+            building trust with your new furry friend, we provide you with
+            everything you need to ensure a happy, healthy life together.
+          </p>
+
+          <div class="cta-features">
+            <div
+              class="feature-item aos-init aos-animate"
+              data-aos="zoom-in"
+              data-aos-delay="400"
+            >
+              <i class="bi bi-check-circle-fill text-white"></i>
+              <span>Step-by-Step Adoption Advice</span>
+            </div>
+            <div
+              class="feature-item aos-init aos-animate"
+              data-aos="zoom-in"
+              data-aos-delay="450"
+            >
+              <i class="bi bi-check-circle-fill text-white"></i>
+              <span>Rescue Success Stories</span>
+            </div>
+            <div
+              class="feature-item aos-init aos-animate"
+              data-aos="zoom-in"
+              data-aos-delay="500"
+            >
+              <i class="bi bi-check-circle-fill text-white"></i>
+              <span>Training & Adjustment Tips</span>
+            </div>
+            <div
+              class="feature-item aos-init aos-animate"
+              data-aos="zoom-in"
+              data-aos-delay="550"
+            >
+              <i class="bi bi-check-circle-fill text-white"></i>
+              <span>Health & Wellness Guidance</span>
+            </div>
+          </div>
+
+          <div class="cta-action mt-5">
+            <a [routerLink]="'/contact'" class="btn btn-outline-light btn-lg"
+              >Ask for Help</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Image on the Right -->
+      <div
+        class="col-lg-6 aos-init aos-animate"
+        data-aos="fade-left"
+        data-aos-delay="200"
+      >
+        <div class="cta-image-wrapper text-center">
+          <img
+            src="assets/PetImages/dog-blog.png"
+            alt="Adoption and Rescue Advice"
+            class="img-fluid rounded-4"
+            style="max-height: 400px"
+          />
+          <p class="mt-3 text-white" style="font-size: 0.95rem">
+            <em
+              >“Saving one animal won’t change the world, but it will change the
+              world for that one animal.”</em
+            >
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 </section>

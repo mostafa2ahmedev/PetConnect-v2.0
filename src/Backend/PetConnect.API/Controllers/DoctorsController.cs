@@ -26,7 +26,7 @@ namespace PetConnect.PL.Controllers
         // GET: api/doctors
         [HttpGet]
     
-        public IActionResult GetAll(string? name, decimal? maxPrice, PetSpecialty? specialty)
+        public IActionResult GetAll(string? name, decimal? maxPrice, PetSpecialty? specialty, string? city)
         {
             var doctors = doctorService.GetAll();
 
@@ -45,6 +45,10 @@ namespace PetConnect.PL.Controllers
             if (specialty.HasValue)
             {
                 doctors = doctors.Where(d => d.PetSpecialty == specialty.Value.ToString());
+            }
+            if (!string.IsNullOrEmpty(city))
+            {
+                doctors = doctors.Where(d => d.City.Contains(city, StringComparison.OrdinalIgnoreCase));
             }
 
             var filteredList = doctors.ToList();

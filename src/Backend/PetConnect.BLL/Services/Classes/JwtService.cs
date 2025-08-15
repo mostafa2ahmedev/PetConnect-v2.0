@@ -40,7 +40,7 @@ namespace PetConnect.BLL.Services.Classes
             //New
 
             claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
-
+            claims.Add(new Claim(ClaimTypes.Email, user.Email!));
             //New
             SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
 
