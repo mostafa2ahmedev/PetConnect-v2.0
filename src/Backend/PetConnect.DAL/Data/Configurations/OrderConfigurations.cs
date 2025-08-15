@@ -16,7 +16,7 @@ namespace PetConnect.DAL.Data.Configurations
         {
             builder.HasKey(o => o.Id);
             builder.Property(o => o.OrderDate).IsRequired();
-            builder.Property(o => o.TotalPrice).HasColumnType("decimal(18,2)");
+            builder.Property(o => o.SubTotal).HasColumnType("decimal(18,2)");
             builder.HasOne(o => o.customer).WithMany(o => o.Orders).HasForeignKey(o => o.CustomerId);
             builder.Property(O => O.OrderStatus)
               .HasConversion(
@@ -40,7 +40,9 @@ namespace PetConnect.DAL.Data.Configurations
                    .HasColumnType("varchar(20)");
             });
 
-            builder.HasOne(o => o.DeliveryMethod).WithOne().HasForeignKey<Order>(o => o.DeliveryMethodId);
+            builder.HasOne(o => o.DeliveryMethod).WithMany().HasForeignKey(o => o.DeliveryMethodId).OnDelete(DeleteBehavior.SetNull);
+            
+
         }
     }
 }

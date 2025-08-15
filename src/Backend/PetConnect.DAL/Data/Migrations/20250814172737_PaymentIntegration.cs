@@ -30,6 +30,11 @@ namespace PetConnect.DAL.Data.Migrations
                 name: "orderProducts",
                 newName: "OrderProducts");
 
+            migrationBuilder.RenameColumn(
+                name: "TotalPrice",
+                table: "Orders",
+                newName: "SubTotal");
+
             migrationBuilder.RenameIndex(
                 name: "IX_orderProducts_SellerId",
                 table: "OrderProducts",
@@ -85,7 +90,7 @@ namespace PetConnect.DAL.Data.Migrations
                     ShortName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DeliveryTime = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Cost = table.Column<int>(type: "int", nullable: false)
+                    Cost = table.Column<decimal>(type: "decimal(8,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -95,9 +100,7 @@ namespace PetConnect.DAL.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_DeliveryMethodId",
                 table: "Orders",
-                column: "DeliveryMethodId",
-                unique: true,
-                filter: "[DeliveryMethodId] IS NOT NULL");
+                column: "DeliveryMethodId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_OrderProducts_Orders_OrderId",
@@ -128,7 +131,8 @@ namespace PetConnect.DAL.Data.Migrations
                 table: "Orders",
                 column: "DeliveryMethodId",
                 principalTable: "DeliveryMethod",
-                principalColumn: "Id");
+                principalColumn: "Id",
+                onDelete: ReferentialAction.SetNull);
         }
 
         /// <inheritdoc />
@@ -184,6 +188,11 @@ namespace PetConnect.DAL.Data.Migrations
             migrationBuilder.RenameTable(
                 name: "OrderProducts",
                 newName: "orderProducts");
+
+            migrationBuilder.RenameColumn(
+                name: "SubTotal",
+                table: "Orders",
+                newName: "TotalPrice");
 
             migrationBuilder.RenameIndex(
                 name: "IX_OrderProducts_SellerId",
