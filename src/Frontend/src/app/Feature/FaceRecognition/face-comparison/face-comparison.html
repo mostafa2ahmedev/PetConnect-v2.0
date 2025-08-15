@@ -1,51 +1,60 @@
 <div class="container">
   <div class="card">
     <h2>Doctor Registration: Step 1 of 2</h2>
-    <p>
-      Please upload the following documents to verify your identity before
-      proceeding.
-    </p>
+    <p>Please upload the following documents to verify your identity.</p>
 
     <!-- منطقة رفع الملفات -->
     <div class="upload-section">
-      <!-- ID Card -->
-      <div class="file-upload-wrapper">
-        <label for="idCardInput">1. National ID Card Image</label>
-        <input
-          id="idCardInput"
-          type="file"
-          class="form-control"
-          (change)="onFileSelected($event, 'idCard')"
-          accept="image/*"
-        />
-        <img
-          *ngIf="image1Preview"
-          [src]="image1Preview"
-          alt="ID Card Preview"
-          class="preview-image"
-        />
+      <div class="image-upload-area">
+        <!-- ID Card Box -->
+        <div class="image-box-container">
+          <div class="image-box" (click)="idCardInput.click()">
+            <input
+              #idCardInput
+              type="file"
+              (change)="onFileSelected($event, 'idCard')"
+              accept="image/*"
+              style="display: none"
+            />
+            <ng-container *ngIf="image1Preview; else placeholder1">
+              <img [src]="image1Preview" alt="ID Card Preview" />
+            </ng-container>
+            <ng-template #placeholder1>
+              <span>1. National ID</span>
+            </ng-template>
+          </div>
+          <!-- زر الكاميرا الجديد -->
+          <button class="btn-camera" (click)="openCamera('idCard')">
+            <i class="fas fa-camera"></i> Open Camera
+          </button>
+        </div>
+
+        <!-- Profile Image Box -->
+        <div class="image-box-container">
+          <div class="image-box" (click)="profileImageInput.click()">
+            <input
+              #profileImageInput
+              type="file"
+              (change)="onFileSelected($event, 'profile')"
+              accept="image/*"
+              style="display: none"
+            />
+            <ng-container *ngIf="image2Preview; else placeholder2">
+              <img [src]="image2Preview" alt="Profile Image Preview" />
+            </ng-container>
+            <ng-template #placeholder2>
+              <span>2. Profile Image</span>
+            </ng-template>
+          </div>
+          <!-- زر الكاميرا الجديد -->
+          <button class="btn-camera" (click)="openCamera('profile')">
+            <i class="fas fa-camera"></i> Open Camera
+          </button>
+        </div>
       </div>
 
-      <!-- Profile Image -->
-      <div class="file-upload-wrapper">
-        <label for="profileImageInput">2. Clear Profile Image</label>
-        <input
-          id="profileImageInput"
-          type="file"
-          class="form-control"
-          (change)="onFileSelected($event, 'profile')"
-          accept="image/*"
-        />
-        <img
-          *ngIf="image2Preview"
-          [src]="image2Preview"
-          alt="Profile Image Preview"
-          class="preview-image"
-        />
-      </div>
-
-      <!-- Certificate -->
-      <div class="file-upload-wrapper">
+      <!-- Certificate Upload (يبقى كما هو) -->
+      <div class="file-upload-wrapper mt-3">
         <label for="certificateInput">3. Practice Certificate (PDF)</label>
         <input
           id="certificateInput"
@@ -54,10 +63,12 @@
           (change)="onFileSelected($event, 'certificate')"
           accept=".pdf"
         />
-        <!-- يمكن إضافة أيقونة أو نص لتأكيد رفع ملف الـ PDF -->
-        <span *ngIf="certificateFile" class="file-confirmation"
-          >✅ Certificate Uploaded: {{ certificateFile.name }}</span
+        <span
+          *ngIf="certificateFile"
+          class="file-confirmation text-success mt-1 d-block"
         >
+          ✅ Certificate Uploaded: {{ certificateFile.name }}
+        </span>
       </div>
     </div>
 
@@ -67,7 +78,7 @@
       [disabled]="
         isLoading || !idCardFile || !profileImageFile || !certificateFile
       "
-      class="btn btn-primary w-100 mt-3"
+      class="mt-4"
     >
       <span
         *ngIf="isLoading"
@@ -75,12 +86,23 @@
         role="status"
         aria-hidden="true"
       ></span>
-      {{ isLoading ? "Verifying..." : "Verify & Continue to Next Step" }}
+      {{ isLoading ? "Verifying..." : "Verify & Continue" }}
     </button>
 
     <!-- رسالة الخطأ -->
-    <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+    <div *ngIf="errorMessage" class="error-message">
       {{ errorMessage }}
     </div>
   </div>
+</div>
+
+<!-- واجهة الكاميرا (مخفية بشكل افتراضي) -->
+<div class="camera-modal" [class.active]="isCameraOpen">
+  <video #videoElement autoplay playsinline></video>
+  <button class="btn-capture" (click)="captureImage()">
+    <i class="fas fa-camera-retro"></i> Capture
+  </button>
+  <button class="btn-close-camera" (click)="closeCamera()">
+    <i class="fas fa-times"></i> Close
+  </button>
 </div>
