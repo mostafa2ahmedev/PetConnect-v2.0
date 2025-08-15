@@ -24,10 +24,11 @@ export class DoctorEditProfile implements OnInit {
   doctor: IDoctor | string = '';
   editedDoctor: IDoctorEdit = null as any;
   imageError: string = '';
+  IDCardError: string = '';
   certificateError: string = '';
   profileLoading = signal(true);
 
-  onFileChange(event: Event, type: 'image' | 'certificate') {
+  onFileChange(event: Event, type: 'image' | 'certificate' | 'IDCard') {
     const input = event.target as HTMLInputElement;
 
     if (input.files && input.files.length > 0) {
@@ -55,13 +56,25 @@ export class DoctorEditProfile implements OnInit {
         return;
       }
       // Clear error and assign the file
-      type === 'image'
-        ? ((this.imageError = ''), (this.editedDoctor.ImageFile = file))
-        : ((this.certificateError = ''),
-          (this.editedDoctor.CertificateFile = file));
+      this.setFileError(type, '');
+
+      if (type === 'image') {
+        this.editedDoctor.ImageFile = file;
+      } else if (type === 'certificate') {
+        this.editedDoctor.CertificateFile = file;
+      } else if (type === 'IDCard') {
+        this.editedDoctor.IDCardFile = file;
+      }
     }
   }
-
+  private setFileError(
+    type: 'image' | 'certificate' | 'IDCard',
+    message: string
+  ) {
+    if (type === 'image') this.imageError = message;
+    if (type === 'certificate') this.certificateError = message;
+    if (type === 'IDCard') this.IDCardError = message;
+  }
   ngOnInit(): void {
     this.activeRoute.params.subscribe((e) => {
       this.id = e['id'];
@@ -70,6 +83,7 @@ export class DoctorEditProfile implements OnInit {
         if (typeof this.doctor !== 'string') {
           this.doctor.imageFile = '';
           this.doctor.certificateFile = '';
+          console.log(this.doctor);
         }
         this.editedDoctor = this.doctorCastToEdit();
         this.profileLoading.set(false);
@@ -77,12 +91,13 @@ export class DoctorEditProfile implements OnInit {
     });
   }
   onSubmit() {
+    console.log(this.editedDoctor);
     if (this.doctor && typeof this.doctor !== 'string') {
       this.doctorsService
         .editByIdWithFile(this.id, this.editedDoctor)
         .subscribe({
           next: (response) => {
-            this.router.navigateByUrl('/doctors');
+            this.router.navigateByUrl('/doc-profile');
           },
           error: (error) => {
             console.error('Error updating doctor profile:', error);

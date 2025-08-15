@@ -1,0 +1,117 @@
+<div class="container mb-5">
+  <h2 class="mb-4 fw-bold text-primary">Support Center</h2>
+
+  <!-- Filter Section -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+      <form class="row g-3 align-items-end">
+        <!-- Username Filter -->
+        <div class="col-md-4">
+          <label for="filterUsername" class="form-label">Username</label>
+          <input
+            type="text"
+            id="filterUsername"
+            class="form-control"
+            placeholder="Enter username"
+            [(ngModel)]="filters.username"
+            name="username"
+          />
+        </div>
+
+        <!-- Type Filter -->
+        <div class="col-md-4">
+          <label for="filterType" class="form-label">Type</label>
+          <select
+            id="filterType"
+            class="form-select"
+            [(ngModel)]="filters.type"
+            name="type"
+          >
+            <option value="">All Types</option>
+            <option *ngFor="let key of typeKeys" [value]="key">
+              {{ typeMap[key]?.text }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Status Filter -->
+        <div class="col-md-4">
+          <label for="filterStatus" class="form-label">Status</label>
+          <select
+            id="filterStatus"
+            class="form-select"
+            [(ngModel)]="filters.status"
+            name="status"
+          >
+            <option value="">All Statuses</option>
+            <option *ngFor="let key of statusKeys" [value]="key">
+              {{ statusMap[key]?.text }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="col-12 text-end">
+          <button
+            type="button"
+            class="btn btn-primary me-2"
+            (click)="applyFilters()"
+          >
+            Apply Filters
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="resetFilters()"
+          >
+            Reset
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="text-center my-5">
+    <div class="spinner-border text-primary"></div>
+    <p class="mt-2 text-muted">Loading support requests...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div
+    *ngIf="!loading && filteredRequests.length === 0"
+    class="alert alert-info text-center shadow-sm"
+  >
+    No support requests found.
+  </div>
+
+  <!-- Support Requests -->
+  <div class="row g-4" *ngIf="!loading && filteredRequests.length > 0">
+    <div class="col-md-12" *ngFor="let req of filteredRequests">
+      <div class="card border-0 shadow-lg h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="card-title mb-0 fw-medium">
+              {{ req.userName }}
+            </h6>
+            <span class="badge bg-{{ typeMap[req.type]?.color }}">
+              {{ typeMap[req.type]?.text || "Unknown" }}
+            </span>
+          </div>
+          <p class="card-subtitle text-muted small">
+            {{ req.userEmail }}
+          </p>
+          <hr />
+          <p class="card-text">
+            {{ req.message }}
+          </p>
+        </div>
+        <div class="card-footer bg-light border-0 text-end">
+          <span class="badge bg-{{ statusMap[req.status]?.color }}">
+            {{ statusMap[req.status]?.text || "Unknown" }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

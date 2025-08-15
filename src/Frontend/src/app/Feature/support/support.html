@@ -1,0 +1,144 @@
+<section id="hero" class="hero section pb-0">
+  <div
+    class="container section-title aos-init aos-animate pb-0"
+    data-aos="fade-up"
+  >
+    <h2>Contact</h2>
+    <p>
+      Necessitatibus eius consequatur ex aliquid fuga eum quidem sint
+      consectetur velit
+    </p>
+  </div>
+  <!-- End Section Title -->
+</section>
+
+<section id="contact" class="contact section" style="background-color: #f7f6fe">
+  <div
+    class="container aos-init aos-animate"
+    data-aos="fade-up"
+    data-aos-delay="100"
+  >
+    <!-- <div class="row gy-4 mb-5">
+      <div
+        class="col-lg-4 aos-init aos-animate"
+        data-aos="fade-up"
+        data-aos-delay="100"
+      >
+        <div class="info-card">
+          <div class="icon-box">
+            <i class="bi bi-geo-alt"></i>
+          </div>
+          <h3>Our Address</h3>
+          <p>2847 Rainbow Road, Springfield, IL 62701, USA</p>
+        </div>
+      </div>
+
+      <div
+        class="col-lg-4 aos-init aos-animate"
+        data-aos="fade-up"
+        data-aos-delay="200"
+      >
+        <div class="info-card">
+          <div class="icon-box">
+            <i class="bi bi-telephone"></i>
+          </div>
+          <h3>Contact Number</h3>
+          <p>
+            Mobile: +1 (555) 123-4567<br />
+            Email: infoexample.com
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="col-lg-4 aos-init aos-animate"
+        data-aos="fade-up"
+        data-aos-delay="300"
+      >
+        <div class="info-card">
+          <div class="icon-box">
+            <i class="bi bi-clock"></i>
+          </div>
+          <h3>Opening Hour</h3>
+          <p>
+            Monday - Saturday: 9:00 - 18:00<br />
+            Sunday: Closed
+          </p>
+        </div>
+      </div>
+    </div> -->
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div
+          class="form-wrapper aos-init aos-animate"
+          data-aos="fade-up"
+          data-aos-delay="400"
+        >
+          <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+            <div class="row mt-3">
+              <!-- Phone -->
+              <div class="col-md-6 form-group">
+                <div class="input-group">
+                  <span class="input-group-text"
+                    ><i class="bi bi-phone"></i
+                  ></span>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="phone"
+                    placeholder="Phone number*"
+                  />
+                </div>
+              </div>
+
+              <!-- Subject / Type -->
+              <div class="col-md-6 form-group">
+                <div class="input-group">
+                  <span class="input-group-text"
+                    ><i class="bi bi-list"></i
+                  ></span>
+                  <select formControlName="type" class="form-control" required>
+                    <option value="" disabled selected>
+                      ---- Select service ---- *
+                    </option>
+                    <option value="0">Consulting</option>
+                    <option value="1">Development</option>
+                    <option value="2">Marketing</option>
+                    <option value="3">Support</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Message -->
+              <div class="form-group mt-3">
+                <div class="input-group">
+                  <span class="input-group-text"
+                    ><i class="bi bi-chat-dots"></i
+                  ></span>
+                  <textarea
+                    class="form-control"
+                    formControlName="message"
+                    rows="6"
+                    placeholder="Write a message*"
+                  ></textarea>
+                </div>
+              </div>
+
+              <!-- Submit -->
+              <div class="text-center mt-3">
+                <button
+                  type="submit"
+                  class="btn btn-success shadow-sm"
+                  [disabled]="contactForm.invalid"
+                >
+                  Submit Message
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

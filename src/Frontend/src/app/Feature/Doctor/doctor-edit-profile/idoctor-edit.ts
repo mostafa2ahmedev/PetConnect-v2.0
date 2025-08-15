@@ -13,4 +13,6 @@ export interface IDoctorEdit {
   City: string;
   IsApproved: boolean;
   PhoneNumber: string;
+  IDCardFile?: any;
+  IdCardUrl?: string;
 }

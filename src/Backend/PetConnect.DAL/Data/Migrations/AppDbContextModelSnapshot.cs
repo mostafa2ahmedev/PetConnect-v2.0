@@ -1221,6 +1221,10 @@ namespace PetConnect.DAL.Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(100)");
 
+                    b.Property<string>("IDCardUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PetSpecialty")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

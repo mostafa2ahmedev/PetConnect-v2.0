@@ -107,6 +107,7 @@ export class Doctor implements OnInit {
       next: (resp) => {
         if (typeof resp !== 'string') {
           this.doctor.set(resp);
+          console.log(resp);
           this.loading = false;
         }
       },

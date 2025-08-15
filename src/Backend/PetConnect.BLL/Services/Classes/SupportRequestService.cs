@@ -42,7 +42,7 @@ namespace PetConnect.BLL.Services.Classes
           Status= SR.Status,
           Type = SR.Type,
           UserId= SR.UserId,
-          UserName = SR.User.UserName!,
+          UserName = SR.User.FName +" "+ SR.User.LName!,
           UserEmail =SR.User.Email!
           });
         }

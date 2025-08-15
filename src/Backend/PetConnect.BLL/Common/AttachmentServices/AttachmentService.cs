@@ -12,29 +12,44 @@ namespace PetConnect.BLL.Common.AttachmentServices
     {
         private readonly List<string> _allowedExtensions = new() { ".png", ".jpg", ".jpeg" , ".pdf" };
 
-        private const int _allowedMaxSize = 2_097_152; //Can only take bytes
+        private const int _allowedMaxSize = 2_097_152; 
 
         public async Task<string?> UploadAsync(IFormFile file, string folderName)
         {
-            //Get the extension name from the filename (with dot)
+           
             var extension = Path.GetExtension(file.FileName);
 
             if (!_allowedExtensions.Contains(extension))
                 return null;
             if (file.Length > _allowedMaxSize)
                 return null;
-            //Get Folder Path
+            
             var folderPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\assets", folderName);
-            //The Unique Name for each image
+            
             var fileName = $"{Guid.NewGuid()}{extension}";
-            // file location
+            
             var filePath = Path.Combine(folderPath, fileName);
-            //file steram is an un managed resource so i must use using statment
+           
             using var fileStream = new FileStream(filePath, FileMode.Create);
-            //copy the file that is passed to the function which is the image to the file stream to save it.
+           
             await file.CopyToAsync(fileStream);
 
-            return fileName; // To be saved in database
+            return fileName; 
+        }
+        public async Task<string> UploadAsync(byte[] fileBytes, string fileName, string folderName)
+        {
+            var newFileName = $"{Guid.NewGuid()}{Path.GetExtension(fileName)}";
+            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "assets", folderName);
+
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            var fullPath = Path.Combine(folderPath, newFileName);
+            await File.WriteAllBytesAsync(fullPath, fileBytes); 
+
+            return newFileName;
         }
         public bool Delete(string filePath)
         {

@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductTypeService } from '../product-type-service';
 import { ProductType } from '../../../models/product-type';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-all-product-type',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './all-product-type.html',
   styleUrls: ['./all-product-type.css'],
 })

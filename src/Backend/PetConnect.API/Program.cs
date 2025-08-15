@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PetConnect.BLL.Common.AttachmentServices;
 using PetConnect.BLL.Services.Classes;
@@ -25,6 +25,7 @@ namespace PetConnect.API
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddHttpClient();
 
             builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
                .AddEntityFrameworkStores<AppDbContext>()
@@ -38,8 +39,6 @@ namespace PetConnect.API
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
-            //Repositories Services register
-
 
             // Repositories Services register
             RepositoriesCollectionExtensions.AddDalRepositories(builder.Services,builder.Configuration);
@@ -74,7 +73,6 @@ namespace PetConnect.API
             {
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    
                     ValidateAudience = true,
                     ValidAudience = builder.Configuration["Jwt:Audience"],
                     ValidateIssuer = true,
@@ -123,7 +121,6 @@ namespace PetConnect.API
                         return Task.CompletedTask;
                     }
                 };
-
             });
 
             var app = builder.Build();
@@ -140,11 +137,14 @@ namespace PetConnect.API
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseRouting();
-            app.UseCors(AngularCorsPolicy);
-            app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
+
+            app.UseRouting(); 
+
+            app.UseCors(AngularCorsPolicy); 
+
+            app.UseAuthentication(); 
+            app.UseAuthorization(); 
+
             app.MapControllers();
             app.Run();
 

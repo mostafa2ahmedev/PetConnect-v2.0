@@ -26,7 +26,7 @@ namespace PetConnect.API.Controllers
         [HttpPost(template: "CreateSupportRequest")]
         [EndpointSummary("Create a Support Request")]
         [Authorize]
-        public ActionResult CreateSupportRequest(CreateSupportRequestDto supportRequestDto)
+        public ActionResult CreateSupportRequest([FromBody]CreateSupportRequestDto supportRequestDto)
         {
             var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
