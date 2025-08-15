@@ -1,14 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using PetConnect.BLL.Services.DTOs;
+using PetConnect.BLL.Services.DTOs.Review;
 using PetConnect.BLL.Services.Interfaces;
-using PetConnect.DAL.Data.GenericRepository;
 using PetConnect.DAL.Data.Models;
 using PetConnect.DAL.Data.Repositories.Interfaces;
 using PetConnect.DAL.UnitofWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetConnect.BLL.Services.Classes
 {
@@ -17,22 +15,34 @@ namespace PetConnect.BLL.Services.Classes
         private readonly IReviewRepository _reviewRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-
-        public ReviewService(IReviewRepository reviewRepository , IUnitOfWork unitOfWork)
+        public ReviewService(IReviewRepository reviewRepository, IUnitOfWork unitOfWork)
         {
             _reviewRepository = reviewRepository;
             _unitOfWork = unitOfWork;
-
         }
 
-        public IEnumerable<Review> GetByCustomerId(string customerId)
+        public IEnumerable<ReviewDto> GetByCustomerId(string customerId)
         {
-            return _reviewRepository.GetByCustomerId(customerId);
+            var reviews = _reviewRepository.GetByCustomerId(customerId);
+            return reviews.Select(r => new ReviewDto
+            {
+                Id = r.Id,
+                Rating = r.Rating,
+                ReviewText = r.ReviewText,
+                ReviewDate = r.ReviewDate,
+            });
         }
 
-        public IEnumerable<Review> GetByDoctorId(string doctorId)
+        public IEnumerable<ReviewDto> GetByDoctorId(string doctorId)
         {
-            return _reviewRepository.GetByDoctorId(doctorId);
+            var reviews = _reviewRepository.GetByDoctorId(doctorId);
+            return reviews.Select(r => new ReviewDto
+            {
+                Id = r.Id,
+                Rating = r.Rating,
+                ReviewText = r.ReviewText,
+                ReviewDate = r.ReviewDate,
+            });
         }
 
         public bool AnyByAppointment(Guid appointmentId)
@@ -40,14 +50,30 @@ namespace PetConnect.BLL.Services.Classes
             return _reviewRepository.AnyByAppointment(appointmentId);
         }
 
-        public Review AddReview(Review review)
+        public ReviewDto AddReview(ReviewCreateDto dto)
         {
+            Review review = new Review
+            {
+                AppointmentId = dto.AppointmentId,
+                Rating = dto.Rating,
+                ReviewText = dto.ReviewText,
+                ReviewDate = DateTime.UtcNow
+            };
+
             _reviewRepository.Add(review);
-            _unitOfWork.SaveChanges();  
-                return review;
+            _unitOfWork.SaveChanges();
+
+            return new ReviewDto
+            {
+                Id = review.Id,
+                Rating = review.Rating,
+                ReviewText = review.ReviewText,
+                ReviewDate = review.ReviewDate,
+               
+            };
         }
 
-        public bool DeleteReview(Guid reviewId)
+        public bool DeleteReview(int reviewId)
         {
             var review = _reviewRepository.GetByID(reviewId);
             if (review == null)
@@ -58,6 +84,4 @@ namespace PetConnect.BLL.Services.Classes
             return true;
         }
     }
-
-
 }

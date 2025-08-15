@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using PetConnect.BLL.Services.Classes;
+﻿using Microsoft.AspNetCore.Mvc;
+using PetConnect.BLL.Services.DTOs.Review;
 using PetConnect.BLL.Services.Interfaces;
-using PetConnect.DAL.Data.Models;
+using System;
 
 namespace PetConnect.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class ReviewsController : ControllerBase
     {
         private readonly IReviewService _reviewService;
@@ -17,41 +16,35 @@ namespace PetConnect.API.Controllers
             _reviewService = reviewService;
         }
 
-        // GET: api/reviews/doctor/{doctorId}
-        [HttpGet("doctor/{doctorId}")]
-        public ActionResult<IEnumerable<Review>> GetByDoctorId(string doctorId)
+        [HttpPost]
+        public IActionResult AddReview([FromBody] ReviewCreateDto dto)
         {
-            var reviews = _reviewService.GetByDoctorId(doctorId);
-            return Ok(reviews);
+            if (dto == null)
+                return BadRequest("Review data is required.");
+
+            var review = _reviewService.AddReview(dto);
+            return CreatedAtAction(nameof(GetByCustomerId), new { customerId = review.CustomerId }, review);
         }
 
-        // GET: api/reviews/customer/{customerId}
-        [HttpGet("customer/{customerId}")]
-        public ActionResult<IEnumerable<Review>> GetByCustomerId(string customerId)
+        [HttpGet("by-customer/{customerId}")]
+        public IActionResult GetByCustomerId(string customerId)
         {
             var reviews = _reviewService.GetByCustomerId(customerId);
             return Ok(reviews);
         }
 
-        // POST: api/reviews
-        [HttpPost]
-        public ActionResult<Review> AddReview([FromBody] Review review)
+        [HttpGet("by-doctor/{doctorId}")]
+        public IActionResult GetByDoctorId(string doctorId)
         {
-            if (review == null)
-                return BadRequest("Review object is null");
-
-            var createdReview = _reviewService.AddReview(review);
-            return CreatedAtAction(nameof(GetByDoctorId), new { doctorId = createdReview.DoctorId }, createdReview);
+            var reviews = _reviewService.GetByDoctorId(doctorId);
+            return Ok(reviews);
         }
 
-        // DELETE: api/reviews/{reviewId}
-        [HttpDelete("{reviewId}")]
-        public IActionResult DeleteReview(Guid reviewId)
+        [HttpDelete("{id}")]
+        public IActionResult DeleteReview(int id)
         {
-            var result = _reviewService.DeleteReview(reviewId);
-            if (!result)
-                return NotFound();
-
+            var deleted = _reviewService.DeleteReview(id);
+            if (!deleted) return NotFound();
             return NoContent();
         }
     }

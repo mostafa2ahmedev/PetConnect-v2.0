@@ -10,10 +10,12 @@ namespace PetConnect.BLL.Services.Interfaces
 {
     public interface IReviewService
     {
-        IEnumerable<Review> GetByCustomerId(string customerId);
-        IEnumerable<Review> GetByDoctorId(string doctorId);
+        IEnumerable<ReviewDto> GetByDoctorId(string doctorId);
+        IEnumerable<ReviewDto> GetByCustomerId(string customerId);
         bool AnyByAppointment(Guid appointmentId);
-        Review AddReview(Review review);
-        bool DeleteReview(Guid reviewId);
+        ReviewDto AddReview(ReviewCreateDto dto);
+
+        bool DeleteReview(int reviewId);
+
     }
 }
