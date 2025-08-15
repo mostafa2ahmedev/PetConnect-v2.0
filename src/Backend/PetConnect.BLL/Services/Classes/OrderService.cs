@@ -8,8 +8,11 @@ using PetConnect.DAL.Data.Enums;
 using PetConnect.DAL.Data.Models;
 using PetConnect.DAL.Data.Repositories.Interfaces;
 using PetConnect.DAL.UnitofWork;
+using StackExchange.Redis;
+
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace PetConnect.BLL.Services.Classes
 {
@@ -17,28 +20,33 @@ namespace PetConnect.BLL.Services.Classes
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IBasketService _basketService;
-        private readonly IProductRepository _productRepository;
-        private readonly IUserRepository _userRepository;
 
-        public OrderService(IUnitOfWork unitOfWork , IBasketService basketService,IProductRepository productRepository , IUserRepository userRepository)
+
+
+        public OrderService(IUnitOfWork unitOfWork, IBasketService basketService, IProductRepository productRepository)
         {
             _unitOfWork = unitOfWork;
             _basketService = basketService;
-            _productRepository = productRepository;
-            _userRepository = userRepository;
+
         }
-        public async Task<OrderToReturnDto> CreateOrderAsync(string UserId,string buyerEmail, OrderToCreateDto order)
+        public async Task<OrderToReturnDto> CreateOrderAsync(string UserId, string buyerEmail, OrderToCreateDto order)
         {
+            // 1 . Get Basket From baskets Repo (Redis)
             var basket = await _basketService.GetCustomerBasketAsync(order.BasketId);
             var orderItems = new List<OrderProduct>();
-            if (basket.Items.Count > 0) {
-              
-                foreach (var item in basket.Items)
-                {
-                    var product = _productRepository.GetByID(item.Id);
 
-                    if(product is not null) {
-                        var productItemOrdered = new ProductItemOrdered()
+            // 2. Get Selected Items at Basket From Products Repo
+
+            if (basket.Items.Count > 0)
+            {
+
+                foreach (var BasketItemDto in basket.Items)
+                {
+                    var product = _unitOfWork.ProductRepository.GetByID(BasketItemDto.Id);
+
+                    if (product is not null)
+                    {
+                        var productItem = new ProductItemOrdered()
                         {
                             ProductId = product.Id,
                             ProductName = product.Name,
@@ -46,27 +54,26 @@ namespace PetConnect.BLL.Services.Classes
 
                         };
 
-                        var orderItem = new OrderProduct() {
-                        product = product,
-                        UnitPrice = product.Price,
-                        Quantity = item.Quantity,
-                        SellerId= product.SellerId,
-                        OrderProductStatus = OrderProductStatus.Pending,
-                        ProductId = product.Id,
-                        
-                        
-                        
+                        var orderItem = new OrderProduct()
+                        {
+                            product = product,
+                            UnitPrice = product.Price,
+                            Quantity = BasketItemDto.Quantity,
+                            SellerId = product.SellerId,
+                            OrderProductStatus = OrderProductStatus.Pending,
+                            ProductId = product.Id,
                         };
                         orderItems.Add(orderItem);
                     }
 
                 }
                 var subTotal = orderItems.Sum(item => item.UnitPrice * item.Quantity);
-                var User = _userRepository.GetByID(UserId);
-                var orderToCreate = new Order()
+                var User = _unitOfWork.UserRepository.GetByID(UserId);
+                var orderToCreate = new DAL.Data.Models.Order()
                 {
                     OrderProducts = orderItems,
                     DeliveryMethodId = order.DeliveryMethodId,
+                    DeliveryMethod = _unitOfWork.DeliveryMethodRepository.GetByID(order.DeliveryMethodId),
                     OrderStatus = OrderStatus.Pending,
                     CustomerId = UserId,
                     SubTotal = subTotal,
@@ -117,26 +124,135 @@ namespace PetConnect.BLL.Services.Classes
                     OrderDate = orderToCreate.OrderDate,
                     Id = orderToCreate.Id,
                     DeliveryMethod = orderToCreate?.DeliveryMethod?.ShortName,
-                    Total  = orderToCreate!.Total
+                    Total = orderToCreate?.Total ?? 0
                 };
             }
             throw new Exception();
 
         }
 
-        public Task<OrderToReturnDto> GetOrderByIdAsync(string buyerEmail, int orderId)
+
+
+
+        public async Task<OrderToReturnDto> GetOrderByIdAsync(string buyerEmail, int orderId)
         {
-            throw new NotImplementedException();
+            var order = await _unitOfWork.OrderRepository.GetOrderDetailsWithDeliveryMethod(buyerEmail, orderId);
+            var orderitemlistDtos = new List<OrderItemDto>();
+
+            foreach (var item in order?.OrderProducts)
+            {
+                orderitemlistDtos.Add(new OrderItemDto()
+                {
+                    Id = item.ProductId,
+                    Price = item.UnitPrice,
+                    Quantity = item.Quantity,
+
+                    Product = new ProductItemOrdered()
+                    {
+                        ProductId = item.ProductId,
+                        ProductName = item.product.Name,
+                        PictureUrl = item.product.ImgUrl ?? ""
+                    }
+
+
+                });
+
+            }
+            return new OrderToReturnDto()
+            {
+                BuyerEmail = buyerEmail,
+                DeliveryMethodId = order.DeliveryMethodId,
+                Id = order.Id,
+                OrderDate = order.OrderDate,
+                DeliveryMethod = order.DeliveryMethod?.ShortName,
+                Total = order.Total,
+                Status = order.OrderStatus.ToString(),
+                SubTotal = order.SubTotal,
+                ShippingAddress = new AddressDto()
+                {
+                    City = order.customer.Address.City,
+                    Country = order.customer.Address.Country,
+                    Street = order.customer.Address.Street,
+                },
+                OrderItems = orderitemlistDtos
+
+            };
+
         }
 
-        public Task<IEnumerable<OrderToReturnDto>> GetOrdersForUserAsync(string buyerEmail)
+        public async Task<IEnumerable<OrderToReturnDto>> GetOrdersForUserAsync(string buyerEmail)
         {
-            throw new NotImplementedException();
+            var userOrders = await _unitOfWork.OrderRepository.GetOrderDetailsWithDeliveryMethodBuUserEmail(buyerEmail);
+            var OrderItemDtos = new List<OrderToReturnDto>();
+
+            foreach (var order in userOrders)
+            {
+                var orderitemlistDtos = new List<OrderItemDto>();
+
+                foreach (var orderProduct in order.OrderProducts)
+                {
+                    orderitemlistDtos.Add(new OrderItemDto()
+                    {
+                        Id = orderProduct.ProductId,
+                        Price = orderProduct.UnitPrice,
+                        Quantity = orderProduct.Quantity,
+
+                        Product = new ProductItemOrdered()
+                        {
+                            ProductId = orderProduct.ProductId,
+                            ProductName = orderProduct.product.Name,
+                            PictureUrl = orderProduct.product.ImgUrl ?? ""
+                        }
+
+
+                    });
+
+                }
+                OrderItemDtos.Add(new OrderToReturnDto()
+                {
+                    BuyerEmail = buyerEmail,
+                    DeliveryMethodId = order.DeliveryMethodId,
+                    Id = order.Id,
+                    OrderDate = order.OrderDate,
+                    DeliveryMethod = order.DeliveryMethod?.ShortName,
+                    Total = order.Total,
+                    Status = order.OrderStatus.ToString(),
+                    SubTotal = order.SubTotal,
+                    ShippingAddress = new AddressDto()
+                    {
+                        City = order.customer.Address.City,
+                        Country = order.customer.Address.Country,
+                        Street = order.customer.Address.Street,
+                    },
+                    OrderItems = orderitemlistDtos
+
+                });
+            }
+
+
+            return OrderItemDtos;
+
+
+
+
         }
 
-        public Task<IEnumerable<DeliveryMethodDto>> GetDeliveryMethodsAsync()
+        public IEnumerable<DeliveryMethodDto> GetDeliveryMethodsAsync()
         {
-            throw new NotImplementedException();
+            var DeliveryMethods = _unitOfWork.DeliveryMethodRepository.GetAll();
+            List<DeliveryMethodDto> DeliveryMethodDtoList = new List<DeliveryMethodDto>();
+            foreach (var item in DeliveryMethods)
+            {
+                DeliveryMethodDtoList.Add(new DeliveryMethodDto()
+                {
+                    Id = item.Id,
+                    Cost = item.Cost,
+                    DeliveryTime = item.DeliveryTime,
+                    Description = item.Description,
+                    ShortName = item.ShortName
+                });
+            }
+            return DeliveryMethodDtoList;
         }
         #region Legacy Code (5ara)
 
@@ -145,7 +261,7 @@ namespace PetConnect.BLL.Services.Classes
 
 
 
-            var order = new Order
+            var order = new DAL.Data.Models.Order
             {
                 OrderDate = dto.OrderDate,
                 CustomerId = dto.CustomerId,
@@ -277,7 +393,7 @@ namespace PetConnect.BLL.Services.Classes
             }).ToList();
         }
 
-    
+
         #endregion
 
     }

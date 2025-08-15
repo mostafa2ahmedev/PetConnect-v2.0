@@ -18,16 +18,26 @@ namespace PetConnect.DAL.Data.Repositories.Classes
         {
             _context = context;
         }
+        #region LegacyCode (5ara)
 
         public List<Order> GetOrdersWithDetails()
         {
             return _context.Orders
                 .Include(o => o.customer)
                 .Include(o => o.OrderProducts)
+
                     .ThenInclude(op => op.product)
                 .ToList();
         }
+        public List<Order> GetOrdersDetails()
+        {
+            return _context.Orders
+                .Include(o => o.customer)
+                .Include(o => o.OrderProducts)
 
+                    .ThenInclude(op => op.product)
+                .ToList();
+        }
         public Order? GetOrderWithDetails(int id)
         {
             return _context.Orders
@@ -36,6 +46,7 @@ namespace PetConnect.DAL.Data.Repositories.Classes
                     .ThenInclude(op => op.product)
                 .FirstOrDefault(o => o.Id == id);
         }
+
         public List<Order> GetOrdersByCustomerId(string customerId)
         {
             return _context.Orders
@@ -43,7 +54,32 @@ namespace PetConnect.DAL.Data.Repositories.Classes
                 .Include(o => o.OrderProducts)
                     .ThenInclude(op => op.product)
                 .ToList();
+        } 
+        #endregion
+        public async Task<Order?> GetOrderDetailsWithDeliveryMethod(string BuyerEmail,int id)
+        {
+            return _context.Orders
+                .Include(o => o.customer)
+                .Include(o => o.OrderProducts)
+                .ThenInclude(op => op.product)
+                .Include(o => o.DeliveryMethod).Where(o=>o.customer.Email == BuyerEmail)
+                .FirstOrDefault(o => o.Id == id);
         }
+        public async Task<IEnumerable<Order>> GetOrderDetailsWithDeliveryMethodBuUserEmail(string BuyerEmail)
+        {
+            var orders = await _context.Orders
+            .Include(o => o.customer)
+            .Include(o => o.OrderProducts)  
+                .ThenInclude(op => op.product) 
+            .Include(o => o.DeliveryMethod)  
+            .Where(o => o.customer.Email == BuyerEmail) 
+            .ToListAsync();  
 
+  
+  
+
+            return orders;
+
+        }
     }
 }
