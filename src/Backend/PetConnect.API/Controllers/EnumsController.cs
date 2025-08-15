@@ -175,5 +175,19 @@ namespace PetConnect.API.Controllers
             return Ok(values);
         }
 
+        [HttpGet("SupportRequest-types")]
+        [EndpointSummary("Get Support Request Types")]
+        public IActionResult GetSupportRequestTypes()
+        {
+            var values = Enum.GetValues(typeof(SupportRequestType))
+                .Cast<SupportRequestType>()
+                .Select(e => new
+                {
+                    key = (int)e,
+                    value = e.ToString()
+                });
+
+            return Ok(values);
+        }
     }
 }

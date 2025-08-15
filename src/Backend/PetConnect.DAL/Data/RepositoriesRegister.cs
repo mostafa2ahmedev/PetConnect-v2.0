@@ -51,12 +51,15 @@ namespace PetConnect.DAL.Data
             services.AddScoped<IUserBlogCommentRepository, UserBlogCommentRepository>();
             services.AddScoped<IUserBlogCommentReplyLikeRepository, UserBlogCommentReplyLikeRepository>();
             services.AddScoped<IUserBlogCommentReplyRepository, UserBlogCommentReplyRepository>();
+            services.AddScoped<ISupportRequestRepository, SupportRequestRepository>();
+
             services.AddScoped(typeof(IConnectionMultiplexer), (serviceProvider) => {
                 return ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis")!);
             });
             services.AddScoped<IBasketRepository, BasketRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
 
+            services.AddScoped<ISupportResponseRepository, SupportResponseRepository>();
             return services;
         }
     }

@@ -49,8 +49,8 @@ namespace PetConnect.DAL.UnitofWork
         public IUserBlogCommentRepository UserBlogCommentRepository { get; }
         public IUserBlogCommentReplyRepository UserBlogCommentReplyRepository { get; }
 
-  
-
+        public ISupportRequestRepository SupportRequestRepository { get; }
+        public ISupportResponseRepository SupportResponseRepository { get; }
         public int SaveChanges();
         Task<int> SaveChangesAsync();
 
