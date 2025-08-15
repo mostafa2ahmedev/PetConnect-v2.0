@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetConnect.DAL.Data.Models
+namespace PetConnect.BLL.Services.DTOs.NewFolder
 {
-    public class DeliveryMethod
+    public class DeliveryMethodDto
     {
         public int Id { get; set; }
         public string ShortName { get; set; } = null!;

@@ -12,7 +12,7 @@ namespace PetConnect.BLL.Services.DTOs.Basket
     {
         [Required]
         public string Id { get; set; }
-        public IEnumerable<BasketItemDto> Items { get; set; } = new List<BasketItemDto>();
+        public ICollection<BasketItemDto> Items { get; set; } = new List<BasketItemDto>();
 
 
 

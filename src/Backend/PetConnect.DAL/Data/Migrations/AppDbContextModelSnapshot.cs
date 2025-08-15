@@ -506,8 +506,8 @@ namespace PetConnect.DAL.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Cost")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(8,2)");
 
                     b.Property<string>("DeliveryTime")
                         .IsRequired()
@@ -585,16 +585,14 @@ namespace PetConnect.DAL.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("TotalPrice")
+                    b.Property<decimal>("SubTotal")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("DeliveryMethodId")
-                        .IsUnique()
-                        .HasFilter("[DeliveryMethodId] IS NOT NULL");
+                    b.HasIndex("DeliveryMethodId");
 
                     b.ToTable("Orders");
                 });
@@ -1384,8 +1382,9 @@ namespace PetConnect.DAL.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("PetConnect.DAL.Data.Models.DeliveryMethod", "DeliveryMethod")
-                        .WithOne()
-                        .HasForeignKey("PetConnect.DAL.Data.Models.Order", "DeliveryMethodId");
+                        .WithMany()
+                        .HasForeignKey("DeliveryMethodId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.OwnsOne("PetConnect.DAL.Data.Models.Address", "ShippingAddress", b1 =>
                         {

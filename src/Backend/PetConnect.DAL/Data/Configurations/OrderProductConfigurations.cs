@@ -15,7 +15,7 @@ namespace PetConnect.DAL.Data.Configurations
         public void Configure(EntityTypeBuilder<OrderProduct> builder)
         {
             builder.HasKey(op => new { op.OrderId, op.ProductId });
-            builder.HasOne(o => o.order).WithMany(o => o.OrderProducts).HasForeignKey(o => o.OrderId);
+            builder.HasOne(o => o.order).WithMany(o => o.OrderProducts).HasForeignKey(o => o.OrderId).OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(p => p.product).WithMany(o => o.OrderProducts).HasForeignKey(o => o.ProductId);
             builder.Property(op => op.Quantity).IsRequired();
             builder.Property(op => op.UnitPrice).IsRequired().HasColumnType("decimal(18,2)");

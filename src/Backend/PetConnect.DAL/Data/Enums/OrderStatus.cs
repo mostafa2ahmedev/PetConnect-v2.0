@@ -8,6 +8,6 @@ namespace PetConnect.DAL.Data.Enums
 {
     public enum OrderStatus
     {
-        Pending, Shipped, Arrived
+        Pending, Shipped, Arrived, PaymentReceived, PaymentFailed
     }
 }

@@ -55,6 +55,8 @@ namespace PetConnect.DAL.Data
                 return ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis")!);
             });
             services.AddScoped<IBasketRepository, BasketRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+
             return services;
         }
     }

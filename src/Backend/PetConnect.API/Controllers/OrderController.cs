@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PetConnect.BLL.Services.DTOs.Basket;
 using PetConnect.BLL.Services.DTOs.Order;
 using PetConnect.BLL.Services.Interfaces;
+using System.Security.Claims;
 
 namespace PetConnect.API.Controllers
 {
@@ -44,7 +46,14 @@ namespace PetConnect.API.Controllers
             var orderId = _orderService.AddOrder(dto);
             return Ok(new { OrderId = orderId });
         }
-
+        [HttpPost("legacyCode")]
+        public async Task<IActionResult> CreateOrder(OrderToCreateDto OrderToCreateDto)
+        {
+            var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var customerEmail = User.FindFirstValue(ClaimTypes.Email);
+            var reuslt = await _orderService.CreateOrderAsync( customerId!, customerEmail!, OrderToCreateDto);
+            return Ok(reuslt);
+        }
         // PUT: api/Order
         [HttpPut]
         public IActionResult Update([FromBody] UpdatedOrderDTO dto)
