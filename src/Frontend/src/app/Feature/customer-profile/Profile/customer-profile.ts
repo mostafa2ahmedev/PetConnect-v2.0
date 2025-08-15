@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AdoptionService } from '../../../core/services/adoption-service';
 import { AdoptionResponse } from '../../../models/adoption-response';
 import { CustomerService } from '../customer-service';
@@ -40,7 +40,8 @@ export class CustomerProfile implements OnInit, OnDestroy {
     private alert: AlertService,
     private cdRef: ChangeDetectorRef,
     private notificationService: NotificationService,
-    private appointmentService: AppointmentService
+    private appointmentService: AppointmentService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -199,5 +200,8 @@ export class CustomerProfile implements OnInit, OnDestroy {
         console.error('Failed to load owned pets', err);
       },
     });
+  }
+  writeReview(appointmentId: number): void {
+    this.router.navigate(['/review'],{state:{appointmentId}});
   }
 }

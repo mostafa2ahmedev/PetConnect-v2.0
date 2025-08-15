@@ -348,6 +348,7 @@
                     <th>Doctor</th>
                     <th>Time Slot</th>
                     <th>Status</th>
+                    <th>Action</th>
                     <!-- <th>Created At</th> -->
                   </tr>
                 </thead>
@@ -387,6 +388,9 @@
                       >
                         {{ appt.status }}
                       </span>
+                    </td>
+                    <td>
+                      <button [disabled]="appt.status !== 'Confirmed'" class="review-button" (click)="writeReview(appt.id)">Write a Review</button>
                     </td>
                     <!-- <td>{{ appt.createdAt | date : "medium" }}</td> -->
                   </tr>

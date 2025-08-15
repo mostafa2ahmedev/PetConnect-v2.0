@@ -55,9 +55,11 @@ import { UpdateBlog } from './Feature/Blog/update-blog/update-blog';
 
 import { NotFound } from './Feature/not-found/not-found';
 import { ReviewMainPage } from './Feature/Review/review-main-page/review-main-page';
+import { AddReview } from './Feature/Review/add-review/add-review';
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'home', component: Home },
+  {path:'review', component:AddReview},
   { path: 'doctors', component: Doctors },
   {
     path: 'doctors/appointment',

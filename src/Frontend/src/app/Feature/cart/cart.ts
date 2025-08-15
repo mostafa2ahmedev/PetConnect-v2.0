@@ -69,6 +69,7 @@ export class CartComponent implements OnInit {
        error: (err) => {
       this.alertService.error('Error placing order')
       console.log(err);
+      console.log(order)
        }
       });
   }

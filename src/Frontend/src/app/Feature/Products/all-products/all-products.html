@@ -69,7 +69,7 @@
               <h4 class="card-title text-truncate mb-2 fw-bold">
                 {{ product.name }}
               </h4>
-
+              <p class="text-muted">{{ product.description }}</p>
               <span
                 class="badge border text-secondary small"
                 style="display: inline; white-space: nowrap"
@@ -77,10 +77,10 @@
                 {{ product.productTypeName }}
               </span>
               <p class="text-dark fw-semibold mb-3 mt-3">
-                {{ product.price | currency : "USD" }}
+                Price: {{ product.price | currency : "USD" }}
               </p>
               @if(product.quantity>0){
-              <!-- <p class="text-dark">In Stock : {{ product.quantity }}</p> -->
+              <p class="text-dark">In Stock : {{ product.quantity }}</p>
               <button
                 class="btn btn-sm btn-outline-primary mt-auto mx-auto rounded-pill px-3"
                 (click)="addToCart(product)"
