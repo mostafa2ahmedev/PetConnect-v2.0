@@ -68,6 +68,7 @@ namespace PetConnect.BLL.Services.DTO.Doctor
         public bool IsApproved { get; set; }
         public bool IsDeleted { get; set; }
 
+        public int? Rating { get; set; }
 
 
 

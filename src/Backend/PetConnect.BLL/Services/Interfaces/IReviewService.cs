@@ -16,6 +16,9 @@ namespace PetConnect.BLL.Services.Interfaces
         ReviewDto AddReview(ReviewCreateDto dto);
 
         bool DeleteReview(int reviewId);
+        IEnumerable<ReviewByIdDoctorDTO> GetDoctor(string doctorId);
+        IEnumerable<ReviewByCustomerDTO> GetCustomer(string customerId);
+        bool AddCustomerReview(ReviewCreatedByCustToDocDTO reviewDTO);
 
     }
 }

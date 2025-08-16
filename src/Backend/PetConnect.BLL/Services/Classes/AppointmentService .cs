@@ -149,7 +149,8 @@ namespace PetConnect.BLL.Services.Classes
                     DoctorName = $"{app.Doctor.FName} {app.Doctor.LName}",
                     PetImg = app.Pet.ImgUrl,
                     CustomerImg = app.Customer.ImgUrl,
-                    CustomerPhone= app.Customer.PhoneNumber
+                    CustomerPhone= app.Customer.PhoneNumber,
+                    DoctorId= app.DoctorId
                 });
             }
             return appointments;
@@ -178,7 +179,8 @@ namespace PetConnect.BLL.Services.Classes
                     DoctorName = $"{app.Doctor.FName} {app.Doctor.LName}",
                     PetImg = app.Pet.ImgUrl,
                     CustomerImg = app.Customer.ImgUrl,
-                    CustomerPhone = app.Customer.PhoneNumber
+                    CustomerPhone = app.Customer.PhoneNumber,
+                    DoctorId=app.DoctorId
                 });
             }
             return appointments;

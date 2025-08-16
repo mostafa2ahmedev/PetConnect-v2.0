@@ -39,3 +39,21 @@
 .btn-animated:hover i {
   transform: translateX(5px);
 }
+.btn-reviews-standout {
+  background-color: #5d57f4; /* Your primary color */
+  color: white;
+  border: 1px solid #5d57f4;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.6rem 1.2rem;
+  box-shadow: 0 8px 20px rgba(0, 123, 255, 0.1) !important;
+
+}
+
+.btn-reviews-standout:hover {
+  background-color: #4b46c2;
+  border-color: #4b46c2;
+  transform: translateY(-10px);
+
+}

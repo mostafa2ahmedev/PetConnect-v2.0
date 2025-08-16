@@ -19,7 +19,7 @@ namespace PetConnect.DAL.Data.Repositories.Classes
 
         public IEnumerable<Review> GetByCustomerId(string customerId)
         {
-            return _context.Reviews 
+            return _context.Review 
                 .Where(r => r.CustomerId == customerId)
                 .OrderByDescending(r => r.ReviewDate)
                 .Include(r => r.Doctor)
@@ -29,7 +29,7 @@ namespace PetConnect.DAL.Data.Repositories.Classes
 
         public IEnumerable<Review> GetByDoctorId(string doctorId)
         {
-            return _context.Reviews 
+            return _context.Review 
                 .Where(r => r.DoctorId == doctorId)
                 .OrderByDescending(r => r.ReviewDate)
                 .Include(r => r.Customer)
@@ -38,15 +38,15 @@ namespace PetConnect.DAL.Data.Repositories.Classes
 
         public bool AnyByAppointment(Guid appointmentId)
         {
-            return _context.Reviews 
+            return _context.Review 
                 .Any(r => r.AppointmentId == appointmentId);
         }
         public bool DeleteReview(int reviewId)
         {
-            var review = _context.Reviews.Find(reviewId);
+            var review = _context.Review.Find(reviewId);
             if (review == null) return false;
 
-            _context.Reviews.Remove(review);
+            _context.Review.Remove(review);
             _context.SaveChanges();
             return true;
         }

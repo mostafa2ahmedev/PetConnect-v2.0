@@ -20,9 +20,10 @@ import { TimeSlotsCustomerService } from './time-slots-customer-service';
 import { TimeSlotsWithCustomerIdStatusBookingDTO } from './time-slots-with-customer-id-status-booking-dto';
 import { Blog } from '../../Blog/blog-models';
 import { BlogService } from '../../Blog/blog-service';
+import { ReviewMainPage } from "../../Review/review-main-page/review-main-page";
 @Component({
   selector: 'app-doctor-profile',
-  imports: [CurrencyPipe, DatePipe, CommonModule, RouterModule],
+  imports: [CurrencyPipe, DatePipe, CommonModule, RouterModule, ReviewMainPage],
   templateUrl: './doctor-profile.html',
   styleUrl: './doctor-profile.css',
 })

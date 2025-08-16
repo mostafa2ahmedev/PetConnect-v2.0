@@ -8,10 +8,12 @@ import 'swiper/css/pagination'; // If you're using pagination
 // You also need to import the modules you will use
 import { Navigation, Pagination } from 'swiper/modules';
 import { Router } from '@angular/router';
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
+import { DoctorReviewModel } from '../models/doctor-review-model';
+import { ReviewsService } from '../reviews-service';
 @Component({
   selector: 'app-review-main-page',
-  imports: [],
+  imports: [DatePipe],
   templateUrl: './review-main-page.html',
   styleUrl: './review-main-page.css'
 })
@@ -20,56 +22,8 @@ export class ReviewMainPage implements OnInit , AfterViewInit{
     this.initSwiper();
   }
   ngOnInit(): void {
-    this.testimonials.push(  {
-    id: "t1",
-    content: "This product completely exceeded my expectations. The quality is top-notch and the customer service was outstanding.",
-    stars: [1, 1, 1, 1],
-    halfStar: true,
-    name: "Sarah Mitchell",
-    role: "Marketing Director",
-    imgSrc: "https://randomuser.me/api/portraits/women/44.jpg"
-  },
-  {
-    id: "t2",
-    content: "Really good experience overall. There were a few minor issues, but they were resolved quickly.",
-    stars: [1, 1, 1],
-    halfStar: true,
-    name: "James Carter",
-    role: "Software Engineer",
-    imgSrc: "https://randomuser.me/api/portraits/men/32.jpg"
-  },{    id: "t1",
-    content: "This product completely exceeded my expectations. The quality is top-notch and the customer service was outstanding.",
-    stars: [1, 1, 1, 1],
-    halfStar: true,
-    name: "Sarah Mitchell",
-    role: "Marketing Director",
-    imgSrc: "https://randomuser.me/api/portraits/women/44.jpg"
-  },
-  {
-    id: "t2",
-    content: "Really good experience overall. There were a few minor issues, but they were resolved quickly.",
-    stars: [1, 1, 1],
-    halfStar: true,
-    name: "James Carter",
-    role: "Software Engineer",
-    imgSrc: "https://randomuser.me/api/portraits/men/32.jpg"
-  },{    id: "t1",
-    content: "This product completely exceeded my expectations. The quality is top-notch and the customer service was outstanding.",
-    stars: [1, 1, 1, 1],
-    halfStar: true,
-    name: "Sarah Mitchell",
-    role: "Marketing Director",
-    imgSrc: "https://randomuser.me/api/portraits/women/44.jpg"
-  },
-  {
-    id: "t2",
-    content: "Really good experience overall. There were a few minor issues, but they were resolved quickly.",
-    stars: [1, 1, 1],
-    halfStar: true,
-    name: "James Carter",
-    role: "Software Engineer",
-    imgSrc: "https://randomuser.me/api/portraits/men/32.jpg"
-  })
+    if(!history.state.doctorId)
+      this.router.navigate(['/doctors'])
 
     this.doctorId=history.state.doctorId;
     this.doctorService.getById(history.state.doctorId).subscribe({
@@ -79,7 +33,16 @@ export class ReviewMainPage implements OnInit , AfterViewInit{
         this.doctorName=`${resp.fName} ${resp.lName}`;
 
         }
-        console.log(resp);
+      }
+    })
+
+    this.reviewService.getDoctorReviewsById(this.doctorId).subscribe({
+      next:resp=>{
+        this.testimonials= resp.data
+        console.log(resp.data);
+      },
+      error: err=>{
+        console.log(err);
       }
     })
   }
@@ -120,12 +83,19 @@ export class ReviewMainPage implements OnInit , AfterViewInit{
   makeReview(){
     this.router.navigate(['doctors','add-review'],{state:{doctorObj:this.doc}})
   }
+  arrayOfRating(rating:number){
+    return Array.from({length :rating},(_,i)=>i);
+  }
+  getFullImageUrl(relativePath: string): string {
+    return `https://localhost:7102${relativePath}`;
+  }
   doctorService = inject(DoctorsService)
   router=inject(Router)
   location = inject(Location)
 doctorName:string="";
 doctorId:string="" ;
 doc:any;
-  testimonials:{id:string,content:string, stars:number[],halfStar:boolean,name:string,role:string,imgSrc:string}[]=[];
-
+  // testimonials:{id:string,content:string, stars:number[],halfStar:boolean,name:string,role:string,imgSrc:string}[]=[];
+  testimonials:DoctorReviewModel[] = []; 
+  reviewService= inject(ReviewsService);
 }

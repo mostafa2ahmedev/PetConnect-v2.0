@@ -13,4 +13,5 @@ export interface IDoctor {
   city: string;
   isApproved: boolean;
   phoneNumber: string;
+  rating:number;
 }
