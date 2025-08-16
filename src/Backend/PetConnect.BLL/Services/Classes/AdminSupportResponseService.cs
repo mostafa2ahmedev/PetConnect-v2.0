@@ -37,14 +37,16 @@ namespace PetConnect.BLL.Services.Classes
             {
                 fileName = await _attachmentService.UploadAsync(supportResponseDto.PictureUrl, "img/support");
             }
+            string? PictureUrl = fileName != null ? $"/assets/img/support/{fileName}" : null;
+
             var SuppResponse = new AdminSupportResponse()
             {
                 Message = supportResponseDto.Message,
                 SupportRequestId = supportResponseDto.SupportRequestId,
                 LastActivity = DateTime.Now,
-                PictureUrl  = fileName != null ? $"/assets/img/support/{fileName}" : null,
-                
-                
+                PictureUrl  = PictureUrl
+
+
 
             };
             unitOfWork.SupportResponseRepository.Add(SuppResponse);
@@ -64,7 +66,7 @@ namespace PetConnect.BLL.Services.Classes
 
             
             var User = unitOfWork.UserRepository.GetByID(SuppRequestRecord.UserId);
-            await _emailService.SendEmailAsync(User!.Email!, supportResponseDto.Subject, supportResponseDto.Message);
+            await _emailService.SendEmailAsync(User!.Email!, supportResponseDto.Subject, supportResponseDto.Message, PictureUrl);
             return unitOfWork.SaveChanges() >= 1;
         }
 
