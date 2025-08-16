@@ -11,20 +11,16 @@ using System.Threading.Tasks;
 
 namespace PetConnect.DAL.Data.Repositories.Classes
 {
-    public class SupportResponseRepository : GenericRepository<SupportResponse>, ISupportResponseRepository
+    public class AdminSupportResponseRepository : GenericRepository<AdminSupportResponse>, IAdminSupportResponseRepository
     {
         private readonly AppDbContext context;
 
-        public SupportResponseRepository(AppDbContext _context) : base(_context)
+        public AdminSupportResponseRepository(AppDbContext _context) : base(_context)
         {
             context = _context;
         }
 
-        public SupportRequest? GetUesrByRequestId(int SuppRquestId)
-        {
 
-            return context.SupportRequests.SingleOrDefault(SR => SR.Id == SuppRquestId);
-        }
 
     }
 }

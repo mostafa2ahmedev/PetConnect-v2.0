@@ -18,6 +18,7 @@ namespace PetConnect.DAL.Data.Configurations
             builder.HasKey(SR => SR.Id);
          
             builder.Property(SR => SR.Message).HasColumnType("varchar(500)");
+            builder.Property(SR => SR.PictureUrl).HasColumnType("varchar(200)");
             builder.Property(SR => SR.Type)
              .HasConversion(
              Type => Type.ToString(),
@@ -28,8 +29,18 @@ namespace PetConnect.DAL.Data.Configurations
              Status => Status.ToString(),
              returnStatus => (SupportRequestStatus)Enum.Parse(typeof(SupportRequestStatus), returnStatus)
              );
-             builder.HasOne(SR => SR.User).WithMany(U => U.SupportRequests).HasForeignKey(SR => SR.UserId).OnDelete(DeleteBehavior.NoAction);
-    
+
+            builder.Property(SR => SR.Priority)
+             .HasConversion(
+             Priority => Priority.ToString(),
+             returnPriority => (SupportRequestPriority)Enum.Parse(typeof(SupportRequestPriority), returnPriority)
+             );
+
+            builder.HasOne(SR => SR.User).WithMany(U => U.SupportRequests).HasForeignKey(SR => SR.UserId).OnDelete(DeleteBehavior.NoAction);
+
+
+            builder.Property(SR => SR.CreatedAt).HasDefaultValueSql("GetDate()");
+
         }
     }
 }

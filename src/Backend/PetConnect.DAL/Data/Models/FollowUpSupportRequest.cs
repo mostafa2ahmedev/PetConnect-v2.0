@@ -6,13 +6,16 @@ using System.Threading.Tasks;
 
 namespace PetConnect.DAL.Data.Models
 {
-    public class SupportResponse
+    public class FollowUpSupportRequest
     {
-
         public int Id { get; set; }
-        public string Message { get; set; } = null!;
 
-        public int SupportRequestId { get; set; } 
+        public string Message { get; set; } = null!;
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? LastActivity { get; set; }
+        public string? PictureUrl { get; set; } = null!;
+
+        public int SupportRequestId { get; set; }
         public SupportRequest Request { get; set; } = null!;
     }
 }

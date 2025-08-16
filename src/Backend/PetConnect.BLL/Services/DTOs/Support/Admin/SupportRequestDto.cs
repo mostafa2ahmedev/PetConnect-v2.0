@@ -5,15 +5,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetConnect.BLL.Services.DTOs.Support
+namespace PetConnect.BLL.Services.DTOs.Support.Admin
 {
-    public class SupportRequestDto
+    public class AdminSupportRequestDto
     {
         public int Id { get; set; }
         public string SupportRequestType { get; set; } = null!;
 
         public string SupportRequestStatus { get; set; } = null!;
 
+        public string Priority { get; set; } = null!;
+
+        public string? CreatedAt { get; set; }
+
+        public string? LastActivity { get; set; }
         public string Message { get; set; } = null!;
 
         public string UserId { get; set; } = null!;

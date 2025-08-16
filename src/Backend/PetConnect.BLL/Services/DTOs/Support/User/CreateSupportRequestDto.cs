@@ -1,4 +1,5 @@
-﻿using PetConnect.DAL.Data.Enums;
+﻿using Microsoft.AspNetCore.Http;
+using PetConnect.DAL.Data.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetConnect.BLL.Services.DTOs.Support
+namespace PetConnect.BLL.Services.DTOs.Support.User
 {
     public class CreateSupportRequestDto
     {
@@ -15,5 +16,6 @@ namespace PetConnect.BLL.Services.DTOs.Support
         [Required(ErrorMessage = "Message Is Required")]
         public string Message { get; set; } = null!;
 
+        public IFormFile? PictureUrl { get; set; } = null!;
     }
 }

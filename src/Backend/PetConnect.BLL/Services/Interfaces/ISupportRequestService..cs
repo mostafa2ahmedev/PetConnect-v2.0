@@ -1,4 +1,5 @@
-﻿using PetConnect.BLL.Services.DTOs.Support;
+﻿using PetConnect.BLL.Services.DTOs.Support.Admin;
+using PetConnect.BLL.Services.DTOs.Support.User;
 using PetConnect.DAL.Data.Enums;
 using PetConnect.DAL.Data.Models;
 using System;
@@ -12,9 +13,16 @@ namespace PetConnect.BLL.Services.Interfaces
     public interface ISupportRequestService
     {
 
-        bool CreateSupportRequest(string UserId,CreateSupportRequestDto supportRequestDto);
+        Task<bool> CreateSupportRequest(string UserId,CreateSupportRequestDto supportRequestDto);
 
-        bool UpdateSupportRequestStatus(UpdateSupportRequestDto updateSupportRequestDto);
-        IEnumerable<SupportRequestDto> GetSupportRequests();
+        bool UpdateSupportRequestStatus(UpdateSupportRequestStatusDto updateSupportRequestDto);
+        IEnumerable<AdminSupportRequestDto> GetAdminSupportRequests();
+
+
+
+        IEnumerable<SubmittedSupportRequestDto> GetSubmittedSupportRequestsForUser(string UserId);
+
+
+        SubmittedSupportRequestDetailsDto? GetSubmittedSupportRequestsDetails(string Role,string UserId,int supportRequestId);
     }
 }
