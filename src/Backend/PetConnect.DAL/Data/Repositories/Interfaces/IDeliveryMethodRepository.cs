@@ -10,6 +10,6 @@ namespace PetConnect.DAL.Data.Repositories.Interfaces
 {
     public interface IDeliveryMethodRepository : IGenericRepository<DeliveryMethod>
     {
-        public SupportRequest? GetUesrByRequestId(int SuppRquestId);
+        public IEnumerable<DeliveryMethod> GetAllDeliveryMethods();
     }
 }

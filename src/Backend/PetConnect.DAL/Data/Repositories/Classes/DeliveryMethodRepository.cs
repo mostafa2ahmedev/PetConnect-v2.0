@@ -11,8 +11,16 @@ namespace PetConnect.DAL.Data.Repositories.Classes
 {
     public class DeliveryMethodRepository : GenericRepository<DeliveryMethod>,IDeliveryMethodRepository
     {
-        public DeliveryMethodRepository(AppDbContext _context) : base(_context)
+        private readonly AppDbContext _context;
+
+        public DeliveryMethodRepository(AppDbContext context) : base(context)
         {
+            _context = context;
+        }
+
+        public IEnumerable<DeliveryMethod> GetAllDeliveryMethods()
+        {
+            return _context.Set<DeliveryMethod>().ToList();
         }
     }
 }

@@ -1,15 +1,16 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using PetConnect.BLL.Services.DTOs.Basket;
 using PetConnect.BLL.Services.Interfaces;
 using PetConnect.DAL.Data.Repositories.Classes;
 using PetConnect.DAL.Data.Repositories.Interfaces;
 using PetConnect.DAL.UnitofWork;
 using Stripe;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetConnect.BLL.Services.Classes
 {
@@ -51,6 +52,7 @@ namespace PetConnect.BLL.Services.Classes
 
 
             var PaymentService = new PaymentIntentService();
+            PaymentIntent paymentIntent;
             if (Basket.paymentIntentId is null)
             {
                 var Options = new PaymentIntentCreateOptions()
@@ -59,6 +61,10 @@ namespace PetConnect.BLL.Services.Classes
                     Currency = "USD",
                     PaymentMethodTypes = ["cards"]
                 };
+                paymentIntent = await PaymentService.CreateAsync(options);
+
+                Basket.paymentIntentId = paymentIntent.Id;
+                Basket.clientSecret = paymentIntent.ClientSecret;
 
             }
             else {

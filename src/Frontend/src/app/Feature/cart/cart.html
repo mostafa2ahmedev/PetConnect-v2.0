@@ -1,38 +1,28 @@
 <section id="hero" class="hero section pb-0">
-  <div
-    class="container section-title aos-init aos-animate pb-0"
-    data-aos="fade-up"
-  >
+  <div class="container section-title aos-init aos-animate pb-0" data-aos="fade-up">
     <h2>Your Cart</h2>
 
     <div class="container mt-5 mb-5 col-md-7">
-      <!-- <h2>Your Cart</h2> -->
 
+      <!-- Empty Cart Message -->
       <div *ngIf="cartItems.length === 0" class="alert alert-info text-center">
         Your cart is empty.
       </div>
 
-      <div
-        *ngFor="let item of cartItems; let i = index"
-        class="card shadow-sm mb-3 border-0 p-2 rounded-3"
-      >
+      <!-- Cart Items -->
+      <div *ngFor="let item of cartItems; let i = index" class="card shadow-sm mb-3 border-0 p-2 rounded-3">
         <div class="row g-0 align-items-center">
+
           <!-- Product Image -->
           <div class="col-auto">
-            <img
-              [src]="server + item.imgUrl"
-              alt="{{ item.name }}"
-              class="rounded bg-light p-2"
-              style="height: 80px; width: 80px; object-fit: contain"
-            />
+            <img [src]="server + item.imgUrl" alt="{{ item.name }}" class="rounded bg-light p-2"
+              style="height: 80px; width: 80px; object-fit: contain" />
           </div>
 
           <!-- Product Info -->
           <div class="col ps-3">
             <h6 class="mb-1 fw-bold">{{ item.name }}</h6>
-            <small class="text-muted d-block mb-1">{{
-              item.description
-            }}</small>
+            <small class="text-muted d-block mb-1">{{ item.description }}</small>
             <div class="text-primary fw-semibold">
               {{ item.price | currency : "USD" }}
             </div>
@@ -40,34 +30,30 @@
 
           <!-- Quantity & Actions -->
           <div class="col-auto text-end">
-            <input
-              type="number"
-              [(ngModel)]="item.quantity"
-              min="1"
-              [max]="item.maxQuantity"
-              class="form-control form-control-sm text-center mb-1"
-              style="width: 60px"
-            />
+            <input type="number" [(ngModel)]="item.quantity" min="1" [max]="item.maxQuantity"
+              class="form-control form-control-sm text-center mb-1" style="width: 60px" />
             <small class="d-block text-secondary mb-1">
               {{ item.price * item.quantity | currency : "USD" }}
             </small>
-            <button
-              class="btn btn-link text-danger p-0 small"
-              (click)="removeItem(i)"
-            >
-              Remove
-            </button>
+            <button class="btn btn-link text-danger p-0 small" (click)="removeItem(i)">Remove</button>
           </div>
         </div>
       </div>
 
-      <div
-        *ngIf="cartItems.length > 0"
-        class="d-flex justify-content-end mt-3 gap-2"
-      >
-        <button class="btn btn-dark" (click)="clearCart()">Clear Cart</button>
-        <button class="btn btn-primary" (click)="checkout()">Checkout</button>
+      <!-- Checkout Section -->
+      <div *ngIf="cartItems.length > 0" class="d-flex flex-column justify-content-end mt-3 gap-3">
+
+        <!-- Stripe Card Element -->
+        <div id="card-element" class="mb-3" style="border: 1px solid #ccc; padding: 10px; border-radius: 5px;"></div>
+
+        <!-- Buttons -->
+        <div class="d-flex gap-2">
+          <button class="btn btn-dark" (click)="clearCart()">Clear Cart</button>
+          <button class="btn btn-primary" (click)="checkout()">Checkout</button>
+        </div>
+
       </div>
+
     </div>
   </div>
 </section>
