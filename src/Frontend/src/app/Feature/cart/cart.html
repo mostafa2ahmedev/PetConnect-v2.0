@@ -1,59 +1,82 @@
-<section id="hero" class="hero section pb-0">
-  <div class="container section-title aos-init aos-animate pb-0" data-aos="fade-up">
-    <h2>Your Cart</h2>
+<section class="cart-section py-4">
+  <div class="container">
+    <h2 class="mb-4">Your Cart</h2>
 
-    <div class="container mt-5 mb-5 col-md-7">
+    <!-- Empty Cart Message -->
+    <div *ngIf="cartItems.length === 0" class="alert alert-info">
+      Your cart is empty.
+    </div>
 
-      <!-- Empty Cart Message -->
-      <div *ngIf="cartItems.length === 0" class="alert alert-info text-center">
-        Your cart is empty.
-      </div>
+    <!-- Cart Items -->
+    <div *ngFor="let item of cartItems; let i = index" class="cart-item card mb-3 p-3">
+      <div class="row align-items-center">
+        <!-- Product Image -->
+        <div class="col-2">
+          <img [src]="server + item.imgUrl" [alt]="item.name" class="img-fluid">
+        </div>
 
-      <!-- Cart Items -->
-      <div *ngFor="let item of cartItems; let i = index" class="card shadow-sm mb-3 border-0 p-2 rounded-3">
-        <div class="row g-0 align-items-center">
+        <!-- Product Info -->
+        <div class="col-6">
+          <h6 class="mb-1">{{item.name}}</h6>
+          <p class="text-muted small mb-1">{{item.description}}</p>
+          <div class="price">{{item.price | currency:'USD'}}</div>
+        </div>
 
-          <!-- Product Image -->
-          <div class="col-auto">
-            <img [src]="server + item.imgUrl" alt="{{ item.name }}" class="rounded bg-light p-2"
-              style="height: 80px; width: 80px; object-fit: contain" />
+        <!-- Quantity Controls -->
+        <div class="col-4 text-end">
+          <div class="d-flex align-items-center justify-content-end gap-2">
+            <input type="number" 
+                   [(ngModel)]="item.quantity"
+                   min="1" 
+                   [max]="item.maxQuantity || 99"
+                   class="form-control form-control-sm" 
+                   style="width: 60px">
+            
+            <button class="btn btn-sm btn-outline-danger" (click)="removeItem(i)">
+              <i class="bi bi-trash"></i>
+            </button>
           </div>
-
-          <!-- Product Info -->
-          <div class="col ps-3">
-            <h6 class="mb-1 fw-bold">{{ item.name }}</h6>
-            <small class="text-muted d-block mb-1">{{ item.description }}</small>
-            <div class="text-primary fw-semibold">
-              {{ item.price | currency : "USD" }}
-            </div>
-          </div>
-
-          <!-- Quantity & Actions -->
-          <div class="col-auto text-end">
-            <input type="number" [(ngModel)]="item.quantity" min="1" [max]="item.maxQuantity"
-              class="form-control form-control-sm text-center mb-1" style="width: 60px" />
-            <small class="d-block text-secondary mb-1">
-              {{ item.price * item.quantity | currency : "USD" }}
-            </small>
-            <button class="btn btn-link text-danger p-0 small" (click)="removeItem(i)">Remove</button>
+          <div class="mt-2 fw-bold">
+            {{item.price * item.quantity | currency:'USD'}}
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Checkout Section -->
-      <div *ngIf="cartItems.length > 0" class="d-flex flex-column justify-content-end mt-3 gap-3">
-
-        <!-- Stripe Card Element -->
-        <div id="card-element" class="mb-3" style="border: 1px solid #ccc; padding: 10px; border-radius: 5px;"></div>
-
-        <!-- Buttons -->
-        <div class="d-flex gap-2">
-          <button class="btn btn-dark" (click)="clearCart()">Clear Cart</button>
-          <button class="btn btn-primary" (click)="checkout()">Checkout</button>
-        </div>
-
+    <!-- Checkout Section -->
+    <div *ngIf="cartItems.length > 0" class="checkout-section mt-4">
+      <!-- Stripe Card Element -->
+      <div id="card-element" class="stripe-card mb-3"></div>
+      
+      <div class="d-flex justify-content-between">
+        <button class="btn btn-outline-dark" (click)="clearCart()">
+          Clear Cart
+        </button>
+        <button class="btn btn-primary" (click)="checkout()">
+          Checkout Now
+        </button>
       </div>
-
     </div>
   </div>
 </section>
+
+<!-- Checkout Modal -->
+<ng-template #checkoutModal>
+  <div class="modal-header">
+    <h4>Complete Your Purchase</h4>
+  </div>
+  <div class="modal-body">
+    <!-- Stripe Card Element -->
+    <div #cardElement class="stripe-card-element"></div>
+    
+    <!-- Payment Button -->
+    <button (click)="confirmPayment()" class="btn btn-primary mt-3">
+      Pay Now
+    </button>
+  </div>
+</ng-template>
+
+<!-- Trigger Button -->
+<button (click)="openCheckoutModal()" class="btn btn-success">
+  Proceed to Checkout
+</button>

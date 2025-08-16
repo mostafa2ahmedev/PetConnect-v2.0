@@ -29,6 +29,7 @@ namespace PetConnect.BLL.Services.Classes
             _unitOfWork = unitOfWork;
             _deliveryMethodRepository = deliveryMethodRepository;
         }
+
         public async Task<CustomerBasketDto> CreateOrUpdatePaymentIntentAsync(string BasketId)
         {
             StripeConfiguration.ApiKey = _configuration["StripeSettings:SecretKey"];
@@ -59,7 +60,7 @@ namespace PetConnect.BLL.Services.Classes
                 {
                     Amount = BasketAmount,
                     Currency = "USD",
-                    PaymentMethodTypes = ["cards"]
+                    PaymentMethodTypes = ["card"]
                 };
                 paymentIntent = await PaymentService.CreateAsync(Options);
 

@@ -1,52 +1,86 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, OnDestroy, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth';
-import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { AlertService } from '../../core/services/alert-service';
-import { CartService } from './cart-service';
 import { FormsModule } from '@angular/forms';
-import { loadStripe, Stripe } from '@stripe/stripe-js';
+import { loadStripe, Stripe, StripeCardElement } from '@stripe/stripe-js';
+import { Subscription } from 'rxjs';
+import { CartService } from './cart-service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
+interface CartItem {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  quantity: number;
+  maxQuantity?: number;
+  imgUrl: string;
+  brand?: string;
+  category?: string;
+}
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './cart.html',
-  styleUrls: ['./cart.css'],
+  styleUrls: ['./cart.css']
 })
-export class CartComponent implements OnInit, AfterViewInit {
-  cartItems: any[] = [];
+export class CartComponent implements AfterViewInit, OnDestroy {
+  @ViewChild('cardElement') cardElementRef!: ElementRef;
+  @ViewChild('checkoutModal') checkoutModal!: TemplateRef<any>;
+  cartItems: CartItem[] = [];
   server = 'https://localhost:7102';
-  stripe!: Stripe | null;
-  cardElement: any;
+  stripe: Stripe | null = null;
+  cardElement: StripeCardElement | null = null;
+  private cartSubscription!: Subscription;
+  currentClientSecret: string | null = null;
+  paymentProcessing = false;
 
   constructor(
     private http: HttpClient,
     private authService: AuthService,
     private router: Router,
     private alertService: AlertService,
-    private cartService: CartService
+    private cartService: CartService,
+    private modalService: NgbModal
   ) {}
 
-  async ngOnInit() {
-    // Load Stripe
-    this.stripe = await loadStripe('your_stripe_publishable_key_here');
-
-    // Subscribe to cart items
-    this.cartService.cart$.subscribe((items) => {
+  ngOnInit() {
+    this.cartSubscription = this.cartService.cart$.subscribe(items => {
       this.cartItems = items;
     });
   }
 
-  ngAfterViewInit() {
-    // Mount Stripe card element after view initialization
-    if (this.stripe) {
-      const elements = this.stripe.elements();
-      this.cardElement = elements.create('card');
-      this.cardElement.mount('#card-element');
+  async ngAfterViewInit() {
+    try {
+      this.stripe = await loadStripe('your_publishable_key_here');
+      if (this.stripe && this.cardElementRef?.nativeElement) {
+        const elements = this.stripe.elements();
+        this.cardElement = elements.create('card');
+        this.cardElement.mount(this.cardElementRef.nativeElement);
+      }
+    } catch (error) {
+      console.error('Stripe initialization error:', error);
+      this.alertService.error('Payment system initialization failed');
     }
+  }
+
+  ngOnDestroy() {
+    if (this.cardElement) {
+      this.cardElement.unmount();
+    }
+    if (this.cartSubscription) {
+      this.cartSubscription.unsubscribe();
+    }
+  }
+
+  updateQuantity(index: number, quantity: number) {
+    const newQuantity = Math.max(1, Math.min(quantity, this.cartItems[index].maxQuantity || 99));
+    this.cartService.updateQuantity(index, newQuantity);
   }
 
   removeItem(index: number) {
@@ -57,91 +91,98 @@ export class CartComponent implements OnInit, AfterViewInit {
     this.cartService.clearCart();
   }
 
-  async checkout() {
+  async proceedToCheckout() {
     const customerId = this.authService.getCustomerIdFromToken();
     if (!customerId) {
       this.alertService.error('Please login first!');
       return;
     }
 
-    // Prepare basket DTO
-    const basketDto = {
-      id: customerId, // or your basket ID logic
-      items: this.cartItems.map((item) => ({
-        id: item.id,
-        productName: item.productName,
-        quantity: item.quantity,
-        price: item.price,
-        pictureUrl: item.pictureUrl,
-        brand: item.brand,
-        category: item.category,
-      })),
-    };
+    if (this.cartItems.length === 0) {
+      this.alertService.error('Your cart is empty');
+      return;
+    }
 
     try {
-      // Save basket to Redis
-      await this.http.post(`${this.server}/api/basket`, basketDto).toPromise();
+      // 1. Save cart to Redis
+      const basketId = `basket_${customerId}`;
+      const basketDto = {
+        id: basketId,
+        items: this.cartItems.map(item => ({
+          id: item.id,
+          productName: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          pictureUrl: item.imgUrl
+        }))
+      };
 
-      // Create or update Stripe PaymentIntent
-      const paymentResp: any = await this.http
-        .post(`${this.server}/api/payment/${basketDto.id}`, {})
-        .toPromise();
+      await this.http.post(`${this.server}/api/Basket`, basketDto).toPromise();
 
-      const clientSecret = paymentResp.clientSecret;
-      if (!clientSecret) throw new Error('Failed to get client secret');
+      // 2. Create payment intent
+      const paymentResp = await this.http.post<{ clientSecret: string }>(
+        `${this.server}/api/Payment/${basketId}`, 
+        {}
+      ).toPromise();
 
-      // Confirm payment with Stripe
-      const { error, paymentIntent } = await this.stripe!.confirmCardPayment(
-        clientSecret,
+      if (!paymentResp?.clientSecret) {
+        throw new Error('Failed to get payment client secret');
+      }
+
+      this.currentClientSecret = paymentResp.clientSecret;
+      
+      // 3. Open checkout modal
+      this.modalService.open(this.checkoutModal, { 
+        size: 'lg',
+        backdrop: 'static' // Prevent closing by clicking outside
+      });
+
+    } catch (error: any) {
+      console.error('Checkout preparation error:', error);
+      this.alertService.error(error.error?.message || error.message || 'Checkout preparation failed');
+    }
+  }
+
+  async confirmPayment() {
+    if (!this.currentClientSecret || !this.stripe || !this.cardElement) {
+      this.alertService.error('Payment system not ready');
+      return;
+    }
+
+    this.paymentProcessing = true;
+
+    try {
+      const { error, paymentIntent } = await this.stripe.confirmCardPayment(
+        this.currentClientSecret,
         {
           payment_method: {
             card: this.cardElement,
-          },
+            billing_details: {
+              name:  'Customer'
+            }
+          }
         }
       );
 
       if (error) {
-        this.alertService.error(error.message!);
-        return;
+        throw error;
       }
 
-      // Payment successful: clear cart and navigate
+      if (paymentIntent?.status !== 'succeeded') {
+        throw new Error('Payment not completed');
+      }
+
+      // Success - close modal and clear cart
+      this.modalService.dismissAll();
       this.cartService.clearCart();
       this.alertService.success('Payment successful!');
       this.router.navigate(['/orders']);
-    } catch (err: any) {
-      console.error(err);
-      this.alertService.error('Checkout failed!');
+
+    } catch (error: any) {
+      console.error('Payment confirmation error:', error);
+      this.alertService.error(error.message || 'Payment failed');
+    } finally {
+      this.paymentProcessing = false;
     }
   }
 }
-
-
-      // checkout() {
-      //   const customerId = this.authService.getCustomerIdFromToken();
-      //   if (!customerId) {
-      //     this.alertService.error('Please login first!');
-      //     return;
-      //   }
-    
-      //   const order = {
-      //     orderDate: new Date().toISOString(),
-      //     customerId: customerId,
-      //     products: this.cartItems.map(item => ({
-      //       orderId: 0,
-      //       productId: item.id,
-      //       quantity: item.quantity,
-      //       unitPrice: item.price,
-      //     }))
-      //   };
-    
-      // this.http.post(`${this.server}/api/Order`, order).subscribe({next: (res) => {
-      //     this.alertService.success('Order placed successfully:');
-      //      this.clearCart();
-      //     this.router.navigate(['/orders']); },
-      //      error: (err) => {
-      //     this.alertService.error('Error placing order')
-      //     console.log(err);
-      //      }
-      //     });
-      // }

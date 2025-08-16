@@ -19,12 +19,11 @@ namespace PetConnect.API.Controllers
         [Authorize]
         [HttpPost("{BasketId}")]
 
-        public async Task<ActionResult<CustomerBasketDto>> CreateOrUpdatePaymentIntent(string BasketId) { 
-        
-        var Basket =await paymentService.CreateOrUpdatePaymentIntentAsync(BasketId);
-       return Ok(Basket);
+        public async Task<ActionResult<CustomerBasketDto>> CreateOrUpdatePaymentIntent(string BasketId)
+        {
 
-
+            var Basket = await paymentService.CreateOrUpdatePaymentIntentAsync(BasketId);
+            return Ok(Basket);
         }
     }
 }

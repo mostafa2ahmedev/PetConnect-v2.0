@@ -14,10 +14,10 @@ namespace PetConnect.BLL.Services.DTOs.Basket
         public string Id { get; set; }
         public ICollection<BasketItemDto> Items { get; set; } = new List<BasketItemDto>();
 
-        public string? clientSecret { get; set; } = "test";
-        public string? paymentIntentId { get; set; } = "Test";
-        public int? deliveryMethodId { get; set; } = 1;
-        public decimal? shippingPrice { get; set; } = 0; 
+        public string? clientSecret { get; set; } 
+        public string? paymentIntentId { get; set; } 
+        public int? deliveryMethodId { get; set; } 
+        public decimal? shippingPrice { get; set; } 
 
 
     }
