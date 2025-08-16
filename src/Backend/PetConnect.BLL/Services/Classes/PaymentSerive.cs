@@ -61,7 +61,7 @@ namespace PetConnect.BLL.Services.Classes
                     Currency = "USD",
                     PaymentMethodTypes = ["cards"]
                 };
-                paymentIntent = await PaymentService.CreateAsync(options);
+                paymentIntent = await PaymentService.CreateAsync(Options);
 
                 Basket.paymentIntentId = paymentIntent.Id;
                 Basket.clientSecret = paymentIntent.ClientSecret;
@@ -69,7 +69,9 @@ namespace PetConnect.BLL.Services.Classes
             }
             else {
                 var Options = new PaymentIntentUpdateOptions() { Amount=BasketAmount};
-                await PaymentService.UpdateAsync(Basket.paymentIntentId,Options);
+                paymentIntent = await PaymentService.UpdateAsync(Basket.paymentIntentId, Options);
+                Basket.clientSecret = paymentIntent.ClientSecret;
+
             }
             await _basketRepository.UpdateAsync(Basket, TimeSpan.FromDays(double.Parse(_configuration.GetSection("RedisSettings")["TimeToLiveInDays"])));
            
