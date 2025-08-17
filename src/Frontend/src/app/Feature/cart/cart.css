@@ -1,0 +1,112 @@
+/* Replaced gradient design with clean, simple styling to match PetConnect theme */
+/* Clean, simple design matching PetConnect website theme */
+.container {
+  max-width: 1200px;
+}
+
+/* Clean card styling with subtle shadows */
+.bg-white {
+  background-color: #ffffff !important;
+}
+
+.shadow-sm {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+}
+
+.rounded-3 {
+  border-radius: 0.75rem !important;
+}
+
+/* Typography matching PetConnect style */
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #1f2937;
+  font-weight: 600;
+}
+
+/* Clean button styling */
+.btn-link {
+  text-decoration: none !important;
+  font-weight: 500;
+  color: #6366f1 !important;
+}
+
+.btn-link:hover {
+  color: #4f46e5 !important;
+}
+
+/* Primary button styling to match PetConnect blue */
+.btn-primary {
+  background-color: #6366f1 !important;
+  border-color: #6366f1 !important;
+  font-weight: 500;
+}
+
+.btn-primary:hover {
+  background-color: #4f46e5 !important;
+  border-color: #4f46e5 !important;
+}
+
+/* Clean quantity controls */
+.btn-outline-secondary {
+  border-color: #d1d5db !important;
+  color: #6b7280 !important;
+  background-color: #ffffff !important;
+}
+
+.btn-outline-secondary:hover:not(:disabled) {
+  background-color: #f9fafb !important;
+  border-color: #9ca3af !important;
+  color: #374151 !important;
+}
+
+.btn-outline-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Clean product images */
+img.rounded {
+  border-radius: 0.5rem !important;
+}
+
+/* Sticky positioning for order summary */
+.sticky-top {
+  top: 1rem;
+}
+
+/* Clean border styling */
+.border {
+  border: 1px solid #e5e7eb !important;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+/* Text colors */
+.text-muted {
+  color: #6b7280 !important;
+}
+
+/* Clean hover effects */
+.btn:hover {
+  transform: translateY(-1px);
+  transition: all 0.2s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sticky-top {
+    position: relative !important;
+    top: auto !important;
+  }
+}
+
+/* Focus states for accessibility */
+.btn:focus {
+  box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25) !important;
+}

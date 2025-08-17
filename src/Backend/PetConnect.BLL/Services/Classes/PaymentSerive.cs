@@ -22,7 +22,7 @@ namespace PetConnect.BLL.Services.Classes
         private readonly IDeliveryMethodRepository _deliveryMethodRepository;
 
         public PaymentService(IConfiguration configuration,
-            IBasketRepository basketRepository,IUnitOfWork unitOfWork,IDeliveryMethodRepository deliveryMethodRepository)
+            IBasketRepository basketRepository, IUnitOfWork unitOfWork, IDeliveryMethodRepository deliveryMethodRepository)
         {
             _configuration = configuration;
             _basketRepository = basketRepository;
@@ -35,12 +35,13 @@ namespace PetConnect.BLL.Services.Classes
             StripeConfiguration.ApiKey = _configuration["StripeSettings:SecretKey"];
 
             var Basket = await _basketRepository.GetAsync(BasketId) ?? throw new Exception();
+            Basket.deliveryMethodId = 2; // need to be send from front 
 
             var ProductRepo = _unitOfWork.ProductRepository;
 
             foreach (var item in Basket.Items)
             {
-                var Product =  ProductRepo.GetByID(item.Id) ??  throw new Exception();
+                var Product = ProductRepo.GetByID(item.Id) ?? throw new Exception();
                 item.Price = Product.Price;
 
             }
@@ -49,7 +50,8 @@ namespace PetConnect.BLL.Services.Classes
 
             Basket.shippingPrice = DeliveryMethod.Cost;
 
-            var BasketAmount =(long) (Basket.Items.Sum(item => item.Quantity * item.Price) * DeliveryMethod.Cost)*100;
+            var subtotal = Basket.Items.Sum(item => item.Quantity * item.Price);
+            var BasketAmount = (long)((subtotal + DeliveryMethod.Cost) * 100);
 
 
             var PaymentService = new PaymentIntentService();
@@ -68,37 +70,39 @@ namespace PetConnect.BLL.Services.Classes
                 Basket.clientSecret = paymentIntent.ClientSecret;
 
             }
-            else {
-                var Options = new PaymentIntentUpdateOptions() { Amount=BasketAmount};
+            else
+            {
+                var Options = new PaymentIntentUpdateOptions() { Amount = BasketAmount };
                 paymentIntent = await PaymentService.UpdateAsync(Basket.paymentIntentId, Options);
                 Basket.clientSecret = paymentIntent.ClientSecret;
 
             }
             await _basketRepository.UpdateAsync(Basket, TimeSpan.FromDays(double.Parse(_configuration.GetSection("RedisSettings")["TimeToLiveInDays"])));
-           
+
             List<BasketItemDto> basketItemDtos = new List<BasketItemDto>();
 
             foreach (var item in Basket.Items)
             {
-                basketItemDtos.Add( new BasketItemDto() {
-                ProductName= item.ProductName,
-                Brand = item.Brand,
-                Category =item.Category,
-                Id = item.Id,
-                PictureUrl=item.PictureUrl,
-                Price = item.Price,
-                Quantity = item.Quantity
+                basketItemDtos.Add(new BasketItemDto()
+                {
+                    ProductName = item.ProductName,
+                    Brand = item.Brand,
+                    Category = item.Category,
+                    Id = item.Id,
+                    PictureUrl = item.PictureUrl,
+                    Price = item.Price,
+                    Quantity = item.Quantity
                 });
             }
-            
-            return new CustomerBasketDto() { 
-            
-            clientSecret = Basket.clientSecret,
-            deliveryMethodId = Basket.deliveryMethodId,
-            Id = Basket.Id,
-            Items = basketItemDtos,
-            paymentIntentId = Basket.paymentIntentId,
-            shippingPrice = Basket.shippingPrice
+
+            return new CustomerBasketDto()
+            {
+                clientSecret = Basket.clientSecret,
+                deliveryMethodId = Basket.deliveryMethodId,
+                Id = Basket.Id,
+                Items = basketItemDtos,
+                paymentIntentId = Basket.paymentIntentId,
+                shippingPrice = Basket.shippingPrice
             };
         }
     }

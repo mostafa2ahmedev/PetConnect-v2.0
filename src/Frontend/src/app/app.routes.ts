@@ -53,6 +53,8 @@ import { AddBlog } from './Feature/Blog/add-blog/add-blog';
 import { Blogs } from './Feature/profile/doctor/blogs/blogs';
 import { UpdateBlog } from './Feature/Blog/update-blog/update-blog';
 import { NotFound } from './Feature/not-found/not-found';
+import { CheckoutComponent } from './Feature/checkout/checkout/checkout';
+import { OrderSuccessComponent } from './Feature/order-success/order-success/order-success';
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'home', component: Home },
@@ -226,5 +228,7 @@ export const routes: Routes = [
     component: ChatComponent,
     canActivate: [authGuard, CustomerGuard],
   },
+  { path: 'checkout/:basketId', component: CheckoutComponent },
+    { path: 'order-success/:id', component: OrderSuccessComponent },
   { path: '**', component: NotFound },
 ];

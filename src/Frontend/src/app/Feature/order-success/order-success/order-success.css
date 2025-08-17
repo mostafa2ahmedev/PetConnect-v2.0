@@ -1,0 +1,145 @@
+/* Updated CSS to style the new detailed order success structure with PetConnect theme */
+.order-success-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.success-card {
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.success-icon {
+  width: 50px;
+  height: 50px;
+  background: #6366f1;
+  color: white;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.success-card h2 {
+  color: #1e293b;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.success-card p {
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+.order-summary-card,
+.shipping-card {
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.order-summary-card h3,
+.shipping-card h3 {
+  color: #1e293b;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: #6366f1;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #5856eb;
+  color: white;
+  text-decoration: none;
+}
+
+.btn-secondary {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.btn-secondary:hover {
+  background: #e2e8f0;
+  color: #334155;
+  text-decoration: none;
+}
+
+/* Bootstrap utility classes */
+.text-center {
+  text-align: center;
+}
+.p-4 {
+  padding: 1.5rem;
+}
+.p-3 {
+  padding: 1rem;
+}
+.mb-4 {
+  margin-bottom: 1.5rem;
+}
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+.mt-2 {
+  margin-top: 0.5rem;
+}
+.py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+.py-5 {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+.d-flex {
+  display: flex;
+}
+.justify-content-between {
+  justify-content: space-between;
+}
+.justify-content-center {
+  justify-content: center;
+}
+.gap-2 {
+  gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .order-success-container {
+    padding: 1rem;
+  }
+
+  .d-flex.gap-2 {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

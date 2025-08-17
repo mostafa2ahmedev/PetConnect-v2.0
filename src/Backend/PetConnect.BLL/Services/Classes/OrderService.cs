@@ -78,7 +78,7 @@ namespace PetConnect.BLL.Services.Classes
                     OrderProducts = orderItems,
                     DeliveryMethodId = order.DeliveryMethodId,
                     DeliveryMethod = _unitOfWork.DeliveryMethodRepository.GetByID(order.DeliveryMethodId),
-                    OrderStatus = OrderStatus.Pending,
+                    OrderStatus = OrderStatus.PaymentReceived,
                     CustomerId = UserId,
                     SubTotal = subTotal,
                     ShippingAddress = new Address()
