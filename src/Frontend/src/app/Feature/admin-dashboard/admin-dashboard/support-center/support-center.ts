@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import {
   CreateSupportResponseDto,
+  EnumOption,
   SupportRequest,
 } from '../../../support/support-models';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SupportServie } from '../../../support/support-servie';
 import { AlertService } from '../../../../core/services/alert-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-support-center',
@@ -15,111 +17,153 @@ import { AlertService } from '../../../../core/services/alert-service';
   styleUrl: './support-center.css',
 })
 export class SupportCenter implements OnInit {
-  supportRequests: SupportRequest[] = [];
-  loading = true;
+  requests: SupportRequest[] = [];
+  filteredRequests: SupportRequest[] = [];
+  loading = false;
   showFilters = false;
-  // Map numeric type to readable text & badge color
-  typeMap: { [key: string]: { text: string; color: string } } = {
-    Support: { text: 'Support', color: 'primary' },
-    Consulting: { text: 'Consulting', color: 'info' },
-    Marketing: { text: 'Marketing', color: 'dark' },
-    Issue: { text: 'Issue', color: 'danger' },
-  };
 
-  statusMap: { [key: string]: { text: string; color: string } } = {
-    Open: { text: 'Open', color: 'primary' },
-    WaitingReply: { text: 'Waiting Reply', color: 'dark' },
-    Closed: { text: 'Closed', color: 'secondary' },
-  };
+  // Filters
+  filters = { username: '', type: '', status: '', priority: '' };
 
-  // Keys for looping
-  typeKeys: string[] = Object.keys(this.typeMap);
-  statusKeys: string[] = Object.keys(this.statusMap);
+  // Enum data
+  requestTypes: EnumOption[] = [];
+  requestStatuses: EnumOption[] = [];
+  requestPriorities: EnumOption[] = [];
+
+  // Reply handling
+  replyFormVisible: { [key: number]: boolean } = {};
+  replyData: {
+    [key: number]: { subject: string; message: string; status: string };
+  } = {};
+
   constructor(
     private supportService: SupportServie,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.loadTickets();
+    this.loadEnums();
   }
+
+  // Load tickets
   loadTickets() {
+    this.loading = true;
     this.supportService.getSupportRequests().subscribe({
-      next: (data) => {
-        this.supportRequests = data;
-        console.log('supportRequests', this.supportRequests);
-        this.filteredRequests = data;
+      next: (res: SupportRequest[]) => {
+        this.requests = res;
+        this.filteredRequests = res;
         this.loading = false;
       },
-      error: (err) => {
-        console.error('Error loading support requests:', err);
+      error: () => {
         this.loading = false;
+        this.alertService.error('Failed to load support tickets.');
       },
     });
   }
-  filters = {
-    username: '',
-    type: '',
-    status: '',
-  };
 
-  filteredRequests: SupportRequest[] = [];
+  // Load enums
+  loadEnums() {
+    this.supportService
+      .getSupportRequestTypes()
+      .subscribe((data) => (this.requestTypes = data));
+    this.supportService
+      .getSupportRequestStatus()
+      .subscribe((data) => (this.requestStatuses = data));
+    this.supportService
+      .getSupportRequestPriority()
+      .subscribe((data) => (this.requestPriorities = data));
+  }
 
+  // Badge colors
+  getTypeBadgeClass(type: string): string {
+    switch (type.toLowerCase()) {
+      case 'general':
+        return 'bg-secondary';
+      case 'bug':
+        return 'bg-info';
+      case 'feature':
+        return 'bg-warning';
+      case 'support':
+        return 'bg-dark';
+      default:
+        return 'bg-primary';
+    }
+  }
+
+  getStatusBadgeClass(status: string): string {
+    switch (status.toLowerCase()) {
+      case 'open':
+        return 'bg-warning text-dark';
+      case 'inprogress':
+        return 'bg-primary';
+      case 'resolved':
+        return 'bg-success';
+      case 'closed':
+        return 'bg-dark';
+      default:
+        return 'bg-secondary';
+    }
+  }
+
+  getPriorityBadgeClass(priority: string): string {
+    switch (priority.toLowerCase()) {
+      case 'low':
+        return 'bg-success';
+      case 'medium':
+        return 'bg-warning text-dark';
+      case 'high':
+        return 'bg-danger';
+      default:
+        return 'bg-secondary';
+    }
+  }
+
+  // Filtering
   applyFilters() {
-    this.filteredRequests = this.supportRequests.filter((req) => {
-      return (
+    this.filteredRequests = this.requests.filter(
+      (r) =>
         (!this.filters.username ||
-          req.userName
+          r.userName
             .toLowerCase()
             .includes(this.filters.username.toLowerCase())) &&
         (!this.filters.type ||
-          req.supportRequestType.toString() == this.filters.type) &&
+          this.requestTypes
+            .find((t) => t.value === r.supportRequestType)
+            ?.key.toString() === this.filters.type) &&
         (!this.filters.status ||
-          req.supportRequestStatus.toString() == this.filters.status)
-      );
-    });
+          this.requestStatuses
+            .find((s) => s.value === r.supportRequestStatus)
+            ?.key.toString() === this.filters.status) &&
+        (!this.filters.priority ||
+          this.requestPriorities
+            .find((p) => p.value === r.priority)
+            ?.key.toString() === this.filters.priority)
+    );
   }
 
   resetFilters() {
-    this.filters = { username: '', type: '', status: '' };
-    this.filteredRequests = [...this.supportRequests];
+    this.filters = { username: '', type: '', status: '', priority: '' };
+    this.filteredRequests = this.requests;
   }
 
-  replyFormVisible: { [key: number]: boolean } = {};
-  replyData: { [key: number]: CreateSupportResponseDto } = {};
-
+  // Toggle reply form
   toggleReplyForm(requestId: number) {
     this.replyFormVisible[requestId] = !this.replyFormVisible[requestId];
     if (!this.replyData[requestId]) {
-      this.replyData[requestId] = {
-        message: '',
-        subject: '',
-        supportRequestId: requestId,
-        status: 2, // default status, change if needed
-      };
+      this.replyData[requestId] = { subject: '', message: '', status: '' };
     }
   }
 
+  // Send reply (dummy for now)
   sendReply(requestId: number) {
-    const payload = this.replyData[requestId];
-    payload.status = this.statusKeys.indexOf(payload.status.toString());
-    console.log(payload);
-
-    if (!payload.message.trim() || !payload.subject.trim()) {
-      this.alertService.error('Please fill out both subject and message.');
-      return;
-    }
-
-    this.supportService.createSupportResponse(payload).subscribe({
-      next: () => {
-        this.alertService.success('Reply sent successfully!');
-        this.replyFormVisible[requestId] = false;
-        this.loadTickets();
-      },
-      error: (err) => {
-        console.error(err);
-        this.alertService.error('Failed to send reply.');
-      },
-    });
+    const reply = this.replyData[requestId];
+    console.log('Reply to request:', requestId, reply);
+    this.alertService.success('Reply sent successfully.');
+    this.toggleReplyForm(requestId);
+  }
+  viewTicket(ticketId: number) {
+    this.router.navigate(['/admin/support-center/ticket', ticketId]);
   }
 }

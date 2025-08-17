@@ -1,0 +1,112 @@
+<div class="container mt-4" *ngIf="ticketDetails; else loadingTpl">
+  <h4>Ticket #{{ ticketId }}</h4>
+  <p class="text-muted">
+    Created by: {{ ticketDetails.userName }} on
+    {{ ticketDetails.createdAt | date : "medium" }}
+  </p>
+  <p class="text-muted">
+    Last Activity on
+    {{ ticketDetails.lastActivity }}
+  </p>
+  <div *ngIf="ticketDetails.pictureUrl" class="mt-2">
+    <img
+      *ngIf="
+        ticketDetails.pictureUrl.trim() && ticketDetails.pictureUrl?.trim()
+      "
+      [src]="getFullImageUrl(ticketDetails.pictureUrl)"
+      alt="Attachment"
+      class="img-fluid rounded"
+      style="max-height: 200px"
+    />
+  </div>
+
+  <hr />
+
+  <!-- Timeline -->
+  <div class="timeline">
+    <p>{{ ticketDetails.message }}</p>
+    <div
+      class="timeline-item mb-3"
+      *ngFor="let msg of ticketDetails.supportMessages"
+    >
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h6>
+            <strong>{{ msg.sender }}</strong>
+            <small class="text-muted">
+              <!-- ({{ msg.isAdmin ? "Admin" : "User" }}) -->
+            </small>
+          </h6>
+          <p class="mb-1">{{ msg.message }}</p>
+          <small class="text-muted">
+            {{ msg.createdAt | date : "short" }}
+          </small>
+          <div *ngIf="msg.pictureUrl" class="mt-2">
+            <img
+              *ngIf="msg.pictureUrl.trim() && msg.pictureUrl?.trim()"
+              [src]="getFullImageUrl(msg.pictureUrl)"
+              alt="Attachment"
+              class="img-fluid rounded"
+              style="max-height: 200px"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reply Form -->
+  <div class="card mt-4 shadow-sm">
+    <div class="card-header">Admin Reply</div>
+    <div class="card-body">
+      <form [formGroup]="replyForm" (ngSubmit)="submitReply()">
+        <div class="mb-3">
+          <label class="form-label">Subject</label>
+          <input type="text" class="form-control" formControlName="subject" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Message</label>
+          <textarea
+            rows="4"
+            class="form-control"
+            formControlName="message"
+          ></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Status</label>
+          <select class="form-select" formControlName="status">
+            <option value="0">Open</option>
+            <option value="1">Waiting Reply</option>
+            <option value="2">Closed</option>
+          </select>
+        </div>
+
+        <!-- <div class="mb-3">
+          <label class="form-label">Attachment</label>
+          <input
+            type="file"
+            class="form-control"
+            (change)="onFileChange($event)"
+          />
+        </div> -->
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="replyForm.invalid || submitting"
+        >
+          {{ submitting ? "Sending..." : "Send Reply" }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="text-center mt-5">
+    <div class="spinner-border text-primary"></div>
+    <p class="mt-2">Loading ticket details...</p>
+  </div>
+</ng-template>

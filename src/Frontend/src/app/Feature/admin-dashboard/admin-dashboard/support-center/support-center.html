@@ -1,184 +1,159 @@
-<div class="container mb-5">
-  <h2 class="h3 mb-2 text-dark">Support Tickets</h2>
+<div class="container my-4">
+  <h2 class="mb-3">Support Requests</h2>
 
-  <!-- Filter Section -->
-  <!-- Filter Toggle Icon -->
-  <div class="text-end">
-    <button class="btn btn-primary my-2">
-      <i
-        class="fas fa-sliders-h fa-lg text-white text-end"
-        style="cursor: pointer"
-        (click)="showFilters = !showFilters"
-        title="Toggle Filters"
-      >
-      </i>
-    </button>
-  </div>
-  <!-- Filter Section -->
-  <div *ngIf="showFilters" class="card shadow-sm border-0 mb-4">
-    <div class="card-body">
-      <form class="row g-3 align-items-end">
-        <!-- Username Filter -->
-        <div class="col-md-4">
-          <label for="filterUsername" class="form-label">Username</label>
-          <input
-            type="text"
-            id="filterUsername"
-            class="form-control"
-            placeholder="Enter username"
-            [(ngModel)]="filters.username"
-            name="username"
-          />
-        </div>
+  <!-- Toggle Filters -->
+  <button
+    class="btn btn-outline-primary mb-3"
+    (click)="showFilters = !showFilters"
+  >
+    <i class="bi bi-funnel"></i> Filters
+  </button>
 
-        <!-- Type Filter -->
-        <div class="col-md-4">
-          <label for="filterType" class="form-label">Type</label>
-          <select
-            id="filterType"
-            class="form-select"
-            [(ngModel)]="filters.type"
-            name="type"
-          >
-            <option value="">All Types</option>
-            <option *ngFor="let key of typeKeys" [value]="key">
-              {{ typeMap[key]?.text }}
-            </option>
-          </select>
-        </div>
+  <!-- Filters -->
+  <div *ngIf="showFilters" class="card p-3 mb-3 shadow-sm">
+    <div class="row g-3 align-items-end">
+      <!-- Username Filter -->
+      <div class="col-md-5">
+        <label class="form-label">Username</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="filters.username"
+          name="username"
+          placeholder="Search by username"
+        />
+      </div>
 
-        <!-- Status Filter -->
-        <div class="col-md-4">
-          <label for="filterStatus" class="form-label">Status</label>
-          <select
-            id="filterStatus"
-            class="form-select"
-            [(ngModel)]="filters.status"
-            name="status"
-          >
-            <option value="">All Statuses</option>
-            <option *ngFor="let key of statusKeys" [value]="key">
-              {{ statusMap[key]?.text }}
-            </option>
-          </select>
-        </div>
+      <!-- Type Filter -->
+      <div class="col-md-5">
+        <label class="form-label">Type</label>
+        <select class="form-select" [(ngModel)]="filters.type" name="type">
+          <option value="">All Types</option>
+          <option *ngFor="let t of requestTypes" [value]="t.key">
+            {{ t.value }}
+          </option>
+        </select>
+      </div>
 
-        <!-- Filter Buttons -->
-        <div class="col-12 text-end">
-          <button
-            type="button"
-            class="btn btn-primary me-2"
-            (click)="applyFilters()"
-          >
-            Apply Filters
-          </button>
-          <button
-            type="button"
-            class="btn btn-outline-secondary"
-            (click)="resetFilters()"
-          >
-            Reset
-          </button>
-        </div>
-      </form>
+      <!-- Status Filter -->
+      <div class="col-md-5">
+        <label class="form-label">Status</label>
+        <select class="form-select" [(ngModel)]="filters.status" name="status">
+          <option value="">All Statuses</option>
+          <option *ngFor="let s of requestStatuses" [value]="s.key">
+            {{ s.value }}
+          </option>
+        </select>
+      </div>
+      <!-- Priority Filter -->
+      <div class="col-md-5">
+        <label class="form-label">Priority</label>
+        <select
+          class="form-select"
+          [(ngModel)]="filters.priority"
+          name="priority"
+        >
+          <option value="">All Priorities</option>
+          <option *ngFor="let p of requestPriorities" [value]="p.key">
+            {{ p.value }}
+          </option>
+        </select>
+      </div>
+      <div class="col-12 d-flex gap-2">
+        <button class="btn btn-primary" (click)="applyFilters()">Apply</button>
+        <button class="btn btn-secondary" (click)="resetFilters()">
+          Reset
+        </button>
+      </div>
     </div>
   </div>
 
-  <!-- Loading Spinner -->
-  <div *ngIf="loading" class="text-center my-5">
-    <div class="spinner-border text-primary"></div>
-    <p class="mt-2 text-muted">Loading support requests...</p>
-  </div>
-
-  <!-- Empty State -->
-  <div
-    *ngIf="!loading && filteredRequests.length === 0"
-    class="alert alert-info text-center shadow-sm"
-  >
-    No support requests found.
-  </div>
-  <div class="row g-4" *ngIf="!loading && filteredRequests.length > 0">
-    <div class="col-md-12" *ngFor="let req of filteredRequests">
-      <div class="card border-1 shadow-sm h-100">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <h6 class="card-title mb-0 fw-medium">
-              {{ req.userName }}
-            </h6>
-            <span class="badge bg-{{ typeMap[req.supportRequestType]?.color }}">
-              {{ typeMap[req.supportRequestType]?.text || "Unknown" }}
-            </span>
-          </div>
-          <p class="card-subtitle text-muted small">
-            {{ req.userEmail }}
-          </p>
-          <hr />
-          <p class="card-text">
-            {{ req.message }}
-          </p>
-        </div>
-        <div class="card-footer bg-light border-0">
-          <div class="d-flex justify-content-between align-items-center">
+  <!-- Tickets Table -->
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>#</th>
+          <th>User</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Priority</th>
+          <!-- <th>Subject</th> -->
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let req of filteredRequests; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ req.userName }}</td>
+          <td>
             <span
-              class="badge bg-{{ statusMap[req.supportRequestStatus]?.color }}"
+              class="badge"
+              [ngClass]="getTypeBadgeClass(req.supportRequestType)"
             >
-              {{ statusMap[req.supportRequestStatus]?.text || "Unknown" }}
+              {{ req.supportRequestType }}
             </span>
+          </td>
+          <td>
+            <span
+              class="badge"
+              [ngClass]="getStatusBadgeClass(req.supportRequestStatus)"
+            >
+              {{ req.supportRequestStatus }}
+            </span>
+          </td>
+          <td>
+            <span class="badge" [ngClass]="getPriorityBadgeClass(req.priority)">
+              {{ req.priority }}
+            </span>
+          </td>
+          <!-- <td>{{ req.subject }}</td> -->
+          <td>
             <button
               class="btn btn-sm btn-outline-primary"
-              (click)="toggleReplyForm(req.id)"
+              (click)="viewTicket(req.id)"
             >
               Reply
             </button>
-          </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-          <!-- Inline reply form -->
-          <div *ngIf="replyFormVisible[req.id]" class="mt-3 border-top pt-3">
-            <div class="mb-2">
-              <label class="form-label small">Subject</label>
-              <input
-                type="text"
-                class="form-control form-control-sm"
-                [(ngModel)]="replyData[req.id].subject"
-                placeholder="Enter reply subject"
-              />
-            </div>
-            <div class="mb-2">
-              <label class="form-label small">Message</label>
-              <textarea
-                class="form-control form-control-sm"
-                [(ngModel)]="replyData[req.id].message"
-                rows="2"
-                placeholder="Write your reply..."
-              ></textarea>
-            </div>
-            <div class="mb-2">
-              <label class="form-label small">Status</label>
-              <select
-                class="form-select form-select-sm"
-                [(ngModel)]="replyData[req.id].status"
-              >
-                <option *ngFor="let key of statusKeys" [value]="key">
-                  {{ statusMap[key]?.text }}
-                </option>
-              </select>
-            </div>
-            <div class="text-end">
-              <button
-                class="btn btn-sm btn-primary m-1"
-                (click)="sendReply(req.id)"
-              >
-                Send Reply
-              </button>
-              <button
-                class="btn btn-sm btn-secondary m-1"
-                (click)="toggleReplyForm(req.id)"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
+  <!-- Reply Form -->
+  <div *ngFor="let req of filteredRequests">
+    <div *ngIf="replyFormVisible[req.id]" class="card p-3 mb-3 shadow-sm">
+      <h5>Reply to {{ req.userName }}</h5>
+      <div class="mb-2">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Subject"
+          [(ngModel)]="replyData[req.id].subject"
+        />
+      </div>
+      <div class="mb-2">
+        <textarea
+          class="form-control"
+          placeholder="Message"
+          [(ngModel)]="replyData[req.id].message"
+        ></textarea>
+      </div>
+      <div class="mb-2">
+        <select class="form-select" [(ngModel)]="replyData[req.id].status">
+          <option *ngFor="let s of requestStatuses" [value]="s.key">
+            {{ s.value }}
+          </option>
+        </select>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-success" (click)="sendReply(req.id)">
+          Send
+        </button>
+        <button class="btn btn-secondary" (click)="toggleReplyForm(req.id)">
+          Cancel
+        </button>
       </div>
     </div>
   </div>

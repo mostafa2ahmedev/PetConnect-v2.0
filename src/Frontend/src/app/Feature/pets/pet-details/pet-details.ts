@@ -90,7 +90,7 @@ export class PetDetails implements OnInit {
   }
 
   sendAdoptionRequest(pet: PetDetailsModel) {
-    const recCustomerId = this.accountService.getUserId();
+    const recCustomerId = pet.customerId;
 
     if (!recCustomerId) {
       console.error('User ID is null. User might not be logged in.');

@@ -59,8 +59,11 @@ import { AddReview } from './Feature/Review/add-review/add-review';
 import { FaceComparisonComponent } from './Feature/FaceRecognition/face-comparison/face-comparison';
 import { RegistrationGuard } from '././core/guards/registration-guard';
 import { DoctorRegisterForm } from './Feature/Doctor/doctor-register-form/doctor-register-form';
-import { Support } from './Feature/support/support';
 import { SupportCenter } from './Feature/admin-dashboard/admin-dashboard/support-center/support-center';
+import { TicketDetails } from './Feature/support/ticket-details/ticket-details';
+import { Support } from './Feature/support/support';
+import { UserSubmittedRequests } from './Feature/support/user-submitted-requests/user-submitted-requests';
+import { UserTicketDetails } from './Feature/support/user-ticket-details/user-ticket-details';
 
 export const routes: Routes = [
   // --- المسارات الأساسية ---
@@ -93,6 +96,16 @@ export const routes: Routes = [
   { path: 'login', component: Login },
   { path: 'contact', component: Contact },
   { path: 'support', component: Support, canActivate: [authGuard] },
+  {
+    path: 'support/tickets',
+    component: UserSubmittedRequests,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'support/tickets/:id',
+    component: UserTicketDetails,
+    canActivate: [authGuard],
+  },
 
   // --- مسارات الأطباء ---
   { path: 'doctors', component: Doctors },
@@ -263,6 +276,11 @@ export const routes: Routes = [
       {
         path: 'support-center',
         component: SupportCenter,
+        canActivate: [authGuard, AdminGuard],
+      },
+      {
+        path: 'support-center/ticket/:id',
+        component: TicketDetails,
         canActivate: [authGuard, AdminGuard],
       },
 

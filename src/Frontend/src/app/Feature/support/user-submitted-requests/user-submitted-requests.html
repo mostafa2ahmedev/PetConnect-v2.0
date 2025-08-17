@@ -1,0 +1,76 @@
+<section id="hero" class="hero section pb-0">
+  <div class="container section-title pb-0" data-aos="fade-up">
+    <h2>My Support Requests</h2>
+    <p>Send us your support request with optional screenshot/file.</p>
+  </div>
+
+  <div class="container my-4">
+    <!-- Loading -->
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner-border text-primary"></div>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="error" class="alert alert-danger">
+      {{ error }}
+    </div>
+
+    <!-- No Tickets -->
+    <div *ngIf="!loading && tickets.length === 0" class="alert alert-info">
+      You have not submitted any support requests yet.
+    </div>
+
+    <!-- Tickets Table -->
+    <div class="table-responsive col-md-10 mx-auto" *ngIf="tickets.length > 0">
+      <table class="table table-hover align-middle shadow-sm border rounded">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Type</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Message</th>
+            <th>Created</th>
+            <th>Last Activity</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let t of tickets; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ t.type }}</td>
+            <td>
+              <span class="badge bg-secondary">{{ t.priority }}</span>
+            </td>
+            <td>
+              <span
+                class="badge"
+                [ngClass]="{
+                  'bg-success': t.status === 'Resolved',
+                  'bg-warning text-dark': t.status === 'WaitingReply',
+                  'bg-primary': t.status === 'Closed',
+                  'bg-info text-dark': t.status === 'Open'
+                }"
+              >
+                {{ t.status }}
+              </span>
+            </td>
+            <td class="text-truncate" style="max-width: 250px">
+              {{ t.message }}
+            </td>
+            <td>{{ t.createdAt | date : "short" }}</td>
+            <td>{{ t.lastActivity | date : "short" }}</td>
+            <td>
+              <a
+                class="btn btn-sm btn-outline-primary"
+                [routerLink]="['/support/tickets', t.id]"
+              >
+                <i class="bi bi-eye"></i> View
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
