@@ -251,6 +251,14 @@
             >
           </li>
           <li>
+            <a
+              class="dropdown-item"
+              routerLink="/support"
+              *ngIf="isAuthenticated"
+              >Help Center</a
+            >
+          </li>
+          <li>
             <a class="dropdown-item pointer" (click)="logout()"
               >Logout <i class="bi bi-box-arrow-right ms-2"></i
             ></a>
@@ -308,6 +316,11 @@
           routerLinkActive="active"
           (click)="closeMobileMenu()"
           >Blog</a
+        >
+      </li>
+      <li>
+        <a class="dropdown-item" routerLink="/support" *ngIf="isAuthenticated"
+          >Help Center</a
         >
       </li>
       <li>

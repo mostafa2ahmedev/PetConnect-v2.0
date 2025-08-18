@@ -60,7 +60,8 @@ namespace PetConnect.DAL.Data
             services.AddScoped<IDeliveryMethodRepository, DeliveryMethodRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
 
-            services.AddScoped<ISupportResponseRepository, SupportResponseRepository>();
+            services.AddScoped<IAdminSupportResponseRepository, AdminSupportResponseRepository>();
+            services.AddScoped<IFollowUpSupportRequestRepository, FollowUpSupportRequestRepository>();
             return services;
         }
     }

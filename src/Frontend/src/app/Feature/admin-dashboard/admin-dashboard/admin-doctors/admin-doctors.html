@@ -4,11 +4,12 @@
     <thead class="table-light">
       <tr>
         <th scope="col" class="fw-semibold text-dark p-2">Doctor</th>
-        <th scope="col" class="fw-semibold text-dark p-2">Location</th>
         <th scope="col" class="fw-semibold text-dark p-2">Speciality</th>
+        <th scope="col" class="fw-semibold text-dark p-2">Location</th>
         <th scope="col" class="fw-semibold text-dark p-2">Phone</th>
-        <th scope="col" class="fw-semibold text-dark p-2">Price/hr</th>
+        <!-- <th scope="col" class="fw-semibold text-dark p-2">Price/hr</th> -->
         <th scope="col" class="fw-semibold text-dark p-2">Certificate</th>
+        <th scope="col" class="fw-semibold text-dark p-2">ID Card</th>
         <th scope="col" class="fw-semibold text-dark p-2 text-center">
           Actions
         </th>
@@ -52,12 +53,11 @@
             >{{ doctor.city }}
           </td>
           <td>{{ doctor.phoneNumber }}</td>
-          <td>${{ doctor.pricePerHour }}</td>
+          <!-- <td>${{ doctor.pricePerHour }}</td> -->
 
           <!-- Certificate Button -->
           <td>
             <a
-              *ngIf="doctor.certificateUrl"
               class="btn btn-sm text-primary"
               [href]="'https://localhost:7102' + doctor.certificateUrl"
               target="_blank"
@@ -66,7 +66,17 @@
               View Certificate
             </a>
           </td>
-
+          <!-- ID CARD Button -->
+          <td>
+            <a
+              class="btn btn-sm text-primary"
+              [href]="'https://localhost:7102' + doctor.idCardUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View ID
+            </a>
+          </td>
           <!-- Actions: Icons Only -->
           <td class="text-center">
             <button

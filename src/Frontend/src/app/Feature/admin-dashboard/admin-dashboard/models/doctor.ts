@@ -15,4 +15,6 @@ export interface Doctor {
   city: string;
   isApproved: boolean;
   isDeleted: boolean;
+  idCardUrl: string;
+  iDCardFile?: string;
 }

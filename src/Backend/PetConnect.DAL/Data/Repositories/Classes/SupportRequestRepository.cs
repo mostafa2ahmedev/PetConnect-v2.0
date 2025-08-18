@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PetConnect.DAL.Data.Enums;
 using PetConnect.DAL.Data.GenericRepository;
 using PetConnect.DAL.Data.Models;
 using PetConnect.DAL.Data.Repositories.Interfaces;
@@ -20,8 +21,26 @@ namespace PetConnect.DAL.Data.Repositories.Classes
         }
 
 
-        public IEnumerable<SupportRequest> GetSupportRequestsWithUserData() {
+  
+
+        public IEnumerable<SupportRequest> GetSupportRequestsWithUserDataForAdmin()
+        {
             return context.SupportRequests.Include(SR => SR.User);
+        }
+
+
+        public IEnumerable<SupportRequest> GetSupportRequestsForUser(string userId)
+        {
+            return context.SupportRequests.Where(S => S.UserId == userId);
+        }
+        public SupportRequest? GetSupportRequestsDetailsForUser(int supportRequestId)
+        {
+            return context.SupportRequests.Include(S=>S.User).Include(S=>S.AdminSupportResponses).Include(S=>S.FollowUpSupportRequests).SingleOrDefault(S=>S.Id ==supportRequestId);
+        }
+        public SupportRequest? GetUesrByRequestId(int SuppRquestId)
+        {
+
+            return context.SupportRequests.SingleOrDefault(SR => SR.Id == SuppRquestId);
         }
     }
 }

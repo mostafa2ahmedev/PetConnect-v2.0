@@ -212,7 +212,20 @@
           {{ certificateError }}
         </div>
       </div>
-
+      <!-- Upload ID cArd -->
+      <div class="col-md-6">
+        <label class="form-label">Upload ID Card:</label>
+        <input
+          type="file"
+          name="IDCardFile"
+          (change)="onFileChange($event, 'IDCard')"
+          class="form-control"
+          accept=".png,.jpg,.jpeg,.pdf"
+        />
+        <div *ngIf="IDCardError" class="text-danger">
+          {{ IDCardError }}
+        </div>
+      </div>
       <div class="col-md-6">
         <!-- <button [routerLink]="['/doctors','timeslot',editedDoctor.id]" class="btn btn-primary">Update Time Slot</button> -->
       </div>

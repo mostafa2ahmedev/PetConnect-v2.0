@@ -1,38 +1,49 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+// src/app/Feature/product-type/add-product-type.ts
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
-  ReactiveFormsModule,
   Validators,
+  ReactiveFormsModule,
 } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
 import { ProductTypeService } from '../product-type-service';
-import { Router } from '@angular/router';
+import { BreedService } from '../../breeds/breed-service';
 
 @Component({
   selector: 'app-add-product-type',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule , RouterModule],
   templateUrl: './add-product-type.html',
   styleUrls: ['./add-product-type.css'],
 })
-export class AddProductTypeComponent {
-  form: FormGroup;
+export class AddProductTypeComponent implements OnInit {
+  form!: FormGroup;
+  breeds: any[] = [];
 
   constructor(
     private fb: FormBuilder,
-    private productTypeService: ProductTypeService,
-    private router: Router
-  ) {
+    private router: Router,
+    private service: ProductTypeService,
+    private breedService: BreedService
+  ) {}
+
+  ngOnInit(): void {
     this.form = this.fb.group({
       name: ['', Validators.required],
       breedId: [null, Validators.required],
+    });
+
+    this.breedService.getAllBreeds().subscribe({
+      next: (data) => (this.breeds = data),
+      error: (err) => console.error('Error loading breeds:', err),
     });
   }
 
   onSubmit(): void {
     if (this.form.valid) {
-      this.productTypeService.add(this.form.value).subscribe({
+      this.service.add(this.form.value).subscribe({
         next: () => this.router.navigate(['/product-type/all']),
         error: (err) => console.error('Error adding product type:', err),
       });

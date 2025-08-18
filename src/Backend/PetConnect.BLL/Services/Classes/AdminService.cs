@@ -45,7 +45,8 @@ namespace PetConnect.BLL.Services.Classes
                     City = d.Address.City,
                     PhoneNumber = d.PhoneNumber,
                     IsApproved = d.IsApproved,
-                    IsDeleted = d.IsDeleted
+                    IsDeleted = d.IsDeleted,
+                    IDCardUrl = d.IDCardUrl
 
                 }).ToList();
 

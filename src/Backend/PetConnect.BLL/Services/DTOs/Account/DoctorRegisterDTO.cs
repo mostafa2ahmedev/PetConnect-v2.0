@@ -40,9 +40,13 @@ namespace PetConnect.BLL.Services.DTO.Account
         public Gender Gender { get; set; }
         /*-----------------------------------------------------------------------------------------------------------------*/
 
-        [Required(ErrorMessage = "Image Is Required")]
-        [Display(Name = "Doctor Image")]
-        public IFormFile Image { get; set; } = null!;
+        [Required(ErrorMessage = "Profile Image is required")]
+        [Display(Name = "Profile Image")]
+        public IFormFile ProfileImage { get; set; } = null!;
+
+        [Required(ErrorMessage = "ID Card Image is required")]
+        [Display(Name = "ID Card Image")]
+        public IFormFile IdCardImage { get; set; } = null!;
         /*-----------------------------------------------------------------------------------------------------------------*/
 
         [Required(ErrorMessage = "Certificate Is Required")]

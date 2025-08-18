@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PetConnect.BLL.Services.DTO.Account;
 using PetConnect.BLL.Services.DTOs.Account;
+using PetConnect.BLL.Services.DTOs.Doctor;
 using PetConnect.BLL.Services.Interfaces;
 using PetConnect.BLL.Services.Models;
 using PetConnect.DAL.Data.Identity;
@@ -33,119 +34,8 @@ namespace PetConnect.API.Controllers
             jwtService = _jwtService;
         }
 
-        [HttpPost("register/customer")]
-        [EndpointSummary("Register a new customer.")]
-        [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> PostCustomerRegister([FromForm] CustomerRegisterDTO registerDTO)
-        {
-            if (!ModelState.IsValid)
-            {
-                // Return validation errors as array
-                var errors = ModelState.Values
-                    .SelectMany(v => v.Errors)
-                    .Select(e => e.ErrorMessage)
-                    .ToArray();
-
-                return BadRequest(new
-                {
-                    success = false,
-                    errors = errors
-                });
-            }
-
-            RegistrationResult result = await accountService.CustomerRegister(registerDTO);
-
-            if (result.Succeeded)
-            {
-                return Ok(new
-                {
-                    success = true,
-                    message = "Customer Registered Successfully."
-                });
-            }
-
-            return BadRequest(new
-            {
-                success = false,
-                errors = result.Errors.ToArray()
-            });
-        }
-        [HttpPost("register/doctor")]
-        [EndpointSummary("Register a new doctor.")]
-        [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> PostDoctorRegister([FromForm] DoctorRegisterDTO registerDTO)
-        {
-            if (!ModelState.IsValid)
-            {
-                // Return validation errors as array
-                var errors = ModelState.Values
-                    .SelectMany(v => v.Errors)
-                    .Select(e => e.ErrorMessage)
-                    .ToArray();
-
-                return BadRequest(new
-                {
-                    success = false,
-                    errors = errors
-                });
-            }
-
-            RegistrationResult result = await accountService.DoctorRegister(registerDTO);
-
-            if (result.Succeeded)
-            {
-                return Ok(new
-                {
-                    success = true,
-                    message = "Doctor Registered Successfully."
-                });
-            }
-            else
-            {
-                return BadRequest(new
-                {
-                    success = false,
-                    errors = result.Errors.ToArray()
-                });
-            }
-        }
-        [HttpPost(template: "register/Seller")]
-        public async Task<IActionResult> PostSellerRegister([FromForm] SellerRegisterDto registerDTO)
-        {
-            if (!ModelState.IsValid)
-            {
-                // Return validation errors as array
-                var errors = ModelState.Values
-                    .SelectMany(v => v.Errors)
-                    .Select(e => e.ErrorMessage)
-                    .ToArray();
-
-                return BadRequest(new
-                {
-                    success = false,
-                    errors = errors
-                });
-            }
-
-            RegistrationResult result = await accountService.SellerRegister(registerDTO);
-
-            if (result.Succeeded)
-            {
-                return Ok(new
-                {
-                    success = true,
-                    message = "Seller Registered Successfully."
-                });
-            }
-
-            return BadRequest(new
-            {
-                success = false,
-                errors = result.Errors.ToArray()
-            });
-        }
+   
+       
         [HttpPost("login")]
         [EndpointSummary("Login with email and password.")]
         [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status200OK)]
@@ -170,5 +60,96 @@ namespace PetConnect.API.Controllers
             return Ok(authResponse);
         }
 
+        [HttpPost(template: "register/customer")]
+        public async Task<IActionResult> PostCustomerRegister([FromForm] CustomerRegisterDTO registerDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToArray();
+
+                return BadRequest(new { success = false, errors = errors });
+            }
+
+            RegistrationResult result = await accountService.CustomerRegister(registerDTO);
+
+            if (result.Succeeded)
+            {
+                return Ok(new { success = true, message = "Customer Registered Successfully." });
+            }
+
+            return BadRequest(new { success = false, errors = result.Errors.ToArray() });
+        }
+
+
+        [HttpPost("register/doctor")]
+        public async Task<IActionResult> PostDoctorRegister([FromForm] DoctorRegisterDTO registerDTO)
+        {
+           
+            if (!ModelState.IsValid)
+            {
+                
+                var errors = ModelState
+                    .Where(x => x.Value.Errors.Count > 0)
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                    );   
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Model State is Invalid",
+                    errors = errors 
+                });
+            }
+        
+
+            RegistrationResult result = await accountService.DoctorRegister(registerDTO);
+
+            if (result.Succeeded)
+            {
+                return Ok(new
+                {
+                    success = true,
+                    message = "Doctor Registered Successfully.",
+                    userId = result.UserId
+                });
+            }
+            else
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    errors = result.Errors.ToArray()
+                });
+            }
+        }
+
+
+
+        [HttpPost(template: "register/Seller")]
+        public async Task<IActionResult> PostSellerRegister([FromForm] SellerRegisterDto registerDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToArray();
+
+                return BadRequest(new { success = false, errors = errors });
+            }
+
+            RegistrationResult result = await accountService.SellerRegister(registerDTO);
+
+            if (result.Succeeded)
+            {
+                return Ok(new { success = true, message = "Seller Registered Successfully." });
+            }
+
+            return BadRequest(new { success = false, errors = result.Errors.ToArray() });
+        }
     }
 }

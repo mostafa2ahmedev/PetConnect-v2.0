@@ -1,0 +1,240 @@
+/* ============================================= */
+/*          Your Existing CSS (No Changes)       */
+/* ============================================= */
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  padding: 20px;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  text-align: center;
+  width: 100%;
+  max-width: 600px;
+}
+
+h2 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.image-upload-area {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 30px;
+  gap: 20px;
+}
+
+.image-box {
+  width: 180px;
+  height: 180px;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  background-color: #f9f9f9;
+}
+
+.image-box:hover {
+  border-color: #007bff;
+}
+
+.image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.image-box span {
+  color: #999;
+  font-size: 1.1em;
+}
+
+.remove-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.remove-btn:hover {
+  background-color: #c82333;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 12px 25px;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  max-width: 300px;
+}
+
+button:hover:not([disabled]) {
+  background-color: #0056b3;
+}
+
+button[disabled] {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+button.loading {
+  background-color: #ffc107;
+}
+
+button.success {
+  background-color: #28a745;
+}
+
+button.error {
+  background-color: #dc3545;
+}
+
+.error-message {
+  color: #dc3545;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+.result-message {
+  margin-top: 20px;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.success-text {
+  color: #28a745;
+}
+
+.error-text {
+  color: #dc3545;
+}
+
+.preview-image {
+  display: block;
+  max-width: 100%;
+  max-height: 250px;
+  width: auto;
+  height: auto;
+  margin-top: 15px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* ============================================= */
+/*           New CSS for Camera Feature          */
+/* ============================================= */
+
+.image-box-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-camera {
+  background-color: #6c757d; /* لون رمادي ثانوي */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 15px;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: auto; /* اجعل العرض تلقائياً ليتناسب مع المحتوى */
+}
+
+.btn-camera:hover {
+  background-color: #5a6268;
+}
+
+.btn-camera i {
+  margin-right: 5px;
+}
+
+/* --- تنسيقات واجهة الكاميرا --- */
+.camera-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 0.3s, opacity 0.3s ease;
+}
+
+.camera-modal.active {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.camera-modal video {
+  width: 90%;
+  max-width: 800px;
+  height: auto;
+  border-radius: 10px;
+  border: 3px solid white;
+}
+
+.camera-modal .btn-capture {
+  margin-top: 20px;
+  background-color: #dc3545;
+  padding: 15px 30px;
+  font-size: 1.5em;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  border: 4px solid white;
+}
+
+.camera-modal .btn-close-camera {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  color: white;
+  font-size: 2em;
+  border: none;
+  cursor: pointer;
+}

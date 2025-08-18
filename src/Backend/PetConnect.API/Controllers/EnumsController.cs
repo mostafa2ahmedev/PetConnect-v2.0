@@ -189,5 +189,33 @@ namespace PetConnect.API.Controllers
 
             return Ok(values);
         }
+        [HttpGet("SupportRequest-Status")]
+        [EndpointSummary("Get Support Request Status")]
+        public IActionResult GetSupportRequestStatus()
+        {
+            var values = Enum.GetValues(typeof(SupportRequestStatus))
+                .Cast<SupportRequestStatus>()
+                .Select(e => new
+                {
+                    key = (int)e,
+                    value = e.ToString()
+                });
+
+            return Ok(values);
+        }
+        [HttpGet("SupportRequest-Priority")]
+        [EndpointSummary("Get Support Request Priority")]
+        public IActionResult GetSupportRequestPriority()
+        {
+            var values = Enum.GetValues(typeof(SupportRequestPriority))
+                .Cast<SupportRequestPriority>()
+                .Select(e => new
+                {
+                    key = (int)e,
+                    value = e.ToString()
+                });
+
+            return Ok(values);
+        }
     }
 }

@@ -1,16 +1,16 @@
 <div class="container my-5">
+  <!-- هذا الفورم لم يعد يحتوي على حقول رفع الملفات -->
   <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
-    <!-- Global Errors -->
     <div *ngIf="generalErrors.length > 0" class="alert alert-danger">
       <ul>
         <li *ngFor="let error of generalErrors">{{ error }}</li>
       </ul>
     </div>
 
-    <div class="row">
-      <!-- First Name -->
-      <div class="col-md-6 mb-3">
-        <label for="fName" class="form-label">First Name</label>
+    <!-- First Name -->
+    <div class="row mb-3">
+      <label for="fName" class="col-sm-3 col-form-label">First Name</label>
+      <div class="col-sm-9">
         <input
           type="text"
           class="form-control"
@@ -24,10 +24,12 @@
           First Name can't be blank
         </div>
       </div>
+    </div>
 
-      <!-- Last Name -->
-      <div class="col-md-6 mb-3">
-        <label for="lName" class="form-label">Last Name</label>
+    <!-- Last Name -->
+    <div class="row mb-3">
+      <label for="lName" class="col-sm-3 col-form-label">Last Name</label>
+      <div class="col-sm-9">
         <input
           type="text"
           class="form-control"
@@ -41,10 +43,12 @@
           Last Name can't be blank
         </div>
       </div>
+    </div>
 
-      <!-- Email -->
-      <div class="col-md-6 mb-3">
-        <label for="email" class="form-label">Email</label>
+    <!-- Email -->
+    <div class="row mb-3">
+      <label for="email" class="col-sm-3 col-form-label">Email</label>
+      <div class="col-sm-9">
         <input
           type="email"
           class="form-control"
@@ -64,10 +68,14 @@
           Please enter a valid email
         </div>
       </div>
+    </div>
 
-      <!-- Phone Number -->
-      <div class="col-md-6 mb-3">
-        <label for="phoneNumber" class="form-label">Phone Number</label>
+    <!-- Phone Number -->
+    <div class="row mb-3">
+      <label for="phoneNumber" class="col-sm-3 col-form-label"
+        >Phone Number</label
+      >
+      <div class="col-sm-9">
         <input
           type="text"
           class="form-control"
@@ -87,10 +95,12 @@
           Please enter only numbers
         </div>
       </div>
+    </div>
 
-      <!-- Password -->
-      <div class="col-md-6 mb-3">
-        <label for="password" class="form-label">Password</label>
+    <!-- Password -->
+    <div class="row mb-3">
+      <label for="password" class="col-sm-3 col-form-label">Password</label>
+      <div class="col-sm-9">
         <input
           type="password"
           class="form-control"
@@ -111,12 +121,14 @@
           letter and one special character.
         </div>
       </div>
+    </div>
 
-      <!-- Confirm Password -->
-      <div class="col-md-6 mb-3">
-        <label for="confirmationPassword" class="form-label"
-          >Confirm Password</label
-        >
+    <!-- Confirm Password -->
+    <div class="row mb-3">
+      <label for="confirmationPassword" class="col-sm-3 col-form-label"
+        >Confirm Password</label
+      >
+      <div class="col-sm-9">
         <input
           type="password"
           class="form-control"
@@ -136,10 +148,12 @@
           Passwords do not match
         </div>
       </div>
+    </div>
 
-      <!-- Gender -->
-      <div class="col-md-6 mb-3">
-        <label for="gender" class="form-label">Gender</label>
+    <!-- Gender -->
+    <div class="row mb-3">
+      <label for="gender" class="col-sm-3 col-form-label">Gender</label>
+      <div class="col-sm-9">
         <select class="form-select" id="gender" formControlName="gender">
           <option value="" disabled>Select gender</option>
           <option *ngFor="let option of genderOptions" [ngValue]="option.id">
@@ -153,10 +167,14 @@
           Gender is required
         </div>
       </div>
+    </div>
 
-      <!-- Pet Specialty -->
-      <div class="col-md-6 mb-3">
-        <label for="petSpecialty" class="form-label">Pet Specialty</label>
+    <!-- Pet Specialty -->
+    <div class="row mb-3">
+      <label for="petSpecialty" class="col-sm-3 col-form-label"
+        >Pet Specialty</label
+      >
+      <div class="col-sm-9">
         <select
           class="form-select"
           id="petSpecialty"
@@ -177,36 +195,14 @@
           Pet Specialty is required
         </div>
       </div>
+    </div>
 
-      <!-- Image -->
-      <div class="col-md-6 mb-3">
-        <label for="image" class="form-label">Image</label>
-        <input
-          type="file"
-          class="form-control"
-          id="image"
-          (change)="onImageSelected($event)"
-        />
-        <div *ngIf="imageError" class="text-danger mt-1">{{ imageError }}</div>
-      </div>
-
-      <!-- Certificate -->
-      <div class="col-md-6 mb-3">
-        <label for="certificate" class="form-label">Certificate</label>
-        <input
-          type="file"
-          class="form-control"
-          id="certificate"
-          (change)="onCertificateSelected($event)"
-        />
-        <div *ngIf="certificateError" class="text-danger mt-1">
-          {{ certificateError }}
-        </div>
-      </div>
-
-      <!-- Price Per Hour -->
-      <div class="col-md-6 mb-3">
-        <label for="pricePerHour" class="form-label">Price Per Hour</label>
+    <!-- Price Per Hour -->
+    <div class="row mb-3">
+      <label for="pricePerHour" class="col-sm-3 col-form-label"
+        >Price Per Hour</label
+      >
+      <div class="col-sm-9">
         <input
           type="number"
           class="form-control"
@@ -220,10 +216,12 @@
           Price Per Hour can't be blank
         </div>
       </div>
+    </div>
 
-      <!-- Country -->
-      <div class="col-md-6 mb-3">
-        <label for="country" class="form-label">Country</label>
+    <!-- Country -->
+    <div class="row mb-3">
+      <label for="country" class="col-sm-3 col-form-label">Country</label>
+      <div class="col-sm-9">
         <input
           type="text"
           class="form-control"
@@ -237,10 +235,12 @@
           Country can't be blank
         </div>
       </div>
+    </div>
 
-      <!-- City -->
-      <div class="col-md-6 mb-3">
-        <label for="city" class="form-label">City</label>
+    <!-- City -->
+    <div class="row mb-3">
+      <label for="city" class="col-sm-3 col-form-label">City</label>
+      <div class="col-sm-9">
         <input
           type="text"
           class="form-control"
@@ -254,10 +254,12 @@
           City can't be blank
         </div>
       </div>
+    </div>
 
-      <!-- Street -->
-      <div class="col-md-6 mb-3">
-        <label for="street" class="form-label">Street</label>
+    <!-- Street -->
+    <div class="row mb-3">
+      <label for="street" class="col-sm-3 col-form-label">Street</label>
+      <div class="col-sm-9">
         <input
           type="text"
           class="form-control"
@@ -273,9 +275,15 @@
       </div>
     </div>
 
-    <!-- Submit -->
-    <div class="d-flex justify-content-end mt-3">
-      <button type="submit" class="btn btn-primary px-4">Register</button>
+    <!-- زر الإرسال النهائي -->
+    <div class="d-flex justify-content-end">
+      <button
+        type="submit"
+        class="btn btn-primary px-4"
+        [disabled]="registerForm.invalid && isSubmitted"
+      >
+        Complete Registration
+      </button>
     </div>
   </form>
 </div>
