@@ -29,20 +29,24 @@ namespace PetConnect.BLL.Services.Classes
             List<BasketItemDto> basketItemDtos = new List<BasketItemDto>();
             foreach (var item in basket.Items)
             {
-                var basketItemDto = new BasketItemDto() { 
-                Id = item.Id,
-                ProductName = item.ProductName,
-                Brand = item.Brand,
-                Category = item.Category,
-                PictureUrl = item.PictureUrl,
-                Price = item.Price,
-                Quantity = item.Quantity,
+                var basketItemDto = new BasketItemDto()
+                {
+                    Id = item.Id,
+                    ProductName = item.ProductName,
+                    Brand = item.Brand,
+                    Category = item.Category,
+                    PictureUrl = item.PictureUrl,
+                    Price = item.Price,
+                    Quantity = item.Quantity,
+
                 };
                 basketItemDtos.Add(basketItemDto);
             }
-            return new CustomerBasketDto() {
-            Id = basket.Id,
-            Items = basketItemDtos
+            return new CustomerBasketDto()
+            {
+                Id = basket.Id,
+                Items = basketItemDtos,
+                paymentIntentId = basket.paymentIntentId
             };
         }
         public async Task<CustomerBasketDto> UpdateCustomerBasketAsync(CustomerBasketDto customerBasket)
