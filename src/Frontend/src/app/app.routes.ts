@@ -52,18 +52,24 @@ import { SinglePost } from './Feature/Blog/single-post/single-post';
 import { AddBlog } from './Feature/Blog/add-blog/add-blog';
 import { Blogs } from './Feature/profile/doctor/blogs/blogs';
 import { UpdateBlog } from './Feature/Blog/update-blog/update-blog';
+
 import { NotFound } from './Feature/not-found/not-found';
 import { CheckoutComponent } from './Feature/checkout/checkout/checkout';
 import { OrderSuccessComponent } from './Feature/order-success/order-success/order-success';
+
+import { ReviewMainPage } from './Feature/Review/review-main-page/review-main-page';
+import { AddReview } from './Feature/Review/add-review/add-review';
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'home', component: Home },
+  {path:'review', component:AddReview},
   { path: 'doctors', component: Doctors },
   {
     path: 'doctors/appointment',
     component: DoctorCustomerAppointment,
     canActivate: [authGuard, CustomerGuard],
   },
+  {path:'doctors/review',component:ReviewMainPage}  ,
   {
     path: 'doctors/timeslots',
     component: ShowAllDoctorTimeslots,

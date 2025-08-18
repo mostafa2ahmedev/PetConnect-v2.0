@@ -1,0 +1,80 @@
+<main class="container-md bg-white p-5 rounded-4 shadow-lg my-5">
+    <!-- Review Form Section -->
+    <div>
+        <h1 class="fs-2 fw-bold text-center text-dark mb-2">Write a Review</h1>
+        <p class="text-center text-muted mb-4">Share your experience with Doctor Name.</p>
+
+        <form #reviewForm="ngForm" (ngSubmit)="onSubmit(reviewForm)" class="g-3">
+            <!-- Name and Role -->
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="name" class="form-label">Your Name</label>
+                    <input type="text" id="name" name="name"  required 
+                           disabled [value]="`${customerData.fName}  ${customerData.lName}`"
+                           class="form-control rounded-3" >
+
+                </div>
+                <div class="col-md-6">
+                    <label for="role" class="form-label" >Your Role</label>
+                    <input type="text" id="role" name="role"  required disabled
+                           class="form-control rounded-3" value="Customer">
+                </div>
+            </div>
+
+            <!-- Review Content -->
+            <div class="mb-3">
+                <label for="content" class="form-label">Your Review</label>
+                <textarea id="content" name="content" rows="4" ngModel required placeholder="Write your review here..."
+                          class="form-control rounded-3"></textarea>
+            </div>
+
+            <!-- Rating -->
+            <div class="mb-3">
+                <label class="form-label mb-2">Rating</label>
+                <div class="d-flex align-items-center">
+                    <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
+                        <label class="cursor-pointer fs-2 me-2" (click)="setRating(i)">
+                            <i class="bi bi-star-fill" [class.text-warning]="starRating >= i" [class.text-secondary]="starRating < i"></i>
+                        </label>
+                    </ng-container>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" [disabled]="!reviewForm.valid || starRating === 0"
+                    class="btn btn-primary w-100 rounded-3">
+                Submit Review
+            </button>
+        </form>
+    </div>
+    
+    <!-- Display Testimonials Section -->
+    <!-- <hr class="my-5">
+    <div>
+        <h2 class="fs-4 fw-bold text-center text-dark mb-4">Recent Reviews</h2>
+        <div id="testimonials-container">
+            <div *ngFor="let review of reviews" class="testimonial-card mx-auto mb-4">
+                <div class="testimonial-content">
+                    <p>
+                        <i class="bi bi-quote quote-icon"></i>
+                        {{ review.content }}
+                    </p>
+                </div>
+                <div class="testimonial-profile">
+                    <div class="profile-info">
+                        <img [src]="review.imgSrc" alt="Profile Image" onerror="this.src='[https://placehold.co/100x100/1e40af/ffffff?text=User](https://placehold.co/100x100/1e40af/ffffff?text=User)';"/>
+                        <div>
+                            <h3>{{ review.name }}</h3>
+                            <h4>{{ review.role }}</h4>
+                        </div>
+                    </div>
+                    <div class="rating">
+                        <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
+                            <i class="bi bi-star-fill" [class.text-warning]="review.rating >= i" [class.text-secondary]="review.rating < i"></i>
+                        </ng-container>
+                    </div>
+                </div>
+            </div> -->
+        <!-- </div> -->
+    <!-- </div> -->
+</main>

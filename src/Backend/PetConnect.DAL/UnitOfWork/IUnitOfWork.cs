@@ -51,6 +51,8 @@ namespace PetConnect.DAL.UnitofWork
 
         public IDeliveryMethodRepository DeliveryMethodRepository { get; }
 
+        public ISupportRequestRepository SupportRequestRepository { get; }
+        public ISupportResponseRepository SupportResponseRepository { get; }
         public int SaveChanges();
         Task<int> SaveChangesAsync();
 

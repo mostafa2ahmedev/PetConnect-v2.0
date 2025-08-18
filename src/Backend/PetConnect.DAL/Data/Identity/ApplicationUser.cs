@@ -27,6 +27,6 @@ namespace PetConnect.DAL.Data.Identity
         public ICollection<UserBlogLike> UserBlogLikes { get; set; } = new HashSet<UserBlogLike>();
         public ICollection<UserBlogCommentLike> UserBlogCommentLikes { get; set; } = new HashSet<UserBlogCommentLike>();
         public ICollection<UserBlogCommentReplyLike> UserBlogCommentReplyLikes { get; set; } = new HashSet<UserBlogCommentReplyLike>();
-    
+        public ICollection<SupportRequest> SupportRequests { get; set; } = new HashSet<SupportRequest>();
     }
 }

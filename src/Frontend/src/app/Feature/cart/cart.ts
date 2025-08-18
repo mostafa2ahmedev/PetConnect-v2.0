@@ -169,5 +169,6 @@ export class CartComponent implements AfterViewInit, OnDestroy {
         'Failed to proceed to checkout';
       this.alertService.error(errorMsg);
     }
+
   }
 }

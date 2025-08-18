@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetConnect.DAL.Data;
 
@@ -11,9 +12,11 @@ using PetConnect.DAL.Data;
 namespace PetConnect.DAL.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250815064410_AddDoctorReviewsTable")]
+    partial class AddDoctorReviewsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -921,59 +924,6 @@ namespace PetConnect.DAL.Data.Migrations
                     b.ToTable("ShelterPhones");
                 });
 
-            modelBuilder.Entity("PetConnect.DAL.Data.Models.SupportRequest", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("varchar(500)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("SupportRequests");
-                });
-
-            modelBuilder.Entity("PetConnect.DAL.Data.Models.SupportResponse", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("varchar(max)");
-
-                    b.Property<int>("SupportRequestId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SupportRequestId");
-
-                    b.ToTable("SupportResponses");
-                });
-
             modelBuilder.Entity("PetConnect.DAL.Data.Models.TimeSlot", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1717,28 +1667,6 @@ namespace PetConnect.DAL.Data.Migrations
                     b.Navigation("Shelter");
                 });
 
-            modelBuilder.Entity("PetConnect.DAL.Data.Models.SupportRequest", b =>
-                {
-                    b.HasOne("PetConnect.DAL.Data.Identity.ApplicationUser", "User")
-                        .WithMany("SupportRequests")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("PetConnect.DAL.Data.Models.SupportResponse", b =>
-                {
-                    b.HasOne("PetConnect.DAL.Data.Models.SupportRequest", "Request")
-                        .WithMany("SupportResponses")
-                        .HasForeignKey("SupportRequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Request");
-                });
-
             modelBuilder.Entity("PetConnect.DAL.Data.Models.TimeSlot", b =>
                 {
                     b.HasOne("PetConnect.DAL.Data.Models.Doctor", "Doctor")
@@ -1944,8 +1872,6 @@ namespace PetConnect.DAL.Data.Migrations
 
                     b.Navigation("SentMessages");
 
-                    b.Navigation("SupportRequests");
-
                     b.Navigation("UserBlogCommentLikes");
 
                     b.Navigation("UserBlogCommentReplies");
@@ -2039,11 +1965,6 @@ namespace PetConnect.DAL.Data.Migrations
                     b.Navigation("ShelterPetAdoptions");
 
                     b.Navigation("ShelterPhones");
-                });
-
-            modelBuilder.Entity("PetConnect.DAL.Data.Models.SupportRequest", b =>
-                {
-                    b.Navigation("SupportResponses");
                 });
 
             modelBuilder.Entity("PetConnect.DAL.Data.Models.TimeSlot", b =>

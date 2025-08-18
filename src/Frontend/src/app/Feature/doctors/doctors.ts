@@ -10,7 +10,8 @@ import { DoctorsService } from './doctors-service';
 import { FormsModule } from '@angular/forms';
 import { IDoctor } from './idoctor';
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+
 import { ISpeciality } from './ispeciality';
 import { AccountService } from '../../core/services/account-service';
 
@@ -25,14 +26,17 @@ export class Doctors implements OnInit {
   doctorsAreLoading = signal(true);
   doctorService = inject(DoctorsService);
   accounterService = inject(AccountService);
+  router = inject(Router)
   name: string = '';
   maxPrice: number | null = null;
   allDoctors: string | IDoctor[] = [];
   specialty: number | null = 0;
   specialities: ISpeciality[] = [
-    { specialityName: 'Dog', value: 1 },
-    { specialityName: 'Cat', value: 2 },
+    { specialityName: 'Dog', value: 0 },
+    { specialityName: 'Cat', value: 1 },
+    {specialityName:'Bird',value:2}
   ];
+  city:string ="";
   isCustomerLogginIn = false;
   errorFound: boolean = false;
   errorMesseage: string = '';
@@ -43,7 +47,7 @@ export class Doctors implements OnInit {
 
   search() {
     this.doctorService
-      .getAll(this.name, this.maxPrice, this.specialty)
+      .getAll(this.name, this.maxPrice, this.specialty,this.city)
       .subscribe({
         next: (e) => {
           this.errorFound = false;
@@ -56,5 +60,8 @@ export class Doctors implements OnInit {
           console.log(this.errorMesseage);
         },
       });
+  }
+  addReview(docId:string){
+    this.router.navigate(['/doctors','review'],{state:{doctorId:docId}});
   }
 }
