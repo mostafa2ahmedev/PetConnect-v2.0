@@ -23,7 +23,7 @@ import { BlogService } from '../../Blog/blog-service';
 import { ReviewMainPage } from "../../Review/review-main-page/review-main-page";
 @Component({
   selector: 'app-doctor-profile',
-  imports: [CurrencyPipe, DatePipe, CommonModule, RouterModule, ReviewMainPage],
+  imports: [CurrencyPipe, DatePipe, CommonModule, RouterModule],
   templateUrl: './doctor-profile.html',
   styleUrl: './doctor-profile.css',
 })

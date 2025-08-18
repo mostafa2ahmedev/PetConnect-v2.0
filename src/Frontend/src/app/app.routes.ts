@@ -57,6 +57,7 @@ import { NotFound } from './Feature/not-found/not-found';
 import { ReviewMainPage } from './Feature/Review/review-main-page/review-main-page';
 import { AddReview } from './Feature/Review/add-review/add-review';
 import { ReviewCustomerListOfReviews } from './Feature/Review/review-customer-list-of-reviews/review-customer-list-of-reviews';
+import { CustomerViewDoctor } from './Feature/Doctor/customer-view-doctor/customer-view-doctor';
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'home', component: Home },
@@ -78,7 +79,8 @@ export const routes: Routes = [
     component: DoctorAddTimeslot,
     canActivate: [doctorGuardGuard],
   },
-  { path: 'doctors/:id', component: DoctorProfile, canActivate: [authGuard] },
+  // { path: 'doctors/:id', component: DoctorProfile, canActivate: [authGuard] },
+  { path: 'doctors/:id', component: CustomerViewDoctor, canActivate: [authGuard] },
   { path: 'doctor-details/:id', component: DoctorLearnMore },
   {
     path: 'doctors/update/:id',

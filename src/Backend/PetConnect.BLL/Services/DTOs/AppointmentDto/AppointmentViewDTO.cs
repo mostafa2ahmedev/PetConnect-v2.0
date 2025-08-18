@@ -21,5 +21,6 @@ namespace PetConnect.BLL.Services.DTOs.AppointmentDto
 
         public DateTime CreatedAt { get; set; }
         public string? Notes { get; set; }
+        public bool IsReviewable { get; set; }
     }
 }

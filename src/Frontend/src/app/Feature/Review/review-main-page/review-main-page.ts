@@ -19,7 +19,6 @@ import { ReviewsService } from '../reviews-service';
 })
 export class ReviewMainPage implements OnInit , AfterViewInit{
   ngAfterViewInit(): void {
-    this.initSwiper();
   }
   ngOnInit(): void {
     if(!history.state.doctorId)
@@ -40,6 +39,9 @@ export class ReviewMainPage implements OnInit , AfterViewInit{
       next:resp=>{
         this.testimonials= resp.data
         console.log(resp.data);
+        if(this.testimonials.length > 0) {
+          this.initSwiper();
+        }
       },
       error: err=>{
         console.log(err);

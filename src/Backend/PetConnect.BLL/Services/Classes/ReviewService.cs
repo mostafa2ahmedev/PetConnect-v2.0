@@ -48,7 +48,7 @@ namespace PetConnect.BLL.Services.Classes
 
         public bool AnyByAppointment(Guid appointmentId)
         {
-            return _reviewRepository.AnyByAppointment(appointmentId);
+            return _reviewRepository.AnyByAppointment(appointmentId) ;
         }
 
         public ReviewDto AddReview(ReviewCreateDto dto)

@@ -66,7 +66,10 @@ namespace PetConnect.BLL.Services.Classes
                 Street = doctor.Address.Street,
                 City = doctor.Address.City,
                 IsApproved = doctor.IsApproved,
-                PhoneNumber = doctor.PhoneNumber
+                PhoneNumber = doctor.PhoneNumber,
+                Rating = UOW.ReviewRepository.GetByDoctorId(doctor.Id).Any()
+            ? Math.Min(Convert.ToInt32(UOW.ReviewRepository.GetByDoctorId(doctor.Id).Average(r => r.Rating)), 5)
+            : 0
             };
         }
 

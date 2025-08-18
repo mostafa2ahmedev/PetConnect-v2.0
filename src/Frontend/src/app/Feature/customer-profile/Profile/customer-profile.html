@@ -398,7 +398,7 @@
                       </span>
                     </td>
                     <td>
-                      <button [disabled]="appt.status !== 'Completed'" class="review-button" (click)="writeReview(appt.id, appt.doctorId)">Write a Review</button>
+                      <button [disabled]=" appt.status !== 'Completed' || appt.isReviewable" class="review-button" (click)="writeReview(appt.id, appt.doctorId)">Write a Review</button>
                     </td>
                     <!-- <td>{{ appt.createdAt | date : "medium" }}</td> -->
                   </tr>

@@ -89,7 +89,6 @@ namespace PetConnect.BLL.Services.Classes
                 PetId = a.PetId,
                 Status = a.Status.ToString(),
                 CreatedAt = a.CreatedAt,
-
             });
         }
         public async Task<AppointmentViewDTO> AddAppointmentAsync(AppointmentCreateDTO dto)
@@ -180,7 +179,9 @@ namespace PetConnect.BLL.Services.Classes
                     PetImg = app.Pet.ImgUrl,
                     CustomerImg = app.Customer.ImgUrl,
                     CustomerPhone = app.Customer.PhoneNumber,
-                    DoctorId=app.DoctorId
+                    DoctorId=app.DoctorId,
+                    IsReviewable = _unitOfWork.ReviewRepository.AnyByAppointment(app.Id)
+
                 });
             }
             return appointments;

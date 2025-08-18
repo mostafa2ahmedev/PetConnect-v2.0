@@ -24,5 +24,6 @@ namespace PetConnect.BLL.Services.DTOs.AppointmentDto
         public string? CustomerImg { get; set; }
         public string? CustomerPhone { get; set; }
         public string DoctorId { get; set; }
+        public bool IsReviewable { get; set; }
     }
 }
