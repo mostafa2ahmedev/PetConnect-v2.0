@@ -83,6 +83,7 @@ namespace PetConnect.DAL.UnitofWork
         public IUserBlogCommentRepository UserBlogCommentRepository => new UserBlogCommentRepository(context);
 
         public IUserBlogCommentReplyRepository UserBlogCommentReplyRepository => new UserBlogCommentReplyRepository(context);
+        public IDeliveryMethodRepository DeliveryMethodRepository => new DeliveryMethodRepository(context);
 
         public ISupportRequestRepository SupportRequestRepository => new SupportRequestRepository(context);
         public IAdminSupportResponseRepository SupportResponseRepository => new AdminSupportResponseRepository(context);

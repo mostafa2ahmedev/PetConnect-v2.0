@@ -1,45 +1,78 @@
 // cart.service.ts
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Product } from '../../models/product';
+
+export interface CartItem {
+  id: number;
+  name: string;
+  productName?: string;  // Alias for backend compatibility
+  description: string;
+  price: number;
+  quantity: number;
+  maxQuantity?: number;
+  imgUrl: string;
+  pictureUrl?: string;   // Alias for backend compatibility
+  brand?: string;
+  category?: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
   private cartKey = 'cart';
-  private cartSubject = new BehaviorSubject<Product[]>(this.getCartFromStorage());
+  private cartSubject = new BehaviorSubject<CartItem[]>(this.getCartFromStorage());
 
   cart$ = this.cartSubject.asObservable();
 
-  private getCartFromStorage(): Product[] {
-    return JSON.parse(localStorage.getItem(this.cartKey) || '[]');
+  private getCartFromStorage(): CartItem[] {
+    const cart = localStorage.getItem(this.cartKey);
+    return cart ? JSON.parse(cart) : [];
   }
 
-  addToCart(product: Product): void {
-    const cart = this.getCartFromStorage();
-    if(cart.some(e=>e.id == product.id)) {
-      cart.find(e=>e.id == product.id)!.quantity += 1;
-    } else {
-      cart.push({...product, quantity: 1 , maxQuantity: product.quantity}); // Ensure quantity is set
-    }
+  private saveCart(cart: CartItem[]): void {
     localStorage.setItem(this.cartKey, JSON.stringify(cart));
-    this.cartSubject.next(cart); // Notify subscribers of the update
+    this.cartSubject.next(cart);
+  }
+
+  addToCart(item: CartItem): void {
+    const cart = this.getCartFromStorage();
+    const existingItem = cart.find(e => e.id === item.id);
+    
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      cart.push({ 
+        ...item,
+        quantity: 1,
+        // Ensure backend-compatible fields
+        productName: item.productName || item.name,
+        pictureUrl: item.pictureUrl || item.imgUrl
+      });
+    }
+    this.saveCart(cart);
+  }
+
+  updateQuantity(index: number, quantity: number): void {
+    const cart = this.getCartFromStorage();
+    if (cart[index]) {
+      cart[index].quantity = quantity;
+      this.saveCart(cart);
+    }
+  }
+
+  removeItem(index: number): void {
+    const cart = this.getCartFromStorage();
+    cart.splice(index, 1);
+    this.saveCart(cart);
+  }
+
+  clearCart(): void {
+    localStorage.removeItem(this.cartKey);
+    this.cartSubject.next([]);
   }
 
   getCartLength(): number {
     return this.getCartFromStorage().length;
   }
-
-  removeItem(index: number): void {
-  const cart = this.getCartFromStorage();
-  cart.splice(index, 1);
-  localStorage.setItem(this.cartKey, JSON.stringify(cart));
-  this.cartSubject.next(cart); // Broadcast updated cart
-}
-
-clearCart(): void {
-  localStorage.removeItem(this.cartKey);
-  this.cartSubject.next([]); // Notify all subscribers the cart is empty
-}
 }

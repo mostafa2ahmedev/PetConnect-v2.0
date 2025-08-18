@@ -1,0 +1,115 @@
+<!-- Redesigned to match PetConnect's clean, simple theme with white background and blue accents -->
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10">
+
+      <!-- Header -->
+      <div class="d-flex align-items-center mb-4">
+        <button class="btn btn-link text-decoration-none p-0 me-3" style="color: #6366f1;" [routerLink]="['/cart']">
+          <i class="fas fa-arrow-left me-2"></i>Back to Cart
+        </button>
+        <h2 class="fw-bold mb-0" style="color: #1f2937;">Checkout</h2>
+      </div>
+
+      <div class="row">
+        <!-- Left Side - Delivery & Payment -->
+        <div class="col-12 col-lg-8 mb-4">
+          <div class="checkout-card">
+
+            <!-- Delivery Selection -->
+            <div *ngIf="!basket?.clientSecret" class="mb-5">
+              <h4 class="section-title">Select Delivery Method</h4>
+
+              <div class="delivery-options">
+                <div *ngFor="let method of deliveryMethods" class="delivery-method-card"
+                  [class.selected]="basket?.deliveryMethodId === method.id" (click)="selectDelivery(method.id)">
+
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                      <div class="delivery-icon">
+                        <i class="fas fa-truck"></i>
+                      </div>
+                      <div>
+                        <h6 class="delivery-name">{{ method.name }}</h6>
+                        <small class="delivery-time">{{ method.days }}</small>
+                      </div>
+                    </div>
+                    <div class="delivery-price">
+                      ${{ method.cost }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Payment Section -->
+            <div *ngIf="basket?.clientSecret">
+              <h4 class="section-title">Payment Information</h4>
+
+              <!-- Added payment method logos section -->
+              <div class="payment-methods mb-3">
+                <span class="payment-label">We accept:</span>
+                <div class="payment-logos">
+                  <img src="/assets/visa.svg" alt="Visa" class="payment-logo">
+                  <img src="/assets/mastercard.svg" alt="Mastercard" class="payment-logo">
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label">Card Information</label>
+                <!-- Enhanced Stripe card element with better styling and state classes -->
+                <div #cardElement class="stripe-card-element" [class.stripe-card-complete]="cardComplete">
+                </div>
+              </div>
+
+              <div class="security-badge">
+                <i class="fas fa-shield-alt me-2"></i>
+                Secured by Stripe
+              </div>
+            </div>
+
+            <!-- Loading -->
+            <div *ngIf="loading" class="loading-section">
+              <div class="spinner-border text-primary mb-3" role="status"></div>
+              <p class="text-muted">Setting up your payment...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side - Order Summary -->
+        <div class="col-12 col-lg-4">
+          <div class="order-summary-card">
+            <h5 class="summary-title">Order Summary</h5>
+
+    
+            <div class="summary-row" *ngIf="basket?.items">
+              <span class="summary-label">Subtotal</span>
+              <span class="summary-value">${{ getSubtotal() }}</span>
+            </div>
+            <div class="summary-row" *ngIf="basket?.shippingPrice">
+              <span class="summary-label">Shipping</span>
+              <span class="summary-value">${{ getShippingPrice() }}</span>
+            </div>
+            <hr class="summary-divider">
+            <div class="summary-row total-row">
+              <span class="summary-label">Total</span>
+              <span class="summary-value">${{ getTotal() }}</span>
+            </div>
+
+            <!-- Updated button to match new component properties -->
+            <button *ngIf="basket?.clientSecret" class="checkout-btn" (click)="confirmPayment()"
+              [disabled]="paymentProcessing || !cardComplete">
+
+              <span *ngIf="!paymentProcessing">
+                <i class="fas fa-lock me-2"></i>Complete Payment
+              </span>
+              <span *ngIf="paymentProcessing">
+                <div class="spinner-border spinner-border-sm me-2"></div>Processing...
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

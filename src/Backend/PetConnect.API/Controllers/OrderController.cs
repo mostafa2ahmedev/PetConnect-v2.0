@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetConnect.BLL.Services.DTOs.Basket;
 using PetConnect.BLL.Services.DTOs.Order;
 using PetConnect.BLL.Services.Interfaces;
@@ -16,7 +17,35 @@ namespace PetConnect.API.Controllers
         {
             _orderService = orderService;
         }
+        [HttpPost("legacyCode")]
+        [Authorize]
+        public async Task<IActionResult> CreateOrder(OrderToCreateDto OrderToCreateDto)
+        {
+            var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var customerEmail = User.FindFirstValue(ClaimTypes.Email);
+            var reuslt = await _orderService.CreateOrderAsync(customerId!, customerEmail!, OrderToCreateDto);
+            return Ok(reuslt);
+        }
+        [HttpGet("legacyCode/{id}")]
+        [Authorize]
+        public IActionResult GetByIdLegacy(int id)
+        {
+            var customerEmail = User.FindFirstValue(ClaimTypes.Email);
+            var order = _orderService.GetOrderByIdAsync(customerEmail!, id);
+            if (order == null)
+                return NotFound($"No order found with ID {id}");
 
+            return Ok(order);
+        }
+        [HttpGet("legacyCode/customer")]
+        [Authorize]
+        public async Task<IActionResult> GetOrdersByCustomerLegacy()
+        {
+            var customerEmail = User.FindFirstValue(ClaimTypes.Email);
+            var result =await _orderService.GetOrdersForUserAsync(customerEmail!);
+            return Ok(result);
+        }
+        #region LegacyCode (5ara)
         // GET: api/Order
         [HttpGet]
         public IActionResult GetAll()
@@ -46,14 +75,7 @@ namespace PetConnect.API.Controllers
             var orderId = _orderService.AddOrder(dto);
             return Ok(new { OrderId = orderId });
         }
-        [HttpPost("legacyCode")]
-        public async Task<IActionResult> CreateOrder(OrderToCreateDto OrderToCreateDto)
-        {
-            var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var customerEmail = User.FindFirstValue(ClaimTypes.Email);
-            var reuslt = await _orderService.CreateOrderAsync( customerId!, customerEmail!, OrderToCreateDto);
-            return Ok(reuslt);
-        }
+
         // PUT: api/Order
         [HttpPut]
         public IActionResult Update([FromBody] UpdatedOrderDTO dto)
@@ -87,5 +109,6 @@ namespace PetConnect.API.Controllers
             return Ok(result);
         }
 
+        #endregion
     }
 }

@@ -45,6 +45,8 @@ namespace PetConnect.DAL.Services
             services.AddScoped<IFaceComparisonService, FaceComparisonService>();
             services.AddScoped<IFollowUpSupportRequestService, FollowUpSupportRequestService>();
 
+            services.AddScoped<IPaymentService, PaymentService>();
+
             return services;
         } 
     }
