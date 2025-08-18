@@ -9,6 +9,5 @@ namespace PetConnect.DAL.Data.Enums
     public enum SupportRequestType
     {
         Support,Consulting,Marketing,Issue
-
     }
 }

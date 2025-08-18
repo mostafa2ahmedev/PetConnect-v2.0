@@ -9,6 +9,6 @@ namespace PetConnect.BLL.Services.Interfaces
 {
     public interface IPaymentService
     {
-        Task<CustomerBasketDto> CreateOrUpdatePaymentIntentAsync(string BasketId);
+        Task<CustomerBasketDto> CreateOrUpdatePaymentIntentAsync(string BasketId , int deliveryMethodId);
     }
 }

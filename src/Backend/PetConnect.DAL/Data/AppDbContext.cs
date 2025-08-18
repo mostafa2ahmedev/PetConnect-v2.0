@@ -39,8 +39,8 @@ namespace PetConnect.DAL.Data
   
         public DbSet<UserBlogCommentReplyLike> UserBlogCommentReplyLikes { get; set; }
         public DbSet<SupportRequest> SupportRequests { get; set; }
-        public DbSet<SupportResponse> SupportResponses { get; set; }
         public DbSet<Review> Review { get; set; }
+        //public DbSet<FollowUpSupportRequest> FollowUpSupportRequests { get; set; }
 
 
         public DbSet<AdminSupportResponse> SupportResponses { get; set; }

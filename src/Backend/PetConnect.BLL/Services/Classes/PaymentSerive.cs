@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using PetConnect.BLL.Services.DTOs.Basket;
 using PetConnect.BLL.Services.Interfaces;
+using PetConnect.DAL.Data.Models;
 using PetConnect.DAL.Data.Repositories.Classes;
 using PetConnect.DAL.Data.Repositories.Interfaces;
 using PetConnect.DAL.UnitofWork;
@@ -30,12 +31,12 @@ namespace PetConnect.BLL.Services.Classes
             _deliveryMethodRepository = deliveryMethodRepository;
         }
 
-        public async Task<CustomerBasketDto> CreateOrUpdatePaymentIntentAsync(string BasketId)
+        public async Task<CustomerBasketDto> CreateOrUpdatePaymentIntentAsync(string BasketId , int deliveryMethodId)
         {
             StripeConfiguration.ApiKey = _configuration["StripeSettings:SecretKey"];
 
             var Basket = await _basketRepository.GetAsync(BasketId) ?? throw new Exception();
-            Basket.deliveryMethodId = 2; // need to be send from front 
+            Basket.deliveryMethodId = deliveryMethodId; // need to be send from front 
 
             var ProductRepo = _unitOfWork.ProductRepository;
 

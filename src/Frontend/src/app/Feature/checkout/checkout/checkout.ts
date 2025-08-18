@@ -125,7 +125,11 @@ export class CheckoutComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   async selectDelivery(methodId: number) {
     const method = this.deliveryMethods.find((m) => m.id === methodId);
+
     if (!method) return;
+    methodId = method.id;
+
+    console.log('Selected delivery method:', method.id);
 
     try {
       this.loading = true;
@@ -133,13 +137,14 @@ export class CheckoutComponent implements OnInit, OnDestroy, AfterViewChecked {
       // 1. Update delivery method and create payment intent
       const response = await firstValueFrom(
         this.http.post<CustomerBasket>(
-          `${environment.apiBaseUrl}/Payment/${this.basketId}`,
+          `${environment.apiBaseUrl}/Payment/${this.basketId}?deliveryMethodId=${methodId}`,
           {
             deliveryMethodId: methodId,
-            shippingPrice: method.cost,
           }
         )
       );
+
+
 
       // 2. Store the response
       this.basket = response;
