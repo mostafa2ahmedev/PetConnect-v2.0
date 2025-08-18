@@ -3,6 +3,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { CommonModule } from '@angular/common';
+import { CartService } from '../../cart/cart-service';
 
 @Component({
   selector: 'app-order-success',
@@ -14,11 +15,12 @@ export class OrderSuccessComponent implements OnInit {
   orderId!: number;
   loading = true;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) {}
+  constructor(private route: ActivatedRoute, private http: HttpClient, private cartService : CartService) {}
 
   ngOnInit(): void {
     this.orderId = +this.route.snapshot.paramMap.get('id')!;
     this.fetchOrder();
+    this.cartService.clearCart();
   }
 
   fetchOrder() {
