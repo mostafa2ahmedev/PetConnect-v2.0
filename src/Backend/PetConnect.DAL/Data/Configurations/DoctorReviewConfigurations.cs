@@ -41,6 +41,9 @@ namespace PetConnect.DAL.Data.Configurations
 
             builder.HasIndex(r => new { r.DoctorId, r.CustomerId });
 
+            builder.HasIndex(r => r.AppointmentId)
+             .IsUnique();
+
         }
     }
 

@@ -59,6 +59,9 @@ import { OrderSuccessComponent } from './Feature/order-success/order-success/ord
 
 import { ReviewMainPage } from './Feature/Review/review-main-page/review-main-page';
 import { AddReview } from './Feature/Review/add-review/add-review';
+import { ReviewCustomerListOfReviews } from './Feature/Review/review-customer-list-of-reviews/review-customer-list-of-reviews';
+import { CustomerViewDoctor } from './Feature/Doctor/customer-view-doctor/customer-view-doctor';
+
 import { FaceComparisonComponent } from './Feature/FaceRecognition/face-comparison/face-comparison';
 import { RegistrationGuard } from '././core/guards/registration-guard';
 import { DoctorRegisterForm } from './Feature/Doctor/doctor-register-form/doctor-register-form';
@@ -90,7 +93,8 @@ export const routes: Routes = [
     component: DoctorAddTimeslot,
     canActivate: [doctorGuardGuard],
   },
-  { path: 'doctors/:id', component: DoctorProfile, canActivate: [authGuard] },
+  // { path: 'doctors/:id', component: DoctorProfile, canActivate: [authGuard] },
+  { path: 'doctors/:id', component: CustomerViewDoctor, canActivate: [authGuard] },
   { path: 'doctor-details/:id', component: DoctorLearnMore },
   {
     path: 'doctors/update/:id',
@@ -144,6 +148,7 @@ export const routes: Routes = [
     component: UpdateProfile,
     canActivate: [authGuard],
   },
+      {path: 'profile/reviews',component:ReviewCustomerListOfReviews},
 
   {
     path: 'profile',

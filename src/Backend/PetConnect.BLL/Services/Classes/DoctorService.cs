@@ -25,7 +25,8 @@ namespace PetConnect.BLL.Services.Classes
         
         public IEnumerable<DoctorDetailsDTO> GetAll()
         {
-            return UOW.DoctorRepository.GetAll().Where(D=> D.IsApproved==true && D.IsDeleted == false)
+
+            return UOW.DoctorRepository.GetAll().Where(D => D.IsApproved == true && D.IsDeleted == false)
                 .Select(d => new DoctorDetailsDTO
                 {
                     Id = d.Id,
@@ -37,7 +38,10 @@ namespace PetConnect.BLL.Services.Classes
                     PricePerHour = d.PricePerHour,
                     CertificateUrl = d.CertificateUrl,
                     Street = d.Address.Street,
-                    City = d.Address.City
+                    City = d.Address.City,
+                    Rating = UOW.ReviewRepository.GetByDoctorId(d.Id).Any()
+            ? Math.Min(Convert.ToInt32(UOW.ReviewRepository.GetByDoctorId(d.Id).Average(r => r.Rating)), 5)
+            : 0
                 });
         }
 
@@ -62,7 +66,10 @@ namespace PetConnect.BLL.Services.Classes
                 Street = doctor.Address.Street,
                 City = doctor.Address.City,
                 IsApproved = doctor.IsApproved,
-                PhoneNumber = doctor.PhoneNumber
+                PhoneNumber = doctor.PhoneNumber,
+                Rating = UOW.ReviewRepository.GetByDoctorId(doctor.Id).Any()
+            ? Math.Min(Convert.ToInt32(UOW.ReviewRepository.GetByDoctorId(doctor.Id).Average(r => r.Rating)), 5)
+            : 0
             };
         }
 

@@ -15,9 +15,13 @@ namespace PetConnect.DAL.Data.Models
         public string? CustomerId { get; set; }
         public Customer? Customer { get; set; }
 
+        public Guid AppointmentId { get; set; }
+        public Appointment? Appointment { get; set; }
+
+
         public int Rating { get; set; }
         public string? ReviewText { get; set; }
         public DateTime ReviewDate { get; set; }
-
+        
     }
 }

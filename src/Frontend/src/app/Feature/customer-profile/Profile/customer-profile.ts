@@ -13,6 +13,7 @@ import { AccountService } from '../../../core/services/account-service';
 import { Subscription } from 'rxjs';
 import { NotificationService } from '../../../core/services/notification-service';
 import { AppointmentService } from '../../Doctor/doctor-profile/appointment-service';
+import { ReviewsService } from '../../Review/reviews-service';
 
 @Component({
   selector: 'app-customer-profile',
@@ -41,7 +42,8 @@ export class CustomerProfile implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private notificationService: NotificationService,
     private appointmentService: AppointmentService,
-    private router: Router
+    private router: Router,
+    private reviewsService : ReviewsService
   ) {}
 
   ngOnInit(): void {
@@ -201,7 +203,20 @@ export class CustomerProfile implements OnInit, OnDestroy {
       },
     });
   }
-  writeReview(appointmentId: number): void {
-    this.router.navigate(['/review'],{state:{appointmentId}});
+  writeReview(appointmentId: string ,doctorId:string): void {
+    this.reviewsService.canWriteReview(appointmentId).subscribe({
+      next:resp=>{
+        console.log(resp);
+        this.router.navigate(['/review'],{state:{appointmentId,doctorId}});
+      }
+      ,
+      error:err=>{
+        this.alert.error(err.error.data);
+        console.log(err);
+      }
+    })
+  }
+  showReviews(){
+    this.router.navigate(['/profile','reviews']);
   }
 }

@@ -48,6 +48,7 @@ namespace PetConnect.DAL.UnitofWork
         public IUserBlogCommentReplyLikeRepository UserBlogCommentReplyLikeRepository { get; }
         public IUserBlogCommentRepository UserBlogCommentRepository { get; }
         public IUserBlogCommentReplyRepository UserBlogCommentReplyRepository { get; }
+        public IReviewRepository  ReviewRepository{ get; }
 
         public IDeliveryMethodRepository DeliveryMethodRepository { get; }
 

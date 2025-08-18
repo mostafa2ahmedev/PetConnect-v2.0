@@ -14,6 +14,7 @@ import { Router, RouterLink } from '@angular/router';
 
 import { ISpeciality } from './ispeciality';
 import { AccountService } from '../../core/services/account-service';
+import { ReviewsService } from '../Review/reviews-service';
 
 @Component({
   selector: 'app-doctors',
@@ -26,6 +27,7 @@ export class Doctors implements OnInit {
   doctorsAreLoading = signal(true);
   doctorService = inject(DoctorsService);
   accounterService = inject(AccountService);
+  reviewService = inject(ReviewsService);
   router = inject(Router)
   name: string = '';
   maxPrice: number | null = null;
@@ -61,7 +63,7 @@ export class Doctors implements OnInit {
         },
       });
   }
-  addReview(docId:string){
+  viewReviews(docId:string){
     this.router.navigate(['/doctors','review'],{state:{doctorId:docId}});
   }
 }

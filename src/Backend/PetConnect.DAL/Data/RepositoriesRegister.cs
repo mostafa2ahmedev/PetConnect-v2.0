@@ -52,6 +52,8 @@ namespace PetConnect.DAL.Data
             services.AddScoped<IUserBlogCommentReplyLikeRepository, UserBlogCommentReplyLikeRepository>();
             services.AddScoped<IUserBlogCommentReplyRepository, UserBlogCommentReplyRepository>();
             services.AddScoped<ISupportRequestRepository, SupportRequestRepository>();
+            services.AddScoped<IReviewRepository, ReviewRepository>();
+
 
             services.AddScoped(typeof(IConnectionMultiplexer), (serviceProvider) => {
                 return ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis")!);

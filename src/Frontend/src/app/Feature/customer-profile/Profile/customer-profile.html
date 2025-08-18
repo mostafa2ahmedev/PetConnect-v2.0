@@ -72,6 +72,13 @@
             >
               Show Orders
             </button>
+
+                        <button
+              type="button"
+              class="btn btn-outline-warning ms-1"
+              (click)="showReviews()">
+              Show Reviews
+            </button>
           </div>
         </div>
       </div>
@@ -391,13 +398,8 @@
                       </span>
                     </td>
                     <td>
-                      <button
-                        [disabled]="appt.status !== 'Confirmed'"
-                        class="review-button"
-                        (click)="writeReview(appt.id)"
-                      >
-                        Write a Review
-                      </button>
+                      <button [disabled]=" appt.status !== 'Completed' || appt.isReviewable" class="review-button" (click)="writeReview(appt.id, appt.doctorId)">Write a Review</button>
+
                     </td>
                     <!-- <td>{{ appt.createdAt | date : "medium" }}</td> -->
                   </tr>
