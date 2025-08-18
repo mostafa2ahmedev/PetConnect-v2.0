@@ -1,101 +1,182 @@
-<section id="hero" class="hero section pb-0">
-  <div
-    class="container section-title aos-init aos-animate pb-0"
-    data-aos="fade-up"
-  >
-    <h2>Products</h2>
-    <p>Pet Essentials with Heart</p>
-
-    <div class="container py-4 mt-3">
-      <!-- <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="h4 font-weight-bold mb-0">All Products</h2>
-      </div> -->
-
-      <div class="row mb-4 g-2 justify-content-center">
-        <div class="col-md-4">
-          <input
-            type="text"
-            class="form-control shadow-sm rounded"
-            placeholder="Filter by type..."
-            [(ngModel)]="filterType"
-          />
-        </div>
-        <div class="col-md-4">
-          <input
-            type="number"
-            class="form-control shadow-sm rounded"
-            placeholder="Exact price..."
-            [(ngModel)]="filterExactPrice"
-          />
-        </div>
-        <div class="col-auto d-flex">
-          <button
-            class="btn btn-primary btn-sm shadow-sm me-2 rounded"
-            type="button"
-            (click)="applyFilters()"
-          >
-            <i class="bi bi-search"></i> Search
-          </button>
-          <button
-            class="btn btn-outline-secondary btn-sm shadow-sm rounded"
-            type="button"
-            (click)="clearFilters()"
-          >
-            <i class="bi bi-x-circle"></i> Clear
+<!-- Modern Hero Section with Gradient -->
+<section class="modern-hero-section">
+  <div class="hero-gradient-bg">
+    <div class="container section-title pb-0" data-aos="fade-up">
+      <div class="hero-content">
+        <h1 class="hero-title">Pet Products</h1>
+        <p class="hero-subtitle">Discover premium pet essentials crafted with love and care for your beloved companions.
+        </p>
+        <div class="hero-nav-buttons">
+          <button class="btn btn-outline-light btn-modern filter-toggle-btn" (click)="toggleFilters()">
+            <i class="fas fa-filter me-2"></i>Filter Products
           </button>
         </div>
       </div>
-      <div *ngIf="loadingProducts" class="text-center p-5">
-        <div class="spinner-border text-primary" role="status"></div>
-        <p class="mt-3">Loading products ...</p>
-      </div>
-      <!-- <div *ngIf="filteredProducts.length === 0" class="text-muted text-center">No products found.</div> -->
+    </div>
+  </div>
+</section>
 
-      <div class="row g-4 justify-content-center mt-5">
-        <div
-          *ngFor="let product of filteredProducts"
-          class="col-6 col-sm-4 col-md-3"
-        >
-          <div class="card h-100 shadow-sm mx-2 mb-5">
+<!-- Enhanced Filter Section -->
+<section class="filter-section" [class.show]="showFilters">
+  <div class="container">
+    <div class="filter-card">
+      <div class="filter-header">
+        <h3 class="filter-title">
+          <i class="fas fa-search me-2"></i>Find Your Perfect Products
+        </h3>
+        <p class="filter-subtitle">Filter by name, type, or price range</p>
+      </div>
+      <form class="filter-form">
+        <div class="filter-grid">
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-tag me-2"></i>Product Name
+            </label>
+            <input type="text" [(ngModel)]="filterName" name="filterName" class="form-control modern-input"
+              placeholder="Search by product name..." (input)="onFilterChange()" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-list me-2"></i>Product Type
+            </label>
+            <select [(ngModel)]="filterType" name="filterType" class="form-select modern-select"
+              (change)="onFilterChange()">
+              <option value="">-- All Types --</option>
+              <option *ngFor="let type of productTypes" [value]="type">{{ type }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-dollar-sign me-2"></i>Min Price
+            </label>
+            <input type="number" [(ngModel)]="minPrice" name="minPrice" class="form-control modern-input"
+              placeholder="Minimum price" step="0.01" (input)="onFilterChange()" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-dollar-sign me-2"></i>Max Price
+            </label>
+            <input type="number" [(ngModel)]="maxPrice" name="maxPrice" class="form-control modern-input"
+              placeholder="Maximum price" step="0.01" (input)="onFilterChange()" />
+          </div>
+        </div>
+
+        <div class="filter-actions">
+          <!-- Removed Search Products button since filtering is now instant -->
+          <button type="button" class="btn btn-outline-secondary btn-clear" (click)="clearFilters()">
+            <i class="fas fa-times me-2"></i>Clear Filters
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Loading State -->
+<div *ngIf="loadingProducts" class="loading-section">
+  <div class="container text-center">
+    <div class="loading-spinner">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="loading-text mt-3">Loading amazing products...</p>
+    </div>
+  </div>
+</div>
+
+<!-- Enhanced Products Grid -->
+<section class="products-section" *ngIf="!loadingProducts">
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <!-- Results Info -->
+    <div class="results-info" *ngIf="filteredProducts.length > 0">
+      <p class="results-text">
+        <i class="fas fa-box me-2"></i>
+        Showing {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ Math.min(currentPage * itemsPerPage,
+        filteredProducts.length) }} of {{ filteredProducts.length }} products
+      </p>
+    </div>
+
+    <!-- No Results -->
+    <div class="no-results" *ngIf="filteredProducts.length === 0 && !loadingProducts">
+      <div class="no-results-content">
+        <i class="fas fa-search no-results-icon"></i>
+        <h3 class="no-results-title">No Products Found</h3>
+        <p class="no-results-text">Try adjusting your filters or search terms</p>
+        <button class="btn btn-primary" (click)="clearFilters()">
+          <i class="fas fa-refresh me-2"></i>Show All Products
+        </button>
+      </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="products-grid" *ngIf="paginatedProducts.length > 0">
+      <div *ngFor="let product of paginatedProducts" class="product-card-wrapper" data-aos="zoom-in"
+        data-aos-delay="100">
+        <div class="modern-product-card">
+          <!-- Product Image -->
+          <div class="product-image-container">
             <a [routerLink]="['/products', product.id]">
-              <img
-                [src]="server + product.imgUrl"
-                alt="Product image"
-                class="card-img-top mt-2"
-                style="object-fit: cover"
-              />
+              <img [src]="server + product.imgUrl" [alt]="product.name" class="product-image" />
             </a>
-            <div class="card-body text-start pb-0 pt-5">
-              <h4 class="card-title text-truncate mb-2 fw-bold">
-                {{ product.name }}
-              </h4>
-              <p class="text-muted">{{ product.description }}</p>
-              <span
-                class="badge border text-secondary small"
-                style="display: inline; white-space: nowrap"
-              >
-                {{ product.productTypeName }}
-              </span>
-              <p class="text-dark fw-semibold mb-3 mt-3">
-                Price: {{ product.price | currency : "USD" }}
-              </p>
-              @if(product.quantity>0){
-              <p class="text-dark">In Stock : {{ product.quantity }}</p>
-              <button
-                class="btn btn-sm btn-outline-primary mt-auto mx-auto rounded-pill px-3"
-                (click)="addToCart(product)"
-                title="Add to cart"
-              >
-                Add to Cart
-                <i class="bi bi-cart-plus"></i>
-              </button>
-              } @else {
-              <p class="text-danger">Out of stock</p>
 
-              }
+            <div class="product-type-badge">{{ product.productTypeName }}</div>
+          </div>
+
+          <!-- Product Info -->
+          <div class="product-info">
+            <h5 class="product-name">{{ product.name }}</h5>
+            <p class="product-description">{{ product.description }}</p>
+
+            <div class="product-details">
+              <div class="price-info">
+                <span class="product-price">${{ product.price | number:'1.2-2' }}</span>
+                <span class="stock-info" *ngIf="product.quantity > 0">
+                  <i class="fas fa-box me-1"></i>{{ product.quantity }} available
+                </span>
+              </div>
+            </div>
+
+            <div class="product-actions">
+              <button class="btn btn-primary btn-add-cart" [disabled]="product.quantity === 0"
+                (click)="addToCart(product)">
+                <i class="fas fa-shopping-cart me-2"></i>
+                {{ product.quantity > 0 ? 'Add to Cart' : 'Out of Stock' }}
+              </button>
+              <a [routerLink]="['/products', product.id]" class="btn btn-outline-primary btn-view">
+                <i class="fas fa-eye me-2"></i>View Details
+              </a>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-section" *ngIf="filteredProducts.length > itemsPerPage">
+      <div class="pagination-info">
+        <span class="pagination-text">
+          Page {{ currentPage }} of {{ totalPages }}
+        </span>
+      </div>
+
+      <div class="pagination-controls">
+        <button class="btn btn-pagination" [disabled]="currentPage === 1" (click)="previousPage()">
+          <i class="fas fa-chevron-left"></i>
+          Previous
+        </button>
+
+        <div class="pagination-numbers">
+          <button *ngFor="let page of [].constructor(totalPages); let i = index" class="btn btn-page-number"
+            [class.active]="currentPage === i + 1" (click)="goToPage(i + 1)">
+            {{ i + 1 }}
+          </button>
+        </div>
+
+        <button class="btn btn-pagination" [disabled]="currentPage === totalPages" (click)="nextPage()">
+          Next
+          <i class="fas fa-chevron-right"></i>
+        </button>
       </div>
     </div>
   </div>

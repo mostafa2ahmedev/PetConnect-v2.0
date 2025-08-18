@@ -1,112 +1,89 @@
-/* Replaced gradient design with clean, simple styling to match PetConnect theme */
-/* Clean, simple design matching PetConnect website theme */
+/* 🌐 Container */
 .container {
   max-width: 1200px;
 }
 
-/* Clean card styling with subtle shadows */
-.bg-white {
-  background-color: #ffffff !important;
+/* 🛍️ Cart & Summary Boxes */
+.cart-box, .summary-box {
+  transition: box-shadow 0.2s ease;
+}
+.cart-box:hover, .summary-box:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-.shadow-sm {
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+/* 🛒 Empty Cart */
+.empty-cart i {
+  font-size: 3rem;
+  color: #6366f1;
+  opacity: 0.6;
 }
-
-.rounded-3 {
-  border-radius: 0.75rem !important;
-}
-
-/* Typography matching PetConnect style */
-h2,
-h3,
-h4,
-h5,
-h6 {
-  color: #1f2937;
+.empty-cart h4 {
+  color: #374151;
   font-weight: 600;
 }
 
-/* Clean button styling */
-.btn-link {
-  text-decoration: none !important;
-  font-weight: 500;
-  color: #6366f1 !important;
+/* 🔢 Quantity Controls */
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.quantity-controls button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.quantity-controls .qty {
+  margin: 0 12px;
+  font-weight: 600;
+  color: #1f2937;
 }
 
-.btn-link:hover {
+/* 🗑️ Remove Button */
+.remove-btn i {
+  color: #9ca3af;
+  transition: color 0.2s ease;
+}
+.remove-btn:hover i {
+  color: #ef4444;
+}
+
+/* 🔙 Back Button */
+.back-btn {
+  color: #6366f1 !important;
+  font-weight: 500;
+}
+.back-btn:hover {
   color: #4f46e5 !important;
 }
 
-/* Primary button styling to match PetConnect blue */
-.btn-primary {
-  background-color: #6366f1 !important;
-  border-color: #6366f1 !important;
-  font-weight: 500;
+/* ✅ Checkout Button */
+.checkout-btn {
+  background-color: #6366f1;
+  border: none;
+  color: #fff;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+.checkout-btn:hover {
+  background: linear-gradient(90deg, #6366f1, #4f46e5);
+  transform: translateY(-2px);
 }
 
-.btn-primary:hover {
-  background-color: #4f46e5 !important;
-  border-color: #4f46e5 !important;
-}
-
-/* Clean quantity controls */
-.btn-outline-secondary {
-  border-color: #d1d5db !important;
-  color: #6b7280 !important;
-  background-color: #ffffff !important;
-}
-
-.btn-outline-secondary:hover:not(:disabled) {
-  background-color: #f9fafb !important;
-  border-color: #9ca3af !important;
-  color: #374151 !important;
-}
-
-.btn-outline-secondary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* Clean product images */
+/* 🖼️ Product Image */
 img.rounded {
   border-radius: 0.5rem !important;
+  object-fit: cover;
+  aspect-ratio: 1;
 }
 
-/* Sticky positioning for order summary */
-.sticky-top {
-  top: 1rem;
-}
-
-/* Clean border styling */
-.border {
-  border: 1px solid #e5e7eb !important;
-}
-
-.border-bottom {
-  border-bottom: 1px solid #e5e7eb !important;
-}
-
-/* Text colors */
-.text-muted {
-  color: #6b7280 !important;
-}
-
-/* Clean hover effects */
-.btn:hover {
-  transform: translateY(-1px);
-  transition: all 0.2s ease;
-}
-
-/* Responsive adjustments */
+/* 📱 Responsive */
 @media (max-width: 768px) {
   .sticky-top {
     position: relative !important;
     top: auto !important;
   }
-}
-
-/* Focus states for accessibility */
-.btn:focus {
-  box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25) !important;
 }

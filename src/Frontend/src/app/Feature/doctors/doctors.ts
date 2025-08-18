@@ -28,7 +28,7 @@ export class Doctors implements OnInit {
   doctorService = inject(DoctorsService);
   accounterService = inject(AccountService);
   reviewService = inject(ReviewsService);
-  router = inject(Router)
+  router = inject(Router);
   name: string = '';
   maxPrice: number | null = null;
   allDoctors: string | IDoctor[] = [];
@@ -36,9 +36,9 @@ export class Doctors implements OnInit {
   specialities: ISpeciality[] = [
     { specialityName: 'Dog', value: 0 },
     { specialityName: 'Cat', value: 1 },
-    {specialityName:'Bird',value:2}
+    { specialityName: 'Bird', value: 2 },
   ];
-  city:string ="";
+  city: string = '';
   isCustomerLogginIn = false;
   errorFound: boolean = false;
   errorMesseage: string = '';
@@ -49,7 +49,7 @@ export class Doctors implements OnInit {
 
   search() {
     this.doctorService
-      .getAll(this.name, this.maxPrice, this.specialty,this.city)
+      .getAll(this.name, this.maxPrice, this.specialty, this.city)
       .subscribe({
         next: (e) => {
           this.errorFound = false;
@@ -63,7 +63,17 @@ export class Doctors implements OnInit {
         },
       });
   }
-  viewReviews(docId:string){
-    this.router.navigate(['/doctors','review'],{state:{doctorId:docId}});
+  viewReviews(docId: string) {
+    this.router.navigate(['/doctors', 'review'], {
+      state: { doctorId: docId },
+    });
   }
+
+  getFullStars(rating: number): any[] {
+  return Array(Math.floor(rating));
+}
+
+getEmptyStars(rating: number): any[] {
+  return Array(5 - Math.floor(rating));
+}
 }
