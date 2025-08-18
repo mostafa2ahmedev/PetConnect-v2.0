@@ -22,7 +22,7 @@ namespace PetConnect.BLL.Services.Classes
         {
             UOW = _UOW;
         }
-        // Return list of doctor DTOs 
+        
         public IEnumerable<DoctorDetailsDTO> GetAll()
         {
 
@@ -45,7 +45,7 @@ namespace PetConnect.BLL.Services.Classes
                 });
         }
 
-        // Get single doctor details by id
+       
         public DoctorDetailsDTO? GetByID(string id)
         {
             var doctor = UOW.DoctorRepository.GetByID(id);
@@ -62,7 +62,7 @@ namespace PetConnect.BLL.Services.Classes
                 Gender = doctor.Gender.ToString(),
                 PricePerHour = doctor.PricePerHour,
                 CertificateUrl = doctor.CertificateUrl,
-
+                IDCardUrl = doctor.IDCardUrl,
                 Street = doctor.Address.Street,
                 City = doctor.Address.City,
                 IsApproved = doctor.IsApproved,
@@ -86,12 +86,13 @@ namespace PetConnect.BLL.Services.Classes
             if (doctor == null)
                 throw new Exception("Doctor not found");
 
-            // Map DTO values to entity
+         
             doctor.FName = dto.FName;
             doctor.LName = dto.LName;
             doctor.ImgUrl = dto.ImgUrl;
             doctor.PricePerHour = dto.PricePerHour;
             doctor.CertificateUrl = dto.CertificateUrl;
+            doctor.IDCardUrl = dto.IDCardUrl;
             doctor.IsDeleted = false;
             doctor.IsApproved = false;
             // Enum and complex object parsing
@@ -101,14 +102,14 @@ namespace PetConnect.BLL.Services.Classes
             if (Enum.TryParse(dto.Gender, out Gender gender))
                 doctor.Gender = gender;
 
-            // Address might already be initialized in the entity
+          
             if (doctor.Address == null)
                 doctor.Address = new Address();
 
             doctor.Address.Street = dto.Street;
             doctor.Address.City = dto.City;
 
-            // Update via repository
+            
             UOW.DoctorRepository.Update(doctor);
             UOW.SaveChanges();
         }

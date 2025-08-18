@@ -126,6 +126,26 @@ namespace PetConnect.PL.Controllers
                     dto.CertificateUrl = existingDoctor.CertificateUrl;
                 }
 
+
+
+                if (dto.IDCardFile != null)
+                {
+                    var fileName = await attachmentService.UploadAsync(dto.IDCardFile, Path.Combine("img", "doctorIDs"));
+                    if (fileName != null)
+                    {
+                        dto.IDCardUrl = $"/assets/img/doctorIDs/{fileName}";
+                    }
+                    else
+                    {
+                        return BadRequest("Invalid ID Card file. Please upload a PNG, JPG, JPEG or PDF under 2MB.");
+                    }
+                }
+                else
+                {
+                    dto.IDCardUrl = existingDoctor.IDCardUrl;
+                }
+
+
                 doctorService.Update(dto);
 
                 return Ok(new { message="Doctor updated successfully." });

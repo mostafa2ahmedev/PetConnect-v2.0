@@ -10,6 +10,10 @@ namespace PetConnect.DAL.Data.Repositories.Interfaces
 {
     public interface ISupportRequestRepository  :IGenericRepository<SupportRequest>
     {
-         IEnumerable<SupportRequest> GetSupportRequestsWithUserData();
+         IEnumerable<SupportRequest> GetSupportRequestsWithUserDataForAdmin();
+         IEnumerable<SupportRequest> GetSupportRequestsForUser(string userId);
+         SupportRequest? GetSupportRequestsDetailsForUser(int supportRequestId);
+
+         SupportRequest? GetUesrByRequestId(int SuppRquestId);
     }
 }

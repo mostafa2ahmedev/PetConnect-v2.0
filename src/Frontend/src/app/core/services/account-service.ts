@@ -8,6 +8,7 @@ import { JwtUser } from '../models/jwt-user';
 import { DoctorsService } from '../../Feature/doctors/doctors-service';
 import { CustomerService } from '../../Feature/profile/customer-service';
 import { CustomerDto } from '../../Feature/profile/customer-dto';
+
 const API_URL = environment.apiBaseUrl + '/account';
 
 @Injectable({
@@ -18,12 +19,12 @@ export class AccountService {
   customerService = inject(CustomerService);
   constructor(private http: HttpClient) {}
 
-  public PostCustomerRegister(formData: FormData): Observable<any> {
-    return this.http.post(API_URL + '/register/customer', formData);
+  public PostDoctorRegister(formData: FormData): Observable<any> {
+    return this.http.post<any>(API_URL + '/register/doctor', formData);
   }
 
-  public PostDoctorRegister(formData: FormData): Observable<any> {
-    return this.http.post(API_URL + '/register/doctor', formData);
+  public PostCustomerRegister(formData: FormData): Observable<any> {
+    return this.http.post(API_URL + '/register/customer', formData);
   }
 
   public PostSellerRegister(formData: FormData): Observable<any> {
@@ -41,7 +42,6 @@ export class AccountService {
   }
 
   logout(): void {
-    // Clear all auth-related storage
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('userRoles');
@@ -89,7 +89,7 @@ export class AccountService {
     const user = this.jwtTokenDecoder();
     return user?.userRole == 'Doctor' ? true : false;
   }
-   isSeller(): boolean {
+  isSeller(): boolean {
     const user = this.jwtTokenDecoder();
     return user?.userRole == 'Seller' ? true : false;
   }

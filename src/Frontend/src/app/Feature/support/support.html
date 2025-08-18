@@ -1,0 +1,102 @@
+<section id="hero" class="hero section pb-0">
+  <div class="container section-title pb-0" data-aos="fade-up">
+    <h2>Contact</h2>
+    <p>Send us your support request with optional screenshot/file.</p>
+    <button
+      class="btn btn-primary btn-sm mt-3"
+      [routerLink]="'/support/tickets'"
+    >
+      Tack Submitted Tickets
+    </button>
+  </div>
+</section>
+
+<section id="contact" class="contact section" style="background-color: #f7f6fe">
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+        <div class="form-wrapper" data-aos="fade-up" data-aos-delay="400">
+          <form
+            [formGroup]="contactForm"
+            (ngSubmit)="onSubmit()"
+            enctype="multipart/form-data"
+          >
+            <div class="row mt-3">
+              <!-- Subject / Type -->
+              <div class="form-group">
+                <div class="input-group">
+                  <span class="input-group-text">
+                    <i class="bi bi-list"></i>
+                  </span>
+                  <select formControlName="type" class="form-control" required>
+                    <option value="" disabled selected>
+                      ---- Select service ---- *
+                    </option>
+                    <option value="0">Consulting</option>
+                    <option value="1">Development</option>
+                    <option value="2">Marketing</option>
+                    <option value="3">Support</option>
+                  </select>
+                </div>
+                <div
+                  *ngIf="
+                    contactForm.get('type')?.invalid &&
+                    contactForm.get('type')?.touched
+                  "
+                  class="text-danger small"
+                >
+                  Please select a service type
+                </div>
+              </div>
+
+              <!-- Message -->
+              <div class="form-group mt-3">
+                <div class="input-group">
+                  <span class="input-group-text">
+                    <i class="bi bi-chat-dots"></i>
+                  </span>
+                  <textarea
+                    class="form-control"
+                    formControlName="message"
+                    rows="6"
+                    placeholder="Write a message*"
+                  ></textarea>
+                </div>
+                <div
+                  *ngIf="
+                    contactForm.get('message')?.invalid &&
+                    contactForm.get('message')?.touched
+                  "
+                  class="text-danger small"
+                >
+                  Message is required
+                </div>
+              </div>
+
+              <!-- File Upload -->
+              <div class="form-group mt-3">
+                <label class="form-label">Attach a file (optional)</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  (change)="onFileSelected($event)"
+                />
+              </div>
+
+              <!-- Submit -->
+              <div class="text-center mt-3">
+                <button
+                  type="submit"
+                  class="btn btn-success shadow-sm"
+                  [disabled]="contactForm.invalid"
+                >
+                  Submit Message
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

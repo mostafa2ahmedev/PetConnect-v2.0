@@ -27,7 +27,7 @@ namespace PetConnect.BLL.Services.Interfaces
         Task<IEnumerable<OrderToReturnDto>> GetOrdersForUserAsync(string buyerEmail);
 
 
-        Task<IEnumerable<DeliveryMethodDto>> GetDeliveryMethodsAsync();
+        IEnumerable<DeliveryMethodDto> GetDeliveryMethodsAsync();
 
     }
 }

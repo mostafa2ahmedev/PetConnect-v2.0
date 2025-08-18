@@ -390,8 +390,8 @@
                         [ngClass]="{
                           'bg-warning text-dark': appt.status === 'Pending',
                           'bg-info': appt.status === 'Confirmed',
-                          'bg-danger': appt.status === 'Cancelled',
-                          'bg-success': appt.status === 'Completed'
+                          'bg-primary': appt.status === 'Completed',
+                          'bg-danger': appt.status === 'Cancelled'
                         }"
                       >
                         {{ appt.status }}
@@ -399,6 +399,7 @@
                     </td>
                     <td>
                       <button [disabled]=" appt.status !== 'Completed' || appt.isReviewable" class="review-button" (click)="writeReview(appt.id, appt.doctorId)">Write a Review</button>
+
                     </td>
                     <!-- <td>{{ appt.createdAt | date : "medium" }}</td> -->
                   </tr>
@@ -454,9 +455,9 @@
                 <h4>{{ pet.name }}</h4>
                 <h6>
                   {{
-                    pet.status === "0"
+                    pet.status === 0
                       ? "Owned"
-                      : pet.status === "1"
+                      : pet.status === 1
                       ? "For Adoption"
                       : "For Rescue"
                   }}

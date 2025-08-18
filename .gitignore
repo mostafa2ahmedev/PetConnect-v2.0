@@ -16,6 +16,14 @@
 *.dbmdl
 *.cache
 
+# Ignore specific assets folder or file types
+**/src/assets/images/
+**/src/assets/*.png
+**/src/assets/*.jpg
+**/src/assets/*.jpeg
+**/src/assets/*.gif
+
+
 
 
 # Ignore appsettings

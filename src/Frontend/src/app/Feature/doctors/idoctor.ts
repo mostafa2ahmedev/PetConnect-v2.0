@@ -14,4 +14,7 @@ export interface IDoctor {
   isApproved: boolean;
   phoneNumber: string;
   rating:number;
+
+  idCardUrl: string;
+  idCardFile: string;
 }

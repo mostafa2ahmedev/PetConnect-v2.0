@@ -1,0 +1,510 @@
+/* Replaced gradient design with clean, simple styling to match PetConnect theme */
+/* Clean, simple design matching PetConnect website theme */
+.container,
+.container-fluid {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Clean card styling with subtle shadows */
+.bg-white {
+  background-color: #ffffff !important;
+}
+
+.shadow-sm {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+}
+
+.rounded-3 {
+  border-radius: 0.75rem !important;
+}
+
+/* Enhanced card styling to match cart design */
+.checkout-card,
+.order-summary-card {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f1f5f9;
+  overflow: hidden;
+}
+
+.checkout-header {
+  background: #6366f1;
+  color: white;
+  text-align: center;
+  padding: 2rem;
+}
+
+.checkout-title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.checkout-body {
+  padding: 2rem;
+}
+
+.order-summary-card {
+  position: sticky;
+  top: 1rem;
+}
+
+/* Typography matching PetConnect style */
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #1f2937;
+  font-weight: 600;
+}
+
+/* Improved section titles */
+.section-title,
+.summary-title {
+  margin: 0;
+  color: #1f2937;
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.section-icon {
+  width: 40px;
+  height: 40px;
+  background: #6366f1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin-right: 1rem;
+}
+
+.section-icon.payment-icon {
+  background: #10b981;
+}
+
+/* Clean button styling */
+.btn-link {
+  text-decoration: none !important;
+  font-weight: 500;
+  color: #6366f1 !important;
+}
+
+.btn-link:hover {
+  color: #4f46e5 !important;
+}
+
+/* Primary button styling to match PetConnect blue */
+.btn-primary {
+  background-color: #6366f1 !important;
+  border-color: #6366f1 !important;
+  font-weight: 500;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #4f46e5 !important;
+  border-color: #4f46e5 !important;
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  transform: none;
+}
+
+/* Enhanced delivery method cards */
+.delivery-method-card,
+.delivery-option {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.delivery-method-card:hover,
+.delivery-option:hover {
+  border-color: #6366f1;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.1);
+}
+
+.delivery-method-card.selected,
+.delivery-option.selected {
+  border-color: #6366f1;
+  background-color: #f8fafc;
+}
+
+.selected-indicator {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #6366f1;
+  color: white;
+  padding: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+}
+
+.delivery-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.delivery-content {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.delivery-info {
+  display: flex;
+  align-items: center;
+}
+
+.delivery-info {
+  margin-bottom: 0.5rem;
+}
+
+.delivery-icon-wrapper {
+  width: 40px;
+  height: 40px;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6366f1;
+  margin-right: 1rem;
+}
+
+.delivery-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background-color: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  color: #6b7280;
+}
+
+.delivery-icon-wrapper {
+  width: 40px;
+  height: 40px;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6366f1;
+  margin-right: 1rem;
+}
+
+.delivery-method-card.selected .delivery-icon,
+.delivery-option.selected .delivery-icon-wrapper {
+  background-color: #6366f1;
+  color: white;
+}
+
+.delivery-name {
+  margin: 0 0 0.25rem 0;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.delivery-time {
+  color: #6b7280;
+}
+
+.delivery-price,
+.price-amount {
+  color: #6366f1;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+/* Clean form styling */
+.form-control {
+  border: 1px solid #d1d5db !important;
+  border-radius: 0.5rem !important;
+  padding: 0.75rem !important;
+}
+
+.form-control:focus {
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25) !important;
+}
+
+.form-label {
+  color: #374151;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* Added payment method logos styling */
+.payment-methods {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.payment-label {
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.payment-logos,
+.card-brands {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.payment-logo,
+.card-brand-icon {
+  height: 24px;
+  width: auto;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.payment-logo:hover,
+.card-brand-icon:hover {
+  opacity: 1;
+}
+
+/* Enhanced Stripe card element styling for better interaction */
+.stripe-card-element {
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem;
+  min-height: 50px;
+  background: white;
+  transition: all 0.3s ease;
+  position: relative;
+  /* Ensure Stripe element is fully interactive and not blocked */
+  pointer-events: auto !important;
+  z-index: 10;
+}
+
+.stripe-card-element * {
+  /* Allow all Stripe internal elements to be interactive */
+  pointer-events: auto !important;
+  user-select: auto !important;
+}
+
+.stripe-card-element iframe {
+  /* Ensure Stripe iframe is fully interactive and accessible */
+  pointer-events: auto !important;
+  z-index: 11;
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+/* Add focus state for Stripe element */
+.stripe-card-element:focus-within,
+.stripe-card-element.StripeElement--focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.stripe-card-element.stripe-card-error {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* Clean text colors */
+.text-muted {
+  color: #6b7280 !important;
+}
+
+.text-primary {
+  color: #6366f1 !important;
+}
+
+/* Sticky positioning for order summary */
+.sticky-top {
+  top: 1rem;
+}
+
+/* Clean border styling */
+.border {
+  border: 1px solid #e5e7eb !important;
+}
+
+/* Loading spinner */
+.spinner-border {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.spinner-border-sm {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+/* Clean hover effects */
+.btn:hover {
+  transition: all 0.2s ease;
+}
+
+/* Loading section */
+.loading-section {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.loading-text {
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Order summary styling */
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.summary-label {
+  color: #6b7280;
+}
+
+.summary-value {
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.summary-divider {
+  border: none;
+  border-top: 1px solid #f1f5f9;
+  margin: 1.5rem 0;
+}
+
+.total-row {
+  margin-bottom: 2rem;
+}
+
+.total-row .summary-label,
+.total-row .summary-value {
+  color: #1f2937;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+/* Enhanced checkout button */
+.checkout-btn,
+.payment-btn {
+  width: 100%;
+  background-color: #6366f1;
+  border: none;
+  color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.checkout-btn:disabled,
+.payment-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  background-color: #9ca3af !important;
+}
+
+.checkout-btn:not(:disabled):hover,
+.payment-btn:not(:disabled):hover {
+  background-color: #4f46e5;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.button-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Added card error message styling */
+.card-error-message {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  padding-left: 0.25rem;
+}
+
+/* Added security badge styling */
+.security-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: #f8fafc;
+  border-radius: 50px;
+  border: 1px solid #e5e7eb;
+}
+
+.security-message {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.security-text {
+  color: #6b7280;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sticky-top {
+    position: relative !important;
+    top: auto !important;
+  }
+
+  .delivery-options .d-flex.justify-content-between {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+
+  .delivery-options .text-end {
+    text-align: left !important;
+    margin-top: 0.5rem;
+  }
+
+  .checkout-body {
+    padding: 1.5rem;
+  }
+}
+
+/* Focus states for accessibility */
+.btn:focus,
+.delivery-method-card:focus,
+.delivery-option:focus,
+.payment-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25) !important;
+}

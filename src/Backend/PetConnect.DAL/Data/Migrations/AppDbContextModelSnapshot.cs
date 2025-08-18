@@ -308,6 +308,39 @@ namespace PetConnect.DAL.Data.Migrations
                     b.ToTable("AdminPetMessage");
                 });
 
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.AdminSupportResponse", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GetDate()");
+
+                    b.Property<DateTime?>("LastActivity")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("varchar(max)");
+
+                    b.Property<string>("PictureUrl")
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<int>("SupportRequestId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SupportRequestId");
+
+                    b.ToTable("SupportResponses");
+                });
+
             modelBuilder.Entity("PetConnect.DAL.Data.Models.Appointment", b =>
                 {
                     b.Property<Guid>("Id")
@@ -524,6 +557,39 @@ namespace PetConnect.DAL.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DeliveryMethod");
+                });
+
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.FollowUpSupportRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GetDate()");
+
+                    b.Property<DateTime?>("LastActivity")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("varchar(max)");
+
+                    b.Property<string>("PictureUrl")
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<int>("SupportRequestId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SupportRequestId");
+
+                    b.ToTable("FollowUpSupportRequest");
                 });
 
             modelBuilder.Entity("PetConnect.DAL.Data.Models.Notification", b =>
@@ -935,9 +1001,24 @@ namespace PetConnect.DAL.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GetDate()");
+
+                    b.Property<DateTime?>("LastActivity")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("varchar(500)");
+
+                    b.Property<string>("PictureUrl")
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Priority")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -956,28 +1037,6 @@ namespace PetConnect.DAL.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("SupportRequests");
-                });
-
-            modelBuilder.Entity("PetConnect.DAL.Data.Models.SupportResponse", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("varchar(max)");
-
-                    b.Property<int>("SupportRequestId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SupportRequestId");
-
-                    b.ToTable("SupportResponses");
                 });
 
             modelBuilder.Entity("PetConnect.DAL.Data.Models.TimeSlot", b =>
@@ -1227,6 +1286,10 @@ namespace PetConnect.DAL.Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(100)");
 
+                    b.Property<string>("IDCardUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PetSpecialty")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1358,6 +1421,17 @@ namespace PetConnect.DAL.Data.Migrations
                     b.Navigation("Pet");
                 });
 
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.AdminSupportResponse", b =>
+                {
+                    b.HasOne("PetConnect.DAL.Data.Models.SupportRequest", "Request")
+                        .WithMany("AdminSupportResponses")
+                        .HasForeignKey("SupportRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Request");
+                });
+
             modelBuilder.Entity("PetConnect.DAL.Data.Models.Appointment", b =>
                 {
                     b.HasOne("PetConnect.DAL.Data.Models.Customer", "Customer")
@@ -1453,6 +1527,17 @@ namespace PetConnect.DAL.Data.Migrations
                     b.Navigation("ReceiverCustomer");
 
                     b.Navigation("RequesterCustomer");
+                });
+
+            modelBuilder.Entity("PetConnect.DAL.Data.Models.FollowUpSupportRequest", b =>
+                {
+                    b.HasOne("PetConnect.DAL.Data.Models.SupportRequest", "Request")
+                        .WithMany("FollowUpSupportRequests")
+                        .HasForeignKey("SupportRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Request");
                 });
 
             modelBuilder.Entity("PetConnect.DAL.Data.Models.Notification", b =>
@@ -1740,17 +1825,6 @@ namespace PetConnect.DAL.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("PetConnect.DAL.Data.Models.SupportResponse", b =>
-                {
-                    b.HasOne("PetConnect.DAL.Data.Models.SupportRequest", "Request")
-                        .WithMany("SupportResponses")
-                        .HasForeignKey("SupportRequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Request");
                 });
 
             modelBuilder.Entity("PetConnect.DAL.Data.Models.TimeSlot", b =>
@@ -2057,7 +2131,9 @@ namespace PetConnect.DAL.Data.Migrations
 
             modelBuilder.Entity("PetConnect.DAL.Data.Models.SupportRequest", b =>
                 {
-                    b.Navigation("SupportResponses");
+                    b.Navigation("AdminSupportResponses");
+
+                    b.Navigation("FollowUpSupportRequests");
                 });
 
             modelBuilder.Entity("PetConnect.DAL.Data.Models.TimeSlot", b =>

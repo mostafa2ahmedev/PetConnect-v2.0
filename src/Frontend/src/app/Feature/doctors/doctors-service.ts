@@ -13,7 +13,7 @@ export class DoctorsService {
     name: any,
     maxPrice: any,
     speciality: any,
-    city:string
+    city: string
   ): Observable<IDoctor[] | string> {
     let params = new HttpParams();
     if (name) params = params.set('name', name);
@@ -46,12 +46,14 @@ export class DoctorsService {
     // Optional URLs
     formData.append('CertificateUrl', doctor.CertificateUrl || '');
     formData.append('ImgUrl', doctor.ImgUrl || '');
-
+    formData.append('IDCardUrl', doctor.IdCardUrl || '');
     // Optional files
     if (doctor.ImageFile instanceof File) {
       formData.append('ImageFile', doctor.ImageFile, doctor.ImageFile.name);
     }
-
+    if (doctor.IDCardFile instanceof File) {
+      formData.append('IdCardFile', doctor.IDCardFile, doctor.IDCardFile.name);
+    }
     if (doctor.CertificateFile instanceof File) {
       formData.append(
         'CertificateFile',
