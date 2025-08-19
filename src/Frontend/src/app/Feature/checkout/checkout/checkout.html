@@ -3,19 +3,19 @@
   <!-- Main Checkout Container -->
   <div class="checkout-container">
     <div class="checkout-content">
-      
+
       <!-- Header Section -->
       <div class="checkout-header">
         <button class="back-btn" [routerLink]="['/cart']">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M19 12H5M12 19l-7-7 7-7"/>
+            <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
           Back to Cart
         </button>
         <h1 class="checkout-title">Secure Checkout</h1>
         <div class="security-indicator">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
           </svg>
           SSL Secured
         </div>
@@ -23,19 +23,19 @@
 
       <!-- Checkout Content -->
       <div class="checkout-layout">
-        
+
         <!-- Left Side - Delivery & Payment -->
         <div class="checkout-main-section">
-          
+
           <!-- Delivery Selection Section -->
           <div class="checkout-section" *ngIf="!basket?.clientSecret">
             <div class="section-header">
               <div class="section-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M1 3h15l-1 9H3l2-7z"/>
-                  <path d="M16 8h5l-1 9H9"/>
-                  <circle cx="7" cy="20" r="1"/>
-                  <circle cx="17" cy="20" r="1"/>
+                  <path d="M1 3h15l-1 9H3l2-7z" />
+                  <path d="M16 8h5l-1 9H9" />
+                  <circle cx="7" cy="20" r="1" />
+                  <circle cx="17" cy="20" r="1" />
                 </svg>
               </div>
               <div>
@@ -45,39 +45,41 @@
             </div>
 
             <div class="delivery-methods-grid">
-              <div *ngFor="let method of deliveryMethods" 
-                   class="delivery-method-card"
-                   [class.selected]="basket?.deliveryMethodId === method.id"
-                   [class.loading]="loading"
-                   (click)="selectDelivery(method.id)">
-                
+              <div *ngFor="let method of deliveryMethods" class="delivery-method-card"
+                [class.selected]="basket?.deliveryMethodId === method.id" [class.loading]="loading"
+                (click)="selectDelivery(method.id)">
+
                 <div class="delivery-method-content">
                   <div class="delivery-icon-wrapper">
-                    <svg *ngIf="method.id === 1" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M16 3h5v5l-5-5z"/>
-                      <path d="M8 3H3v18l5-5z"/>
-                      <path d="M12 12l4-4"/>
+                    <svg *ngIf="method.id === 1" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2">
+                      <path d="M16 3h5v5l-5-5z" />
+                      <path d="M8 3H3v18l5-5z" />
+                      <path d="M12 12l4-4" />
                     </svg>
-                    <svg *ngIf="method.id === 2" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M1 3h15l-1 9H3l2-7z"/>
-                      <circle cx="7" cy="20" r="1"/>
-                      <circle cx="17" cy="20" r="1"/>
+                    <svg *ngIf="method.id === 2" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2">
+                      <path d="M1 3h15l-1 9H3l2-7z" />
+                      <circle cx="7" cy="20" r="1" />
+                      <circle cx="17" cy="20" r="1" />
                     </svg>
-                    <svg *ngIf="method.id === 3" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                      <polyline points="9,22 9,12 15,12 15,22"/>
+                    <svg *ngIf="method.id === 3" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                      <polyline points="9,22 9,12 15,12 15,22" />
                     </svg>
-                    <svg *ngIf="method.id === 4" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                      <circle cx="12" cy="7" r="4"/>
+                    <svg *ngIf="method.id === 4" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                      <circle cx="12" cy="7" r="4" />
                     </svg>
                   </div>
-                  
+
                   <div class="delivery-details">
                     <h3 class="delivery-name">{{ method.name }}</h3>
                     <p class="delivery-time">{{ method.days }}</p>
                   </div>
-                  
+
                   <div class="delivery-price-section">
                     <span class="delivery-price" *ngIf="method.cost > 0">${{ method.cost }}</span>
                     <span class="delivery-price free" *ngIf="method.cost === 0">Free</span>
@@ -86,7 +88,7 @@
 
                 <div class="selection-indicator" *ngIf="basket?.deliveryMethodId === method.id">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                    <polyline points="20,6 9,17 4,12"/>
+                    <polyline points="20,6 9,17 4,12" />
                   </svg>
                 </div>
 
@@ -102,8 +104,8 @@
             <div class="section-header">
               <div class="section-icon payment-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
-                  <line x1="1" y1="10" x2="23" y2="10"/>
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                  <line x1="1" y1="10" x2="23" y2="10" />
                 </svg>
               </div>
               <div>
@@ -117,17 +119,21 @@
               <div class="card-brands">
                 <div class="card-brand">
                   <svg width="32" height="20" viewBox="0 0 32 20" fill="none">
-                    <rect width="32" height="20" rx="4" fill="#1434CB"/>
-                    <path d="M13.8 6.4h4.4v7.2h-4.4z" fill="#FF5F00"/>
-                    <path d="M14.1 10c0-1.4.7-2.7 1.7-3.6-1.5-1.2-3.7-1.2-5.2 0-1.5 1.2-1.5 3.1 0 4.3 1.5 1.2 3.7 1.2 5.2 0-.9-.9-1.7-2.2-1.7-3.6z" fill="#EB001B"/>
-                    <path d="M25.8 10c0 2.8-2.3 5.1-5.1 5.1-1 0-2-.3-2.8-.9 1-1 1.7-2.2 1.7-3.6s-.7-2.7-1.7-3.6c.8-.6 1.8-.9 2.8-.9 2.8 0 5.1 2.3 5.1 5.1z" fill="#F79E1B"/>
+                    <rect width="32" height="20" rx="4" fill="#1434CB" />
+                    <path d="M13.8 6.4h4.4v7.2h-4.4z" fill="#FF5F00" />
+                    <path
+                      d="M14.1 10c0-1.4.7-2.7 1.7-3.6-1.5-1.2-3.7-1.2-5.2 0-1.5 1.2-1.5 3.1 0 4.3 1.5 1.2 3.7 1.2 5.2 0-.9-.9-1.7-2.2-1.7-3.6z"
+                      fill="#EB001B" />
+                    <path
+                      d="M25.8 10c0 2.8-2.3 5.1-5.1 5.1-1 0-2-.3-2.8-.9 1-1 1.7-2.2 1.7-3.6s-.7-2.7-1.7-3.6c.8-.6 1.8-.9 2.8-.9 2.8 0 5.1 2.3 5.1 5.1z"
+                      fill="#F79E1B" />
                   </svg>
                 </div>
                 <div class="card-brand">
                   <svg width="32" height="20" viewBox="0 0 32 20" fill="none">
-                    <rect width="32" height="20" rx="4" fill="#0066CC"/>
-                    <path d="M6.4 6.4h19.2v7.2H6.4z" fill="white"/>
-                    <path d="M8 8h16v4H8z" fill="#0066CC"/>
+                    <rect width="32" height="20" rx="4" fill="#0066CC" />
+                    <path d="M6.4 6.4h19.2v7.2H6.4z" fill="white" />
+                    <path d="M8 8h16v4H8z" fill="#0066CC" />
                   </svg>
                 </div>
               </div>
@@ -136,22 +142,21 @@
             <div class="payment-form">
               <div class="form-group">
                 <label class="form-label">Card Information</label>
-                <div #cardElement class="stripe-card-element" 
-                     [class.complete]="cardComplete">
+                <div #cardElement class="stripe-card-element" [class.complete]="cardComplete">
                 </div>
               </div>
 
               <div class="security-badges">
                 <div class="security-badge">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   </svg>
                   256-bit SSL Encryption
                 </div>
                 <div class="security-badge">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M9 12l2 2 4-4"/>
-                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                    <path d="M9 12l2 2 4-4" />
+                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
                   </svg>
                   PCI Compliant
                 </div>
@@ -173,12 +178,12 @@
         <div class="order-summary-section">
           <div class="order-summary">
             <h3>Order Summary</h3>
-            
+
             <!-- Order Items -->
             <div class="order-items" *ngIf="basketItems.length > 0">
               <div class="order-item" *ngFor="let item of basketItems">
                 <div class="item-image">
-                  <img [src]="item.pictureUrl" [alt]="item.productName" />
+                  <img [src]="'https://localhost:7102' + item.pictureUrl" [alt]="item.productName" />
                 </div>
                 <div class="item-details">
                   <h4>{{ item.productName }}</h4>
@@ -189,26 +194,26 @@
                 </div>
               </div>
             </div>
-            
+
             <div class="summary-calculations">
               <div class="summary-line">
                 <span>Subtotal</span>
                 <span>${{ getSubtotal() }}</span>
               </div>
-              
+
               <div class="summary-line" *ngIf="basket?.deliveryMethodId">
                 <span>Shipping</span>
                 <span *ngIf="getShippingPrice() > 0">${{ getShippingPrice() }}</span>
                 <span *ngIf="getShippingPrice() === 0" class="free-shipping">Free</span>
               </div>
-              
+
               <div class="summary-line" *ngIf="!basket?.deliveryMethodId">
                 <span>Shipping</span>
                 <span class="calculated-later">Calculated at next step</span>
               </div>
-              
+
               <div class="summary-divider"></div>
-              
+
               <div class="summary-total">
                 <span>Total</span>
                 <span>${{ getTotal() }}</span>
@@ -216,13 +221,11 @@
             </div>
 
             <!-- Payment Button -->
-            <button class="checkout-btn" 
-                    *ngIf="basket?.clientSecret"
-                    (click)="confirmPayment()"
-                    [disabled]="paymentProcessing || !cardComplete">
+            <button class="checkout-btn" *ngIf="basket?.clientSecret" (click)="confirmPayment()"
+              [disabled]="paymentProcessing || !cardComplete">
               <span *ngIf="!paymentProcessing" class="btn-content">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
                 Complete Secure Payment
               </span>
@@ -235,7 +238,7 @@
             <!-- Next Step Indicator -->
             <div class="next-step-indicator" *ngIf="!basket?.clientSecret">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M9 18l6-6-6-6"/>
+                <path d="M9 18l6-6-6-6" />
               </svg>
               <span>Select shipping to continue</span>
             </div>
@@ -251,7 +254,7 @@
     <div class="footer-content">
       <div class="footer-security">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
         </svg>
         <span>Your payment information is secure and encrypted</span>
       </div>

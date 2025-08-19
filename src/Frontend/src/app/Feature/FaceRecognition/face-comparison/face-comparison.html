@@ -1,108 +1,131 @@
-<div class="container">
-  <div class="card">
-    <h2>Doctor Registration: Step 1 of 2</h2>
-    <p>Please upload the following documents to verify your identity.</p>
+<div class="auth-container">
+  <div class="auth-card">
+    <!-- Header Section -->
+    <div class="auth-header">
+      <h2 class="auth-title">Doctor Registration</h2>
+      <p class="auth-subtitle">Step 1 of 2 - Document Verification</p>
+      <p class="auth-description">Please upload the following documents to verify your identity and credentials.</p>
+    </div>
 
-    <!-- منطقة رفع الملفات -->
-    <div class="upload-section">
-      <div class="image-upload-area">
-        <!-- ID Card Box -->
-        <div class="image-box-container">
-          <div class="image-box" (click)="idCardInput.click()">
-            <input
-              #idCardInput
-              type="file"
-              (change)="onFileSelected($event, 'idCard')"
-              accept="image/*"
-              style="display: none"
-            />
-            <ng-container *ngIf="image1Preview; else placeholder1">
-              <img [src]="image1Preview" alt="ID Card Preview" />
-            </ng-container>
-            <ng-template #placeholder1>
-              <span>1. National ID</span>
-            </ng-template>
+    <!-- Document Upload Section -->
+    <div class="form-section">
+      <h3 class="section-title">
+        <i class="fas fa-file-upload"></i>
+        Required Documents
+      </h3>
+
+      <div class="upload-grid">
+        <!-- National ID Upload -->
+        <div class="upload-item">
+          <div class="image-upload-container">
+            <div class="image-box" (click)="idCardInput.click()" [class.has-image]="image1Preview">
+              <input #idCardInput type="file" (change)="onFileSelected($event, 'idCard')" accept="image/*"
+                style="display: none" />
+              <ng-container *ngIf="image1Preview; else placeholder1">
+                <img [src]="image1Preview" alt="ID Card Preview" class="preview-image" />
+                <div class="image-overlay">
+                  <i class="fas fa-edit"></i>
+                  <span>Change Image</span>
+                </div>
+              </ng-container>
+              <ng-template #placeholder1>
+                <div class="upload-placeholder">
+                  <i class="fas fa-id-card"></i>
+                  <span class="upload-text">National ID</span>
+                  <span class="upload-hint">Click to upload</span>
+                </div>
+              </ng-template>
+            </div>
+
           </div>
-          <!-- زر الكاميرا الجديد -->
-          <button class="btn-camera" (click)="openCamera('idCard')">
-            <i class="fas fa-camera"></i> Open Camera
-          </button>
         </div>
 
-        <!-- Profile Image Box -->
-        <div class="image-box-container">
-          <div class="image-box" (click)="profileImageInput.click()">
-            <input
-              #profileImageInput
-              type="file"
-              (change)="onFileSelected($event, 'profile')"
-              accept="image/*"
-              style="display: none"
-            />
-            <ng-container *ngIf="image2Preview; else placeholder2">
-              <img [src]="image2Preview" alt="Profile Image Preview" />
-            </ng-container>
-            <ng-template #placeholder2>
-              <span>2. Profile Image</span>
-            </ng-template>
+        <!-- Profile Image Upload -->
+        <div class="upload-item">
+          <div class="image-upload-container">
+            <div class="image-box" (click)="profileImageInput.click()" [class.has-image]="image2Preview">
+              <input #profileImageInput type="file" (change)="onFileSelected($event, 'profile')" accept="image/*"
+                style="display: none" />
+              <ng-container *ngIf="image2Preview; else placeholder2">
+                <img [src]="image2Preview" alt="Profile Image Preview" class="preview-image" />
+                <div class="image-overlay">
+                  <i class="fas fa-edit"></i>
+                  <span>Change Image</span>
+                </div>
+              </ng-container>
+              <ng-template #placeholder2>
+                <div class="upload-placeholder">
+                  <i class="fas fa-user-circle"></i>
+                  <span class="upload-text">Profile Image</span>
+                  <span class="upload-hint">Click to upload</span>
+                </div>
+              </ng-template>
+            </div>
+            <button class="camera-btn" (click)="openCamera('profile')" type="button">
+              <i class="fas fa-camera"></i>
+              <span>Use Camera</span>
+            </button>
           </div>
-          <!-- زر الكاميرا الجديد -->
-          <button class="btn-camera" (click)="openCamera('profile')">
-            <i class="fas fa-camera"></i> Open Camera
-          </button>
         </div>
       </div>
 
-      <!-- Certificate Upload (يبقى كما هو) -->
-      <div class="file-upload-wrapper mt-3">
-        <label for="certificateInput">3. Practice Certificate (PDF)</label>
-        <input
-          id="certificateInput"
-          type="file"
-          class="form-control"
-          (change)="onFileSelected($event, 'certificate')"
-          accept=".pdf"
-        />
-        <span
-          *ngIf="certificateFile"
-          class="file-confirmation text-success mt-1 d-block"
-        >
-          ✅ Certificate Uploaded: {{ certificateFile.name }}
-        </span>
+      <!-- Certificate Upload -->
+      <div class="file-upload-section">
+        <label for="certificateInput" class="file-upload-label">
+          <i class="fas fa-certificate"></i>
+          Practice Certificate (PDF)
+        </label>
+        <div class="file-input-wrapper">
+          <input id="certificateInput" type="file" class="file-input" (change)="onFileSelected($event, 'certificate')"
+            accept=".pdf" />
+          <div class="file-input-display">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <span *ngIf="!certificateFile">Choose PDF file or drag here</span>
+            <span *ngIf="certificateFile" class="file-name">{{ certificateFile.name }}</span>
+          </div>
+        </div>
+        <div *ngIf="certificateFile" class="file-success">
+          <i class="fas fa-check-circle"></i>
+          Certificate uploaded successfully
+        </div>
       </div>
     </div>
 
-    <!-- زر التحقق والمتابعة -->
-    <button
-      (click)="verifyAndContinue()"
-      [disabled]="
-        isLoading || !idCardFile || !profileImageFile || !certificateFile
-      "
-      class="mt-4"
-    >
-      <span
-        *ngIf="isLoading"
-        class="spinner-border spinner-border-sm"
-        role="status"
-        aria-hidden="true"
-      ></span>
-      {{ isLoading ? "Verifying..." : "Verify & Continue" }}
-    </button>
+    <!-- Action Button -->
+    <div class="form-actions">
+      <button type="button" class="btn-primary" (click)="verifyAndContinue()"
+        [disabled]="isLoading || !idCardFile || !profileImageFile || !certificateFile">
+        <span *ngIf="isLoading" class="btn-spinner"></span>
+        <i *ngIf="!isLoading" class="fas fa-shield-alt"></i>
+        {{ isLoading ? "Verifying Documents..." : "Verify & Continue" }}
+      </button>
+    </div>
 
-    <!-- رسالة الخطأ -->
-    <div *ngIf="errorMessage" class="error-message">
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="error-alert">
+      <i class="fas fa-exclamation-triangle"></i>
       {{ errorMessage }}
     </div>
   </div>
 </div>
 
-<!-- واجهة الكاميرا (مخفية بشكل افتراضي) -->
+<!-- Camera Modal -->
 <div class="camera-modal" [class.active]="isCameraOpen">
-  <video #videoElement autoplay playsinline></video>
-  <button class="btn-capture" (click)="captureImage()">
-    <i class="fas fa-camera-retro"></i> Capture
-  </button>
-  <button class="btn-close-camera" (click)="closeCamera()">
-    <i class="fas fa-times"></i> Close
-  </button>
+  <div class="camera-container">
+    <div class="camera-header">
+      <h3>Capture Image</h3>
+      <button class="close-btn" (click)="closeCamera()" type="button">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="camera-content">
+      <video #videoElement autoplay playsinline class="camera-video"></video>
+      <div class="camera-controls">
+        <button class="capture-btn" (click)="captureImage()" type="button">
+          <i class="fas fa-camera"></i>
+          <span>Capture</span>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

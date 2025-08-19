@@ -14,7 +14,7 @@ export class ChatSignalrService {
   public messages$ = new BehaviorSubject<any[]>([]);
   public connectionStatus$ = new BehaviorSubject<string>('Disconnected');
   public userOnline$ = new BehaviorSubject<string | null>(null);
-public userOffline$ = new BehaviorSubject<string | null>(null);
+  public userOffline$ = new BehaviorSubject<string | null>(null);
   private connectionEstablished = false;
   constructor(private http: HttpClient) {}
 
@@ -55,12 +55,12 @@ public userOffline$ = new BehaviorSubject<string | null>(null);
       console.log('✅ Message sent confirmation:', confirmation);
     });
     this.hubConnection?.on('UserOnline', (userId: string) => {
-    this.userOnline$.next(userId);
-  });
+      this.userOnline$.next(userId);
+    });
 
-  this.hubConnection?.on('UserOffline', (userId: string) => {
-    this.userOffline$.next(userId);
-  });
+    this.hubConnection?.on('UserOffline', (userId: string) => {
+      this.userOffline$.next(userId);
+    });
   }
 
   async sendMessage(
