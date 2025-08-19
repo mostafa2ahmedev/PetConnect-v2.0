@@ -1,83 +1,92 @@
-<section>
-  <div class="container">
-    <h4>Your blogs</h4>
-    <a
-      class="btn btn-sm btn-outline-primary d-inline-block w-auto mt-2"
-      [routerLink]="`/doc-profile/blog/add/`"
-    >
-      Add New Post
-    </a>
-    <div class="row">
-      <div class="col-md-6 mt-3" *ngFor="let blog of blogs">
-        <div class="card h-100 shadow-lg mx-2 mb-5">
-          <a [routerLink]="`/blog/post/${blog.id}`">
-            <img
-              *ngIf="blog.media"
-              [src]="getFullImageUrl(blog.media)"
-              class="card-img-top"
-              style="max-height: 300px; object-fit: cover"
-              alt="Blog Media"
-            />
+<!-- Modern Hero Section with Gradient -->
+<section class="modern-hero-section">
+  <div class="hero-gradient-bg">
+    <div class="section-title pb-0" data-aos="fade-up">
+      <div class="hero-content">
+        <h1 class="hero-title">Your Blogs</h1>
+        <p class="hero-subtitle">Manage and showcase your amazing blog posts with style.</p>
+        <div class="hero-nav-buttons">
+          <a class="btn btn-outline-light btn-modern btn-filter-primary" [routerLink]="`/doc-profile/blog/add/`">
+            <i class="fas fa-plus me-2"></i>Add New Post
           </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-          <div class="card-body d-flex flex-column">
-            <a
-              [routerLink]="`/blog/post/${blog.id}`"
-              class="text-decoration-none"
-            >
-              <h5 class="card-title">{{ blog.title }}</h5>
+<!-- Enhanced Blogs Grid -->
+<section class="blogs-section">
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    
+    <!-- Blogs Grid -->
+    <div *ngIf="blogs.length > 0" class="blogs-grid">
+      <div class="blog-card-wrapper" *ngFor="let blog of blogs" data-aos="zoom-in" data-aos-delay="100">
+        <div class="modern-blog-card">
+          <!-- Blog Image -->
+          <div class="blog-image-container">
+            <a [routerLink]="`/blog/post/${blog.id}`">
+              <img *ngIf="blog.media" [src]="getFullImageUrl(blog.media)" alt="{{ blog.title }}" class="blog-image" />
+              <div class="blog-overlay">
+                <i class="fas fa-eye"></i>
+              </div>
+            </a>
+          </div>
+
+          <!-- Blog Content -->
+          <div class="blog-content">
+            <div class="blog-meta">
+              <span class="blog-category" *ngIf="blog.categoryName">
+                <i class="fas fa-folder-open me-1"></i>{{ blog.categoryName }}
+              </span>
+              <span class="blog-topic" *ngIf="blog.topic">
+                <i class="fas fa-tag me-1"></i>{{ blog.topic }}
+              </span>
+            </div>
+
+            <a [routerLink]="`/blog/post/${blog.id}`" class="text-decoration-none">
+              <h5 class="blog-title">{{ blog.title }}</h5>
             </a>
 
-            <!-- Category & Topic row -->
-            <div class="mb-2 text-muted small">
-              <ng-container *ngIf="blog.categoryName">
-                <i class="fas fa-folder-open me-1" style="color: #5d57f4"></i>
-                {{ blog.categoryName }}
-              </ng-container>
+            <p class="blog-excerpt" [innerHTML]="blog.excerpt"></p>
 
-              <ng-container *ngIf="blog.categoryName && blog.topic">
-                <span class="mx-2">|</span>
-              </ng-container>
-
-              <ng-container *ngIf="blog.topic">
-                <i class="fas fa-tag me-1" style="color: #5d57f4"></i>
-                {{ blog.topic }}
-              </ng-container>
+            <div class="blog-stats">
+              <div class="stat-item">
+                <i class="fas fa-thumbs-up"></i>
+                <span>{{ blog.likes }} Likes</span>
+              </div>
+              <div class="stat-item">
+                <i class="fas fa-comments"></i>
+                <span>{{ blog.comments }}</span>
+              </div>
             </div>
 
-            <!-- Excerpt -->
-            <p class="card-text" [innerHTML]="blog.excerpt"></p>
-
-            <!-- Likes & Comments -->
-            <div class="mt-auto mb-2">
-              <span class="badge bg-primary me-2">
-                <i class="fas fa-thumbs-up me-1"></i>
-                {{ blog.likes }} Likes
-              </span>
-              <span class="badge bg-secondary">
-                <i class="fas fa-comments me-1"></i>
-                {{ blog.comments }}
-              </span>
-            </div>
-
-            <!-- Action buttons -->
-            <div class="d-flex justify-content-between">
-              <button
-                class="btn btn-sm btn-outline-primary"
-                [routerLink]="['/doc-profile/blog/edit/', blog.id]"
-              >
-                <i class="fas fa-edit me-1"></i> Edit
-              </button>
-              <button
-                class="btn btn-sm btn-outline-danger"
-                (click)="confirmDelete(blog.id)"
-              >
-                <i class="fas fa-trash-alt me-1"></i> Delete
-              </button>
+            <div class="blog-actions">
+              <div class="d-flex gap-2">
+                <button class="btn btn-outline-primary btn-edit flex-fill" [routerLink]="['/doc-profile/blog/edit/', blog.id]">
+                  <i class="fas fa-edit me-1"></i> Edit
+                </button>
+                <button class="btn btn-outline-danger btn-delete flex-fill" (click)="confirmDelete(blog.id)">
+                  <i class="fas fa-trash-alt me-1"></i> Delete
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Empty State -->
+    <div *ngIf="blogs.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <i class="fas fa-blog"></i>
+      </div>
+      <h3 class="empty-title">No Blogs Found</h3>
+      <p class="empty-text">Start creating amazing content for your audience.</p>
+      <a [routerLink]="`/doc-profile/blog/add/`" class="btn btn-primary btn-create">
+        <i class="fas fa-plus me-2"></i>Create First Blog
+      </a>
+    </div>
+
   </div>
 </section>

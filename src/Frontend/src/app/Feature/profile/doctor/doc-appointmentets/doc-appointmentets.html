@@ -1,217 +1,293 @@
-<div class="row">
-  <div class="sent-requests mb-5 mt-3">
-    <h5 class="mb-4">Appointment requests</h5>
-
-    <!-- Loading Spinner for Appointments -->
-    @if(loadingAppointments()){
-    <div class="text-center p-5">
-      <div class="spinner-border text-primary" role="status"></div>
-      <p class="mt-3">Loading Appointment requests...</p>
+<!-- Modern Doctor Appointments Component -->
+<div class="appointments-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+          <line x1="16" y1="2" x2="16" y2="6" />
+          <line x1="8" y1="2" x2="8" y2="6" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+        </svg>
+        Appointment Requests
+      </h1>
+      <p class="page-subtitle">Manage your upcoming and past appointments</p>
     </div>
-    }
+    <div class="header-stats" *ngIf="!loadingAppointments()">
+      <div class="stat-badge">
+        <span class="stat-number">{{ totalItems() }}</span>
+        <span class="stat-label">Total</span>
+      </div>
+    </div>
+  </div>
 
-    <!-- Filters and Sort Controls (Updated) -->
-    @if(!loadingAppointments() && totalItems() > 0){
-    <div class="card mb-4 shadow-sm">
-      <div class="card-body">
-        <div class="row g-3">
-          <div class="col-md-6 mb-2">
-            <label for="statusFilter" class="form-label fw-semibold"
-              >Filter by Status:</label
-            >
-            <select
-              id="statusFilter"
-              class="form-select"
-              [ngModel]="selectedStatusFilter()"
-              (ngModelChange)="
-                selectedStatusFilter.set($event); currentPage.set(1)
-              "
-            >
-              <option value="">Show All</option>
-              @for(stat of statusArr; track stat){
-              <option [value]="stat">{{ stat }}</option>
-              }
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="loadingAppointments()">
+    <div class="loading-spinner"></div>
+    <p class="loading-text">Loading appointment requests...</p>
+  </div>
+
+  <!-- Content when not loading -->
+  <div *ngIf="!loadingAppointments()">
+    <!-- Filters Section -->
+    <div class="filters-card" *ngIf="totalItems() > 0">
+      <div class="filters-header">
+        <h3 class="filters-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46" />
+          </svg>
+          Filter & Sort
+        </h3>
+      </div>
+      <div class="filters-content">
+        <div class="filter-group">
+          <label for="statusFilter" class="filter-label">Status</label>
+          <div class="select-wrapper">
+            <select id="statusFilter" class="filter-select" [ngModel]="selectedStatusFilter()"
+              (ngModelChange)="selectedStatusFilter.set($event); currentPage.set(1)">
+              <option value="">All Statuses</option>
+              <option *ngFor="let stat of statusArr; trackBy: trackByStatus" [value]="stat">
+                {{ stat }}
+              </option>
             </select>
+            <svg class="select-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <polyline points="6,9 12,15 18,9" />
+            </svg>
           </div>
-          <div class="col-md-6 mb-2">
-            <label for="sortOrder" class="form-label fw-semibold"
-              >Sort by Date:</label
-            >
-            <select
-              id="sortOrder"
-              class="form-select"
-              [ngModel]="sortOrder()"
-              (ngModelChange)="sortOrder.set($event)"
-            >
+        </div>
+
+        <div class="filter-group">
+          <label for="sortOrder" class="filter-label">Sort by Date</label>
+          <div class="select-wrapper">
+            <select id="sortOrder" class="filter-select" [ngModel]="sortOrder()"
+              (ngModelChange)="sortOrder.set($event)">
               <option value="desc">Newest First</option>
               <option value="asc">Oldest First</option>
             </select>
+            <svg class="select-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <polyline points="6,9 12,15 18,9" />
+            </svg>
           </div>
         </div>
       </div>
     </div>
-    }
 
-    <!-- Appointment List (Updated with Pagination) -->
-    @if(!loadingAppointments() && paginatedRequests().length === 0 &&
-    totalItems() > 0){
-    <div class="alert alert-info text-center" role="alert">
-      No appointments match the current filter.
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="totalItems() === 0">
+      <div class="empty-icon">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+          <line x1="16" y1="2" x2="16" y2="6" />
+          <line x1="8" y1="2" x2="8" y2="6" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+        </svg>
+      </div>
+      <h3 class="empty-title">No Appointments Yet</h3>
+      <p class="empty-description">You don't have any appointment requests at the moment.</p>
     </div>
-    } @else if(!loadingAppointments() && totalItems() === 0){
-    <div class="alert alert-info text-center" role="alert">
-      You have no appointments.
+
+    <!-- No Filtered Results -->
+    <div class="no-results-state" *ngIf="paginatedRequests().length === 0 && totalItems() > 0">
+      <div class="no-results-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <path d="M21 21l-4.35-4.35" />
+        </svg>
+      </div>
+      <h3 class="no-results-title">No Results Found</h3>
+      <p class="no-results-description">No appointments match your current filters. Try adjusting your search criteria.
+      </p>
     </div>
-    } @else if(!loadingAppointments()){
-    <div class="card shadow-sm">
-      @for (req of paginatedRequests(); track req.id; let i = $index) {
-      <div
-        class="mb-4"
-        [ngClass]="{
-          'border-top': req.id !== paginatedRequests()[0].id
-        }"
-      >
+
+    <!-- Appointments List -->
+    <div class="appointments-list" *ngIf="paginatedRequests().length > 0">
+      <div class="appointment-card" *ngFor="let req of paginatedRequests(); trackBy: trackByAppointment; let i = index">
         <!-- Card Header -->
-        <div class="card-header bg-primary text-white">
-          {{ (currentPage() - 1) * itemsPerPage() + i + 1 }} - Appointment with
-          {{ req.customerName }}
+        <div class="appointment-header">
+          <div class="appointment-number">
+            #{{ (currentPage() - 1) * itemsPerPage() + i + 1 }}
+          </div>
+          <div class="appointment-status">
+            <span class="status-badge" [ngClass]="getStatusClass(req.status)">
+              <svg *ngIf="req.status === 'Pending'" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12,6 12,12 16,14" />
+              </svg>
+              <svg *ngIf="req.status === 'Confirmed'" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="20,6 9,17 4,12" />
+              </svg>
+              <svg *ngIf="req.status === 'Completed'" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22,4 12,14.01 9,11.01" />
+              </svg>
+              <svg *ngIf="req.status === 'Cancelled'" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="15" y1="9" x2="9" y2="15" />
+                <line x1="9" y1="9" x2="15" y2="15" />
+              </svg>
+              {{ req.status }}
+            </span>
+          </div>
         </div>
 
-        <!-- Card Body -->
-        <div class="card-body">
-          <div class="row g-3 align-items-center">
-            <!-- Created At -->
-            <div class="col-12 mt-1">
-              <!-- <small class="text-muted">
-                Created at: {{ req.createdAt | date : "medium" }}
-              </small> -->
+        <!-- Card Content -->
+        <div class="appointment-content">
+          <!-- Customer & Pet Info -->
+          <div class="appointment-participants">
+            <div class="participant">
+              <div class="participant-avatar">
+                <img *ngIf="typeof req.customerImg === 'string'" [src]="getFullImageUrl(req.customerImg)"
+                  [alt]="req.customerName" class="avatar-img" />
+                <div class="avatar-fallback" *ngIf="typeof req.customerImg !== 'string'">
+                  {{ getInitial(req.customerName) }}
+                </div>
+              </div>
+              <div class="participant-info">
+                <h4 class="participant-name">{{ req.customerName }}</h4>
+                <p class="participant-role">Pet Owner</p>
+              </div>
             </div>
 
-            <!-- Pet & Customer -->
-            <div class="col-md-6">
-              <p class="mb-1">
-                @if (typeof req.petImg === 'string') {
-                <img
-                  [src]="getFullImageUrl('assets/petimages/' + req.petImg)"
-                  alt="{{ req.petName }}"
-                  class="img-fluid rounded-circle me-2"
-                  style="width: 30px; height: 30px"
-                />
-                }
-                <strong>Pet:</strong> {{ req.petName }}
-              </p>
-              <p class="mb-1">
-                @if (typeof req.customerImg === 'string') {
-                <img
-                  [src]="getFullImageUrl(req.customerImg)"
-                  alt="{{ req.customerName }}"
-                  class="img-fluid rounded-circle me-2"
-                  width="30"
-                  height="30"
-                />
-                }
-                <strong>Customer:</strong> {{ req.customerName }}
-              </p>
+            <div class="appointment-arrow">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12,5 19,12 12,19" />
+              </svg>
             </div>
 
-            <!-- Slot & Capacity -->
-            <div class="col-md-6">
-              <p class="mb-1">
-                <strong>Time Slot:</strong>
-                {{ req.slotStartTime | date : "fullDate" }} -
-                {{ req.slotStartTime | date : "shortTime" }} →
-                {{ req.slotEndTime | date : "shortTime" }}
-              </p>
-              <p class="mb-1">
-                <strong>Capacity:</strong> {{ req.bookedCount }} /
-                {{ req.maxCapacity }}
-              </p>
+            <div class="participant">
+              <div class="participant-avatar">
+                <img *ngIf="typeof req.petImg === 'string'" [src]="getFullImageUrl('assets/petimages/' + req.petImg)"
+                  [alt]="req.petName" class="avatar-img" />
+                <div class="avatar-fallback pet-avatar" *ngIf="typeof req.petImg !== 'string'">
+                  {{ getInitial(req.petName) }}
+                </div>
+              </div>
+              <div class="participant-info">
+                <h4 class="participant-name">{{ req.petName }}</h4>
+                <p class="participant-role">Patient</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Appointment Details -->
+          <div class="appointment-details">
+            <div class="detail-item">
+              <div class="detail-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12,6 12,12 16,14" />
+                </svg>
+              </div>
+              <div class="detail-content">
+                <span class="detail-label">Date & Time</span>
+                <span class="detail-value">
+                  {{ req.slotStartTime | date : "fullDate" }}<br>
+                  {{ req.slotStartTime | date : "shortTime" }} - {{ req.slotEndTime | date : "shortTime" }}
+                </span>
+              </div>
             </div>
 
-            <!-- Notes -->
-            <div class="col-12">
-              <p class="mb-1">
-                <strong>Notes:</strong> {{ req.notes || "None" }}
-              </p>
+            <div class="detail-item">
+              <div class="detail-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+              </div>
+              <div class="detail-content">
+                <span class="detail-label">Capacity</span>
+                <span class="detail-value">{{ req.bookedCount }} / {{ req.maxCapacity }}</span>
+              </div>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="col-md-12 text-end">
-              @if (req.status === 'Pending') {
-              <button
-                class="btn btn-outline-success btn-sm me-2"
-                (click)="confirmRequest(req.id)"
-              >
+            <div class="detail-item" *ngIf="req.notes && req.notes.trim()">
+              <div class="detail-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14,2 14,8 20,8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                </svg>
+              </div>
+              <div class="detail-content">
+                <span class="detail-label">Notes</span>
+                <span class="detail-value">{{ req.notes }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="appointment-actions">
+            <ng-container *ngIf="req.status === 'Pending'">
+              <button class="action-btn confirm-btn" (click)="confirmRequest(req.id)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20,6 9,17 4,12" />
+                </svg>
                 Confirm
               </button>
-              <button
-                class="btn btn-outline-danger btn-sm"
-                (click)="cancelRequest(req.id)"
-              >
+              <button class="action-btn cancel-btn" (click)="cancelRequest(req.id)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
                 Cancel
               </button>
-              } @else if (req.status === 'Confirmed') {
-              <button
-                class="btn btn-outline-primary btn-sm"
-                (click)="completeRequest(req.id)"
-              >
-                Mark as Completed
+            </ng-container>
+
+            <ng-container *ngIf="req.status === 'Confirmed'">
+              <button class="action-btn complete-btn" (click)="completeRequest(req.id)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                  <polyline points="22,4 12,14.01 9,11.01" />
+                </svg>
+                Mark Complete
               </button>
-              }
-            </div>
+            </ng-container>
           </div>
         </div>
-
-        <!-- Card Footer: Status -->
-        <div class="card-footer border-0">
-          <span
-            class="badge rounded-pill px-3 py-1"
-            [ngClass]="{
-              'bg-warning text-dark': req.status === 'Pending',
-              'bg-success': req.status === 'Completed',
-              'bg-primary': req.status === 'Confirmed',
-              'bg-danger': req.status === 'Cancelled'
-            }"
-            style="font-size: 0.75rem"
-          >
-            {{ req.status }}
-          </span>
-        </div>
       </div>
-      }
     </div>
 
-    <!-- Pagination Controls (Updated) -->
-    @if(totalPages() > 1) {
-    <nav aria-label="Appointments Pagination" class="mt-4">
-      <ul class="pagination justify-content-center">
-        <li class="page-item" [class.disabled]="currentPage() === 1">
-          <button
-            class="page-link"
-            (click)="previousPage()"
-            aria-label="Previous"
-          >
-            <span aria-hidden="true">&laquo;</span>
-          </button>
-        </li>
-        @for(page of getPages(); track page){
-        <li class="page-item" [class.active]="currentPage() === page">
-          <button class="page-link" (click)="goToPage(page)">
+    <!-- Pagination -->
+    <div class="pagination-container" *ngIf="totalPages() > 1">
+      <nav class="pagination-nav" aria-label="Appointments Pagination">
+        <button class="pagination-btn prev-btn" [disabled]="currentPage() === 1" (click)="previousPage()"
+          aria-label="Previous page">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15,18 9,12 15,6" />
+          </svg>
+          Previous
+        </button>
+
+        <div class="pagination-pages">
+          <button *ngFor="let page of getPages(); trackBy: trackByPage" class="pagination-page"
+            [class.active]="currentPage() === page" (click)="goToPage(page)" [attr.aria-label]="'Go to page ' + page">
             {{ page }}
           </button>
-        </li>
-        }
-        <li class="page-item" [class.disabled]="currentPage() === totalPages()">
-          <button class="page-link" (click)="nextPage()" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-          </button>
-        </li>
-      </ul>
-      <div class="text-center text-muted">
-        Page {{ currentPage() }} of {{ totalPages() }} ({{ totalItems() }}
-        total appointments)
+        </div>
+
+        <button class="pagination-btn next-btn" [disabled]="currentPage() === totalPages()" (click)="nextPage()"
+          aria-label="Next page">
+          Next
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9,18 15,12 9,6" />
+          </svg>
+        </button>
+      </nav>
+
+      <div class="pagination-info">
+        Page {{ currentPage() }} of {{ totalPages() }} ({{ totalItems() }} total appointments)
       </div>
-    </nav>
-    } }
+    </div>
   </div>
 </div>

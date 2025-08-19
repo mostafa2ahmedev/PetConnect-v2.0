@@ -89,7 +89,9 @@ export class DoctorAddTimeslot {
       },
     });
   }
-
+  onCancel(): void {
+    this.router.navigate(['/schedules']);
+  }
   // Helper to format the date (yyyy-MM-dd)
   formatDate(dateObj: Date): string {
     const yyyy = dateObj.getFullYear();

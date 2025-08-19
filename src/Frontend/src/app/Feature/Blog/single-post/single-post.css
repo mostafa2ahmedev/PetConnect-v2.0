@@ -1,5 +1,6 @@
 .like-btn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   gap: 5px;
   border: 1px solid #4b46d6;
   background-color: transparent;
@@ -7,6 +8,12 @@
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  /* Added text wrapping for button content */
+  word-wrap: break-word;
+  white-space: nowrap;
 }
 
 .like-btn:hover {
@@ -31,6 +38,7 @@
   background: var(--c), var(--c), var(--c), var(--c), var(--c), var(--c);
   animation: l34-1 2s infinite alternate, l34-2 2s infinite alternate;
 }
+
 @keyframes l34-1 {
   0%,
   20% {
@@ -45,6 +53,7 @@
     background-size: 20px 20px;
   }
 }
+
 @keyframes l34-2 {
   0%,
   40% {
@@ -55,14 +64,127 @@
     background-position: 50% 0, 50% 0, 0 50%, 100% 50%, 50% 100%, 50% 100%;
   }
 }
+
+/* Enhanced blog content container with better overflow handling */
 .blog-content-container {
-  max-width: 100%; /* Keep it responsive */
-  overflow-wrap: break-word; /* Break long words/URLs */
-  word-break: break-word; /* Fallback for some browsers */
-  white-space: normal; /* Allow wrapping */
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+  hyphens: auto;
+  line-height: 1.6;
 }
 
 .blog-content-container img {
-  max-width: 100%; /* Prevent images from overflowing */
+  max-width: 100%;
   height: auto;
+  border-radius: 8px;
+}
+
+.blog-content-container p {
+  margin-bottom: 1rem;
+  word-wrap: break-word;
+}
+
+.blog-content-container a {
+  word-break: break-all;
+  color: #0d6efd;
+}
+
+/* Added comment card styling with proper overflow handling */
+.comment-card {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  background-color: #f8f9fa;
+  transition: box-shadow 0.2s ease;
+}
+
+.comment-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.reply-card {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  background-color: #ffffff;
+  border-left: 3px solid #4b46d6;
+}
+
+/* Enhanced delete icon styling */
+.delete-icon {
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.delete-icon:hover {
+  opacity: 1;
+  color: #dc3545 !important;
+}
+
+/* Enhanced comment image styling */
+.comment-image {
+  border: 1px solid #dee2e6;
+  transition: transform 0.2s ease;
+}
+
+.comment-image:hover {
+  transform: scale(1.02);
+}
+
+/* Enhanced remove image button */
+.remove-image-btn {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Enhanced comment box styling */
+.comment-box {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+.comment-box input {
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+}
+
+.comment-box input:focus {
+  border-color: #4b46d6;
+  box-shadow: 0 0 0 0.2rem rgba(75, 70, 214, 0.25);
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .like-btn {
+    font-size: 0.875rem;
+    padding: 6px 10px;
+  }
+
+  .comment-box {
+    padding: 10px;
+  }
+
+  .blog-content-container {
+    font-size: 1rem;
+  }
+}
+
+/* Utility classes for better text handling */
+.text-break {
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
+.min-w-0 {
+  min-width: 0 !important;
+}
+
+.flex-shrink-0 {
+  flex-shrink: 0 !important;
+}
+
+.flex-grow-1 {
+  flex-grow: 1 !important;
 }
