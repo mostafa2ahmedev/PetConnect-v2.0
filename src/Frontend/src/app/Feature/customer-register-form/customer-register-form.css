@@ -45,7 +45,23 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+.loading-container {
+  text-align: center;
+  padding: 4rem 0;
+}
 
+.modern-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.loading-text {
+  color: #6c757d;
+  font-size: 1.1rem;
+  margin: 0;
+}
 .form-subtitle {
   color: #718096;
   font-size: 1.1rem;

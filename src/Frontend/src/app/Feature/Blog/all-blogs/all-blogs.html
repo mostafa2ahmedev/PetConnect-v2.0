@@ -1,13 +1,16 @@
-<!-- Modern Hero Section with Gradient -->
-<section class="modern-hero-section">
-  <div class="hero-gradient-bg">
-    <div class="section-title pb-0" data-aos="fade-up">
-      <div class="hero-content">
+<!-- Unified Hero Section -->
+<section id="hero" class="hero-section">
+  <div class="hero-background">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <div class="hero-text">
         <h1 class="hero-title">Latest Blog Posts</h1>
-        <p class="hero-subtitle">Explore inspiring pet stories and practical advice to nurture your beloved companions.</p>
-        <div class="hero-nav-buttons">
-          <button class="btn btn-outline-light btn-modern btn-filter-primary" (click)="showFilters = !showFilters">
-            <i class="fas fa-sliders-h me-2"></i>Filter Blogs
+        <p class="hero-subtitle">
+          Explore inspiring pet stories and practical advice to nurture your beloved companions.
+        </p>
+        <div class="hero-buttons">
+          <button class="btn btn-outline-light">
+            <i class="fas fa-sliders-h"></i> Filter Blogs
           </button>
         </div>
       </div>
@@ -33,7 +36,8 @@
         <label class="filter-label">
           <i class="fas fa-folder-open me-2"></i>Category
         </label>
-        <select class="form-select modern-select" [(ngModel)]="filters.categoryId" name="categoryId" (change)="onBackendFilterChange()">
+        <select class="form-select modern-select" [(ngModel)]="filters.categoryId" name="categoryId"
+          (change)="onBackendFilterChange()">
           <option [ngValue]="''">All Categories</option>
           <option *ngFor="let cat of categories" [ngValue]="cat.id.toString()">{{ cat.name }}</option>
         </select>
@@ -44,7 +48,8 @@
         <label class="filter-label">
           <i class="fas fa-tag me-2"></i>Topic
         </label>
-        <select class="form-select modern-select" [(ngModel)]="filters.topicKey" name="topicKey" (change)="onBackendFilterChange()">
+        <select class="form-select modern-select" [(ngModel)]="filters.topicKey" name="topicKey"
+          (change)="onBackendFilterChange()">
           <option [ngValue]="''">All Topics</option>
           <option *ngFor="let topic of blogTopics" [ngValue]="topic.key.toString()">{{ topic.value }}</option>
         </select>
@@ -55,7 +60,8 @@
         <label class="filter-label">
           <i class="fas fa-search me-2"></i>Search by Title
         </label>
-        <input type="text" class="form-control modern-input" placeholder="Enter blog title..." [(ngModel)]="filters.searchTerm" name="searchTerm" (input)="applyClientFilters()" />
+        <input type="text" class="form-control modern-input" placeholder="Enter blog title..."
+          [(ngModel)]="filters.searchTerm" name="searchTerm" (input)="applyClientFilters()" />
       </div>
 
       <!-- Sort Filter -->
@@ -63,7 +69,8 @@
         <label class="filter-label">
           <i class="fas fa-sort me-2"></i>Sort by Date
         </label>
-        <select class="form-select modern-select" [(ngModel)]="filters.sortOrder" name="sortOrder" (change)="applyClientFilters()">
+        <select class="form-select modern-select" [(ngModel)]="filters.sortOrder" name="sortOrder"
+          (change)="applyClientFilters()">
           <option [ngValue]="''">Default</option>
           <option [ngValue]="'desc'">Newest First</option>
           <option [ngValue]="'asc'">Oldest First</option>
@@ -81,7 +88,7 @@
 <!-- Enhanced Blogs Grid -->
 <section class="blogs-section">
   <div class="container" data-aos="fade-up" data-aos-delay="100">
-    
+
     <!-- Loading State -->
     <div *ngIf="loading" class="loading-container">
       <div class="modern-spinner">

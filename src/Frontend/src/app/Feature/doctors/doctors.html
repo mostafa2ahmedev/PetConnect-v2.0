@@ -1,16 +1,18 @@
-<!-- Modern Hero Section with Gradient -->
-<section class="modern-hero-section">
-  <div class="hero-gradient-bg">
-    <div class="container section-title pb-0" data-aos="fade-up">
-      <div class="hero-content">
+<!-- Unified Hero Section -->
+<section id="hero" class="hero-section">
+  <div class="hero-background">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <div class="hero-text">
         <h1 class="hero-title">Our Vets</h1>
-        <p class="hero-subtitle">Meet the trusted professionals dedicated to keeping your pets safe, healthy, and happy.
+        <p class="hero-subtitle">
+          Meet the trusted professionals dedicated to keeping your pets safe, healthy, and happy.
         </p>
-        <div class="hero-nav-buttons">
-          <a routerLink="/pets" class="btn btn-outline-light btn-modern">
-            <i class="fas fa-paw me-2"></i>All Pets
+        <div class="hero-buttons">
+          <a routerLink="/pets" class="btn btn-outline-light">
+            <i class="fas fa-paw"></i> All Pets
           </a>
-          <a routerLink="/add-pet" class="btn btn-outline-light btn-modern">Add Pet</a>
+          <a routerLink="/add-pet" class="btn btn-outline-light">Add Pet</a>
         </div>
       </div>
     </div>
@@ -85,79 +87,86 @@
     }
   </div>
 </section>
-
-<!-- Enhanced Doctors Grid -->
-@if(typeof allDoctors != "string" && !errorFound) {
-<section class="doctors-section">
-  <div class="container" data-aos="fade-up" data-aos-delay="100">
-    <div class="doctors-grid">
-      @for( doctor of allDoctors ; track doctor.id) {
-      <div class="doctor-card-wrapper" data-aos="zoom-in" data-aos-delay="100">
-        <a class="text-decoration-none" [routerLink]="['/doctors', doctor.id]">
-          <div class="modern-doctor-card">
-            <!-- Doctor Image -->
-            <div class="doctor-image-container">
-              <img src="{{ server }}{{ doctor.imgUrl }}" alt="Dr. {{ doctor.fName }} {{ doctor.lName }}"
-                class="doctor-image" />
-              <div class="doctor-status-badge">Available</div>
-            </div>
-
-            <!-- Doctor Info -->
-            <div class="doctor-info">
-              <h5 class="doctor-name">
-                Dr. {{ doctor.fName }} {{ doctor.lName }}
-              </h5>
-
-              <!-- Enhanced reviews section with modern styling -->
-              <div class="doctor-reviews">
-                @if(doctor.rating && doctor.rating > 0) {
-                <div class="rating-stars">
-                  @for (star of getFullStars(doctor.rating); track $index) {
-                  <i class="fas fa-star star-filled"></i>
-                  }
-                  @for (star of getEmptyStars(doctor.rating); track $index) {
-                  <i class="fas fa-star star-empty"></i>
-                  }
-                  <span class="rating-text">({{ doctor.rating }}/5)</span>
-                </div>
-                } @else {
-                <div class="rating-stars no-reviews">
-                  @for (star of [].constructor(5); track $index) {
-                  <i class="fas fa-star star-empty"></i>
-                  }
-                  <span class="rating-text">No reviews</span>
-                </div>
-                }
-              </div>
-
-              <div class="doctor-details">
-                <div class="detail-item">
-                  <i class="fas fa-stethoscope detail-icon"></i>
-                  <span class="detail-text">{{ doctor.petSpecialty }} Specialist</span>
-                </div>
-
-                <div class="detail-item">
-                  <i class="fas fa-dollar-sign detail-icon"></i>
-                  <span class="detail-text">${{ doctor.pricePerHour }}/hour</span>
-                </div>
-
-                <div class="detail-item">
-                  <i class="fas fa-map-marker-alt detail-icon"></i>
-                  <span class="detail-text">{{ doctor.city }}, {{ doctor.street }}</span>
-                </div>
-              </div>
-
-              <div class="doctor-actions">
-                <button class="btn btn-primary btn-book">
-                  <i class="fas fa-calendar-plus me-2"></i>Book Appointment
-                </button>
-              </div>
-            </div>
-          </div>
-        </a>
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-container">
+      <div class="modern-spinner">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="loading-text">Loading blogs...</p>
       </div>
-      }
     </div>
-  </div>
-</section>
-}
+
+  <!-- Enhanced Doctors Grid -->
+  @if(typeof allDoctors != "string" && !errorFound) {
+  <section class="doctors-section">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="doctors-grid">
+        @for( doctor of allDoctors ; track doctor.id) {
+        <div class="doctor-card-wrapper" data-aos="zoom-in" data-aos-delay="100">
+          <a class="text-decoration-none" [routerLink]="['/doctors', doctor.id]">
+            <div class="modern-doctor-card">
+              <!-- Doctor Image -->
+              <div class="doctor-image-container">
+                <img src="{{ server }}{{ doctor.imgUrl }}" alt="Dr. {{ doctor.fName }} {{ doctor.lName }}"
+                  class="doctor-image" />
+                <div class="doctor-status-badge">Available</div>
+              </div>
+
+              <!-- Doctor Info -->
+              <div class="doctor-info">
+                <h5 class="doctor-name">
+                  Dr. {{ doctor.fName }} {{ doctor.lName }}
+                </h5>
+
+                <!-- Enhanced reviews section with modern styling -->
+                <div class="doctor-reviews">
+                  @if(doctor.rating && doctor.rating > 0) {
+                  <div class="rating-stars">
+                    @for (star of getFullStars(doctor.rating); track $index) {
+                    <i class="fas fa-star star-filled"></i>
+                    }
+                    @for (star of getEmptyStars(doctor.rating); track $index) {
+                    <i class="fas fa-star star-empty"></i>
+                    }
+                    <span class="rating-text">({{ doctor.rating }}/5)</span>
+                  </div>
+                  } @else {
+                  <div class="rating-stars no-reviews">
+                    @for (star of [].constructor(5); track $index) {
+                    <i class="fas fa-star star-empty"></i>
+                    }
+                    <span class="rating-text">No reviews</span>
+                  </div>
+                  }
+                </div>
+
+                <div class="doctor-details">
+                  <div class="detail-item">
+                    <i class="fas fa-stethoscope detail-icon"></i>
+                    <span class="detail-text">{{ doctor.petSpecialty }} Specialist</span>
+                  </div>
+
+                  <div class="detail-item">
+                    <i class="fas fa-dollar-sign detail-icon"></i>
+                    <span class="detail-text">${{ doctor.pricePerHour }}/hour</span>
+                  </div>
+
+                  <div class="detail-item">
+                    <i class="fas fa-map-marker-alt detail-icon"></i>
+                    <span class="detail-text">{{ doctor.city }}, {{ doctor.street }}</span>
+                  </div>
+                </div>
+
+                <div class="doctor-actions">
+                  <button class="btn btn-primary btn-book">
+                    <i class="fas fa-calendar-plus me-2"></i>Book Appointment
+                  </button>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        }
+      </div>
+    </div>
+  </section>
+  }

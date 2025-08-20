@@ -79,7 +79,28 @@ export class DoctorRegisterForm implements OnInit {
     }
   }
 
-  // Getters for easy access in template
+  // ------- helpers -------
+  private toStr(v: unknown): string {
+    return (v ?? '').toString().trim();
+  }
+
+  /** Make a safe filename: slug(prefix)-timestamp.ext */
+  private makeSafeFileName(prefix: string, originalName: string): string {
+    const dot = originalName.lastIndexOf('.');
+    const ext = dot >= 0 ? originalName.slice(dot + 1) : 'bin';
+    const base = prefix
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/gi, '-')
+      .replace(/^-+|-+$/g, '');
+    return `${base}-${Date.now()}.${ext.toLowerCase()}`;
+  }
+
+  /** Replace backslashes with forward slashes for web URLs */
+  private normalizePath(p?: string): string | undefined {
+    return p ? p.replace(/\\/g, '/') : p;
+  }
+
+  // Getters for template
   get fName() {
     return this.registerForm.get('fName');
   }
@@ -125,9 +146,11 @@ export class DoctorRegisterForm implements OnInit {
       return;
     }
 
-    const profileImage = this.registrationDataService.profileImage;
-    const idCardImage = this.registrationDataService.idCardImage;
-    const certificateFile = this.registrationDataService.certificateFile;
+    const profileImage = this.registrationDataService
+      .profileImage as File | null;
+    const idCardImage = this.registrationDataService.idCardImage as File | null;
+    const certificateFile = this.registrationDataService
+      .certificateFile as File | null;
 
     if (!profileImage || !idCardImage || !certificateFile) {
       this.generalErrors.push(
@@ -137,39 +160,62 @@ export class DoctorRegisterForm implements OnInit {
       return;
     }
 
+    // Generate deterministic, URL-safe filenames (fixes bad backend paths)
+    const namePrefix =
+      `${this.toStr(this.fName?.value)}-${this.toStr(this.lName?.value)}` ||
+      'doctor';
+
+    const profileSafe = this.makeSafeFileName(
+      `${namePrefix}-profile`,
+      profileImage.name
+    );
+    const idCardSafe = this.makeSafeFileName(
+      `${namePrefix}-idcard`,
+      idCardImage.name
+    );
+    const certSafe = this.makeSafeFileName(
+      `${namePrefix}-certificate`,
+      certificateFile.name
+    );
+
     const formData = new FormData();
 
-    // إضافة كل حقول الفورم النصية
-    formData.append('FName', this.registerForm.get('fName')?.value);
-    formData.append('LName', this.registerForm.get('lName')?.value);
-    formData.append('Email', this.registerForm.get('email')?.value);
-    formData.append('PhoneNumber', this.registerForm.get('phoneNumber')?.value);
-    formData.append('Password', this.registerForm.get('password')?.value);
+    // Text fields (ensure string values)
+    formData.append('FName', this.toStr(this.fName?.value));
+    formData.append('LName', this.toStr(this.lName?.value));
+    formData.append('Email', this.toStr(this.email?.value));
+    formData.append('PhoneNumber', this.toStr(this.phoneNumber?.value));
+    formData.append('Password', this.toStr(this.password?.value));
     formData.append(
       'ConfirmationPassword',
-      this.registerForm.get('confirmationPassword')?.value
+      this.toStr(this.confirmationPassword?.value)
     );
-    formData.append('Gender', this.registerForm.get('gender')?.value);
-    formData.append(
-      'PricePerHour',
-      this.registerForm.get('pricePerHour')?.value
-    );
-    formData.append(
-      'PetSpecialty',
-      this.registerForm.get('petSpecialty')?.value
-    );
-    formData.append('Country', this.registerForm.get('country')?.value);
-    formData.append('City', this.registerForm.get('city')?.value);
-    formData.append('Street', this.registerForm.get('street')?.value);
+    formData.append('Gender', this.toStr(this.gender?.value)); // if backend expects number, still ok (stringified)
+    formData.append('PricePerHour', this.toStr(this.pricePerHour?.value));
+    formData.append('PetSpecialty', this.toStr(this.petSpecialty?.value));
+    formData.append('Country', this.toStr(this.country?.value));
+    formData.append('City', this.toStr(this.city?.value));
+    formData.append('Street', this.toStr(this.street?.value));
 
-    // إضافة الملفات
-    formData.append('ProfileImage', profileImage, profileImage.name);
-    formData.append('IdCardImage', idCardImage, idCardImage.name);
-    formData.append('Certificate', certificateFile, certificateFile.name);
+    // Files (use sanitized filenames)
+    formData.append('ProfileImage', profileImage, profileSafe);
+    formData.append('IdCardImage', idCardImage, idCardSafe);
+    formData.append('Certificate', certificateFile, certSafe);
 
-    // إرسال الطلب
+    // Optional hints some APIs like to receive (harmless if ignored on server)
+    formData.append('ProfileImageFileName', profileSafe);
+    formData.append('IdCardImageFileName', idCardSafe);
+    formData.append('CertificateFileName', certSafe);
+
     this.accountService.PostDoctorRegister(formData).subscribe({
-      next: (res) => {
+      next: (res: any) => {
+        // If API returns a path string, normalize slashes for the web (optional)
+        if (res?.data?.profileImagePath) {
+          res.data.profileImagePath = this.normalizePath(
+            res.data.profileImagePath
+          );
+        }
+
         if (res && res.success) {
           alert('Registration successful! Your application is under review.');
           this.registrationDataService.clearData();
@@ -178,10 +224,10 @@ export class DoctorRegisterForm implements OnInit {
         } else {
           if (res && res.errors) {
             if (typeof res.errors === 'object' && !Array.isArray(res.errors)) {
-              const errorMessages = [];
+              const errorMessages: string[] = [];
               for (const key in res.errors) {
                 if (
-                  res.errors.hasOwnProperty(key) &&
+                  Object.prototype.hasOwnProperty.call(res.errors, key) &&
                   Array.isArray(res.errors[key])
                 ) {
                   errorMessages.push(...res.errors[key]);

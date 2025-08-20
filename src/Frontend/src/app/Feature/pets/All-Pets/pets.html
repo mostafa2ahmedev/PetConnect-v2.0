@@ -1,22 +1,26 @@
-<!-- Hero Section with Better Contrast -->
-<section class="hero-section-fixed">
-  <div class="hero-overlay">
-    <div class="container">
-      <div class="hero-content-fixed">
-        <h1 class="hero-title-fixed">{{ title }}</h1>
-        <p class="hero-subtitle-fixed">Find your new best friend and give a rescued pet a loving home.</p>
-        <div class="hero-buttons-fixed">
-          <a routerLink="/add-pet" class="btn-primary-fixed">
-            <i class="fas fa-plus me-2"></i>Add New Pet
+<!-- Unified Hero Section -->
+<section id="hero" class="hero-section">
+  <div class="hero-background">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <div class="hero-text">
+        <h1 class="hero-title">{{ title }}</h1>
+        <p class="hero-subtitle">
+          Find your new best friend and give a rescued pet a loving home.
+        </p>
+        <div class="hero-buttons">
+          <a routerLink="/add-pet" class="btn btn-outline-light">
+            <i class="fas fa-plus me-2"></i> Add New Pet
           </a>
-          <a routerLink="/doctors" class="btn-secondary-fixed">
-            <i class="fas fa-stethoscope me-2"></i>Our Vets
+          <a routerLink="/doctors" class="btn btn-outline-light">
+            <i class="fas fa-stethoscope me-2"></i> Our Vets
           </a>
         </div>
       </div>
     </div>
   </div>
 </section>
+
 <!-- Loading State -->
 <div *ngIf="loading" class="loading-section-fixed">
   <div class="spinner-fixed"></div>

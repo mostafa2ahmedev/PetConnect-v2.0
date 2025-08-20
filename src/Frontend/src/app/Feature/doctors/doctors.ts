@@ -23,6 +23,7 @@ import { ReviewsService } from '../Review/reviews-service';
   styleUrl: './doctors.css',
 })
 export class Doctors implements OnInit {
+  loading = true;
   server = 'https://localhost:7102';
   doctorsAreLoading = signal(true);
   doctorService = inject(DoctorsService);
@@ -55,6 +56,7 @@ export class Doctors implements OnInit {
           this.errorFound = false;
           this.allDoctors = e;
           this.doctorsAreLoading.set(false);
+          this.loading = false;
         },
         error: (err) => {
           this.errorFound = true;
@@ -70,10 +72,10 @@ export class Doctors implements OnInit {
   }
 
   getFullStars(rating: number): any[] {
-  return Array(Math.floor(rating));
-}
+    return Array(Math.floor(rating));
+  }
 
-getEmptyStars(rating: number): any[] {
-  return Array(5 - Math.floor(rating));
-}
+  getEmptyStars(rating: number): any[] {
+    return Array(5 - Math.floor(rating));
+  }
 }

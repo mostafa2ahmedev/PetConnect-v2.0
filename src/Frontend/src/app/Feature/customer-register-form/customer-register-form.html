@@ -6,7 +6,7 @@
     </div>
 
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate class="enhanced-form">
-      
+
       <!-- General Errors -->
       <div *ngIf="generalErrors.length > 0" class="alert alert-error">
         <div class="alert-icon">⚠️</div>
@@ -20,17 +20,13 @@
       <!-- Personal Information Section -->
       <div class="form-section">
         <h3 class="section-title">Personal Information</h3>
-        
+
         <div class="form-row">
           <!-- First Name -->
           <div class="form-group">
             <label for="fName" class="form-label">First Name</label>
             <div class="input-wrapper">
-              <input 
-                type="text" 
-                class="form-input" 
-                id="fName" 
-                formControlName="fName"
+              <input type="text" class="form-input" id="fName" formControlName="fName"
                 [class.error]="(fName?.touched || isSubmitted) && fName?.errors?.['required']"
                 placeholder="Enter your first name">
               <div class="error-message" *ngIf="(fName?.touched || isSubmitted) && fName?.errors?.['required']">
@@ -43,11 +39,7 @@
           <div class="form-group">
             <label for="lName" class="form-label">Last Name</label>
             <div class="input-wrapper">
-              <input 
-                type="text" 
-                class="form-input" 
-                id="lName" 
-                formControlName="lName"
+              <input type="text" class="form-input" id="lName" formControlName="lName"
                 [class.error]="(lName?.touched || isSubmitted) && lName?.errors?.['required']"
                 placeholder="Enter your last name">
               <div class="error-message" *ngIf="(lName?.touched || isSubmitted) && lName?.errors?.['required']">
@@ -61,11 +53,7 @@
         <div class="form-group">
           <label for="email" class="form-label">Email Address</label>
           <div class="input-wrapper">
-            <input 
-              type="email" 
-              class="form-input" 
-              id="email" 
-              formControlName="email"
+            <input type="email" class="form-input" id="email" formControlName="email"
               [class.error]="(email?.touched || isSubmitted) && (email?.errors?.['required'] || email?.errors?.['email'])"
               placeholder="Enter your email address">
             <div class="error-message" *ngIf="(email?.touched || isSubmitted) && email?.errors?.['required']">
@@ -81,17 +69,15 @@
         <div class="form-group">
           <label for="phoneNumber" class="form-label">Phone Number</label>
           <div class="input-wrapper">
-            <input 
-              type="text" 
-              class="form-input" 
-              id="phoneNumber" 
-              formControlName="phoneNumber"
+            <input type="text" class="form-input" id="phoneNumber" formControlName="phoneNumber"
               [class.error]="(phoneNumber?.touched || isSubmitted) && (phoneNumber?.errors?.['required'] || phoneNumber?.errors?.['pattern'])"
               placeholder="Enter your phone number">
-            <div class="error-message" *ngIf="(phoneNumber?.touched || isSubmitted) && phoneNumber?.errors?.['required']">
+            <div class="error-message"
+              *ngIf="(phoneNumber?.touched || isSubmitted) && phoneNumber?.errors?.['required']">
               Phone Number is required
             </div>
-            <div class="error-message" *ngIf="(phoneNumber?.touched || isSubmitted) && phoneNumber?.errors?.['pattern']">
+            <div class="error-message"
+              *ngIf="(phoneNumber?.touched || isSubmitted) && phoneNumber?.errors?.['pattern']">
               Please enter a valid phone number
             </div>
           </div>
@@ -101,10 +87,7 @@
         <div class="form-group">
           <label for="gender" class="form-label">Gender</label>
           <div class="input-wrapper">
-            <select 
-              class="form-select" 
-              id="gender" 
-              formControlName="gender"
+            <select class="form-select" id="gender" formControlName="gender"
               [class.error]="(gender?.touched || isSubmitted) && gender?.errors?.['required']">
               <option value="" disabled>Select your gender</option>
               <option *ngFor="let option of genderOptions" [ngValue]="option.id">
@@ -122,12 +105,7 @@
           <label for="image" class="form-label">Profile Image</label>
           <div class="input-wrapper">
             <div class="file-input-wrapper">
-              <input 
-                type="file" 
-                class="file-input" 
-                id="image" 
-                (change)="onImageSelected($event)"
-                accept="image/*">
+              <input type="file" class="file-input" id="image" (change)="onImageSelected($event)" accept="image/*">
               <label for="image" class="file-input-label">
                 <span class="file-icon">📁</span>
                 <span class="file-text">Choose profile image</span>
@@ -141,16 +119,12 @@
       <!-- Security Section -->
       <div class="form-section">
         <h3 class="section-title">Security</h3>
-        
+
         <!-- Password -->
         <div class="form-group">
           <label for="password" class="form-label">Password</label>
           <div class="input-wrapper">
-            <input 
-              type="password" 
-              class="form-input" 
-              id="password" 
-              formControlName="password"
+            <input type="password" class="form-input" id="password" formControlName="password"
               [class.error]="(password?.touched || isSubmitted) && password?.errors?.['required']"
               placeholder="Create a strong password">
             <div class="error-message" *ngIf="(password?.touched || isSubmitted) && password?.errors?.['required']">
@@ -163,17 +137,15 @@
         <div class="form-group">
           <label for="confirmationPassword" class="form-label">Confirm Password</label>
           <div class="input-wrapper">
-            <input 
-              type="password" 
-              class="form-input" 
-              id="confirmationPassword" 
-              formControlName="confirmationPassword"
+            <input type="password" class="form-input" id="confirmationPassword" formControlName="confirmationPassword"
               [class.error]="(confirmationPassword?.touched || isSubmitted) && (confirmationPassword?.errors?.['required'] || confirmationPassword?.errors?.['compareValidator'])"
               placeholder="Confirm your password">
-            <div class="error-message" *ngIf="(confirmationPassword?.touched || isSubmitted) && confirmationPassword?.errors?.['required']">
+            <div class="error-message"
+              *ngIf="(confirmationPassword?.touched || isSubmitted) && confirmationPassword?.errors?.['required']">
               Please confirm your password
             </div>
-            <div class="error-message" *ngIf="(confirmationPassword?.touched || isSubmitted) && confirmationPassword?.errors?.['compareValidator']">
+            <div class="error-message"
+              *ngIf="(confirmationPassword?.touched || isSubmitted) && confirmationPassword?.errors?.['compareValidator']">
               Passwords do not match
             </div>
           </div>
@@ -183,17 +155,13 @@
       <!-- Address Section -->
       <div class="form-section">
         <h3 class="section-title">Address Information</h3>
-        
+
         <div class="form-row">
           <!-- Country -->
           <div class="form-group">
             <label for="country" class="form-label">Country</label>
             <div class="input-wrapper">
-              <input 
-                type="text" 
-                class="form-input" 
-                id="country" 
-                formControlName="country"
+              <input type="text" class="form-input" id="country" formControlName="country"
                 [class.error]="(country?.touched || isSubmitted) && country?.errors?.['required']"
                 placeholder="Enter your country">
               <div class="error-message" *ngIf="(country?.touched || isSubmitted) && country?.errors?.['required']">
@@ -206,11 +174,7 @@
           <div class="form-group">
             <label for="city" class="form-label">City</label>
             <div class="input-wrapper">
-              <input 
-                type="text" 
-                class="form-input" 
-                id="city" 
-                formControlName="city"
+              <input type="text" class="form-input" id="city" formControlName="city"
                 [class.error]="(city?.touched || isSubmitted) && city?.errors?.['required']"
                 placeholder="Enter your city">
               <div class="error-message" *ngIf="(city?.touched || isSubmitted) && city?.errors?.['required']">
@@ -224,11 +188,7 @@
         <div class="form-group">
           <label for="street" class="form-label">Street Address</label>
           <div class="input-wrapper">
-            <input 
-              type="text" 
-              class="form-input" 
-              id="street" 
-              formControlName="street"
+            <input type="text" class="form-input" id="street" formControlName="street"
               [class.error]="(street?.touched || isSubmitted) && street?.errors?.['required']"
               placeholder="Enter your street address">
             <div class="error-message" *ngIf="(street?.touched || isSubmitted) && street?.errors?.['required']">
@@ -244,6 +204,7 @@
           <span class="btn-text">Create Account</span>
           <span class="btn-icon">→</span>
         </button>
+
       </div>
     </form>
   </div>
