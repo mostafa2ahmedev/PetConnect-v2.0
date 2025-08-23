@@ -17,11 +17,33 @@ namespace PetConnect.DAL.Data
         public DbSet<Shelter> Shelters { get; set; }
         public DbSet<ShelterAddedPets> ShelterAddedPets { get; set; }
         public DbSet<ShelterPetAdoptions> ShelterPetAdoptions { get; set; }
-
         public DbSet<CustomerAddedPets> CustomerAddedPets { get; set; }
         public DbSet<CustomerPetAdoptions> CustomerPetAdoptions { get; set; }
+        public DbSet<TimeSlot> TimeSlots { get; set; }
+        public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductType> ProductType { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
-        
+        public DbSet<OrderProduct> OrderProducts { get; set; }
+        public DbSet<Customer> Customers{ get; set; }
+
+        public DbSet<Blog> Blogs { get; set; }
+        public DbSet<BlogComment> BlogComments { get; set; }
+        public DbSet<BlogCommentReply> BlogCommentReplies { get; set; }
+        public DbSet<UserBlogComment> UserBlogComments { get; set; }
+        public DbSet<UserBlogCommentReply> UserBlogCommentReplies { get; set; }
+        public DbSet<UserBlogLike> UserBlogLikes { get; set; }
+        public DbSet<UserBlogCommentLike> UserBlogCommentLikes { get; set; }
+  
+        public DbSet<UserBlogCommentReplyLike> UserBlogCommentReplyLikes { get; set; }
+        public DbSet<SupportRequest> SupportRequests { get; set; }
+        public DbSet<Review> Review { get; set; }
+        //public DbSet<FollowUpSupportRequest> FollowUpSupportRequests { get; set; }
+
+
+        public DbSet<AdminSupportResponse> SupportResponses { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> contextOptions) : base(contextOptions)
         {
             
@@ -40,7 +62,6 @@ namespace PetConnect.DAL.Data
             builder.Entity<Doctor>().ToTable("Doctors");
             builder.Entity<ShelterOwner>().ToTable("ShelterOwners");
             builder.Entity<Admin>().ToTable("Admins");
-
         }
 
     }

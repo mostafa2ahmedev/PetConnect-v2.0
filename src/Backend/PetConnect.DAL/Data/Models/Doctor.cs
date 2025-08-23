@@ -12,6 +12,14 @@ namespace PetConnect.DAL.Data.Models
     {
         public decimal PricePerHour { get; set; }
         public string CertificateUrl { get; set; } = null!;
+        public string IDCardUrl { get; set; } = null!;
         public PetSpecialty PetSpecialty { get; set; }
+        public ICollection<TimeSlot> TimeSlots { get; set; } = new HashSet<TimeSlot>();
+        public ICollection<Appointment> Appointments { get; set; } = new HashSet<Appointment>();
+        public ICollection<AdminDoctorMessage> AdminMessages { get; set; } = new HashSet<AdminDoctorMessage>();
+        public ICollection<Blog> DoctorBlogs { get; set; } = new HashSet<Blog>();
+        public ICollection<Review> DoctorReviews { get; set; } = new HashSet<Review>();
+
     }
+
 }

@@ -1,0 +1,256 @@
+<!-- Enhanced profile update form with modern styling and better visual hierarchy -->
+<section id="hero" class="hero-section">
+  <div class="hero-content" data-aos="fade-up">
+    <div class="hero-icon">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+    </div>
+    <h1 class="hero-title">Update Your Profile</h1>
+    <p class="hero-description">
+      Keep your information current to help us connect you with the perfect pet companion.
+    </p>
+  </div>
+</section>
+
+<div class="profile-form-container">
+  <div class="form-wrapper">
+    <form #form="ngForm" (ngSubmit)="onSubmit(form)" *ngIf="model" class="enhanced-form">
+      <div class="form-grid">
+        <!-- Personal Information Section -->
+        <div class="form-section">
+          <h3 class="section-title">Personal Information</h3> <!-- First Name -->
+          <div class="form-group">
+            <label for="fName" class="form-label">
+              <span class="label-text">First Name</span>
+              <span class="required-indicator">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="text" id="fName" class="form-input" [class.error]="fNameRef.invalid && fNameRef.touched"
+                [class.success]="fNameRef.valid && fNameRef.touched" name="fName" [(ngModel)]="model.fName" required
+                minlength="3" maxlength="20" #fNameRef="ngModel" placeholder="Enter your first name" />
+              <div class="input-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+            </div>
+            <div class="error-messages" *ngIf="fNameRef.invalid && fNameRef.touched">
+              <span *ngIf="fNameRef.errors?.['required']" class="error-text">
+                First Name is required
+              </span>
+              <span *ngIf="fNameRef.errors?.['minlength']" class="error-text">
+                Minimum 3 characters required
+              </span>
+              <span *ngIf="fNameRef.errors?.['maxlength']" class="error-text">
+                Maximum 20 characters allowed
+              </span>
+            </div>
+          </div> <!-- Last Name -->
+          <div class="form-group">
+            <label for="lName" class="form-label">
+              <span class="label-text">Last Name</span>
+              <span class="required-indicator">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="text" id="lName" class="form-input" [class.error]="lNameRef.invalid && lNameRef.touched"
+                [class.success]="lNameRef.valid && lNameRef.touched" name="lName" [(ngModel)]="model.lName" required
+                minlength="3" maxlength="20" #lNameRef="ngModel" placeholder="Enter your last name" />
+              <div class="input-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+            </div>
+            <div class="error-messages" *ngIf="lNameRef.invalid && lNameRef.touched">
+              <span *ngIf="lNameRef.errors?.['required']" class="error-text">
+                Last Name is required
+              </span>
+              <span *ngIf="lNameRef.errors?.['minlength']" class="error-text">
+                Minimum 3 characters required
+              </span>
+              <span *ngIf="lNameRef.errors?.['maxlength']" class="error-text">
+                Maximum 20 characters allowed
+              </span>
+            </div>
+          </div> <!-- Gender -->
+          <div class="form-group">
+            <label for="gender" class="form-label">
+              <span class="label-text">Gender</span>
+              <span class="required-indicator">*</span>
+            </label>
+            <div class="select-wrapper">
+              <select id="gender" class="form-select" [class.error]="genderRef.invalid && genderRef.touched"
+                [class.success]="genderRef.valid && genderRef.touched" name="gender" [(ngModel)]="model.gender" required
+                #genderRef="ngModel">
+                <option value="" disabled>Select your gender</option>
+                <option [value]="0">Male</option>
+                <option [value]="1">Female</option>
+              </select>
+              <div class="select-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6,9 12,15 18,9"></polyline>
+                </svg>
+              </div>
+            </div>
+            <div class="error-messages" *ngIf="genderRef.invalid && genderRef.touched">
+              <span class="error-text">Gender selection is required</span>
+            </div>
+          </div> <!-- Phone Number -->
+          <div class="form-group">
+            <label for="phoneNumber" class="form-label">
+              <span class="label-text">Phone Number</span>
+              <span class="required-indicator">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="text" id="phoneNumber" class="form-input"
+                [class.error]="phoneRef.invalid && phoneRef.touched"
+                [class.success]="phoneRef.valid && phoneRef.touched" name="phoneNumber" [(ngModel)]="model.phoneNumber"
+                required minlength="10" maxlength="15" pattern="^[0-9]*$" #phoneRef="ngModel"
+                placeholder="Enter your phone number" />
+              <div class="input-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path
+                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                  </path>
+                </svg>
+              </div>
+            </div>
+            <div class="error-messages" *ngIf="phoneRef.invalid && phoneRef.touched">
+              <span *ngIf="phoneRef.errors?.['required']" class="error-text">
+                Phone number is required
+              </span>
+              <span *ngIf="phoneRef.errors?.['pattern']" class="error-text">
+                Only numbers are allowed
+              </span>
+              <span *ngIf="phoneRef.errors?.['minlength']" class="error-text">
+                Minimum 10 digits required
+              </span>
+              <span *ngIf="phoneRef.errors?.['maxlength']" class="error-text">
+                Maximum 15 digits allowed
+              </span>
+            </div>
+          </div>
+        </div> <!-- Address Information Section -->
+        <div class="form-section">
+          <h3 class="section-title">Address Information</h3> <!-- Street -->
+          <div class="form-group">
+            <label for="street" class="form-label">
+              <span class="label-text">Street Address</span>
+              <span class="required-indicator">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="text" id="street" class="form-input" [class.error]="streetRef.invalid && streetRef.touched"
+                [class.success]="streetRef.valid && streetRef.touched" name="street" [(ngModel)]="model.street" required
+                #streetRef="ngModel" placeholder="Enter your street address" />
+              <div class="input-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </div>
+            </div>
+            <div class="error-messages" *ngIf="streetRef.invalid && streetRef.touched">
+              <span class="error-text">Street address is required</span>
+            </div>
+          </div> <!-- City -->
+          <div class="form-group">
+            <label for="city" class="form-label">
+              <span class="label-text">City</span>
+              <span class="required-indicator">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="text" id="city" class="form-input" [class.error]="cityRef.invalid && cityRef.touched"
+                [class.success]="cityRef.valid && cityRef.touched" name="city" [(ngModel)]="model.city" required
+                #cityRef="ngModel" placeholder="Enter your city" />
+              <div class="input-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9,22 9,12 15,12 15,22"></polyline>
+                </svg>
+              </div>
+            </div>
+            <div class="error-messages" *ngIf="cityRef.invalid && cityRef.touched">
+              <span class="error-text">City is required</span>
+            </div>
+          </div>
+
+          <!-- Country -->
+          <div class="form-group">
+            <label for="country" class="form-label">
+              <span class="label-text">Country</span>
+              <span class="required-indicator">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="text" id="country" class="form-input"
+                [class.error]="countryRef.invalid && countryRef.touched"
+                [class.success]="countryRef.valid && countryRef.touched" name="country" [(ngModel)]="model.country"
+                required #countryRef="ngModel" placeholder="Enter your country" />
+              <div class="input-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+                  </path>
+                </svg>
+              </div>
+            </div>
+            <div class="error-messages" *ngIf="countryRef.invalid && countryRef.touched">
+              <span class="error-text">Country is required</span>
+            </div>
+          </div>
+
+          <!-- Profile Image -->
+          <div class="form-group image-upload-group">
+            <label for="image" class="form-label">
+              <span class="label-text">Profile Image</span>
+            </label>
+            <div class="image-upload-wrapper">
+              <div class="image-preview" *ngIf="imgUrl">
+                <img [src]="getFullImageUrl(imgUrl)" alt="Profile Preview" class="preview-image" />
+                <div class="image-overlay">
+                  <span class="change-text">Click to change</span>
+                </div>
+              </div>
+              <div class="upload-area" *ngIf="!imgUrl">
+                <div class="upload-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21,15 16,10 5,21"></polyline>
+                  </svg>
+                </div>
+                <p class="upload-text">Click to upload profile image</p>
+                <p class="upload-hint">PNG, JPG up to 5MB</p>
+              </div>
+              <input type="file" id="image" name="image" class="file-input" (change)="onFileSelected($event)"
+                accept="image/*" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+      </div>
+      <div class="form-actions">
+        <button class="submit-button" type="submit" [disabled]="isSubmitting || form.invalid"
+          [class.loading]="isSubmitting">
+          <span class="button-text" *ngIf="!isSubmitting">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+              <polyline points="17,21 17,13 7,13 7,21"></polyline>
+              <polyline points="7,3 7,8 15,8"></polyline>
+            </svg>
+            Update Profile
+          </span>
+          <span class="button-text" *ngIf="isSubmitting">
+            <div class="loading-spinner"></div>
+            Updating...
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

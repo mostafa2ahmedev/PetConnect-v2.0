@@ -1,0 +1,271 @@
+/* Admin Dashboard Styles */
+.container-fluid {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+  padding: 0;
+}
+
+/* Header Section */
+/* Changed header background to white and adjusted text colors for proper contrast */
+.w-100.p-4 {
+  background: white;
+  color: #4a5568;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 0;
+  margin-bottom: 0;
+}
+
+.h3.fw-bold.text-dark {
+  color: #2d3748 !important;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.text-muted.mb-0.small {
+  color: #718096 !important;
+  font-size: 1rem;
+}
+
+/* Statistics Cards */
+/* Updated statistics cards to work better with white header background */
+.bg-light.rounded,
+.bg-info.bg-opacity-10.rounded {
+  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%) !important;
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  color: #4a5568;
+}
+
+.bg-light.rounded:hover,
+.bg-info.bg-opacity-10.rounded:hover {
+  background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%) !important;
+  transform: translateY(-2px);
+}
+
+/* Main Card Container */
+.card {
+  background: white;
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.card:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Loading Spinner */
+.spinner-border.text-primary {
+  color: #667eea !important;
+  width: 3rem;
+  height: 3rem;
+}
+
+/* Mobile Toggle Button */
+.btn.d-md-none {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.btn.d-md-none:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+/* Admin Sidebar */
+.admin-sidebar {
+  top: 0;
+  left: -280px;
+  width: 280px;
+  height: 100vh;
+  z-index: 1050;
+  transition: all 0.3s ease;
+  background: linear-gradient(180deg, #ffffff 0%, #f8f9ff 100%);
+  border-right: 1px solid rgba(102, 126, 234, 0.1);
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.admin-sidebar.show {
+  left: 0;
+}
+
+@media (min-width: 768px) {
+  .admin-sidebar {
+    position: relative !important;
+    left: 0;
+    box-shadow: none;
+    border-right: 1px solid rgba(102, 126, 234, 0.1);
+  }
+}
+
+/* Sidebar Header */
+.admin-sidebar h6 {
+  color: #667eea;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 1rem 0 0.5rem 0;
+  margin: 0;
+  border-bottom: 2px solid rgba(102, 126, 234, 0.1);
+}
+
+/* Navigation Links */
+.list-group {
+  border: none;
+}
+
+.list-group-item {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(102, 126, 234, 0.05) !important;
+  padding: 1rem 1.5rem;
+  color: #4a5568;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.list-group-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+}
+
+.list-group-item:hover {
+  background: linear-gradient(90deg, rgba(102, 126, 234, 0.05) 0%, transparent 100%);
+  color: #667eea;
+  transform: translateX(8px);
+}
+
+.list-group-item:hover::before {
+  transform: scaleY(1);
+}
+
+.list-group-item.active {
+  background: linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0%, rgba(102, 126, 234, 0.02) 100%);
+  color: #667eea;
+  font-weight: 600;
+  transform: translateX(8px);
+}
+
+.list-group-item.active::before {
+  transform: scaleY(1);
+}
+
+/* Icons */
+.list-group-item i {
+  font-size: 1.1rem;
+  width: 20px;
+  text-align: center;
+  margin-right: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.list-group-item:hover i,
+.list-group-item.active i {
+  transform: scale(1.1);
+}
+
+/* Profile Section (when uncommented) */
+.card-body {
+  padding: 1.5rem;
+}
+
+.card-body .row {
+  margin-bottom: 0.5rem;
+}
+
+.card-body p.mb-0 {
+  font-weight: 600;
+  color: #4a5568;
+  font-size: 0.9rem;
+}
+
+.card-body p.text-muted {
+  color: #718096 !important;
+  font-size: 0.9rem;
+}
+
+.card-body hr {
+  border-color: rgba(102, 126, 234, 0.1);
+  margin: 1rem 0;
+}
+
+/* Main Content Area */
+.col-lg-9 {
+  padding-left: 2rem;
+}
+
+@media (max-width: 991px) {
+  .col-lg-9 {
+    padding-left: 1rem;
+    margin-top: 1rem;
+  }
+}
+
+/* Alert Styling */
+.alert-warning {
+  background: linear-gradient(135deg, #fef3cd 0%, #fff3cd 100%);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 12px;
+  color: #856404;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .h3.fw-bold.text-dark {
+    font-size: 1.5rem;
+  }
+
+  .w-100.p-4 {
+    padding: 1.5rem !important;
+  }
+
+  .admin-sidebar {
+    width: 100%;
+    left: -100%;
+  }
+
+  .admin-sidebar.show {
+    left: 0;
+  }
+}
+
+/* Smooth Animations */
+* {
+  transition: all 0.3s ease;
+}
+
+/* Custom Scrollbar for Sidebar */
+.admin-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.admin-sidebar::-webkit-scrollbar-track {
+  background: rgba(102, 126, 234, 0.05);
+}
+
+.admin-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(102, 126, 234, 0.3);
+  border-radius: 3px;
+}
+
+.admin-sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(102, 126, 234, 0.5);
+}

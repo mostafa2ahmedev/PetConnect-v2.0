@@ -1,0 +1,199 @@
+<!-- Unified Hero Section -->
+<section id="hero" class="hero-section">
+  <div class="hero-background">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <div class="hero-text">
+        <h1 class="hero-title">{{ title }}</h1>
+        <p class="hero-subtitle">
+          Find your new best friend and give a rescued pet a loving home.
+        </p>
+        <div class="hero-buttons">
+          <a routerLink="/add-pet" class="btn btn-outline-light">
+            <i class="fas fa-plus me-2"></i> Add New Pet
+          </a>
+          <a routerLink="/doctors" class="btn btn-outline-light">
+            <i class="fas fa-stethoscope me-2"></i> Our Vets
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Loading State -->
+<div *ngIf="loading" class="loading-section-fixed">
+  <div class="spinner-fixed"></div>
+  <p class="loading-text-fixed">Loading amazing pets...</p>
+</div><!-- Filters Section -->
+<section class="filters-section-fixed" *ngIf="!loading">
+  <div class="container">
+    <div class="filters-container-fixed">
+      <h3 class="filters-title-fixed">
+        <i class="fas fa-filter me-2"></i>Find Your Perfect Pet
+      </h3>
+      <form class="filters-grid-fixed">
+        <div class="filter-item-fixed">
+          <label class="filter-label-fixed">
+            <i class="fas fa-tags filter-icon-fixed"></i>
+            Category
+          </label>
+          <select class="filter-select-fixed" [(ngModel)]="filters.categoryId" name="categoryId"
+            (change)="applyFilters()">
+            <option [ngValue]="''" selected>All Categories</option>
+            <option *ngFor="let cat of categories" [ngValue]="cat.id">
+              {{ cat.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="filter-item-fixed">
+          <label class="filter-label-fixed">
+            <i class="fas fa-sort-amount-down filter-icon-fixed"></i>
+            Sort by Age
+          </label>
+          <select class="filter-select-fixed" [(ngModel)]="filters.sortOrder" name="sortOrder"
+            (change)="applyFilters()">
+            <option [ngValue]="''">Default</option>
+            <option [ngValue]="'asc'">Age: Low to High</option>
+            <option [ngValue]="'desc'">Age: High to Low</option>
+          </select>
+        </div>
+
+        <div class="filter-item-fixed">
+          <label class="filter-label-fixed">
+            <i class="fas fa-map-marker-alt filter-icon-fixed"></i>
+            Location
+          </label>
+          <input type="text" class="filter-input-fixed" placeholder="Enter city or country"
+            [(ngModel)]="filters.location" name="location" (input)="applyFilters()" />
+        </div>
+      </form>
+    </div>
+  </div>
+</section><!-- Pets Grid Section -->
+<section class="pets-section-fixed">
+  <div class="container">
+    <div class="alert-fixed alert-warning-fixed" *ngIf="failedLoad">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      No pets found matching your filters. Try adjusting your search criteria.
+    </div>
+
+    <div class="pets-grid-fixed">
+      <div class="pet-card-fixed" *ngFor="let pet of filteredPets" data-aos="fade-up">
+        <div class="pet-image-wrapper-fixed">
+          <a [routerLink]="['/pet-details', pet.id]"> <img [src]="getFullImageUrl(pet.imgUrl)" class="pet-image-fixed"
+              [alt]="pet.name" />
+          </a>
+          <div class="pet-status-fixed">
+            {{ statusMap[pet.status] }}
+          </div>
+        </div>
+
+        <div class="pet-content-fixed">
+          <h4 class="pet-name-fixed">{{ pet.name }}</h4>
+          <div class="pet-details-fixed">
+            <div class="pet-detail-item-fixed">
+              <i class="fas fa-birthday-cake"></i>
+              <span>{{ pet.age }} years old</span>
+            </div>
+
+            <div class="ownership-badge-fixed" *ngIf="accountService.getUserId() === pet.customerId">
+              <i class="fas fa-crown me-1"></i>
+              Your Pet
+            </div>
+
+            <div *ngIf="accountService.getUserId() !== pet.customerId" class="owner-info-fixed">
+              <div class="pet-detail-item-fixed">
+                <i class="fas fa-user"></i>
+                <span>{{ pet.customerName }}</span>
+              </div>
+
+              <div class="pet-detail-item-fixed">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>{{ pet.customerCity }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pet-actions-fixed">
+            <a [routerLink]="['/pet-details', pet.id]" class="btn-outline-fixed">
+              <i class="fas fa-eye me-1"></i>
+              Learn More
+            </a>
+
+            <button class="btn-adopt-fixed" *ngIf="isDataReady && accountService.isAuthenticated() && 
+                     accountService.getUserId() !== pet.customerId && 
+                     !requestedPetIds.includes(pet.id)" (click)="sendAdoptionRequest(pet)">
+              <i class="fas fa-heart me-1"></i>
+              Adopt Now
+            </button>
+
+            <button *ngIf="isDataReady && accountService.isAuthenticated() && 
+                     accountService.getUserId() !== pet.customerId && 
+                     requestedPetIds.includes(pet.id)" class="btn-cancel-fixed" (click)="cancelAdoptionRequest(pet)">
+              <i class="fas fa-times me-1"></i>
+              Cancel Request
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="error && !loading" class="alert-fixed alert-danger-fixed">
+      <i class="fas fa-exclamation-circle me-2"></i>
+      {{ error }}
+    </div>
+  </div>
+</section>
+<!-- Call to Action Section -->
+<section class="cta-section-fixed">
+  <div class="cta-overlay-fixed">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <div class="cta-content-fixed">
+            <h2 class="cta-title-fixed">Adopt. Rescue. Love.</h2>
+            <h3 class="cta-subtitle-fixed">Your Guide to Giving Pets a Second Chance.</h3>
+            <p class="cta-text-fixed">
+              Every pet deserves a loving home. Whether you're opening your heart to a new companion
+              or helping a stray find safety, you're changing lives — including your own.
+            </p>
+
+            <div class="cta-features-fixed">
+              <div class="cta-feature-fixed">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>Step-by-Step Adoption Advice</span>
+              </div>
+              <div class="cta-feature-fixed">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>Rescue Success Stories</span>
+              </div>
+              <div class="cta-feature-fixed">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>Training & Adjustment Tips</span>
+              </div>
+              <div class="cta-feature-fixed">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>Health & Wellness Guidance</span>
+              </div>
+            </div>
+            <div class="cta-action-fixed">
+              <a [routerLink]="'/contact'" class="btn-cta-fixed">
+                <i class="fas fa-question-circle me-2"></i>
+                Ask for Help
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="cta-image-container-fixed">
+            <img src="assets/PetImages/dog-blog.png" alt="Adoption and Rescue Advice" class="cta-image-fixed" />
+            <p class="cta-quote-fixed">
+              <em>"Saving one animal won't change the world, but it will change the world for that one animal."</em>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

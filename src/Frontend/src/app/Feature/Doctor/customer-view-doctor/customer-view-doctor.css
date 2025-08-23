@@ -1,0 +1,359 @@
+/* Global Styles */
+body {
+  font-family: "Inter", sans-serif;
+  background: linear-gradient(to bottom right, #f8fafc, #eff6ff, #f8fafc);
+  min-height: 100vh;
+}
+
+/* Card Styles */
+.elegant-card {
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(226, 232, 240, 0.5);
+  border-radius: 1.5rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+}
+
+.elegant-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}
+
+/* Navigation Pills */
+.nav-pills .nav-link.active,
+.nav-pills .nav-link:hover {
+  background-color: #1a237e;
+  color: #fff;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+}
+
+.nav-pills .nav-link {
+  transition: all 0.3s ease-in-out;
+  border-radius: 50px;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+/* Button Styles */
+.btn-primary {
+  background-color: #1a237e;
+  border-color: #1a237e;
+  transition: all 0.3s ease-in-out;
+  border-radius: 0.75rem;
+  font-weight: 500;
+}
+
+.btn-primary:hover {
+  background-color: #283593;
+  border-color: #283593;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(26, 35, 126, 0.3);
+}
+
+.btn-outline-primary {
+  color: #1a237e;
+  border-color: #1a237e;
+  transition: all 0.3s ease-in-out;
+  border-radius: 0.75rem;
+  font-weight: 500;
+}
+
+.btn-outline-primary:hover {
+  background-color: #1a237e;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(26, 35, 126, 0.3);
+}
+
+.btn-outline-danger {
+  border-radius: 0.75rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-danger:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+/* Form Controls */
+.form-control:focus {
+  border-color: #1a237e;
+  box-shadow: 0 0 0 0.25rem rgba(26, 35, 126, 0.25);
+}
+
+/* Profile Image */
+.profile-image {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid #1a237e;
+  transition: all 0.3s ease;
+}
+
+.profile-image:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(26, 35, 126, 0.3);
+}
+
+/* Date Cards */
+.date-card {
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  border: 2px solid #e9ecef;
+  border-radius: 1rem;
+  background: #fff;
+  padding: 1rem;
+}
+
+.date-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border-color: #1a237e;
+}
+
+.date-card.active {
+  background: linear-gradient(135deg, #1a237e, #3f51b5);
+  color: white;
+  border-color: #1a237e;
+  box-shadow: 0 8px 25px rgba(26, 35, 126, 0.3);
+}
+
+.date-card.active .text-muted {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Time Slot Buttons */
+.time-slot-btn {
+  width: 100%;
+  margin-bottom: 0.75rem;
+  border-radius: 0.75rem;
+  transition: all 0.3s ease;
+  padding: 1rem;
+  font-weight: 500;
+}
+
+.time-slot-btn.btn-outline-primary:hover:not(:disabled) {
+  background-color: #1a237e;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(26, 35, 126, 0.3);
+}
+
+.time-slot-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Alert Messages */
+.alert {
+  border-radius: 1rem;
+  border: none;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.alert-info {
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  color: #0d47a1;
+}
+
+.alert-warning {
+  background: linear-gradient(135deg, #fff3e0, #ffcc02);
+  color: #e65100;
+}
+
+/* Testimonials */
+.testimonials-carousel {
+  max-width: 1000px;
+  margin: auto;
+}
+
+.testimonial-card {
+  background: #fff;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.testimonial-content p {
+  font-style: italic;
+  color: #555;
+  position: relative;
+  padding-left: 40px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.testimonial-content .quote-icon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 2rem;
+  color: #1a237e;
+  opacity: 0.7;
+}
+
+.testimonial-profile {
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.profile-info img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #1a237e;
+}
+
+.profile-info h5 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.rating i {
+  color: #ffc107;
+  margin-right: 2px;
+  font-size: 1rem;
+}
+
+/* Custom Carousel Controls */
+.custom-carousel-controls .btn {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.custom-carousel-controls .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(26, 35, 126, 0.3);
+}
+
+/* Blog Cards */
+.card {
+  border-radius: 1rem;
+  border: none;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.card-img-top {
+  transition: all 0.3s ease;
+}
+
+.card:hover .card-img-top {
+  transform: scale(1.05);
+}
+
+/* Pagination */
+.pagination .page-link {
+  border-radius: 0.5rem;
+  margin: 0 0.25rem;
+  border: 1px solid #dee2e6;
+  color: #1a237e;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.pagination .page-link:hover {
+  background-color: #1a237e;
+  border-color: #1a237e;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #1a237e;
+  border-color: #1a237e;
+}
+
+/* Badges */
+.badge {
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+}
+
+.badge:hover {
+  transform: translateY(-1px);
+}
+
+/* Font Awesome Icons */
+.fa-solid,
+.fas,
+.far,
+.fal,
+.fad,
+.fab {
+  font-family: "Font Awesome 6 Free";
+}
+
+.fa-solid,
+.fas {
+  font-weight: 900;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .profile-image {
+    width: 150px;
+    height: 150px;
+  }
+
+  .display-5 {
+    font-size: 2rem;
+  }
+
+  .testimonial-card {
+    padding: 1.5rem;
+  }
+
+  .date-card {
+    padding: 0.75rem;
+  }
+
+  .time-slot-btn {
+    padding: 0.75rem;
+  }
+}
+
+/* Hide default carousel controls */
+::ng-deep ngb-carousel .carousel-control-prev,
+::ng-deep ngb-carousel .carousel-control-next {
+  display: none !important;
+}
+
+/* Utility Classes */
+.text-dark-yellow {
+  color: #c28800 !important;
+}
+
+.bg-orange {
+  background-color: #ff6f61;
+}

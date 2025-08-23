@@ -1,0 +1,29 @@
+<div *ngIf="loading">Loading...</div>
+<div *ngIf="error">{{ error }}</div>
+
+<div *ngIf="!loading && !error">
+  <button [routerLink]="['/product-type/add']">Add New Product Type</button>
+
+  <table border="1" cellpadding="10">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>BreedId</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let pt of productTypes">
+        <td>{{ pt.id }}</td>
+        <td>{{ pt.name }}</td>
+        <td>{{ pt.breedid }}</td>
+        <td>
+          <button [routerLink]="['/product-type/details', pt.id]">Details</button>
+          <button [routerLink]="['/product-type/update', pt.id]">Update</button>
+          <button [routerLink]="['/product-type/delete', pt.id]">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

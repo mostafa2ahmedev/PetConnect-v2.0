@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using PetConnect.DAL.Data.Models;
 
 namespace PetConnect.DAL.Data.GenericRepository
 {
@@ -24,6 +26,13 @@ namespace PetConnect.DAL.Data.GenericRepository
             context.Set<T>().Remove(entity);
            
         }
+        public IQueryable<T> GetAllQueryable(bool withracking = false)
+        {
+            if (withracking)
+                return context.Set<T>();
+            else
+                return context.Set<T>().AsNoTracking();
+        }
         public IEnumerable<T> GetAll(bool withracking = false)
         {
             if (withracking)
@@ -33,6 +42,8 @@ namespace PetConnect.DAL.Data.GenericRepository
 
         }
 
+
+
         public T? GetByID(int id)
         {
             return context.Set<T>().Find(id);
@@ -41,10 +52,15 @@ namespace PetConnect.DAL.Data.GenericRepository
         {
             return context.Set<T>().Find(id);
         }
-
+        public T? GetByID(Guid Id)
+        {
+            return context.Set<T>().Find(Id);
+        }
         public void Update(T entity)
         {
             context.Set<T>().Update(entity);
         }
+
+   
     }
 }

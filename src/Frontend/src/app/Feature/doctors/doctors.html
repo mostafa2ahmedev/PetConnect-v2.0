@@ -1,0 +1,172 @@
+<!-- Unified Hero Section -->
+<section id="hero" class="hero-section">
+  <div class="hero-background">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <div class="hero-text">
+        <h1 class="hero-title">Our Vets</h1>
+        <p class="hero-subtitle">
+          Meet the trusted professionals dedicated to keeping your pets safe, healthy, and happy.
+        </p>
+        <div class="hero-buttons">
+          <a routerLink="/pets" class="btn btn-outline-light">
+            <i class="fas fa-paw"></i> All Pets
+          </a>
+          <a routerLink="/add-pet" class="btn btn-outline-light">Add Pet</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Enhanced Search Section -->
+<section class="search-section">
+  <div class="container">
+    <div class="search-card">
+      <div class="search-header">
+        <h3 class="search-title">
+          <i class="fas fa-search me-2"></i>Find Your Perfect Vet
+        </h3>
+        <p class="search-subtitle">Search by specialty, location, or price range</p>
+      </div>
+      <form method="get" class="search-form">
+        <div class="search-grid">
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-user-md me-2"></i>Doctor Name
+            </label>
+            <input type="text" name="name" [(ngModel)]="name" class="form-control modern-input"
+              placeholder="Search by name..." />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-dollar-sign me-2"></i>Max Price per Hour
+            </label>
+            <input type="number" name="maxPrice" [(ngModel)]="maxPrice" class="form-control modern-input"
+              placeholder="Max price per hour" step="1" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-stethoscope me-2"></i>Specialty
+            </label>
+            <select [(ngModel)]="specialty" class="form-select modern-select" name="specialty">
+              <option value="0" selected disabled>-- All Specialties --</option>
+              @for (speciality of specialities; track speciality.value) {
+              <option [value]="speciality.value">
+                {{ speciality.specialityName }}
+              </option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-map-marker-alt me-2"></i>City
+            </label>
+            <input type="text" placeholder="Search By City" [(ngModel)]="city" class="form-control modern-input"
+              name="city" />
+          </div>
+        </div>
+
+        <div class="search-actions">
+          <button type="submit" class="btn btn-primary btn-search" (click)="search()">
+            <i class="fas fa-search me-2"></i>Search Vets
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Error Message -->
+    @if (typeof allDoctors== "string" || errorFound) {
+    <div class="alert alert-danger modern-alert">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      {{ errorMesseage }}
+    </div>
+    }
+  </div>
+</section>
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-container">
+      <div class="modern-spinner">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="loading-text">Loading blogs...</p>
+      </div>
+    </div>
+
+  <!-- Enhanced Doctors Grid -->
+  @if(typeof allDoctors != "string" && !errorFound) {
+  <section class="doctors-section">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="doctors-grid">
+        @for( doctor of allDoctors ; track doctor.id) {
+        <div class="doctor-card-wrapper" data-aos="zoom-in" data-aos-delay="100">
+          <a class="text-decoration-none" [routerLink]="['/doctors', doctor.id]">
+            <div class="modern-doctor-card">
+              <!-- Doctor Image -->
+              <div class="doctor-image-container">
+                <img src="{{ server }}{{ doctor.imgUrl }}" alt="Dr. {{ doctor.fName }} {{ doctor.lName }}"
+                  class="doctor-image" />
+                <div class="doctor-status-badge">Available</div>
+              </div>
+
+              <!-- Doctor Info -->
+              <div class="doctor-info">
+                <h5 class="doctor-name">
+                  Dr. {{ doctor.fName }} {{ doctor.lName }}
+                </h5>
+
+                <!-- Enhanced reviews section with modern styling -->
+                <div class="doctor-reviews">
+                  @if(doctor.rating && doctor.rating > 0) {
+                  <div class="rating-stars">
+                    @for (star of getFullStars(doctor.rating); track $index) {
+                    <i class="fas fa-star star-filled"></i>
+                    }
+                    @for (star of getEmptyStars(doctor.rating); track $index) {
+                    <i class="fas fa-star star-empty"></i>
+                    }
+                    <span class="rating-text">({{ doctor.rating }}/5)</span>
+                  </div>
+                  } @else {
+                  <div class="rating-stars no-reviews">
+                    @for (star of [].constructor(5); track $index) {
+                    <i class="fas fa-star star-empty"></i>
+                    }
+                    <span class="rating-text">No reviews</span>
+                  </div>
+                  }
+                </div>
+
+                <div class="doctor-details">
+                  <div class="detail-item">
+                    <i class="fas fa-stethoscope detail-icon"></i>
+                    <span class="detail-text">{{ doctor.petSpecialty }} Specialist</span>
+                  </div>
+
+                  <div class="detail-item">
+                    <i class="fas fa-dollar-sign detail-icon"></i>
+                    <span class="detail-text">${{ doctor.pricePerHour }}/hour</span>
+                  </div>
+
+                  <div class="detail-item">
+                    <i class="fas fa-map-marker-alt detail-icon"></i>
+                    <span class="detail-text">{{ doctor.city }}, {{ doctor.street }}</span>
+                  </div>
+                </div>
+
+                <div class="doctor-actions">
+                  <button class="btn btn-primary btn-book">
+                    <i class="fas fa-calendar-plus me-2"></i>Book Appointment
+                  </button>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        }
+      </div>
+    </div>
+  </section>
+  }

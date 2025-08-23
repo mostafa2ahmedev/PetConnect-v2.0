@@ -1,0 +1,114 @@
+<section id="hero" class="hero section pb-0">
+  <div class="container section-title pb-0" data-aos="fade-up">
+    <h2>My Support Requests</h2>
+    <p>Send us your support request with optional screenshot/file.</p>
+  </div>
+
+  <div class="container mt-4" *ngIf="ticketDetails; else loadingTpl">
+    <h4>Ticket #{{ ticketId }}</h4>
+    <hr />
+
+    <div class="row">
+      <!-- Left Column: Timeline & Reply Form -->
+      <div class="col-lg-8">
+        <!-- Timeline -->
+        <div class="timeline mb-4">
+          <p><strong>Original Message:</strong> {{ ticketDetails.message }}</p>
+          <div
+            class="timeline-item mb-3"
+            *ngFor="let msg of ticketDetails.supportMessages"
+          >
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <h6>
+                  <strong>{{ msg.sender }}</strong>
+                </h6>
+                <p class="mb-1">{{ msg.message }}</p>
+                <small class="text-muted">{{
+                  msg.createdAt | date : "short"
+                }}</small>
+                <div *ngIf="msg.pictureUrl" class="mt-2">
+                  <img
+                    *ngIf="msg.pictureUrl.trim()"
+                    [src]="getFullImageUrl(msg.pictureUrl)"
+                    alt="Attachment"
+                    class="img-fluid rounded"
+                    style="max-height: 200px"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reply Form -->
+        <p *ngIf="ticketDetails.status == 'Closed'" class="my-3">
+          Support Team has marked this ticket as "Resolved"
+        </p>
+        <div class="card shadow-sm" *ngIf="ticketDetails.status !== 'Closed'">
+          <div class="card-header">Your Reply</div>
+          <div class="card-body">
+            <form [formGroup]="replyForm" (ngSubmit)="submitReply()">
+              <div class="mb-3">
+                <label class="form-label">Message</label>
+                <textarea
+                  rows="4"
+                  class="form-control"
+                  formControlName="message"
+                ></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Attachment (optional)</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  (change)="onFileChange($event)"
+                />
+              </div>
+
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="replyForm.invalid || submitting"
+              >
+                {{ submitting ? "Sending..." : "Send Reply" }}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: General Ticket Info -->
+      <div class="col-lg-4">
+        <div class="card s mb-4 border-0">
+          <div class="card-body bg-primary text-white p-5 rounded-2">
+            <h5 class="card-title">Ticket Details</h5>
+            <p><strong>Type:</strong> {{ ticketDetails.type }}</p>
+            <p>
+              <strong>Status:</strong>
+              <span class="badge">
+                {{ ticketDetails.status }}
+              </span>
+            </p>
+            <p>
+              <strong>Created:</strong>
+              {{ ticketDetails.createdAt | date : "medium" }}
+            </p>
+            <p>
+              <strong>Last Activity:</strong>
+              {{ ticketDetails.lastActivity | date : "medium" }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #loadingTpl>
+    <div class="text-center mt-5">
+      <div class="spinner-border text-primary"></div>
+      <p class="mt-2">Loading ticket details...</p>
+    </div>
+  </ng-template>
+</section>

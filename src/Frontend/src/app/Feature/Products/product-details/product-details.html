@@ -1,0 +1,48 @@
+<section id="hero" class="hero section pb-0">
+  <div
+    class="container section-title aos-init aos-animate pb-0"
+    data-aos="fade-up"
+  >
+    <h2>Add to Cart</h2>
+  </div>
+</section>
+<div *ngIf="product" class="container my-5">
+  <div class="card shadow-lg border-0 rounded-4 p-4">
+    <div class="row g-4 align-items-center">
+      <!-- Product Image -->
+      <div class="col-md-6 text-center">
+        <img
+          [src]="server + product.imgUrl"
+          class="img-fluid rounded-4 shadow-sm"
+          alt="Product Image"
+          style="object-fit: cover; height: 300px; width: auto; max-width: 100%"
+        />
+      </div>
+
+      <!-- Product Details -->
+      <div class="col-md-6 justify-content-center">
+        <h2 class="fw-bold mb-3">
+          {{ product.name }}
+        </h2>
+
+        <p class="text-muted mb-3">
+          {{ product.description }}
+        </p>
+
+        <h4 class="text-primary fw-bold mb-2">
+          {{ product.price | currency : "USD" }}
+        </h4>
+
+        <span class="badge bg-light text-dark border mb-4">
+          {{ product.productTypeName }}
+        </span>
+
+        <div>
+          <button class="btn btn-primary btn-lg px-4" (click)="addToCart()">
+            <i class="fa-solid fa-cart-plus me-2"></i> Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,200 @@
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="hero-background">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <div class="hero-text">
+        <!-- Added text-break class for better text wrapping -->
+        <h1 class="hero-title text-break">Schedule Management</h1>
+        <p class="hero-subtitle text-break">Create and manage your appointment timeslots</p>
+        <div class="hero-buttons">
+          <a routerLink="/schedules" class="btn btn-outline-light">
+            <i class="fas fa-calendar-alt flex-no-shrink"></i> 
+            <span class="text-ellipsis">View Schedules</span>
+          </a>
+          <a routerLink="/appointments" class="btn btn-outline-light">
+            <i class="fas fa-clock flex-no-shrink"></i> 
+            <span class="text-ellipsis">Appointments</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Form Section -->
+<section class="form-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10">
+        <div class="form-card">
+          <div class="form-header">
+            <!-- Added text-break class for better text wrapping -->
+            <h3 class="form-title text-break">Add New Timeslot</h3>
+            <p class="form-subtitle text-break">Configure your availability and capacity settings</p>
+          </div>
+
+          <form [formGroup]="scheduleForm" (ngSubmit)="submitSchedule()" class="schedule-form">
+            
+            <!-- Date Selection -->
+            <div class="form-group">
+              <!-- Added text-break class for label -->
+              <label class="form-label text-break">
+                <i class="fas fa-calendar flex-no-shrink"></i>
+                <span>Schedule Date</span>
+              </label>
+              <div class="input-wrapper">
+                <mat-form-field appearance="outline" class="modern-mat-field">
+                  <input
+                    matInput
+                    [matDatepicker]="picker"
+                    formControlName="scheduleDate"
+                    placeholder="Select date"
+                  />
+                  <mat-datepicker-toggle matSuffix [for]="picker">
+                    <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="error-messages" *ngIf="scheduleForm.get('scheduleDate')?.invalid && scheduleForm.get('scheduleDate')?.touched">
+                <!-- Added text-break class for error message -->
+                <span class="error-message text-break">
+                  <i class="fas fa-exclamation-circle flex-no-shrink"></i>
+                  <span>Please select a valid date</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Time Range Row -->
+            <div class="row">
+              <div class="col-md-6">
+                <!-- Start Time -->
+                <div class="form-group">
+                  <!-- Added text-break class for label -->
+                  <label class="form-label text-break">
+                    <i class="fas fa-play flex-no-shrink"></i>
+                    <span>Start Time</span>
+                  </label>
+                  <div class="input-wrapper">
+                    <mat-form-field appearance="outline" class="modern-mat-field">
+                      <input
+                        matInput
+                        type="time"
+                        formControlName="startTime"
+                        placeholder="Start time"
+                      />
+                      <mat-icon matSuffix>access_time</mat-icon>
+                    </mat-form-field>
+                  </div>
+                  <div class="error-messages" *ngIf="scheduleForm.get('startTime')?.invalid && scheduleForm.get('startTime')?.touched">
+                    <!-- Added text-break class for error message -->
+                    <span class="error-message text-break">
+                      <i class="fas fa-exclamation-circle flex-no-shrink"></i>
+                      <span>Start time is required</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <!-- End Time -->
+                <div class="form-group">
+                  <!-- Added text-break class for label -->
+                  <label class="form-label text-break">
+                    <i class="fas fa-stop flex-no-shrink"></i>
+                    <span>End Time</span>
+                  </label>
+                  <div class="input-wrapper">
+                    <mat-form-field appearance="outline" class="modern-mat-field">
+                      <input
+                        matInput
+                        type="time"
+                        formControlName="endTime"
+                        placeholder="End time"
+                      />
+                      <mat-icon matSuffix>access_time</mat-icon>
+                    </mat-form-field>
+                  </div>
+                  <div class="error-messages" *ngIf="scheduleForm.get('endTime')?.invalid && scheduleForm.get('endTime')?.touched">
+                    <!-- Added text-break class for error message -->
+                    <span class="error-message text-break">
+                      <i class="fas fa-exclamation-circle flex-no-shrink"></i>
+                      <span>End time is required</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Max Capacity -->
+            <div class="form-group">
+              <!-- Added text-break class for label -->
+              <label class="form-label text-break">
+                <i class="fas fa-users flex-no-shrink"></i>
+                <span>Maximum Capacity</span>
+              </label>
+              <div class="input-wrapper">
+                <mat-form-field appearance="outline" class="modern-mat-field">
+                  <input
+                    matInput
+                    type="number"
+                    formControlName="maxCapacity"
+                    min="1"
+                    max="100"
+                    placeholder="Enter maximum capacity"
+                  />
+                  <mat-icon matSuffix>group</mat-icon>
+                </mat-form-field>
+              </div>
+              <div class="error-messages" *ngIf="scheduleForm.get('maxCapacity')?.invalid && scheduleForm.get('maxCapacity')?.touched">
+                <!-- Added text-break class for error message -->
+                <span class="error-message text-break">
+                  <i class="fas fa-exclamation-circle flex-no-shrink"></i>
+                  <span>Please enter a valid capacity (1-100)</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Active Status -->
+            <div class="form-group">
+              <div class="checkbox-wrapper">
+                <mat-checkbox formControlName="isActive" class="modern-checkbox">
+                  <!-- Added text-break class for checkbox label -->
+                  <span class="checkbox-label text-break">
+                    <i class="fas fa-toggle-on flex-no-shrink"></i>
+                    <span>Active Status</span>
+                  </span>
+                </mat-checkbox>
+                <!-- Added text-break class for description -->
+                <p class="checkbox-description text-break">
+                  Enable this timeslot for booking appointments
+                </p>
+              </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="scheduleForm.invalid"
+              >
+                <i class="fas fa-save flex-no-shrink"></i>
+                <span class="text-ellipsis">Save Schedule</span>
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="onCancel()"
+              >
+                <i class="fas fa-times flex-no-shrink"></i>
+                <span class="text-ellipsis">Cancel</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

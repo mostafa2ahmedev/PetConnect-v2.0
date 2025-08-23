@@ -1,4 +1,7 @@
-﻿using PetConnect.BLL.Services.DTO.Doctor;
+﻿using Microsoft.EntityFrameworkCore;
+using PetConnect.BLL.Services.DTO.Doctor;
+using PetConnect.BLL.Services.DTOs.Blog;
+using PetConnect.BLL.Services.DTOs.Doctor;
 using PetConnect.BLL.Services.Interfaces;
 using PetConnect.DAL.Data.Enums;
 using PetConnect.DAL.Data.Models;
@@ -19,10 +22,11 @@ namespace PetConnect.BLL.Services.Classes
         {
             UOW = _UOW;
         }
-        // Return list of doctor DTOs 
+        
         public IEnumerable<DoctorDetailsDTO> GetAll()
         {
-            return UOW.DoctorRepository.GetAll()
+
+            return UOW.DoctorRepository.GetAll().Where(D => D.IsApproved == true && D.IsDeleted == false)
                 .Select(d => new DoctorDetailsDTO
                 {
                     Id = d.Id,
@@ -34,11 +38,14 @@ namespace PetConnect.BLL.Services.Classes
                     PricePerHour = d.PricePerHour,
                     CertificateUrl = d.CertificateUrl,
                     Street = d.Address.Street,
-                    City = d.Address.City
+                    City = d.Address.City,
+                    Rating = UOW.ReviewRepository.GetByDoctorId(d.Id).Any()
+            ? Math.Min(Convert.ToInt32(UOW.ReviewRepository.GetByDoctorId(d.Id).Average(r => r.Rating)), 5)
+            : 0
                 });
         }
 
-        // Get single doctor details by id
+       
         public DoctorDetailsDTO? GetByID(string id)
         {
             var doctor = UOW.DoctorRepository.GetByID(id);
@@ -55,8 +62,14 @@ namespace PetConnect.BLL.Services.Classes
                 Gender = doctor.Gender.ToString(),
                 PricePerHour = doctor.PricePerHour,
                 CertificateUrl = doctor.CertificateUrl,
+                IDCardUrl = doctor.IDCardUrl,
                 Street = doctor.Address.Street,
-                City = doctor.Address.City
+                City = doctor.Address.City,
+                IsApproved = doctor.IsApproved,
+                PhoneNumber = doctor.PhoneNumber,
+                Rating = UOW.ReviewRepository.GetByDoctorId(doctor.Id).Any()
+            ? Math.Min(Convert.ToInt32(UOW.ReviewRepository.GetByDoctorId(doctor.Id).Average(r => r.Rating)), 5)
+            : 0
             };
         }
 
@@ -73,13 +86,15 @@ namespace PetConnect.BLL.Services.Classes
             if (doctor == null)
                 throw new Exception("Doctor not found");
 
-            // Map DTO values to entity
+         
             doctor.FName = dto.FName;
             doctor.LName = dto.LName;
             doctor.ImgUrl = dto.ImgUrl;
             doctor.PricePerHour = dto.PricePerHour;
             doctor.CertificateUrl = dto.CertificateUrl;
-
+            doctor.IDCardUrl = dto.IDCardUrl;
+            doctor.IsDeleted = false;
+            doctor.IsApproved = false;
             // Enum and complex object parsing
             if (Enum.TryParse(dto.PetSpecialty, out PetSpecialty specialty))
                 doctor.PetSpecialty = specialty;
@@ -87,18 +102,18 @@ namespace PetConnect.BLL.Services.Classes
             if (Enum.TryParse(dto.Gender, out Gender gender))
                 doctor.Gender = gender;
 
-            // Address might already be initialized in the entity
+          
             if (doctor.Address == null)
                 doctor.Address = new Address();
 
             doctor.Address.Street = dto.Street;
             doctor.Address.City = dto.City;
 
-            // Update via repository
+            
             UOW.DoctorRepository.Update(doctor);
             UOW.SaveChanges();
         }
-
+            
         public void Delete(string id)
         {
             var doctor = UOW.DoctorRepository.GetByID(id);
@@ -107,6 +122,26 @@ namespace PetConnect.BLL.Services.Classes
                 UOW.DoctorRepository.Delete(doctor);
                 UOW.SaveChanges();
             }
+
+        }
+
+        public IEnumerable<BlogData> GetBlogsForDoctorById(string DoctorId)
+        {
+            return  UOW.BlogRepository.GetAllBlogsWithAuthorDataAndSomeStatisticsByDoctorId(DoctorId).Select(B => new BlogData()
+            {
+                ID = B.ID,
+                BlogType = B.BlogType,
+                excerpt = B.excerpt,
+                Title = B.Title,
+                Media = B.Media,
+                PostDate = B.PostDate,
+                DoctorId = B.DoctorId,
+                Likes = B.UserBlogLikes.Count,
+                DoctorName = B.Doctor.FName + " " + B.Doctor.LName,
+                DoctorImgUrl = B.Doctor.ImgUrl,
+                Comments = B.UserBlogComments.Count
+
+            });
 
         }
     }

@@ -1,8 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using PetConnect.BLL.Common.AttachmentServices;
 using PetConnect.BLL.Services.DTO.Account;
+using PetConnect.BLL.Services.DTOs.Account;
 using PetConnect.BLL.Services.Interfaces;
+using PetConnect.BLL.Services.Models;
 using PetConnect.DAL.Data.Identity;
 using PetConnect.DAL.Data.Models;
 using PetConnect.DAL.UnitofWork;
@@ -15,96 +20,224 @@ namespace PetConnect.BLL.Services.Classes
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<ApplicationRole> roleManager;
         private readonly SignInManager<ApplicationUser> signinManager;
+        private readonly IAttachmentService attachmentService;
+        private readonly IJwtService jwtService;
+        private readonly IFaceComparisonService faceComparisonService;
 
         public AccountService(IUnitOfWork _unitOfWork,
             UserManager<ApplicationUser> _userManager,
             RoleManager<ApplicationRole> _roleManager,
-            SignInManager<ApplicationUser> _signinManager)
+            SignInManager<ApplicationUser> _signinManager,
+            IAttachmentService _attachmentService,IJwtService _jwtService , IFaceComparisonService _faceComparisonService)
         {
             unitOfWork = _unitOfWork;
             userManager = _userManager;
             roleManager = _roleManager;
             signinManager = _signinManager;
+            attachmentService = _attachmentService;
+            jwtService = _jwtService;
+            faceComparisonService = _faceComparisonService;
         }
         public async Task<List<string>> GetAllRolesAsync()
         {
             return await roleManager.Roles.Select(r => r.Name).ToListAsync();
         }
 
-        public async Task<ApplicationUser> SignIn(SignInDTO model)
+        public async Task<ApplicationUser?> SignIn(SignInDTO model)
         {
-            ApplicationUser? applicationUser = await userManager.FindByEmailAsync(model.Email);
+            var result = await signinManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: model.RememberMe, lockoutOnFailure: false);
 
-            if (await userManager.CheckPasswordAsync(applicationUser, model.Password))
+            if (result.Succeeded)
             {
-                return applicationUser;
+                var user = await userManager.FindByEmailAsync(model.Email);
+                return user; 
             }
-            return null;
+            else
+                return null; 
         }
 
-        public async Task<bool> DoctorRegister(DoctorRegisterDTO model)
+
+
+        public async Task<RegistrationResult> DoctorRegister(DoctorRegisterDTO registerDTO)
         {
+            var response = new RegistrationResult();
+
+            
+            if (registerDTO.ProfileImage == null || registerDTO.IdCardImage == null || registerDTO.Certificate == null)
+            {
+                response.Errors.Add("Profile image, ID card, and Certificate are all required.");
+                return response;
+            }
+
+            
+            bool facesMatch = await faceComparisonService.AreFacesMatchingAsync(
+                registerDTO.ProfileImage.OpenReadStream(),
+                registerDTO.IdCardImage.OpenReadStream()
+            );
+
+            if (!facesMatch)
+            {
+                response.Errors.Add("Face verification failed. The images do not appear to be of the same person.");
+                return response;
+            }
+
+            
+            string imageName = await attachmentService.UploadAsync(registerDTO.ProfileImage, "img/doctors");
+            string certificateName = await attachmentService.UploadAsync(registerDTO.Certificate, "img/certificates");
+            string IDCardName = await attachmentService.UploadAsync(registerDTO.IdCardImage, "img/doctorIDs");
             var doctor = new Doctor
             {
-                FName = model.FName,
-                LName = model.LName,
-                Email = model.Email,
-                UserName = model.Email,
-                ImgUrl = model.ImageUrl,
-                Gender = model.Gender,
-                PricePerHour = model.PricePerHour,
-                PetSpecialty = model.PetSpecialty,
-                CertificateUrl = model.CertificateUrl,
+                UserName = registerDTO.Email,
+                Email = registerDTO.Email,
+                FName = registerDTO.FName,
+                LName = registerDTO.LName,
+                Gender = registerDTO.Gender,
+                PetSpecialty = registerDTO.PetSpecialty,
+                PhoneNumber = registerDTO.PhoneNumber,
+                IsApproved = false,
+                IsDeleted = false,
+                PricePerHour = registerDTO.PricePerHour,
                 Address = new Address
                 {
-                    Country = model.Country,
-                    City = model.City,
-                    Street = model.Street
-                }
+                    City = registerDTO.City,
+                    Country = registerDTO.Country,
+                    Street = registerDTO.Street
+                },
+         
+                ImgUrl = $"/assets/img/doctors/{imageName}",
+                CertificateUrl = $"/assets/img/certificates/{certificateName}",
+                IDCardUrl = $"/assets/img/doctorIDs/{IDCardName}",
+
             };
-            var result = await userManager.CreateAsync(doctor, model.Password);
+
+         
+            var result = await userManager.CreateAsync(doctor, registerDTO.Password);
+
 
             if (result.Succeeded)
             {
                 await userManager.AddToRoleAsync(doctor, "Doctor");
-                return true;
+
+                response.Succeeded = true;
+                response.UserId = doctor.Id;
             }
-            return false;
+            else
+            {
+                response.Succeeded = false;
+                response.Errors = result.Errors.Select(e => e.Description).ToList();
+            }
+
+            return response;
         }
 
-        public async Task<bool> CustomerRegister(CustomerRegisterDTO model)
+
+        public async Task<RegistrationResult> CustomerRegister(CustomerRegisterDTO registerDTO)
         {
             var customer = new Customer
             {
-                FName = model.FName,
-                LName = model.LName,
-                Email = model.Email,
-                UserName = model.Email,
-                ImgUrl = model.ImageUrl,
-                Gender = model.Gender,
+                Email = registerDTO.Email,
+                UserName = registerDTO.Email,
+                FName = registerDTO.FName,
+                LName = registerDTO.LName,
+                Gender = registerDTO.Gender,
+                PhoneNumber = registerDTO.PhoneNumber,
+                IsApproved = true,
+                IsDeleted = false,
                 Address = new Address
                 {
-                    Country = model.Country,
-                    City = model.City,
-                    Street = model.Street
+                    City = registerDTO.City,
+                    Country = registerDTO.Country,
+                    Street = registerDTO.Street
                 }
             };
-            var result = await userManager.CreateAsync(customer, model.Password);
+
+            var result = await userManager.CreateAsync(customer, registerDTO.Password);
+
+            var response = new RegistrationResult();
 
             if (result.Succeeded)
             {
+                string? fileName;
+
+                if (registerDTO.Image != null)
+                {
+                    fileName = await attachmentService.UploadAsync(registerDTO.Image, "img/person");
+                }
+                else
+                {
+                    fileName = registerDTO.Gender == DAL.Data.Enums.Gender.Male ? "default-m.png" : "default-f.png";
+                }
+
+                customer.ImgUrl = $"/assets/img/person/{fileName}";
+
+                await userManager.UpdateAsync(customer);
                 await userManager.AddToRoleAsync(customer, "Customer");
-                return true;
+                //await signinManager.SignInAsync(customer, isPersistent: false);
+
+                response.Succeeded = true;
             }
-            return false;
+            else
+            {
+                response.Succeeded = false;
+                response.Errors = result.Errors.Select(e => e.Description).ToList();
+            }
+
+            return response;
         }
 
+        public async Task<RegistrationResult> SellerRegister(SellerRegisterDto registerDTO)
+        {
 
-      
+            var Seller = new Seller
+            {
+                Email = registerDTO.Email,
+                UserName = registerDTO.Email,
+                FName = registerDTO.FName,
+                LName = registerDTO.LName,
+                Gender = registerDTO.Gender,
+                PhoneNumber = registerDTO.PhoneNumber,
+                IsApproved = true,
+                Address = new Address
+                {
+                    City = registerDTO.City,
+                    Country = registerDTO.Country,
+                    Street = registerDTO.Street
+                }
+            };
+   
+            var result = await userManager.CreateAsync(Seller, registerDTO.Password);
 
+            var response = new RegistrationResult();
 
+            if (result.Succeeded)
+            {
+                string? fileName;
 
+                if (registerDTO.Image != null)
+                {
+                    fileName = await attachmentService.UploadAsync(registerDTO.Image, "img/person");
+                }
+                else
+                {
+                    fileName = registerDTO.Gender == DAL.Data.Enums.Gender.Male ? "default-m.png" : "default-f.png";
+                }
 
+                Seller.ImgUrl = $"/assets/img/person/{fileName}";
+
+                await userManager.UpdateAsync(Seller);
+                await userManager.AddToRoleAsync(Seller, "Seller");
+                //await signinManager.SignInAsync(customer, isPersistent: false);
+
+                response.Succeeded = true;
+            }
+            else
+            {
+                response.Succeeded = false;
+                response.Errors = result.Errors.Select(e => e.Description).ToList();
+            }
+
+            return response;
+        }
 
 
 

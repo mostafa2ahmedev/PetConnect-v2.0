@@ -1,0 +1,82 @@
+<section class="container mt-0 pt-0 pb-0">
+  <!-- <div class="section-title text-center mb-4">
+    <h2>Breed Details</h2>
+    <p>Update or delete this breed</p>
+  </div> -->
+  <h5>Breed Details</h5>
+  <div *ngIf="loading" class="text-center text-muted">Loading...</div>
+  <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+
+  <div *ngIf="!loading && !error">
+    <form #form="ngForm" (ngSubmit)="updateBreed()">
+      <div class="card shadow rounded-4 p-4 mb-3">
+        <!-- Name -->
+        <div class="mb-3">
+          <label for="name" class="form-label">Breed Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            class="form-control"
+            [(ngModel)]="breed.name"
+            required
+            minlength="3"
+            maxlength="20"
+            #name="ngModel"
+          />
+          <span
+            *ngIf="name.invalid && (name.dirty || name.touched)"
+            class="text-danger"
+          >
+            {{ name.errors?.['required'] ? 'Name is required.' : '' }}
+            {{ name.errors?.['minlength'] ? 'Min 3 characters.' : '' }}
+            {{ name.errors?.['maxlength'] ? 'Max 20 characters.' : '' }}
+          </span>
+          <span *ngIf="fieldErrors['Name']" class="text-danger">
+            {{ fieldErrors["Name"][0] }}
+          </span>
+        </div>
+
+        <!-- Category Select -->
+        <div class="mb-3">
+          <label for="category" class="form-label">Category</label>
+          <select
+            class="form-select"
+            id="category"
+            name="categoryId"
+            [(ngModel)]="breed.categoryId"
+            required
+          >
+            <option value="0" selected>-- Select Category --</option>
+            <option *ngFor="let cat of categories" [value]="cat.id">
+              {{ cat.name }}
+            </option>
+          </select>
+          <span *ngIf="fieldErrors['CategoryId']" class="text-danger">
+            {{ fieldErrors["CategoryId"][0] }}
+          </span>
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex gap-2">
+          <button
+            type="submit"
+            class="btn btn-success"
+            [disabled]="form.invalid || saving"
+          >
+            {{ saving ? "Saving..." : "Update" }}
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="deleteBreed()"
+            [disabled]="deleting"
+          >
+            {{ deleting ? "Deleting..." : "Delete" }}
+          </button>
+          <a routerLink="/admin/breeds" class="btn btn-secondary">Cancel</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>

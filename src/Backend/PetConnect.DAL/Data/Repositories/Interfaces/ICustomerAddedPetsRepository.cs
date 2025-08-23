@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PetConnect.DAL.Data.GenericRepository;
+using PetConnect.DAL.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +8,10 @@ using System.Threading.Tasks;
 
 namespace PetConnect.DAL.Data.Repositories.Interfaces
 {
-    public interface ICustomerAddedPetsRepository
+    public interface ICustomerAddedPetsRepository : IGenericRepository<CustomerAddedPets>
     {
+
+        public CustomerAddedPets? GetCustomerAddedPetRecord(int petId,string CustomerId);
+        public int? DeleteCustomerAddedPetRecord(int petId, string CustomerId);
     }
 }

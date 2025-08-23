@@ -11,7 +11,7 @@ namespace PetConnect.BLL.Common.AttachmentServices
     {
         Task<string?> UploadAsync(IFormFile file, string folderName);
         Task<string?> ReplaceAsync(string? oldRelativePath, IFormFile newFile, string folderName);
-
+        Task<string> UploadAsync(byte[] fileBytes, string fileName, string folderName);
         bool Delete(string filePath);
     }
 }

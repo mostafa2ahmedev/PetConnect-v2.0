@@ -16,8 +16,15 @@
 *.dbmdl
 *.cache
 
-# Entity Framework Migrations (optional — remove if you want to commit them)
-Migrations/
+# Ignore specific assets folder or file types
+**/src/assets/images/
+**/src/assets/*.png
+**/src/assets/*.jpg
+**/src/assets/*.jpeg
+**/src/assets/*.gif
+
+
+
 
 # Ignore appsettings
 appsettings.json

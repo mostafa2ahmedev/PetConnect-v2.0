@@ -1,0 +1,50 @@
+<!-- Enhanced card design with better spacing and modern styling -->
+<div class="reviews-container">
+  <div class="reviews-header">
+    <h2 class="reviews-title">{{ customerName }} Reviews</h2>
+    <div class="reviews-badge">
+      <span class="badge-count">{{ customerReviews.length }}</span>
+      <span class="badge-text">Reviews</span>
+    </div>
+  </div>
+
+  <!-- Enhanced empty state with better visual design -->
+  <div *ngIf="customerReviews.length === 0" class="no-reviews">
+    <div class="no-reviews-icon">📝</div>
+    <h3>No Reviews Yet</h3>
+    <p>No reviews have been submitted yet. Be the first to share your experience!</p>
+  </div>
+
+  <!-- Card-based layout instead of table for better mobile experience -->
+  <div *ngIf="customerReviews.length > 0" class="reviews-list">
+    <div *ngFor="let review of customerReviews" class="review-card">
+      <div class="review-header">
+        <div class="doctor-info">
+          <img [src]="'https://localhost:7102' + review.docImgURL" alt="Doctor" class="doctor-avatar" />
+          <div class="doctor-details">
+            <h4 class="doctor-name">{{ review.doctorFullname }}</h4>
+            <div class="review-rating">
+              <div class="stars">
+                <span *ngFor="let star of [].constructor(review.rating)" class="star filled">★</span>
+                <span *ngFor="let star of [].constructor(5 - review.rating)" class="star">★</span>
+              </div>
+              <span class="rating-text">{{ review.rating }}/5</span>
+            </div>
+          </div>
+        </div>
+        <div class="review-date">{{ review.reviewDate | date : "short" }}</div>
+      </div>
+
+      <div class="review-content">
+        <p class="review-text">{{ review.content }}</p>
+      </div>
+
+      <div class="review-actions">
+        <button class="delete-btn" (click)="deleteReview(review.reviewId)" title="Delete Review">
+          <span class="delete-icon">🗑️</span>
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -10,6 +10,7 @@ namespace PetConnect.DAL.UnitofWork
 {
     public interface IUnitOfWork : IDisposable
     {
+        public IUserRepository UserRepository { get; }
         public IAdminRepository AdminRepository { get; }
         public ICustomerRepository CustomerRepository { get; }
         public ICustomerAddedPetsRepository CustomerAddedPetsRepository { get; }
@@ -25,7 +26,38 @@ namespace PetConnect.DAL.UnitofWork
         public IShelterImagesRepository ShelterImagesRepository { get; }
         public IShelterLocationsRepository ShelterLocationsRepository { get; }
         public IShelterPhonesRepository ShelterPhonesRepository { get; }
+        public ITimeSlotsRepository TimeSlotsRepository { get; }
+        public IAppointmentsRepository AppointmentsRepository { get; }
+        public IProductRepository ProductRepository { get; }
+        public IProductTypeRepository ProductTypeRepository { get; }
+        public IOrderRepository OrderRepository { get; }
+        public INotificationRepository NotificationRepository { get; }
+        public IUserMessagesRepository UserMessagesRepository { get; }
+        public IUserConnectionRepository UserConnectionRepository { get; }
+        public IAdminDoctorMessageRepository AdminDoctorMessageRepository { get;  }
+        public IAdminPetMessageRepository AdminPetMessageRepository { get;  }
+        public IApplicationUserRepository ApplicationUserRepository{ get;  }
+        public ISellerRepository SellerRepository { get; }
+        public IOrderProductRepository orderProductRepository { get; }
+
+        public IBlogRepository BlogRepository { get; }
+        public IBlogCommentRepository BlogCommentRepository { get; }
+        public IBlogCommentReplyRepository BlogCommentReplyRepository { get; }
+        public IUserBlogLikeRepository UserBlogLikeRepository { get; }
+        public IUserBlogCommentLikeRepository UserBlogCommentLikeRepository { get; }
+        public IUserBlogCommentReplyLikeRepository UserBlogCommentReplyLikeRepository { get; }
+        public IUserBlogCommentRepository UserBlogCommentRepository { get; }
+        public IUserBlogCommentReplyRepository UserBlogCommentReplyRepository { get; }
+        public IReviewRepository  ReviewRepository{ get; }
+
+        public IDeliveryMethodRepository DeliveryMethodRepository { get; }
+
+        public ISupportRequestRepository SupportRequestRepository { get; }
+        public IAdminSupportResponseRepository SupportResponseRepository { get; }
+        public IFollowUpSupportRequestRepository FollowUpSupportRequestRepository { get; }
         public int SaveChanges();
+        Task<int> SaveChangesAsync();
+
     }
 
 }

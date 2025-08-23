@@ -1,0 +1,126 @@
+<div class="order-success-container" *ngIf="!loading && order">
+  <!-- Success Message -->
+  <div class="success-card text-center mb-4">
+    <div class="success-icon mb-2">✓</div>
+    <h2>Thank You!</h2>
+    <p>Your order has been successfully placed.</p>
+    <p class="order-number">Order #{{ order.result.id }}</p>
+  </div>
+
+  <!-- Order Summary -->
+  <div class="order-summary-card mb-4">
+    <h3>Order Summary</h3>
+    <div *ngFor="let item of order.result.orderItems" class="d-flex justify-content-between py-1 border-bottom">
+      <span>{{ item.product.productName }} x {{ item.quantity }}</span>
+      <span>{{ item.price | currency:'USD' }}</span>
+    </div>
+    <div class="d-flex justify-content-between mt-2 total-row">
+      <strong>Total:</strong>
+      <strong>{{ order.result.total | currency:'USD' }}</strong>
+    </div>
+  </div>
+
+  <!-- Shipping Address -->
+  <div class="shipping-card mb-4">
+    <h3>Shipping Address</h3>
+    <p>{{ order.result.shippingAddress.street }}</p>
+    <p>{{ order.result.shippingAddress.city }}, {{ order.result.shippingAddress.country }}</p>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <a routerLink="/orders" class="btn btn-primary">View My Orders</a>
+    <a routerLink="/all-products" class="btn btn-secondary">Continue Shopping</a>
+  </div>
+</div>
+
+<!-- Loading State -->
+<div *ngIf="loading" class="loading-container text-center py-5">
+  <div class="loader">
+    <div class="loader-spinner"></div>
+  </div>
+  <p>Loading your order details...</p>
+</div>
+
+<!-- CSS -->
+<style>
+.order-success-container {
+  max-width: 600px;
+  margin: 0 auto;
+  font-family: sans-serif;
+  padding: 1rem;
+}
+.success-card {
+  background: #f0f4ff; /* light primary accent */
+  border-radius: 10px;
+  padding: 2rem;
+}
+.success-icon {
+  width: 60px;
+  height: 60px;
+  background: #6366f1; /* primary color */
+  color: white;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+.order-number {
+  color: #6366f1;
+  font-weight: 600;
+}
+.order-summary-card, .shipping-card {
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  padding: 1.5rem;
+}
+.total-row {
+  font-size: 1.1rem;
+}
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  text-align: center;
+  flex: 1 1 45%;
+  min-width: 140px;
+}
+.btn-primary {
+  background: #6366f1;
+  color: white;
+}
+.btn-primary:hover {
+  background: #4f46e5;
+}
+.btn-secondary {
+  background: #e5e7eb;
+  color: #333;
+}
+.btn-secondary:hover {
+  background: #d1d5db;
+}
+.loading-container {
+  color: #6366f1;
+  font-weight: 500;
+}
+@media (max-width: 480px) {
+  .action-buttons {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .btn {
+    width: 100%;
+  }
+}
+</style>

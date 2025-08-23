@@ -1,0 +1,132 @@
+<section class="support-tickets-container">
+  <!-- Hero Header -->
+  <header class="hero-header">
+    <div class="hero-content">
+      <h1 class="hero-title">My Support Requests</h1>
+      <p class="hero-description">Send us your support request with optional screenshot/file.</p>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-container">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Loading your support requests...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error" class="error-container">
+      <div class="error-icon">⚠️</div>
+      <p class="error-message">{{ error }}</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && tickets.length === 0" class="empty-state">
+      <div class="empty-icon">📝</div>
+      <h3 class="empty-title">No Support Requests Yet</h3>
+      <p class="empty-description">You haven't submitted any support requests yet.</p>
+    </div>
+
+    <!-- Tickets Grid -->
+    <div class="tickets-grid" *ngIf="tickets.length > 0">
+      <div class="tickets-header">
+        <h2 class="tickets-title">Your Support Tickets</h2>
+        <span class="tickets-count">{{ tickets.length }} ticket(s)</span>
+      </div>
+
+      <!-- Desktop Table View -->
+      <div class="table-container desktop-only">
+        <table class="tickets-table">
+          <thead>
+            <tr>
+              <th class="th-number">#</th>
+              <th class="th-type">Type</th>
+              <th class="th-priority">Priority</th>
+              <th class="th-status">Status</th>
+              <th class="th-message">Message</th>
+              <th class="th-created">Created</th>
+              <th class="th-activity">Last Activity</th>
+              <th class="th-action">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let t of tickets; let i = index" class="ticket-row">
+              <td class="td-number">{{ i + 1 }}</td>
+              <td class="td-type">{{ t.type }}</td>
+              <td class="td-priority">
+                <span class="priority-badge priority-{{ t.priority.toLowerCase() }}">
+                  {{ t.priority }}
+                </span>
+              </td>
+              <td class="td-status">
+                <span class="status-badge status-{{ t.status.toLowerCase() }}">
+                  {{ t.status }}
+                </span>
+              </td>
+              <td class="td-message">
+                <div class="message-preview">{{ t.message }}</div>
+              </td>
+              <td class="td-created">{{ t.createdAt | date : "short" }}</td>
+              <td class="td-activity">{{ t.lastActivity | date : "short" }}</td>
+              <td class="td-action">
+                <button 
+                  class="view-button"
+                  [routerLink]="['/support/tickets', t.id]"
+                  type="button"
+                >
+                  <span class="button-icon">👁️</span>
+                  View
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile Card View -->
+      <div class="cards-container mobile-only">
+        <div *ngFor="let t of tickets; let i = index" class="ticket-card">
+          <div class="card-header">
+            <div class="card-number">#{{ i + 1 }}</div>
+            <div class="card-badges">
+              <span class="priority-badge priority-{{ t.priority.toLowerCase() }}">
+                {{ t.priority }}
+              </span>
+              <span class="status-badge status-{{ t.status.toLowerCase() }}">
+                {{ t.status }}
+              </span>
+            </div>
+          </div>
+          
+          <div class="card-content">
+            <div class="card-type">{{ t.type }}</div>
+            <div class="card-message">{{ t.message }}</div>
+            
+            <div class="card-dates">
+              <div class="date-item">
+                <span class="date-label">Created:</span>
+                <span class="date-value">{{ t.createdAt | date : "short" }}</span>
+              </div>
+              <div class="date-item">
+                <span class="date-label">Last Activity:</span>
+                <span class="date-value">{{ t.lastActivity | date : "short" }}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card-footer">
+            <button 
+              class="view-button"
+              [routerLink]="['/support/tickets', t.id]"
+              type="button"
+            >
+              <span class="button-icon">👁️</span>
+              View Details
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</section>

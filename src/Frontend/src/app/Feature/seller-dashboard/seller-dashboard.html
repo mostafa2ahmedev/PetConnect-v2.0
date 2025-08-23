@@ -1,0 +1,20 @@
+<div class="dashboard-container">
+  <div class="sidebar">
+    <h2 class="seller-name">Welcome, {{ sellerName }}</h2>
+
+    <button class="tab-btn" [class.active]="activeTab === 'products'" (click)="activeTab = 'products'">
+      Products
+    </button>
+
+    <button class="tab-btn" [class.active]="activeTab === 'orders'" (click)="activeTab = 'orders'">
+      Orders
+    </button>
+
+  </div>
+
+  <div class="main-content">
+    <app-products *ngIf="activeTab === 'products'"></app-products>
+    <!-- <app-orders *ngIf="activeTab === 'orders'"></app-orders> -->
+    <p *ngIf="activeTab === 'orders'">Orders component placeholder</p>
+  </div>
+</div>

@@ -1,0 +1,233 @@
+<!-- Modern Doctor Profile Layout -->
+<div class="doctor-profile-wrapper" *ngIf="typeof profileData() != 'undefined'">
+  <!-- Mobile Menu Toggle -->
+  <button 
+    class="mobile-menu-toggle d-md-none"
+    (click)="sidebarVisible = !sidebarVisible"
+    aria-label="Toggle sidebar"
+  >
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <line x1="3" y1="12" x2="21" y2="12"/>
+      <line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+    Menu
+  </button>
+
+  <div class="doctor-profile-container">
+    <!-- Sidebar -->
+    <aside class="doctor-sidebar" [class.sidebar-visible]="sidebarVisible">
+      <!-- Profile Header -->
+      <div class="profile-header">
+        <div class="profile-avatar">
+          <img 
+            [src]="getFullImageUrl(profileData().imgUrl) || 'assets/img/default-user.png'"
+            alt="Doctor Avatar"
+            class="avatar-image"
+          />
+          <div class="avatar-status" *ngIf="profileData().isApproved">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20,6 9,17 4,12"/>
+            </svg>
+          </div>
+        </div>
+        <div class="profile-info">
+          <h2 class="profile-name">Hey, {{ profileData().fName }}</h2>
+          <p class="profile-specialty">{{ profileData().petSpecialty }}</p>
+          <div class="profile-rate">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <path d="M12 17h.01"/>
+            </svg>
+            {{ profileData().pricePerHour }} EGP/Hour
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Menu -->
+      <nav class="sidebar-nav" *ngIf="doctor().isApproved">
+        <a 
+          routerLink="/doc-profile/appointments"
+          routerLinkActive="nav-active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-item"
+          (click)="sidebarVisible = false"
+        >
+          <div class="nav-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+          <span>Appointments</span>
+        </a>
+
+        <a 
+          routerLink="/doc-profile/blogs"
+          routerLinkActive="nav-active"
+          class="nav-item"
+          (click)="sidebarVisible = false"
+        >
+          <div class="nav-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14,2 14,8 20,8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10,9 9,9 8,9"/>
+            </svg>
+          </div>
+          <span>Blogs</span>
+        </a>
+
+        <a 
+          [routerLink]="['/doc-profile/add-time-slots', profileData().id]"
+          routerLinkActive="nav-active"
+          class="nav-item"
+          (click)="sidebarVisible = false"
+        >
+          <div class="nav-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"/>
+            </svg>
+          </div>
+          <span>Add Timeslot</span>
+        </a>
+
+        <a 
+          [routerLink]="['/doc-profile/timeslots', profileData().id]"
+          routerLinkActive="nav-active"
+          class="nav-item"
+          (click)="sidebarVisible = false"
+        >
+          <div class="nav-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12,6 12,12 16,14"/>
+            </svg>
+          </div>
+          <span>Show Timeslots</span>
+        </a>
+      </nav>
+
+      <!-- Profile Details Card -->
+      <div class="profile-details-card">
+        <h3 class="details-title">Profile Information</h3>
+        
+        <div class="detail-item">
+          <span class="detail-label">Full Name</span>
+          <span class="detail-value">{{ profileData().fName }} {{ profileData().lName }}</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="detail-label">Gender</span>
+          <span class="detail-value">{{ profileData().gender }}</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="detail-label">Specialty</span>
+          <span class="detail-value">{{ profileData().petSpecialty }}</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="detail-label">Address</span>
+          <span class="detail-value">{{ profileData().street }}, {{ profileData().city }}</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="detail-label">Certificate</span>
+          <a 
+            [href]="getFullImageUrl(profileData().certificateUrl)"
+            target="_blank"
+            class="detail-link"
+          >
+            View Certificate
+          </a>
+        </div>
+
+        <div class="detail-item">
+          <span class="detail-label">ID Card</span>
+          <a 
+            [href]="getFullImageUrl(profileData().idCardUrl)"
+            target="_blank"
+            class="detail-link"
+          >
+            View ID Card
+          </a>
+        </div>
+
+        <div class="detail-item">
+          <span class="detail-label">Status</span>
+          <span class="status-badge" [class.approved]="profileData().isApproved" [class.pending]="!profileData().isApproved">
+            {{ profileData().isApproved ? "Approved" : "Pending" }}
+          </span>
+        </div>
+
+        <button 
+          class="update-profile-btn"
+          [routerLink]="['/doctors', 'update', profileData().id]"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+          Update Profile
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="doctor-main-content">
+      <!-- Loading State -->
+      <div class="loading-container" *ngIf="loadingProfile()">
+        <div class="loading-spinner"></div>
+        <p>Loading profile...</p>
+      </div>
+
+      <!-- No Profile State -->
+      <div class="error-container" *ngIf="!loadingProfile() && !profileData()">
+        <div class="error-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </div>
+        <h3>Unable to load profile</h3>
+        <p>Please try refreshing the page or contact support.</p>
+      </div>
+
+      <!-- Approved Doctor Content -->
+      <div class="approved-content" *ngIf="doctor().isApproved && !loading">
+        <router-outlet></router-outlet>
+      </div>
+
+      <!-- Not Approved State -->
+      <div class="not-approved-container" *ngIf="!doctor().isApproved && !loading">
+        <div class="not-approved-card">
+          <div class="not-approved-icon">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+          </div>
+          <h2>Profile Under Review</h2>
+          <p>Your profile is currently being reviewed by our team. You'll receive an email notification once approved.</p>
+          <div class="not-approved-actions">
+            <a routerLink="/contact" class="contact-support-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+              Contact Support
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

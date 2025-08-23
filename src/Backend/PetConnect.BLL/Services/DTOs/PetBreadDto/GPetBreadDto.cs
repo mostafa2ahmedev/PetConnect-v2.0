@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PetConnect.BLL.Services.DTO.PetBreadDto
 {
-    public class GPetBreadDto
+    public class GPetBreedDto
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;

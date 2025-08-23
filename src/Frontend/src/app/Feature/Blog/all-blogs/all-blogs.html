@@ -1,0 +1,171 @@
+<!-- Unified Hero Section -->
+<section id="hero" class="hero-section">
+  <div class="hero-background">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <div class="hero-text">
+        <h1 class="hero-title">Latest Blog Posts</h1>
+        <p class="hero-subtitle">
+          Explore inspiring pet stories and practical advice to nurture your beloved companions.
+        </p>
+        <div class="hero-buttons">
+          <button class="btn btn-outline-light">
+            <i class="fas fa-sliders-h"></i> Filter Blogs
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Enhanced Filter Section -->
+<section class="filter-section">
+  <div class="modern-filter-sidebar" [class.open]="showFilters">
+    <div class="filter-header">
+      <h3 class="filter-title">
+        <i class="fas fa-sliders-h me-2"></i>Filter Blogs
+      </h3>
+      <button type="button" class="btn-close-modern" (click)="showFilters = false">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="filter-content">
+      <!-- Category Filter -->
+      <div class="filter-group">
+        <label class="filter-label">
+          <i class="fas fa-folder-open me-2"></i>Category
+        </label>
+        <select class="form-select modern-select" [(ngModel)]="filters.categoryId" name="categoryId"
+          (change)="onBackendFilterChange()">
+          <option [ngValue]="''">All Categories</option>
+          <option *ngFor="let cat of categories" [ngValue]="cat.id.toString()">{{ cat.name }}</option>
+        </select>
+      </div>
+
+      <!-- Topic Filter -->
+      <div class="filter-group">
+        <label class="filter-label">
+          <i class="fas fa-tag me-2"></i>Topic
+        </label>
+        <select class="form-select modern-select" [(ngModel)]="filters.topicKey" name="topicKey"
+          (change)="onBackendFilterChange()">
+          <option [ngValue]="''">All Topics</option>
+          <option *ngFor="let topic of blogTopics" [ngValue]="topic.key.toString()">{{ topic.value }}</option>
+        </select>
+      </div>
+
+      <!-- Search Filter -->
+      <div class="filter-group">
+        <label class="filter-label">
+          <i class="fas fa-search me-2"></i>Search by Title
+        </label>
+        <input type="text" class="form-control modern-input" placeholder="Enter blog title..."
+          [(ngModel)]="filters.searchTerm" name="searchTerm" (input)="applyClientFilters()" />
+      </div>
+
+      <!-- Sort Filter -->
+      <div class="filter-group">
+        <label class="filter-label">
+          <i class="fas fa-sort me-2"></i>Sort by Date
+        </label>
+        <select class="form-select modern-select" [(ngModel)]="filters.sortOrder" name="sortOrder"
+          (change)="applyClientFilters()">
+          <option [ngValue]="''">Default</option>
+          <option [ngValue]="'desc'">Newest First</option>
+          <option [ngValue]="'asc'">Oldest First</option>
+        </select>
+      </div>
+
+      <!-- Reset Button -->
+      <button class="btn btn-secondary btn-reset w-100" (click)="resetFilters()">
+        <i class="fas fa-undo me-2"></i>Reset Filters
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Enhanced Blogs Grid -->
+<section class="blogs-section">
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-container">
+      <div class="modern-spinner">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="loading-text">Loading blogs...</p>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="!loading && errorMessage" class="alert alert-danger modern-alert">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      {{ errorMessage }}
+    </div>
+
+    <!-- Blogs Grid -->
+    <div *ngIf="!loading && blogs.length > 0" class="blogs-grid">
+      <div class="blog-card-wrapper" *ngFor="let blog of blogs" data-aos="zoom-in" data-aos-delay="100">
+        <div class="modern-blog-card">
+          <!-- Blog Image -->
+          <div class="blog-image-container">
+            <a [routerLink]="`/blog/post/${blog.id}`">
+              <img *ngIf="blog.media" [src]="getFullImageUrl(blog.media)" alt="{{ blog.title }}" class="blog-image" />
+              <div class="blog-overlay">
+                <i class="fas fa-eye"></i>
+              </div>
+            </a>
+          </div>
+
+          <!-- Blog Content -->
+          <div class="blog-content">
+            <div class="blog-meta">
+              <span class="blog-category" *ngIf="blog.categoryName">
+                <i class="fas fa-folder-open me-1"></i>{{ blog.categoryName }}
+              </span>
+              <span class="blog-topic" *ngIf="blog.topic">
+                <i class="fas fa-tag me-1"></i>{{ blog.topic }}
+              </span>
+            </div>
+
+            <a [routerLink]="`/blog/post/${blog.id}`" class="text-decoration-none">
+              <h5 class="blog-title">{{ blog.title }}</h5>
+            </a>
+
+            <p class="blog-excerpt" [innerHTML]="blog.excerpt"></p>
+
+            <div class="blog-stats">
+              <div class="stat-item">
+                <i class="fas fa-thumbs-up"></i>
+                <span>{{ blog.likes }}</span>
+              </div>
+              <div class="stat-item">
+                <i class="fas fa-comments"></i>
+                <span>{{ blog.comments }}</span>
+              </div>
+            </div>
+
+            <div class="blog-actions">
+              <a [routerLink]="`/blog/post/${blog.id}`" class="btn btn-primary btn-read">
+                <i class="fas fa-book-open me-2"></i>Read More
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && blogs.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <i class="fas fa-blog"></i>
+      </div>
+      <h3 class="empty-title">No Blogs Found</h3>
+      <p class="empty-text">Try adjusting your filters or check back later for new content.</p>
+      <a routerLink="/create-blog" class="btn btn-primary btn-create">
+        <i class="fas fa-plus me-2"></i>Create First Blog
+      </a>
+    </div>
+
+  </div>
+</section>

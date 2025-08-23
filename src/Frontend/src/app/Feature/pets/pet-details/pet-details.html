@@ -1,0 +1,284 @@
+<!-- Hero Section -->
+<section id="hero" class="hero section">
+  <div
+    class="container section-title aos-init aos-animate pb-0"
+    data-aos="fade-up"
+  >
+    <h2>Pet Details</h2>
+    <p>Add a new pet for adoption or rescue</p>
+
+    <div class="my-3 d-flex justify-content-center gap-3">
+      <a routerLink="/pets" class="btn btn-outline-primary btn-sm">All Pets</a>
+      <a routerLink="/doctors" class="btn btn-outline-primary btn-sm"
+        >Our Vets</a
+      >
+    </div>
+  </div>
+</section>
+<section style="background-color: #f7f6fe" class="pt-0">
+  <div
+    class="container aos-init aos-animate"
+    data-aos="fade-up"
+    data-aos-delay="100"
+  >
+    <!-- <h3 class="text-center mb-4">Pet Details</h3> -->
+  </div>
+  <div class="container pb-5">
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="mt-3">Loading pet details...</p>
+    </div>
+
+    <div *ngIf="!loading && pet" class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow-lg border-0">
+          <div class="row g-0">
+            <!-- Image on left -->
+            <div class="col-md-5">
+              <img
+                [src]="getFullImageUrl(pet.imgUrl)"
+                class="img-fluid rounded-start"
+                alt="{{ pet.name }}"
+                style="height: 100%; object-fit: cover"
+              />
+            </div>
+
+            <!-- Data on right -->
+            <div class="col-md-7">
+              <div class="card-body p-4">
+                <h3 class="card-title text-dark fw-bold mb-4">
+                  {{ pet.name }}
+                </h3>
+
+                <div class="row mb-2">
+                  <div class="col-4 text-dark fw-semibold">
+                    <i class="fas fa-info-circle me-2 text-primary"></i> Status
+                  </div>
+                  <div class="col-7">
+                    {{
+                      pet.status === 0
+                        ? "Owned"
+                        : pet.status === 1
+                        ? "For Adoption"
+                        : "For Rescue"
+                    }}
+                  </div>
+                </div>
+
+                <div class="row mb-2">
+                  <div class="col-4 text-dark fw-semibold">
+                    <i class="fas fa-dog me-2 text-primary"></i> Breed
+                  </div>
+                  <div class="col-7">{{ pet.breadName }}</div>
+                </div>
+
+                <div class="row mb-2">
+                  <div class="col-4 text-dark fw-semibold">
+                    <i class="fas fa-tags me-2 text-primary"></i> Category
+                  </div>
+                  <div class="col-7">{{ pet.categoryName }}</div>
+                </div>
+
+                <div class="row mb-2">
+                  <div class="col-4 text-dark fw-semibold">
+                    <i class="fas fa-id-badge me-2 text-primary"></i> Ownership
+                  </div>
+                  <div class="col-7">
+                    {{ getOwnershipLabel(pet.ownership) }}
+                  </div>
+                </div>
+
+                <div class="row mb-2">
+                  <div class="col-4 text-dark fw-semibold">
+                    <i class="fas fa-user me-2 text-primary"></i> Owner
+                  </div>
+                  <div class="col-7">{{ pet.customerName }}</div>
+                </div>
+
+                <div class="row mb-2">
+                  <div class="col-4 text-dark fw-semibold">
+                    <i class="fas fa-map-marker-alt me-2 text-primary"></i> From
+                  </div>
+                  <div class="col-7">{{ pet.customerCity }}</div>
+                </div>
+
+                <div class="row mb-4">
+                  <div class="col-4 text-dark fw-semibold">
+                    <i class="fas fa-sticky-note me-2 text-primary"></i> Notes
+                  </div>
+                  <div class="col-7">{{ pet.notes }}</div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="mt-3 d-flex gap-2">
+                  <a
+                    [routerLink]="['/pets/update', UrlId]"
+                    class="btn btn-warning btn-sm"
+                    *ngIf="
+                      isDataReady &&
+                      accountService.isAuthenticated() &&
+                      accountService.getUserId() === pet.customerId
+                    "
+                  >
+                    Update
+                  </a>
+                  <a
+                    class="btn btn-danger btn-sm"
+                    (click)="deletePetById(pet.id)"
+                    *ngIf="
+                      isDataReady &&
+                      accountService.isAuthenticated() &&
+                      accountService.getUserId() === pet.customerId
+                    "
+                  >
+                    Delete
+                  </a>
+                  <button
+                    class="btn btn-primary btn-sm"
+                    [disabled]="!isDataReady"
+                    *ngIf="
+                      !isDataReady &&
+                      accountService.isAuthenticated() &&
+                      accountService.isCustomer()
+                    "
+                  >
+                    loading
+                  </button>
+                  <button
+                    class="btn btn-primary btn-sm"
+                    *ngIf="
+                      isDataReady &&
+                      accountService.isAuthenticated() &&
+                      accountService.getUserId() !== pet.customerId &&
+                      !requestedPetIds.includes(pet.id)
+                    "
+                    (click)="sendAdoptionRequest(pet)"
+                  >
+                    Adopt Now
+                  </button>
+                  <button
+                    *ngIf="requestedPetIds.includes(pet.id)"
+                    class="btn btn-danger btn-sm"
+                    (click)="cancelAdoptionRequest(pet)"
+                  >
+                    Cancel Request
+                  </button>
+                  <p *ngIf="!accountService.isAuthenticated()">
+                    <a routerLink="/login">Login</a>, to adopt or add a new pet
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="error && !loading" class="alert alert-danger text-center mt-4">
+      {{ error }}
+    </div>
+  </div>
+</section>
+
+<section
+  id="call-to-action-blog"
+  class="call-to-action-2 section light-background"
+  style="background-color: #5d57f4; color: #fff !important"
+>
+  <div
+    class="container aos-init aos-animate"
+    data-aos="fade-up"
+    data-aos-delay="100"
+  >
+    <div class="row g-5 align-items-center">
+      <!-- Content on the Left -->
+      <div
+        class="col-lg-6 aos-init aos-animate"
+        data-aos="fade-right"
+        data-aos-delay="300"
+      >
+        <div class="cta-content">
+          <h2 class="text-white">Adopt. Rescue. Love.<br /></h2>
+          <h3 class="text-white">
+            Your Guide to Giving Pets a Second Chance.<br />
+          </h3>
+
+          <p class="text-white" class="mt-3">
+            Every pet deserves a loving home. Whether you’re opening your heart
+            to a new companion or helping a stray find safety, you’re changing
+            lives — including your own. Our adoption and rescue guides are here
+            to make your journey smoother, kinder, and more rewarding.
+          </p>
+          <p class="text-white">
+            From understanding adoption procedures to preparing your home and
+            building trust with your new furry friend, we provide you with
+            everything you need to ensure a happy, healthy life together.
+          </p>
+
+          <div class="cta-features">
+            <div
+              class="feature-item aos-init aos-animate"
+              data-aos="zoom-in"
+              data-aos-delay="400"
+            >
+              <i class="bi bi-check-circle-fill text-white"></i>
+              <span>Step-by-Step Adoption Advice</span>
+            </div>
+            <div
+              class="feature-item aos-init aos-animate"
+              data-aos="zoom-in"
+              data-aos-delay="450"
+            >
+              <i class="bi bi-check-circle-fill text-white"></i>
+              <span>Rescue Success Stories</span>
+            </div>
+            <div
+              class="feature-item aos-init aos-animate"
+              data-aos="zoom-in"
+              data-aos-delay="500"
+            >
+              <i class="bi bi-check-circle-fill text-white"></i>
+              <span>Training & Adjustment Tips</span>
+            </div>
+            <div
+              class="feature-item aos-init aos-animate"
+              data-aos="zoom-in"
+              data-aos-delay="550"
+            >
+              <i class="bi bi-check-circle-fill text-white"></i>
+              <span>Health & Wellness Guidance</span>
+            </div>
+          </div>
+
+          <div class="cta-action mt-5">
+            <a [routerLink]="'/contact'" class="btn btn-outline-light btn-lg"
+              >Ask for Help</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Image on the Right -->
+      <div
+        class="col-lg-6 aos-init aos-animate"
+        data-aos="fade-left"
+        data-aos-delay="200"
+      >
+        <div class="cta-image-wrapper text-center">
+          <img
+            src="assets/PetImages/dog-blog.png"
+            alt="Adoption and Rescue Advice"
+            class="img-fluid rounded-4"
+            style="max-height: 400px"
+          />
+          <p class="mt-3 text-white" style="font-size: 0.95rem">
+            <em
+              >“Saving one animal won’t change the world, but it will change the
+              world for that one animal.”</em
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

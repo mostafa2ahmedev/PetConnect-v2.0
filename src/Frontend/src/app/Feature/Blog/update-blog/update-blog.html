@@ -1,0 +1,153 @@
+<div class="container mt-4" style="max-width: 700px">
+  <h5>{{ isEditMode ? "Edit Blog Post" : "Create New Blog Post" }}</h5>
+
+  <div *ngIf="errorMsg" class="alert alert-danger">{{ errorMsg }}</div>
+  <div *ngIf="successMsg" class="alert alert-success">{{ successMsg }}</div>
+
+  <form (ngSubmit)="submitBlog()" #blogForm="ngForm" novalidate>
+    <!-- Title -->
+    <div class="mb-3">
+      <label for="title" class="form-label">Title *</label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        class="form-control"
+        required
+        [(ngModel)]="blog.title"
+        #title="ngModel"
+      />
+      <div *ngIf="title.invalid && title.touched" class="text-danger">
+        Title is required.
+      </div>
+    </div>
+
+    <!-- Blog Type -->
+    <div class="mb-3">
+      <label for="blogType" class="form-label">Blog Type *</label>
+      <select
+        id="blogType"
+        name="blogType"
+        class="form-select"
+        required
+        [(ngModel)]="blog.blogType"
+        #blogType="ngModel"
+      >
+        <option [value]="0">General</option>
+        <option [value]="1">Read</option>
+        <option [value]="2">Read & Write</option>
+      </select>
+      <div *ngIf="blogType.invalid && blogType.touched" class="text-danger">
+        Blog type is required.
+      </div>
+    </div>
+
+    <!-- Category -->
+    <div class="mb-3">
+      <label for="categorySelect" class="form-label">Category </label>
+      <select
+        id="categorySelect"
+        name="petCategoryId"
+        class="form-select"
+        [(ngModel)]="blog.petCategoryId"
+        #categorySelect="ngModel"
+      >
+        <option [ngValue]="null" disabled>Select Category</option>
+        <option *ngFor="let cat of categories" [value]="cat.id">
+          {{ cat.name }}
+        </option>
+      </select>
+      <div
+        *ngIf="categorySelect.invalid && categorySelect.touched"
+        class="text-danger"
+      >
+        Category is required.
+      </div>
+    </div>
+
+    <!-- Topic -->
+    <div class="mb-3">
+      <label for="topicSelect" class="form-label">Topic </label>
+      <select
+        id="topicSelect"
+        name="topic"
+        class="form-select"
+        [(ngModel)]="blog.topic"
+        #topicSelect="ngModel"
+      >
+        <option [ngValue]="null" disabled>Select Topic</option>
+        <option *ngFor="let topic of blogTopics" [value]="topic.key">
+          {{ topic.value }}
+        </option>
+      </select>
+      <div
+        *ngIf="topicSelect.invalid && topicSelect.touched"
+        class="text-danger"
+      >
+        Topic is required.
+      </div>
+    </div>
+
+    <!-- Excerpt -->
+    <div class="mb-3">
+      <label for="excerpt" class="form-label">Excerpt (optional)</label>
+      <textarea
+        id="excerpt"
+        name="excerpt"
+        class="form-control"
+        [(ngModel)]="blog.excerpt"
+        rows="2"
+      ></textarea>
+    </div>
+
+    <!-- Content -->
+    <div class="mb-3">
+      <label for="content" class="form-label">Content *</label><br />
+      <quill-editor
+        [(ngModel)]="blog.content"
+        name="content"
+        [modules]="{ toolbar: true }"
+        [styles]="{ height: '200px', background: '#fff' }"
+        #content="ngModel"
+        style="width: 100%; background-color: #fff"
+      ></quill-editor>
+      <div *ngIf="content.invalid && content.touched" class="text-danger">
+        Content is required.
+      </div>
+    </div>
+
+    <!-- Media -->
+    <div class="mb-3">
+      <label for="media" class="form-label">Upload Media (optional)</label>
+      <input
+        type="file"
+        id="media"
+        class="form-control"
+        (change)="onFileSelected($event)"
+      />
+      <div *ngIf="isEditMode && blog.media && !mediaFile" class="mt-2">
+        <!-- <small>Current Media:</small><br />
+        <img
+          [src]="getFullImageUrl(blog.media)"
+          style="max-width: 150px; border: 1px solid #ddd"
+        /> -->
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      class="btn btn-primary"
+      [disabled]="isSubmitting || blogForm.invalid"
+    >
+      {{
+        isSubmitting
+          ? isEditMode
+            ? "Updating..."
+            : "Submitting..."
+          : isEditMode
+          ? "Update Blog"
+          : "Submit"
+      }}
+    </button>
+  </form>
+</div>

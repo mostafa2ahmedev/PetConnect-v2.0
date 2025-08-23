@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using PetConnect.DAL.Data;
 using PetConnect.DAL.Data.Repositories.Classes;
 using PetConnect.DAL.Data.Repositories.Interfaces;
@@ -17,13 +18,14 @@ namespace PetConnect.DAL.UnitofWork
         {
             context = _context;
         }
+        public IUserRepository UserRepository => new UserRepository(context);
         public IAdminRepository AdminRepository => new AdminRepository(context);
 
         public ICustomerRepository CustomerRepository => new CustomerRepository(context);
 
         public ICustomerAddedPetsRepository CustomerAddedPetsRepository => new CustomerAddedPetsRepository(context);
 
-        public ICustomerPetAdoptionsRepository CustomerPetAdpotionsRepository => new CustomerPetAdpotionsRepository(context);
+        public ICustomerPetAdoptionsRepository CustomerPetAdpotionsRepository => new CustomerPetAdoptionsRepository(context);
 
         public IDoctorRepository DoctorRepository => new DoctorRepository(context);
 
@@ -47,6 +49,50 @@ namespace PetConnect.DAL.UnitofWork
 
         public IShelterPhonesRepository ShelterPhonesRepository => new ShelterPhonesRepository(context);
 
+        public IProductRepository ProductRepository => new ProductRepository(context);
+        public IProductTypeRepository ProductTypeRepository => new ProductTypeRepository(context);
+        public IOrderProductRepository orderProductRepository => new OrderProductRepository(context);
+        public IOrderRepository OrderRepository => new OrderRepository(context);
+
+        public ITimeSlotsRepository TimeSlotsRepository =>  new TimeSlotsRepository(context);
+        public IAppointmentsRepository AppointmentsRepository => new AppointmentsRepository(context);
+
+        public ISellerRepository SellerRepository => new SellerRepository(context);
+
+        public IAdminDoctorMessageRepository AdminDoctorMessageRepository => new AdminDoctorMessageRepository(context);
+        public IAdminPetMessageRepository AdminPetMessageRepository => new AdminPetMessageRepository(context);
+        public IApplicationUserRepository ApplicationUserRepository=> new ApplicationUserRepository(context);
+
+
+        public INotificationRepository NotificationRepository => new NotificationRepository(context);
+        public IUserConnectionRepository UserConnectionRepository => new UserConnectionRepository(context);
+        public IUserMessagesRepository UserMessagesRepository => new UserMessagesRepository(context);
+
+        public IBlogRepository BlogRepository =>  new BlogRepository(context);
+
+        public IBlogCommentRepository BlogCommentRepository => new BlogCommentRepository(context);
+
+        public IBlogCommentReplyRepository BlogCommentReplyRepository => new BlogCommentReplyRepository(context);
+
+        public IUserBlogLikeRepository UserBlogLikeRepository => new UserBlogLikeRepository(context);
+
+        public IUserBlogCommentLikeRepository UserBlogCommentLikeRepository => new UserBlogCommentLikeRepository(context);
+
+        public IUserBlogCommentReplyLikeRepository UserBlogCommentReplyLikeRepository => new UserBlogCommentReplyLikeRepository(context);
+
+        public IUserBlogCommentRepository UserBlogCommentRepository => new UserBlogCommentRepository(context);
+
+        public IUserBlogCommentReplyRepository UserBlogCommentReplyRepository => new UserBlogCommentReplyRepository(context);
+        public IDeliveryMethodRepository DeliveryMethodRepository => new DeliveryMethodRepository(context);
+
+        public ISupportRequestRepository SupportRequestRepository => new SupportRequestRepository(context);
+
+        public IReviewRepository ReviewRepository => new ReviewRepository(context);
+
+        public IAdminSupportResponseRepository SupportResponseRepository => new AdminSupportResponseRepository(context);
+
+        public IFollowUpSupportRequestRepository FollowUpSupportRequestRepository =>  new FollowUpSupportRequestRepository(context);
+
         public void Dispose()
         {
             context.Dispose();
@@ -55,5 +101,10 @@ namespace PetConnect.DAL.UnitofWork
         {
             return context.SaveChanges();
         }
+        public async Task<int> SaveChangesAsync()
+        {
+            return await context.SaveChangesAsync();
+        }
+
     }
 }

@@ -1,0 +1,461 @@
+<!-- Enhanced profile dashboard with modern card-based layout and improved visual hierarchy -->
+<section class="profile-hero">
+  <div class="hero-background"></div>
+  <div class="hero-content">
+    <div class="hero-icon">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+    </div>
+    <h1 class="hero-title">Your Profile Dashboard</h1>
+    <p class="hero-description">
+      Keep track of your adoption journey, manage requests, and connect with your pets.
+    </p>
+  </div>
+</section>
+
+<div class="profile-container">
+  <div class="profile-layout">
+    <!-- Profile Sidebar -->
+    <div class="profile-sidebar">
+      <!-- Profile Card -->
+      <div class="profile-card">
+        <!-- Loading State -->
+        <div *ngIf="loadingProfile" class="loading-state">
+          <div class="loading-spinner-large"></div>
+          <p class="loading-text">Loading profile...</p>
+        </div>
+
+        <!-- Error State -->
+        <div *ngIf="!loadingProfile && !profileData" class="error-state">
+          <div class="error-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="15" y1="9" x2="9" y2="15"></line>
+              <line x1="9" y1="9" x2="15" y2="15"></line>
+            </svg>
+          </div>
+          <p class="error-text">Unable to load profile information</p>
+        </div>
+
+        <!-- Profile Content -->
+        <div class="profile-content" *ngIf="!loadingProfile && profileData">
+          <div class="avatar-section">
+            <div class="avatar-wrapper">
+              <img [src]="getFullImageUrl(profileData?.imgUrl || '') || 'assets/img/default-user.png'"
+                alt="Profile Avatar" class="avatar-image" />
+              <div class="avatar-status"></div>
+            </div>
+            <h2 class="profile-name">{{ profileData?.fName }} {{ profileData?.lName }}</h2>
+            <p class="profile-location">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              {{ profileData?.city }}
+            </p>
+            <div class="pet-count">
+              <span class="count-number">{{ petCount }}</span>
+              <span class="count-label">Pets</span>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button class="btn-primary" routerLink="/profile/update">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+              Update Profile
+            </button>
+            <button class="btn-secondary" routerLink="/add-pet">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Add Pets
+            </button>
+            <button class="btn-outline" routerLink="/orders">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-4"></path>
+                <rect x="9" y="7" width="6" height="4"></rect>
+              </svg>
+              Show Orders
+            </button>
+            <!-- Added Show Reviews button from old version -->
+            <button class="btn-reviews" (click)="showReviews()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon
+                  points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26">
+                </polygon>
+              </svg>
+              Show Reviews
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Details Card -->
+      <div class="details-card" *ngIf="!loadingProfile && profileData">
+        <h3 class="details-title">Profile Details</h3>
+        <div class="details-list">
+          <div class="detail-item">
+            <span class="detail-label">Full Name</span>
+            <span class="detail-value">{{ profileData?.fName }} {{ profileData?.lName }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Email</span>
+            <span class="detail-value">{{ profileData?.email }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Phone</span>
+            <span class="detail-value">{{ profileData?.phoneNumber }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Address</span>
+            <span class="detail-value">{{ profileData?.street }}, {{ profileData?.city }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Sent Requests Section -->
+      <div class="content-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+            Sent Adoption Requests
+          </h2>
+        </div>
+
+        <!-- Loading State -->
+        <div *ngIf="loadingReuests" class="loading-state">
+          <div class="loading-spinner-large"></div>
+          <p class="loading-text">Loading adoption requests...</p>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="!loadingReuests && sentRequests.length === 0" class="empty-state">
+          <div class="empty-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+          </div>
+          <h3 class="empty-title">No Requests Sent</h3>
+          <p class="empty-description">You haven't sent any adoption requests yet. Start browsing pets to find your
+            perfect companion!</p>
+        </div>
+
+        <!-- Requests List -->
+        <div class="requests-grid" *ngIf="!loadingReuests && sentRequests.length > 0">
+          <div class="request-card" *ngFor="let req of sentRequests">
+            <div class="request-content">
+              <div class="request-info">
+                <p class="request-text">
+                  You requested to adopt <strong class="pet-name">{{ req.petName }}</strong>
+                </p>
+              </div>
+              <div class="request-status">
+                <span class="status-badge" [ngClass]="{
+                  'status-pending': req.adoptionStatus === 'Pending',
+                  'status-approved': req.adoptionStatus === 'Approved',
+                  'status-cancelled': req.adoptionStatus === 'Cancelled'
+                }">
+                  {{ req.adoptionStatus }}
+                </span>
+              </div>
+              <div class="request-actions"
+                *ngIf="requestedPetIds.includes(req.petId) && req.adoptionStatus === 'Pending'">
+                <button class="btn-danger-sm" (click)="cancelAdoptionRequest(req)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                  Cancel Request
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Received Requests Section -->
+      <div class="content-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            Adoption Requests Received
+          </h2>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="filter-controls">
+          <div class="filter-group">
+            <label class="filter-label">Filter by Pet:</label>
+            <select class="filter-select" [(ngModel)]="selectedPetFilter">
+              <option value="">All Pets</option>
+              <option *ngFor="let pet of uniquePetNames" [value]="pet">{{ pet }}</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Sort by Date:</label>
+            <select class="filter-select" [(ngModel)]="sortOrder">
+              <option value="desc">Newest First</option>
+              <option value="asc">Oldest First</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="filteredAndSortedRequests.length === 0" class="empty-state">
+          <div class="empty-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
+          <h3 class="empty-title">No Requests Found</h3>
+          <p class="empty-description">No adoption requests match your current filter.</p>
+        </div>
+
+        <!-- Requests Table -->
+        <div class="table-container" *ngIf="filteredAndSortedRequests.length > 0">
+          <div class="enhanced-table">
+            <div class="table-header">
+              <div class="header-cell">Customer</div>
+              <div class="header-cell">Pet</div>
+              <div class="header-cell">Date</div>
+              <div class="header-cell">Actions</div>
+            </div>
+            <div class="table-body">
+              <div class="table-row" *ngFor="let request of filteredAndSortedRequests">
+                <div class="table-cell">
+                  <div class="customer-info">
+                    <span class="customer-name">{{ request.requesterFullName }}</span>
+                  </div>
+                </div>
+                <div class="table-cell">
+                  <span class="pet-name">{{ request.petName }}</span>
+                </div>
+                <div class="table-cell">
+                  <span class="request-date">{{ request.adoptionDate | date : "mediumDate" }}</span>
+                </div>
+                <div class="table-cell">
+                  <div class="action-buttons-group">
+                    <button class="btn-contact" (click)="request.showPhone = !request.showPhone">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path
+                          d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                        </path>
+                      </svg>
+                      Contact
+                    </button>
+                    <button class="btn-chat" [routerLink]="['/chat', request.reqCustomerId]">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                      </svg>
+                      Chat
+                    </button>
+                    <button *ngIf="request.adoptionStatus === 1" class="btn-approve"
+                      (click)="approveOrCancel(request, 0)">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <polyline points="20,6 9,17 4,12"></polyline>
+                      </svg>
+                      Approve
+                    </button>
+                    <button *ngIf="request.adoptionStatus === 1" class="btn-cancel"
+                      (click)="approveOrCancel(request, 2)">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                      Cancel
+                    </button>
+                  </div>
+                  <div class="contact-info" *ngIf="request.showPhone">
+                    <a [href]="'https://wa.me/2' + request.reqPhoneNumber" target="_blank" class="whatsapp-link">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path
+                          d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                        </path>
+                      </svg>
+                      {{ request.reqPhoneNumber }}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Appointments Section -->
+      <div class="content-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            My Appointment History
+          </h2>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="appointments.length === 0" class="empty-state">
+          <div class="empty-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </div>
+          <h3 class="empty-title">No Appointments</h3>
+          <p class="empty-description">You don't have any appointments scheduled yet.</p>
+        </div>
+
+        <!-- Appointments Table -->
+        <div class="table-container" *ngIf="appointments.length > 0">
+          <div class="enhanced-table">
+            <div class="table-header">
+              <div class="header-cell">Pet</div>
+              <div class="header-cell">Doctor</div>
+              <div class="header-cell">Time Slot</div>
+              <div class="header-cell">Status</div>
+              <div class="header-cell">Action</div>
+            </div>
+            <div class="table-body">
+              <div class="table-row" *ngFor="let appt of appointments">
+                <div class="table-cell">
+                  <div class="pet-info">
+                    <img [src]="'https://localhost:7102/assets/PetImages/' + appt.petImg" alt="Pet"
+                      class="pet-avatar" />
+                    <span class="pet-name">{{ appt.petName }}</span>
+                  </div>
+                </div>
+                <div class="table-cell">
+                  <span class="doctor-name">{{ appt.doctorName }}</span>
+                </div>
+                <div class="table-cell">
+                  <div class="time-info">
+                    <span class="time-slot">
+                      {{ appt.slotStartTime | date : "shortTime" }} - {{ appt.slotEndTime | date : "shortTime" }}
+                    </span>
+                    <span class="appointment-date">{{ appt.slotStartTime | date : "mediumDate" }}</span>
+                  </div>
+                </div>
+                <div class="table-cell">
+                  <span class="status-badge" [ngClass]="{
+                    'status-pending': appt.status === 'Pending',
+                    'status-confirmed': appt.status === 'Confirmed',
+                    'status-cancelled': appt.status === 'Cancelled'
+                  }">
+                    {{ appt.status }}
+                  </span>
+                </div>
+                <div class="table-cell">
+                  <!-- Updated review button to match old version functionality -->
+                  <button [disabled]="appt.status !== 'Completed' || appt.isReviewable" class="review-button"
+                    (click)="writeReview(appt.id, appt.doctorId)">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon
+                        points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26">
+                      </polygon>
+                    </svg>
+                    Write a Review
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pets Gallery Section -->
+  <div class="pets-gallery-section">
+    <div class="section-header">
+      <h2 class="section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path
+            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+          </path>
+          <polyline points="3.27,6.96 12,12.01 20.73,6.96"></polyline>
+          <line x1="12" y1="22.08" x2="12" y2="12"></line>
+        </svg>
+        My Pets Gallery
+      </h2>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loadingPets" class="loading-state">
+      <div class="loading-spinner-large"></div>
+      <p class="loading-text">Loading your pets...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loadingPets && myPets.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path
+            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+          </path>
+          <polyline points="3.27,6.96 12,12.01 20.73,6.96"></polyline>
+          <line x1="12" y1="22.08" x2="12" y2="12"></line>
+        </svg>
+      </div>
+      <h3 class="empty-title">No Pets Yet</h3>
+      <p class="empty-description">
+        You haven't added any pets yet.
+        <a routerLink="/pets" class="cta-link">Adopt or rescue a pet now!</a>
+      </p>
+    </div>
+
+    <!-- Pets Grid -->
+    <div class="pets-grid" *ngIf="!loadingPets && myPets.length > 0">
+      <div class="pet-card" *ngFor="let pet of myPets" data-aos="zoom-in" data-aos-delay="100">
+        <a [routerLink]="['/pet-details', pet.id]" class="pet-link">
+          <div class="pet-image-wrapper">
+            <img [src]="getFullImageUrl(pet.imgUrl)" class="pet-image" [alt]="pet.name" />
+            <div class="pet-overlay">
+              <span class="view-details">View Details</span>
+            </div>
+          </div>
+        </a>
+        <div class="pet-info">
+          <h4 class="pet-name">{{ pet.name }}</h4>
+          <div class="pet-status">
+
+          </div>
+          <p class="pet-age">Age: {{ pet.age }} years</p>
+          <div class="pet-actions">
+            <a [routerLink]="['/pet-details', pet.id]" class="btn-learn-more">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              Learn More
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

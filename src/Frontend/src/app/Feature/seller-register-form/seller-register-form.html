@@ -1,0 +1,241 @@
+<section id="hero" class="hero section pb-0">
+  <div class="container section-title pb-0" data-aos="fade-up">
+    <div class="form-container">
+      <div class="form-wrapper">
+        <div class="form-card">
+          <div class="form-header">
+            <h2 class="form-title">Seller Registration</h2>
+            <p class="form-subtitle">Join our marketplace and start selling today</p>
+          </div>
+
+          <div class="form-body">
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+
+              <!-- General Errors -->
+              <div *ngIf="generalErrors.length > 0" class="error-alert">
+                <div class="error-icon">⚠️</div>
+                <div class="error-content">
+                  <ul class="error-list">
+                    <li *ngFor="let error of generalErrors">{{ error }}</li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Personal Information Section -->
+              <div class="form-section">
+                <h3 class="section-title">
+                  <span class="section-icon">👤</span>
+                  Personal Information
+                </h3>
+
+                <div class="form-grid">
+                  <!-- First Name -->
+                  <div class="form-group">
+                    <label for="fName" class="form-label">First Name</label>
+                    <div class="input-wrapper">
+                      <input type="text" id="fName" class="form-input" formControlName="fName"
+                        [class.error]="(fName?.touched || isSubmitted) && fName?.errors?.['required']"
+                        placeholder="Enter your first name" />
+                    </div>
+                    <div class="error-message" *ngIf="(fName?.touched || isSubmitted) && fName?.errors?.['required']">
+                      First Name can't be blank
+                    </div>
+                  </div>
+
+                  <!-- Last Name -->
+                  <div class="form-group">
+                    <label for="lName" class="form-label">Last Name</label>
+                    <div class="input-wrapper">
+                      <input type="text" id="lName" class="form-input" formControlName="lName"
+                        [class.error]="(lName?.touched || isSubmitted) && lName?.errors?.['required']"
+                        placeholder="Enter your last name" />
+                    </div>
+                    <div class="error-message" *ngIf="(lName?.touched || isSubmitted) && lName?.errors?.['required']">
+                      Last Name can't be blank
+                    </div>
+                  </div>
+
+                  <!-- Gender -->
+                  <div class="form-group">
+                    <label for="gender" class="form-label">Gender</label>
+                    <div class="input-wrapper">
+                      <select id="gender" class="form-select" formControlName="gender"
+                        [class.error]="(gender?.touched || isSubmitted) && gender?.errors?.['required']">
+                        <option value="" selected disabled>Select gender</option>
+                        <option *ngFor="let option of genderOptions" [ngValue]="option.id">
+                          {{ option.name }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="error-message" *ngIf="(gender?.touched || isSubmitted) && gender?.errors?.['required']">
+                      Gender is required
+                    </div>
+                  </div>
+
+                  <!-- Profile Image -->
+                  <div class="form-group">
+                    <label for="image" class="form-label">Profile Image</label>
+                    <div class="input-wrapper file-input-wrapper">
+                      <input type="file" id="image" class="form-input file-input" (change)="onImageSelected($event)"
+                        accept="image/*" />
+                      <div class="file-input-label">
+                        <span class="file-icon">📷</span>
+                        <span class="file-text">Choose profile image</span>
+                      </div>
+                    </div>
+                    <div class="error-message" *ngIf="imageError">{{ imageError }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Contact Information Section -->
+              <div class="form-section">
+                <h3 class="section-title">
+                  <span class="section-icon">📧</span>
+                  Contact Information
+                </h3>
+
+                <div class="form-grid">
+                  <!-- Email -->
+                  <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <div class="input-wrapper">
+                      <input type="email" id="email" class="form-input" formControlName="email"
+                        [class.error]="(email?.touched || isSubmitted) && (email?.errors?.['required'] || email?.errors?.['email'])"
+                        placeholder="Enter your email address" />
+                    </div>
+                    <div class="error-message" *ngIf="(email?.touched || isSubmitted) && email?.errors?.['required']">
+                      Email can't be blank
+                    </div>
+                    <div class="error-message" *ngIf="(email?.touched || isSubmitted) && email?.errors?.['email']">
+                      Please enter a valid email
+                    </div>
+                  </div>
+
+                  <!-- Phone -->
+                  <div class="form-group">
+                    <label for="phoneNumber" class="form-label">Phone Number</label>
+                    <div class="input-wrapper">
+                      <input type="text" id="phoneNumber" class="form-input" formControlName="phoneNumber"
+                        [class.error]="(phoneNumber?.touched || isSubmitted) && (phoneNumber?.errors?.['required'] || phoneNumber?.errors?.['pattern'])"
+                        placeholder="Enter your phone number" />
+                    </div>
+                    <div class="error-message"
+                      *ngIf="(phoneNumber?.touched || isSubmitted) && phoneNumber?.errors?.['required']">
+                      Phone Number can't be blank
+                    </div>
+                    <div class="error-message"
+                      *ngIf="(phoneNumber?.touched || isSubmitted) && phoneNumber?.errors?.['pattern']">
+                      Please enter only numbers
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Security Section -->
+              <div class="form-section">
+                <h3 class="section-title">
+                  <span class="section-icon">🔒</span>
+                  Security
+                </h3>
+
+                <div class="form-grid">
+                  <!-- Password -->
+                  <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-wrapper">
+                      <input type="password" id="password" class="form-input" formControlName="password"
+                        [class.error]="(password?.touched || isSubmitted) && password?.errors?.['required']"
+                        placeholder="Create a strong password" />
+                    </div>
+                    <div class="error-message"
+                      *ngIf="(password?.touched || isSubmitted) && password?.errors?.['required']">
+                      Password can't be blank
+                    </div>
+                  </div>
+
+                  <!-- Confirm Password -->
+                  <div class="form-group">
+                    <label for="confirmationPassword" class="form-label">Confirm Password</label>
+                    <div class="input-wrapper">
+                      <input type="password" id="confirmationPassword" class="form-input"
+                        formControlName="confirmationPassword"
+                        [class.error]="(confirmationPassword?.touched || isSubmitted) && (confirmationPassword?.errors?.['required'] || confirmationPassword?.errors?.['compareValidator'])"
+                        placeholder="Confirm your password" />
+                    </div>
+                    <div class="error-message"
+                      *ngIf="(confirmationPassword?.touched || isSubmitted) && confirmationPassword?.errors?.['required']">
+                      Confirm Password can't be blank
+                    </div>
+                    <div class="error-message"
+                      *ngIf="(confirmationPassword?.touched || isSubmitted) && confirmationPassword?.errors?.['compareValidator']">
+                      Passwords do not match
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Address Information Section -->
+              <div class="form-section">
+                <h3 class="section-title">
+                  <span class="section-icon">📍</span>
+                  Address Information
+                </h3>
+
+                <div class="form-grid">
+                  <!-- Country -->
+                  <div class="form-group">
+                    <label for="country" class="form-label">Country</label>
+                    <div class="input-wrapper">
+                      <input type="text" id="country" class="form-input" formControlName="country"
+                        [class.error]="(country?.touched || isSubmitted) && country?.errors?.['required']"
+                        placeholder="Enter your country" />
+                    </div>
+                    <div class="error-message"
+                      *ngIf="(country?.touched || isSubmitted) && country?.errors?.['required']">
+                      Country can't be blank
+                    </div>
+                  </div>
+
+                  <!-- City -->
+                  <div class="form-group">
+                    <label for="city" class="form-label">City</label>
+                    <div class="input-wrapper">
+                      <input type="text" id="city" class="form-input" formControlName="city"
+                        [class.error]="(city?.touched || isSubmitted) && city?.errors?.['required']"
+                        placeholder="Enter your city" />
+                    </div>
+                    <div class="error-message" *ngIf="(city?.touched || isSubmitted) && city?.errors?.['required']">
+                      City can't be blank
+                    </div>
+                  </div>
+
+                  <!-- Street -->
+                  <div class="form-group full-width">
+                    <label for="street" class="form-label">Street Address</label>
+                    <div class="input-wrapper">
+                      <input type="text" id="street" class="form-input" formControlName="street"
+                        [class.error]="(street?.touched || isSubmitted) && street?.errors?.['required']"
+                        placeholder="Enter your street address" />
+                    </div>
+                    <div class="error-message" *ngIf="(street?.touched || isSubmitted) && street?.errors?.['required']">
+                      Street can't be blank
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="form-actions">
+                <button type="submit" class="submit-btn" [disabled]="registerForm.invalid">
+                  <span class="btn-text">Register as Seller</span>
+                  <span class="btn-icon">🚀</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

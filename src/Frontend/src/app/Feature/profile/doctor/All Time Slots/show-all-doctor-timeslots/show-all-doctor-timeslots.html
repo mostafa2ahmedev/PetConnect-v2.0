@@ -1,0 +1,145 @@
+<div class="scheduler-container">
+  <!-- Enhanced filter section with gradient background and modern styling -->
+  <div class="filter-card">
+    <div class="filter-header">
+      <h4 class="filter-title">Filter Time Slots</h4>
+    </div>
+    <div class="filter-body">
+      <div class="filter-grid">
+        <div class="filter-group">
+          <label for="filterStatus" class="filter-label">Status</label>
+          <select
+            id="filterStatus"
+            class="filter-select"
+            [(ngModel)]="filterStatus"
+            (change)="applyFiltersAndPagination()"
+          >
+            <option value="all">All</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filterStartDate" class="filter-label">Start Date</label>
+          <input
+            type="date"
+            id="filterStartDate"
+            class="filter-input"
+            [(ngModel)]="filterStartDate"
+            (change)="applyFiltersAndPagination()"
+          />
+        </div>
+        <div class="filter-group">
+          <label for="filterEndDate" class="filter-label">End Date</label>
+          <input
+            type="date"
+            id="filterEndDate"
+            class="filter-input"
+            [(ngModel)]="filterEndDate"
+            (change)="applyFiltersAndPagination()"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enhanced time slots grid with modern card design -->
+  <div class="slots-grid">
+    @for(slot of paginatedTimeSlots; track slot.id){
+    <div class="slot-card" 
+         [class.slot-inactive]="!slot.isActive"
+         [class.slot-full]="slot.bookedCount === slot.maxCapacity && slot.isActive">
+      <div class="slot-header">
+        <div class="slot-date">
+          {{ slot.startTime | date : "mediumDate" }}
+        </div>
+        <div class="slot-time">
+          {{ slot.startTime | date : "shortTime" }} -
+          {{ slot.endTime | date : "shortTime" }}
+        </div>
+      </div>
+      
+      <div class="slot-content">
+        <div class="reservation-info">
+          <div class="reservation-text">
+            Reservations: {{(slot.bookedCount / slot.maxCapacity) * 100 | number : "1.0-0"}}%
+          </div>
+          <div class="progress-container">
+            <div class="progress-bar" 
+                 [style.width.%]="(slot.bookedCount / slot.maxCapacity) * 100"
+                 [class.progress-success]="slot.bookedCount < slot.maxCapacity && slot.isActive"
+                 [class.progress-warning]="slot.bookedCount === slot.maxCapacity && slot.isActive"
+                 [class.progress-danger]="!slot.isActive">
+              <span class="progress-text">{{ slot.bookedCount }} / {{ slot.maxCapacity }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="status-info">
+          <span class="status-label">Status:</span>
+          <span class="status-badge" 
+                [class.status-active]="slot.isActive" 
+                [class.status-inactive]="!slot.isActive">
+            {{ slot.isActive ? "Active" : "Inactive" }}
+          </span>
+        </div>
+      </div>
+      
+      <div class="slot-footer">
+        @if(slot.isActive){
+        <button class="action-btn btn-deactivate" (click)="changeStatusToActive(slot)">
+          Deactivate Slot
+        </button>
+        } @else {
+        <button class="action-btn btn-activate" (click)="changeStatusToActive(slot)">
+          Activate Slot
+        </button>
+        }
+      </div>
+    </div>
+    }
+  </div>
+
+  <!-- Enhanced empty states with better messaging -->
+  @if(paginatedTimeSlots.length === 0 && allTimeSlots.length > 0){
+  <div class="empty-state empty-filtered">
+    <div class="empty-icon">🔍</div>
+    <h5 class="empty-title">No time slots match your current filters</h5>
+    <p class="empty-text">Try adjusting your search criteria to see more results.</p>
+  </div>
+  } @else if (allTimeSlots.length === 0) {
+  <div class="empty-state empty-all">
+    <div class="empty-icon">📅</div>
+    <h4 class="empty-title">No time slots available</h4>
+    <p class="empty-text">Time slots will appear here once they are created.</p>
+  </div>
+  }
+
+  <!-- Enhanced pagination with modern styling -->
+  <nav class="pagination-nav" *ngIf="totalPages > 1">
+    <div class="pagination-container">
+      <button class="pagination-btn pagination-prev" 
+              [disabled]="currentPage === 1"
+              (click)="previousPage()">
+        <span>‹</span>
+      </button>
+      
+      @for(page of getPages(); track page){
+      <button class="pagination-btn pagination-page" 
+              [class.pagination-active]="currentPage === page"
+              (click)="goToPage(page)">
+        {{ page }}
+      </button>
+      }
+      
+      <button class="pagination-btn pagination-next" 
+              [disabled]="currentPage === totalPages || totalPages === 0"
+              (click)="nextPage()">
+        <span>›</span>
+      </button>
+    </div>
+    <div class="pagination-info">
+      Showing {{ paginatedTimeSlots.length }} of {{ totalItems }} slots
+    </div>
+  </nav>
+</div>

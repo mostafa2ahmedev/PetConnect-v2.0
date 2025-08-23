@@ -1,0 +1,114 @@
+<section id="hero" class="hero-section">
+  <div class="container section-title" data-aos="fade-up">
+    <h2 class="hero-title">Contact Support</h2>
+    <p class="hero-description">Send us your support request with optional screenshot or file attachment.</p>
+    <button
+      class="btn btn-outline"
+      [routerLink]="'/support/tickets'"
+    >
+      Track Submitted Tickets
+    </button>
+  </div>
+</section>
+
+<section id="contact" class="contact-section">
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+        <div class="form-card" data-aos="fade-up" data-aos-delay="400">
+          <form
+            [formGroup]="contactForm"
+            (ngSubmit)="onSubmit()"
+            enctype="multipart/form-data"
+            class="contact-form"
+          >
+            <!-- Enhanced form layout with modern styling -->
+            <div class="form-fields">
+              <!-- Subject / Type -->
+              <div class="form-group">
+                <label class="form-label">Service Type</label>
+                <div class="input-wrapper">
+                  <div class="input-icon">
+                    <i class="bi bi-list"></i>
+                  </div>
+                  <select formControlName="type" class="form-select" required>
+                    <option value="" disabled selected>
+                      Select service type
+                    </option>
+                    <option value="0">Support</option>
+                    <option value="1">Consulting</option>
+                    <option value="2">Marketing</option>
+                    <option value="3">Issue</option>
+                  </select>
+                </div>
+                <div
+                  *ngIf="
+                    contactForm.get('type')?.invalid &&
+                    contactForm.get('type')?.touched
+                  "
+                  class="error-message"
+                >
+                  Please select a service type
+                </div>
+              </div>
+
+              <!-- Message -->
+              <div class="form-group">
+                <label class="form-label">Message</label>
+                <div class="input-wrapper">
+                  <div class="input-icon">
+                    <i class="bi bi-chat-dots"></i>
+                  </div>
+                  <textarea
+                    class="form-textarea"
+                    formControlName="message"
+                    rows="6"
+                    placeholder="Describe your issue or request in detail..."
+                  ></textarea>
+                </div>
+                <div
+                  *ngIf="
+                    contactForm.get('message')?.invalid &&
+                    contactForm.get('message')?.touched
+                  "
+                  class="error-message"
+                >
+                  Message is required
+                </div>
+              </div>
+
+              <!-- File Upload -->
+              <div class="form-group">
+                <label class="form-label">Attach File (Optional)</label>
+                <div class="file-upload-wrapper">
+                  <input
+                    type="file"
+                    class="file-input"
+                    (change)="onFileSelected($event)"
+                    id="fileUpload"
+                  />
+                  <label for="fileUpload" class="file-upload-label">
+                    <i class="bi bi-cloud-upload"></i>
+                    <span>Choose file or drag and drop</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Submit -->
+              <div class="form-actions">
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  [disabled]="contactForm.invalid"
+                >
+                  <i class="bi bi-send"></i>
+                  Submit Request
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

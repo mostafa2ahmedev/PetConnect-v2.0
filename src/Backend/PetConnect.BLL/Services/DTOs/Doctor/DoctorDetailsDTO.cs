@@ -23,6 +23,11 @@ namespace PetConnect.BLL.Services.DTO.Doctor
         [StringLength(20, ErrorMessage = "Last name cannot exceed 20 characters.")]
         public string LName { get; set; } = null!;
 
+        [Display(Name = "Phone Number")]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "Phone Number Can Only Have Digits")]
+        [Phone(ErrorMessage = "Invalid Phone Number Format")]
+        public string PhoneNumber { get; set; } = null!;
+
         [Display(Name = "Profile Image URL")]
         [StringLength(100, ErrorMessage = "Image URL cannot exceed 100 characters.")]
 
@@ -46,9 +51,14 @@ namespace PetConnect.BLL.Services.DTO.Doctor
         [StringLength(100, ErrorMessage = "Image URL cannot exceed 100 characters.")]
         public string? CertificateUrl { get; set; }
 
+        [Display(Name = "IDCard Image URL")]
+        [StringLength(100, ErrorMessage = "Image URL cannot exceed 100 characters.")]
+        public string? IDCardUrl { get; set; }
 
         [Display(Name = "Certificate Image")]
         public IFormFile? CertificateFile { get; set; } // <-- this replaces ImageUrl in the form
+        [Display(Name = "Certificate Image")]
+        public IFormFile? IDCardFile { get; set; } // <-- this replaces CardUrl in the form
 
         [Display(Name = "Street Address")]
         [Required(ErrorMessage = "Street address is required.")]
@@ -59,9 +69,10 @@ namespace PetConnect.BLL.Services.DTO.Doctor
         [Required(ErrorMessage = "City is required.")]
         [StringLength(50, ErrorMessage = "City name can't be longer than 20 characters.")]
         public string City { get; set; } = null!;
-
         public bool IsApproved { get; set; }
+        public bool IsDeleted { get; set; }
 
+        public int? Rating { get; set; }
 
 
 

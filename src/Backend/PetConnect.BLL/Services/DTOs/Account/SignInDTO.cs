@@ -9,13 +9,14 @@ namespace PetConnect.BLL.Services.DTO.Account
 {
     public class SignInDTO
     {
-        [Required]
+        [Required(ErrorMessage = "Email is Required.")]
         [EmailAddress]
-        public string Email { get; set; }
-
-        [Required]
+        public string Email { get; set; } = null!;
+        /*----------------------------------------------------------*/
+        [Required(ErrorMessage = "Password is Required.")]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public string Password { get; set; } = null!;
+        /*----------------------------------------------------------*/
         [Display(Name = "Remember Me !!")]
         public bool RememberMe { get; set; }
     }
