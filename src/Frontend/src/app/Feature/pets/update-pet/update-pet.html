@@ -1,229 +1,183 @@
-<!-- Hero Section -->
-<section id="hero" class="hero section">
-  <div class="container section-title pb-0" data-aos="fade-up">
-    <h2>Update Pet</h2>
-    <p>Modify an existing pet's information</p>
-    <div class="my-3 d-flex justify-content-center gap-3">
-      <a routerLink="/pets" class="btn btn-outline-primary btn-sm">All Pets</a>
-      <a routerLink="/doctors" class="btn btn-outline-primary btn-sm"
-        >Our Vets</a
-      >
-    </div>
-  </div>
-
-  <!-- Main Form -->
-  <div class="container mb-5 mt-5" *ngIf="!loading">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <div class="card shadow rounded-4 p-4">
-          <form
-            #form="ngForm"
-            (ngSubmit)="onSubmit(form)"
-            enctype="multipart/form-data"
-            novalidate
-          >
-            <!-- Name -->
-            <div class="mb-3">
-              <label class="form-label">Pet Name</label>
-              <input
-                type="text"
-                name="name"
-                class="form-control"
-                [(ngModel)]="pet.Name"
-                #name="ngModel"
-                required
-                minlength="3"
-                maxlength="20"
-              />
-              <span
-                *ngIf="name.invalid && (name.touched || name.dirty)"
-                class="text-danger"
-              >
-                {{ name.errors?.['required'] ? 'Name is required.' : '' }}
-                {{ name.errors?.['minlength'] ? 'Min 3 characters.' : '' }}
-                {{ name.errors?.['maxlength'] ? 'Max 20 characters.' : '' }}
-              </span>
-              <span *ngIf="backendErrors['Name']" class="text-danger">
-                {{ backendErrors["Name"][0] }}
-              </span>
-            </div>
-
-            <!-- Category -->
-            <div class="mb-3">
-              <label for="categoryList" class="form-label">Categories</label>
-              <select
-                class="form-select"
-                id="categoryList"
-                [(ngModel)]="selectedCategoryId"
-                name="category"
-                #category="ngModel"
-                (change)="onCategoryChange($event)"
-                required
-              >
-                <option value="0">-- Select Category --</option>
-                <option *ngFor="let cat of categories" [value]="cat.id">
-                  {{ cat.name }}
-                </option>
-              </select>
-              <span
-                *ngIf="category.invalid && (category.touched || category.dirty)"
-                class="text-danger"
-              >
-                Category is required.
-              </span>
-              <span *ngIf="backendErrors['Category']" class="text-danger">
-                {{ backendErrors["Category"][0] }}
-              </span>
-            </div>
-
-            <!-- Breed -->
-            <div class="mb-3">
-              <label class="form-label">Breeds</label>
-              <select
-                class="form-select"
-                name="breedId"
-                [(ngModel)]="pet.BreedId"
-                #breedId="ngModel"
-                required
-                [disabled]="selectedCategoryId === 0"
-              >
-                <option value="0">-- Select Breed --</option>
-                <option *ngFor="let breed of filteredBreeds" [value]="breed.id">
-                  {{ breed.name }}
-                </option>
-              </select>
-              <span
-                *ngIf="breedId.invalid && (breedId.touched || breedId.dirty)"
-                class="text-danger"
-              >
-                Breed is required.
-              </span>
-              <span *ngIf="backendErrors['BreedId']" class="text-danger">
-                {{ backendErrors["BreedId"][0] }}
-              </span>
-            </div>
-
-            <!-- Status -->
-            <div class="mb-3">
-              <label class="form-label">Status</label>
-              <select
-                class="form-select"
-                name="status"
-                [(ngModel)]="pet.Status"
-                #status="ngModel"
-                required
-              >
-                <option value="">-- Select Status --</option>
-                <option
-                  *ngFor="let status of statusOptions"
-                  [value]="status.key"
-                >
-                  {{ status.value }}
-                </option>
-              </select>
-              <span
-                *ngIf="status.invalid && (status.dirty || status.touched)"
-                class="text-danger"
-              >
-                Status is required.
-              </span>
-              <span *ngIf="backendErrors['Status']" class="text-danger">
-                {{ backendErrors["Status"][0] }}
-              </span>
-            </div>
-
-            <!-- Age -->
-            <div class="mb-3">
-              <label class="form-label">Age</label>
-              <input
-                type="number"
-                name="Age"
-                class="form-control"
-                [(ngModel)]="pet.Age"
-                #Age="ngModel"
-                required
-                min="0"
-                max="50"
-              />
-              <span
-                *ngIf="Age.invalid && (Age.dirty || Age.touched)"
-                class="text-danger"
-              >
-                {{ Age.errors?.['required'] ? 'Age is required.' : '' }}
-                {{ Age.errors?.['min'] ? 'Age must be at least 0.' : '' }}
-                {{ Age.errors?.['max'] ? 'Age must be 50 or less.' : '' }}
-              </span>
-              <span *ngIf="backendErrors['Age']" class="text-danger">
-                {{ backendErrors["Age"][0] }}
-              </span>
-            </div>
-
-            <!-- Image Upload -->
-            <div class="mb-3">
-              <label class="form-label">Upload New Image</label>
-              <input
-                type="file"
-                class="form-control"
-                (change)="onFileChange($event)"
-              />
-              <span *ngIf="imageError" class="text-danger">{{
-                imageError
-              }}</span>
-            </div>
-            <!-- Notes / Desc  -->
-            <div class="mb-3">
-              <label class="form-label">Description / Notes</label>
-              <textarea
-                name="Notes"
-                class="form-control"
-                [(ngModel)]="pet.Notes"
-                #notes="ngModel"
-                required
-                minlength="3"
-                maxlength="100"
-              ></textarea>
-              <span
-                *ngIf="notes.errors?.['required'] && (notes.dirty || notes.touched)"
-                class="text-danger"
-              >
-                Notes are required.
-              </span>
-              <span
-                *ngIf="notes.errors?.['minlength'] && (notes.dirty || notes.touched)"
-                class="text-danger"
-              >
-                Notes must be at least 3 characters.
-              </span>
-              <span
-                *ngIf="notes.errors?.['maxlength'] && (notes.dirty || notes.touched)"
-                class="text-danger"
-              >
-                Notes cannot exceed 100 characters.
-              </span>
-              <span *ngIf="backendErrors['Notes']" class="text-danger">
-                {{ backendErrors["Notes"][0] }}
-              </span>
-            </div>
-
-            <!-- Buttons -->
-            <div class="d-flex gap-2">
-              <button
-                type="submit"
-                class="btn btn-primary"
-                [disabled]="form.invalid"
-              >
-                Update
-              </button>
-              <a routerLink="/pets" class="btn btn-secondary">Cancel</a>
-            </div>
-          </form>
+<section class="modern-hero-section">
+  <div class="hero-gradient-bg">
+    <div class="container section-title pb-0" data-aos="fade-up">
+      <div class="hero-content">
+        <h1 class="hero-title">Update Pet</h1>
+        <p class="hero-subtitle">Modify your pet's information</p>
+        <div class="hero-nav-buttons">
+          <a routerLink="/pets" class="btn btn-outline-light btn-modern">
+            <i class="fas fa-arrow-left me-2"></i>All Pets
+          </a>
+          <a routerLink="/doctors" class="btn btn-outline-light btn-modern">Our Vets</a>
         </div>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- Loading Spinner -->
-  <div *ngIf="loading" class="text-center my-5">
-    <p>Loading pet data...</p>
+<!-- Loading State -->
+<div *ngIf="loading" class="loading-container">
+  <div class="modern-spinner"></div>
+  <p class="loading-text">Loading pet data...</p>
+</div><!-- Update Form Section -->
+<section class="form-section" *ngIf="!loading">
+  <div class="container">
+    <div class="form-card">
+      <div class="form-header">
+        <h3 class="form-title">
+          <i class="fas fa-edit me-2"></i>
+          Update Pet Information
+        </h3>
+        <p class="form-subtitle">Make changes to your pet's profile</p>
+      </div>
+
+      <form #form="ngForm" (ngSubmit)="onSubmit(form)" enctype="multipart/form-data" novalidate>
+        <div class="form-grid">
+          <!-- Pet Name -->
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-paw form-icon"></i>
+              Pet Name
+            </label>
+            <input type="text" name="name" class="form-control modern-input" [(ngModel)]="pet.Name" #name="ngModel"
+              required minlength="3" maxlength="20" placeholder="Enter pet's name" />
+            <div class="form-errors">
+              <span *ngIf="name.invalid && (name.touched || name.dirty)" class="error-message">
+                {{ name.errors?.['required'] ? 'Name is required.' : '' }}
+                {{ name.errors?.['minlength'] ? 'Min 3 characters.' : '' }}
+                {{ name.errors?.['maxlength'] ? 'Max 20 characters.' : '' }}
+              </span> <span *ngIf="backendErrors['Name']" class="error-message">
+                {{ backendErrors["Name"][0] }}
+              </span>
+            </div>
+          </div> <!-- Category -->
+          <div class="form-group">
+            <label for="categoryList" class="form-label">
+              <i class="fas fa-tags form-icon"></i>
+              Category
+            </label>
+            <select class="form-select modern-select" id="categoryList" [(ngModel)]="selectedCategoryId" name="category"
+              #category="ngModel" (change)="onCategoryChange($event)" required>
+              <option value="0">-- Select Category --</option>
+              <option *ngFor="let cat of categories" [value]="cat.id">
+                {{ cat.name }}
+              </option>
+            </select>
+            <div class="form-errors">
+              <span *ngIf="category.invalid && (category.touched || category.dirty)" class="error-message">
+                Category is required.
+              </span> <span *ngIf="backendErrors['Category']" class="error-message">
+                {{ backendErrors["Category"][0] }}
+              </span>
+            </div>
+          </div> <!-- Breed -->
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-dog form-icon"></i>
+              Breed
+            </label>
+            <select class="form-select modern-select" name="breedId" [(ngModel)]="pet.BreedId" #breedId="ngModel"
+              required [disabled]="selectedCategoryId === 0">
+              <option value="0">-- Select Breed --</option>
+              <option *ngFor="let breed of filteredBreeds" [value]="breed.id">
+                {{ breed.name }}
+              </option>
+            </select>
+            <div class="form-errors">
+              <span *ngIf="breedId.invalid && (breedId.touched || breedId.dirty)" class="error-message">
+                Breed is required.
+              </span> <span *ngIf="backendErrors['BreedId']" class="error-message">
+                {{ backendErrors["BreedId"][0] }}
+              </span>
+            </div>
+          </div> <!-- Status -->
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-info-circle form-icon"></i>
+              Status
+            </label>
+            <select class="form-select modern-select" name="status" [(ngModel)]="pet.Status" #status="ngModel" required>
+              <option value="">-- Select Status --</option>
+              <option *ngFor="let status of statusOptions" [value]="status.key">
+                {{ status.value }}
+              </option>
+            </select>
+            <div class="form-errors">
+              <span *ngIf="status.invalid && (status.dirty || status.touched)" class="error-message">
+                Status is required.
+              </span> <span *ngIf="backendErrors['Status']" class="error-message">
+                {{ backendErrors["Status"][0] }}
+              </span>
+            </div>
+          </div> <!-- Age -->
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-birthday-cake form-icon"></i>
+              Age (years)
+            </label>
+            <input type="number" name="Age" class="form-control modern-input" [(ngModel)]="pet.Age" #Age="ngModel"
+              required min="0" max="50" placeholder="Enter age" />
+            <div class="form-errors">
+              <span *ngIf="Age.invalid && (Age.dirty || Age.touched)" class="error-message">
+                {{ Age.errors?.['required'] ? 'Age is required.' : '' }}
+                {{ Age.errors?.['min'] ? 'Age must be at least 0.' : '' }}
+                {{ Age.errors?.['max'] ? 'Age must be 50 or less.' : '' }}
+              </span> <span *ngIf="backendErrors['Age']" class="error-message">
+                {{ backendErrors["Age"][0] }}
+              </span>
+            </div>
+          </div> <!-- Image Upload -->
+          <div class="form-group form-group-full">
+            <label class="form-label">
+              <i class="fas fa-camera form-icon"></i>
+              Update Pet Photo
+            </label>
+            <div class="file-upload-container">
+              <input type="file" class="form-control modern-file-input" (change)="onFileChange($event)"
+                accept="image/*" />
+              <div class="file-upload-hint">
+                <i class="fas fa-cloud-upload-alt me-2"></i>
+                Choose a new photo for your pet
+              </div>
+            </div>
+            <div class="form-errors">
+              <span *ngIf="imageError" class="error-message">{{ imageError }}</span>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div class="form-group form-group-full">
+            <label class="form-label">
+              <i class="fas fa-sticky-note form-icon"></i>
+              Description / Notes
+            </label>
+            <textarea name="Notes" class="form-control modern-textarea" [(ngModel)]="pet.Notes" #notes="ngModel"
+              required minlength="3" maxlength="100" rows="4"
+              placeholder="Tell us about your pet's personality, habits, or special needs..."></textarea>
+            <div class="form-errors">
+              <span *ngIf="notes.errors?.['required'] && (notes.dirty || notes.touched)" class="error-message">
+                Notes are required.
+              </span> <span *ngIf="notes.errors?.['minlength'] && (notes.dirty || notes.touched)" class="error-message">
+                Notes must be at least 3 characters.
+              </span> <span *ngIf="notes.errors?.['maxlength'] && (notes.dirty || notes.touched)" class="error-message">
+                Notes cannot exceed 100 characters.
+              </span> <span *ngIf="backendErrors['Notes']" class="error-message">
+                {{ backendErrors["Notes"][0] }}
+              </span>
+            </div>
+          </div>
+        </div><!-- Form Actions -->
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary btn-modern btn-lg" [disabled]="form.invalid">
+            <i class="fas fa-save me-2"></i>
+            Update Pet
+          </button>
+          <a routerLink="/pets" class="btn btn-secondary btn-modern">
+            <i class="fas fa-times me-2"></i>
+            Cancel
+          </a>
+        </div>
+      </form>
+    </div>
   </div>
 </section>

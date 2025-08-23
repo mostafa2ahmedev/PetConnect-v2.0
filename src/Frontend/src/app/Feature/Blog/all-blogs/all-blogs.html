@@ -1,223 +1,171 @@
-<section id="hero" class="hero section pb-0">
-  <div
-    class="container section-title aos-init aos-animate pb-0"
-    data-aos="fade-up"
-  >
-    <h2>Latest Blog Posts</h2>
-    <p>
-      Explore inspiring pet stories and practical advice to nurture your beloved
-      companions.
-    </p>
-    <!-- <div
-      class="blog-categories-header d-flex justify-content-center gap-4 py-3 mt-4"
-    >
-      <div *ngFor="let cat of categories" class="text-center category-block">
-        <a [routerLink]="['/blogs/', cat.name]" class="text-decoration-none">
-          <img
-            src="
-            https://localhost:7102/assets/chatimages/fdc6a7e3-d72d-4798-b62b-082671ec6406.png
-            "
-            [alt]="cat.name"
-            class="rounded-circle category-img"
-            style="max-width: 80px"
-          />
-          <div class="mt-2 category-name">{{ cat.name }}</div>
-        </a>
+<!-- Unified Hero Section -->
+<section id="hero" class="hero-section">
+  <div class="hero-background">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <div class="hero-text">
+        <h1 class="hero-title">Latest Blog Posts</h1>
+        <p class="hero-subtitle">
+          Explore inspiring pet stories and practical advice to nurture your beloved companions.
+        </p>
+        <div class="hero-buttons">
+          <button class="btn btn-outline-light">
+            <i class="fas fa-sliders-h"></i> Filter Blogs
+          </button>
+        </div>
       </div>
-    </div> -->
-    <!-- Category filter -->
-    <!-- Toggle Filter Button -->
-    <!-- Toggle Button -->
+    </div>
+  </div>
+</section>
 
-    <!-- Sidebar -->
-    <div class="filter-sidebar" [class.open]="showFilters">
-      <!-- Close Button -->
-      <button
-        type="button"
-        class="btn-close"
-        aria-label="Close"
-        style="position: absolute; top: 10px; right: 10px"
-        (click)="showFilters = !showFilters"
-      ></button>
-      <h5 class="mb-3"><i class="fas fa-sliders-h"></i> Filter Blogs</h5>
+<!-- Enhanced Filter Section -->
+<section class="filter-section">
+  <div class="modern-filter-sidebar" [class.open]="showFilters">
+    <div class="filter-header">
+      <h3 class="filter-title">
+        <i class="fas fa-sliders-h me-2"></i>Filter Blogs
+      </h3>
+      <button type="button" class="btn-close-modern" (click)="showFilters = false">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
 
+    <div class="filter-content">
       <!-- Category Filter -->
-      <div class="mb-3">
-        <label for="categorySelect" class="form-label">Category</label>
-        <select
-          id="categorySelect"
-          class="form-select"
-          [(ngModel)]="filters.categoryId"
-          name="categoryId"
-          (change)="onBackendFilterChange()"
-        >
+      <div class="filter-group">
+        <label class="filter-label">
+          <i class="fas fa-folder-open me-2"></i>Category
+        </label>
+        <select class="form-select modern-select" [(ngModel)]="filters.categoryId" name="categoryId"
+          (change)="onBackendFilterChange()">
           <option [ngValue]="''">All Categories</option>
-          <option *ngFor="let cat of categories" [ngValue]="cat.id.toString()">
-            {{ cat.name }}
-          </option>
+          <option *ngFor="let cat of categories" [ngValue]="cat.id.toString()">{{ cat.name }}</option>
         </select>
       </div>
 
       <!-- Topic Filter -->
-      <div class="mb-3">
-        <label for="topicSelect" class="form-label">Topic</label>
-        <select
-          id="topicSelect"
-          class="form-select"
-          [(ngModel)]="filters.topicKey"
-          name="topicKey"
-          (change)="onBackendFilterChange()"
-        >
+      <div class="filter-group">
+        <label class="filter-label">
+          <i class="fas fa-tag me-2"></i>Topic
+        </label>
+        <select class="form-select modern-select" [(ngModel)]="filters.topicKey" name="topicKey"
+          (change)="onBackendFilterChange()">
           <option [ngValue]="''">All Topics</option>
-          <option
-            *ngFor="let topic of blogTopics"
-            [ngValue]="topic.key.toString()"
-          >
-            {{ topic.value }}
-          </option>
+          <option *ngFor="let topic of blogTopics" [ngValue]="topic.key.toString()">{{ topic.value }}</option>
         </select>
       </div>
 
-      <!-- Search Title (frontend) -->
-      <div class="mb-3">
-        <label for="nameSearch" class="form-label">Search by Title</label>
-        <input
-          id="nameSearch"
-          type="text"
-          class="form-control"
-          placeholder="Enter blog title..."
-          [(ngModel)]="filters.searchTerm"
-          name="searchTerm"
-          (input)="applyClientFilters()"
-        />
+      <!-- Search Filter -->
+      <div class="filter-group">
+        <label class="filter-label">
+          <i class="fas fa-search me-2"></i>Search by Title
+        </label>
+        <input type="text" class="form-control modern-input" placeholder="Enter blog title..."
+          [(ngModel)]="filters.searchTerm" name="searchTerm" (input)="applyClientFilters()" />
       </div>
 
-      <!-- Sort by Date (frontend) -->
-      <div class="mb-3">
-        <label for="sortDate" class="form-label">Sort by Date</label>
-        <select
-          id="sortDate"
-          class="form-select"
-          [(ngModel)]="filters.sortOrder"
-          name="sortOrder"
-          (change)="applyClientFilters()"
-        >
+      <!-- Sort Filter -->
+      <div class="filter-group">
+        <label class="filter-label">
+          <i class="fas fa-sort me-2"></i>Sort by Date
+        </label>
+        <select class="form-select modern-select" [(ngModel)]="filters.sortOrder" name="sortOrder"
+          (change)="applyClientFilters()">
           <option [ngValue]="''">Default</option>
           <option [ngValue]="'desc'">Newest First</option>
           <option [ngValue]="'asc'">Oldest First</option>
         </select>
       </div>
 
-      <!-- Reset Filters -->
-      <button class="btn btn-sm btn-secondary w-100" (click)="resetFilters()">
-        <i class="fas fa-undo"></i> Reset Filters
+      <!-- Reset Button -->
+      <button class="btn btn-secondary btn-reset w-100" (click)="resetFilters()">
+        <i class="fas fa-undo me-2"></i>Reset Filters
       </button>
     </div>
-
-    <!-- <div
-      class="mt-3 d-flex justify-content-center gap-3"
-      *ngIf="accountService.isAuthenticated()"
-    >
-      <a class="btn btn-primary btn-sm" routerLink="/categories">
-        Manage Categories
-      </a>
-      <a class="btn btn-outline-primary btn-sm" href="/PetBread">
-        Manage Breeds
-      </a>
-    </div> -->
   </div>
+</section>
 
-  <div class="container my-4 pt-5">
-    <!-- Loading Spinner -->
-    <div *ngIf="loading" class="text-center my-5">
-      <div class="spinner-border text-primary" role="status"></div>
-      <p class="mt-2">Loading blogs...</p>
+<!-- Enhanced Blogs Grid -->
+<section class="blogs-section">
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-container">
+      <div class="modern-spinner">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="loading-text">Loading blogs...</p>
+      </div>
     </div>
 
-    <!-- Error -->
-    <div *ngIf="!loading && errorMessage" class="alert alert-danger">
+    <!-- Error State -->
+    <div *ngIf="!loading && errorMessage" class="alert alert-danger modern-alert">
+      <i class="fas fa-exclamation-triangle me-2"></i>
       {{ errorMessage }}
     </div>
 
-    <!-- Blog Cards -->
-    <div *ngIf="!loading && blogs.length > 0" class="row g-4">
-      <div class="row">
-        <button
-          class="btn btn-primary m-3 z-3 dis"
-          style="width: auto"
-          (click)="showFilters = !showFilters"
-        >
-          <i
-            class="fas"
-            [ngClass]="showFilters ? 'fa-times' : 'fa-sliders-h'"
-          ></i>
-        </button>
-      </div>
-      <div class="col-md-4" *ngFor="let blog of blogs">
-        <div class="card h-100 shadow-lg mx-2 mb-5">
-          <a [routerLink]="`/blog/post/${blog.id}`">
-            <img
-              *ngIf="blog.media"
-              [src]="getFullImageUrl(blog.media)"
-              class="card-img-top"
-              style="max-height: 300px; object-fit: cover"
-              alt="Blog Media"
-            />
-          </a>
-
-          <div class="card-body d-flex flex-column">
-            <a
-              [routerLink]="`/blog/post/${blog.id}`"
-              class="text-decoration-none"
-            >
-              <h5 class="card-title">{{ blog.title }}</h5>
+    <!-- Blogs Grid -->
+    <div *ngIf="!loading && blogs.length > 0" class="blogs-grid">
+      <div class="blog-card-wrapper" *ngFor="let blog of blogs" data-aos="zoom-in" data-aos-delay="100">
+        <div class="modern-blog-card">
+          <!-- Blog Image -->
+          <div class="blog-image-container">
+            <a [routerLink]="`/blog/post/${blog.id}`">
+              <img *ngIf="blog.media" [src]="getFullImageUrl(blog.media)" alt="{{ blog.title }}" class="blog-image" />
+              <div class="blog-overlay">
+                <i class="fas fa-eye"></i>
+              </div>
             </a>
+          </div>
 
-            <!-- Category & Topic row -->
-            <div class="mb-2 text-muted small">
-              <ng-container *ngIf="blog.categoryName">
-                <i class="fas fa-folder-open me-1" style="color: #5d57f4"></i>
-                {{ blog.categoryName }}
-              </ng-container>
-
-              <ng-container *ngIf="blog.categoryName && blog.topic">
-                <span class="mx-2">|</span>
-              </ng-container>
-
-              <ng-container *ngIf="blog.topic">
-                <i class="fas fa-tag me-1" style="color: #5d57f4"></i>
-                {{ blog.topic }}
-              </ng-container>
+          <!-- Blog Content -->
+          <div class="blog-content">
+            <div class="blog-meta">
+              <span class="blog-category" *ngIf="blog.categoryName">
+                <i class="fas fa-folder-open me-1"></i>{{ blog.categoryName }}
+              </span>
+              <span class="blog-topic" *ngIf="blog.topic">
+                <i class="fas fa-tag me-1"></i>{{ blog.topic }}
+              </span>
             </div>
 
-            <!-- Post date -->
-            <!-- <small class="text-muted mb-2">
-            <i class="far fa-calendar-alt me-1"></i>
-            {{ blog.postDate | date : "medium" }}
-          </small> -->
+            <a [routerLink]="`/blog/post/${blog.id}`" class="text-decoration-none">
+              <h5 class="blog-title">{{ blog.title }}</h5>
+            </a>
 
-            <!-- Excerpt -->
-            <p class="card-text" [innerHTML]="blog.excerpt"></p>
+            <p class="blog-excerpt" [innerHTML]="blog.excerpt"></p>
 
-            <!-- Likes & Comments -->
-            <div class="mt-auto">
-              <span class="badge bg-primary me-2">
-                <i class="fas fa-thumbs-up me-1"></i>
-                {{ blog.likes }} Likes
-              </span>
-              <span class="badge bg-secondary">
-                <i class="fas fa-comments me-1"></i>
-                {{ blog.comments }}
-              </span>
+            <div class="blog-stats">
+              <div class="stat-item">
+                <i class="fas fa-thumbs-up"></i>
+                <span>{{ blog.likes }}</span>
+              </div>
+              <div class="stat-item">
+                <i class="fas fa-comments"></i>
+                <span>{{ blog.comments }}</span>
+              </div>
+            </div>
+
+            <div class="blog-actions">
+              <a [routerLink]="`/blog/post/${blog.id}`" class="btn btn-primary btn-read">
+                <i class="fas fa-book-open me-2"></i>Read More
+              </a>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- No Blogs Found -->
-    <div *ngIf="!loading && blogs.length === 0" class="text-center my-5">
-      <p class="text-muted">No blogs available.</p>
+    <!-- Empty State -->
+    <div *ngIf="!loading && blogs.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <i class="fas fa-blog"></i>
+      </div>
+      <h3 class="empty-title">No Blogs Found</h3>
+      <p class="empty-text">Try adjusting your filters or check back later for new content.</p>
+      <a routerLink="/create-blog" class="btn btn-primary btn-create">
+        <i class="fas fa-plus me-2"></i>Create First Blog
+      </a>
     </div>
+
   </div>
 </section>

@@ -1,63 +1,60 @@
 <div *ngIf="typeof doctor !== 'string'" class="container my-5 py-5 min-vh-100">
   <div class="container-xl">
+    <!-- Doctor Profile Header Section -->
     <section class="py-5">
       <div class="elegant-card p-4 p-md-5">
         <div class="row align-items-center justify-content-center">
           <div class="col-lg-auto mb-4 mb-lg-0 text-center">
-            <img
-              id="doctor-img"
-              [src]="getFullImageUrl(doctor.imgUrl)"
-              alt="Dr. Sarah Smith"
-              class="rounded-circle img-fluid border border-4 border-primary border-opacity-25"
-              style="width: 192px; height: 192px; object-fit: cover"
-            />
+            <img id="doctor-img" [src]="getFullImageUrl(doctor.imgUrl)" alt="Dr. {{ doctor.fName }} {{ doctor.lName }}"
+              class="profile-image shadow-lg" />
           </div>
           <div class="col-lg text-center text-lg-start">
-            <h1 class="display-5 fw-bold text-dark-800 mb-2" id="doctor-name">
-             Dr.{{ doctor.fName }} {{ doctor.lName }}
+            <h1 class="display-5 fw-bold text-dark mb-3" id="doctor-name">
+              Dr. {{ doctor.fName }} {{ doctor.lName }}
             </h1>
-            @if(doctor.rating > 0) { @for (star of [].constructor(doctor.rating); track $index) {
-            <i class="bi bi-star-fill text-warning"></i>
-            }
-            <span class="ms-2 text-muted">({{ doctor.rating }}/5)</span>
-            } @else { @for (star of [].constructor(5); track $index) {
-            <i class="bi bi-star text-muted"></i>
-            }
-            <span class="ms-2 text-muted">({{ doctor.rating }}/5)</span>
-            }
+
+            <!-- Rating Section -->
+            <div class="mb-3">
+              @if(doctor.rating > 0) {
+              @for (star of [].constructor(doctor.rating); track $index) {
+              <i class="bi bi-star-fill text-warning fs-5"></i>
+              }
+              <span class="ms-2 text-muted fw-medium">({{ doctor.rating }}/5)</span>
+              } @else {
+              @for (star of [].constructor(5); track $index) {
+              <i class="bi bi-star text-muted fs-5"></i>
+              }
+              <span class="ms-2 text-muted fw-medium">({{ doctor.rating }}/5)</span>
+              }
+            </div>
+
             <p class="lead text-muted mb-4" id="doctor-specialty">
-               {{ doctor.petSpecialty }} Speciality
+              {{ doctor.petSpecialty }} Specialist
             </p>
 
-            <div class="d-flex flex-wrap justify-content-center justify-content-lg-start gap-2 mb-4">
-              <span class="badge rounded-pill text-primary border border-primary fw-normal py-2 px-3">
-                <i class="fa-solid fa-dollar-sign me-1"></i>
+            <!-- Doctor Info Badges -->
+            <div class="d-flex flex-wrap justify-content-center justify-content-lg-start gap-3 mb-4">
+              <span class="badge rounded-pill bg-light text-primary border border-primary fw-normal py-2 px-3">
+                <i class="fa-solid fa-dollar-sign me-2"></i>
                 <span id="doctor-price">{{ doctor.pricePerHour | currency }}</span>
               </span>
-              <span class="badge rounded-pill text-primary border border-primary fw-normal py-2 px-3">
-                <i class="fa-solid fa-venus-mars me-1"></i>
+              <span class="badge rounded-pill bg-light text-primary border border-primary fw-normal py-2 px-3">
+                <i class="fa-solid fa-venus-mars me-2"></i>
                 <span id="doctor-gender">{{ doctor.gender }}</span>
               </span>
-              <span class="badge rounded-pill text-primary border border-primary fw-normal py-2 px-3">
-                <i class="fa-solid fa-location-dot me-1"></i>
-                <span id="doctor-address">
-                  {{ doctor.city }} - {{ doctor.street }}</span
-                >
+              <span class="badge rounded-pill bg-light text-primary border border-primary fw-normal py-2 px-3">
+                <i class="fa-solid fa-location-dot me-2"></i>
+                <span id="doctor-address">{{ doctor.city }} - {{ doctor.street }}</span>
               </span>
-
-              <span class="badge rounded-pill text-success border border-success fw-normal py-2 px-3">
-                <i class="fa-solid fa-certificate me-1"></i>
-                <a
-                  [href]="getFullCertifactionUrl(doctor.certificateUrl)"
-                  target="_blank"
-                  class="text-success text-decoration-none"
-                  rel="noopener noreferrer"
-                >
+              <span class="badge rounded-pill bg-light text-success border border-success fw-normal py-2 px-3">
+                <i class="fa-solid fa-certificate me-2"></i>
+                <a [href]="getFullCertifactionUrl(doctor.certificateUrl)" target="_blank"
+                  class="text-success text-decoration-none" rel="noopener noreferrer">
                   View Certification
                 </a>
               </span>
-              <span class="badge rounded-pill text-primary border border-primary fw-normal py-2 px-3">
-                <i class="fa-solid fa-phone me-1"></i>
+              <span class="badge rounded-pill bg-light text-primary border border-primary fw-normal py-2 px-3">
+                <i class="fa-solid fa-phone me-2"></i>
                 <span id="doctor-phone">{{ doctor.phoneNumber }}</span>
               </span>
             </div>
@@ -66,24 +63,17 @@
       </div>
     </section>
 
+    <!-- Navigation Tabs Section -->
     <section class="py-5">
       <div class="d-flex justify-content-center mb-5">
         <div class="elegant-card p-2">
           <ul class="nav nav-pills" id="myTab" role="tablist">
             @for (tab of tabs; track tab.id) {
             <li class="nav-item" role="presentation">
-              <button
-                class="nav-link fw-medium py-3 px-4 px-md-5"
-                [class.active]="activeTab === tab.id"
-                [attr.id]="tab.id + '-tab'"
-                data-bs-toggle="tab"
-                [attr.data-bs-target]="'#' + tab.id"
-                type="button"
-                role="tab"
-                [attr.aria-controls]="tab.id"
-                [attr.aria-selected]="activeTab === tab.id"
-                (click)="setActiveTab(tab.id)"
-              >
+              <button class="nav-link fw-medium py-3 px-4 px-md-5" [class.active]="activeTab === tab.id"
+                [attr.id]="tab.id + '-tab'" data-bs-toggle="tab" [attr.data-bs-target]="'#' + tab.id" type="button"
+                role="tab" [attr.aria-controls]="tab.id" [attr.aria-selected]="activeTab === tab.id"
+                (click)="setActiveTab(tab.id)">
                 <i [class]="tab.icon + ' me-2'"></i>{{ tab.label }}
               </button>
             </li>
@@ -92,322 +82,237 @@
         </div>
       </div>
 
+      <!-- Tab Content -->
       <div class="tab-content" id="myTabContent">
-        <div
-          class="tab-pane fade"
-          [class.show]="activeTab === 'booking'"
-          [class.active]="activeTab === 'booking'"
-          id="booking"
-          role="tabpanel"
-          aria-labelledby="booking-tab"
-        >
+
+        <!-- Booking Tab -->
+        <div class="tab-pane fade" [class.show]="activeTab === 'booking'" [class.active]="activeTab === 'booking'"
+          id="booking" role="tabpanel" aria-labelledby="booking-tab">
           <div class="elegant-card p-4 p-md-5">
             <div class="text-center mb-5">
-              <h2 class="h3 fw-bold text-dark-800 mb-2">Book Your Appointment</h2>
+              <h2 class="h3 fw-bold text-dark mb-2">Book Your Appointment</h2>
               <p class="text-muted">Schedule a visit with Dr. {{ doctor.fName }} {{ doctor.lName }}</p>
             </div>
 
-            <div class="my-5">
-              <div *ngIf="loadingDates()" class="d-flex justify-content-center align-items-center">
-                <div class="spinner-border text-primary" role="status">
-                  <span class="visually-hidden">Loading...</span>
+            <!-- Loading State -->
+            <div *ngIf="loadingDates()" class="d-flex justify-content-center align-items-center py-5">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+
+            <!-- Available Dates -->
+            <div *ngIf="!loadingDates() && paginatedDates().length > 0" class="mb-5">
+              <h4 class="mb-4 text-center text-md-start">Available Dates:</h4>
+              <div class="row g-3">
+                <div class="col-6 col-md-3 col-lg-3" *ngFor="let date of paginatedDates()">
+                  <div class="date-card p-3 text-center" [class.active]="isSelected(date)" (click)="selectDate(date)">
+                    <h5 class="mb-1 fw-bold">{{ date | date : "EEE" }}</h5>
+                    <p class="mb-0 text-muted">{{ date | date : "MMM d" }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Time Slots -->
+            <div *ngIf="selectedDate" class="mb-5">
+              <h4 class="mb-4 text-center text-md-start">
+                Time Slots for
+                <span class="text-primary">{{ selectedDate | date : "fullDate" }}</span>
+              </h4>
+              <div class="row g-3">
+                <div class="col-6 col-md-4 col-lg-3" *ngFor="let slot of getSlotsForSelectedDate()">
+                  <button class="time-slot-btn" [ngClass]="{
+                      'btn-outline-primary': !CustomerHasThisAppointmentSlot(slot),
+                      'btn-secondary': CustomerHasThisAppointmentSlot(slot)
+                    }" [disabled]="CustomerHasThisAppointmentSlot(slot) || slot.isFull || !slot.isActive"
+                    (click)="bookAppointment(slot)">
+                    <div class="d-flex flex-column align-items-center">
+                      <span class="fw-medium">
+                        {{ slot.startTime | date : "shortTime" }} - {{ slot.endTime | date : "shortTime" }}
+                      </span>
+                      <span class="badge mt-1" [class.bg-danger]="CustomerHasThisAppointmentSlot(slot)"
+                        [class.bg-success]="!CustomerHasThisAppointmentSlot(slot)">
+                        {{ CustomerHasThisAppointmentSlot(slot) ? 'Booked' : 'Available' }}
+                      </span>
+                    </div>
+                  </button>
+                </div>
+              </div>
+              <div class="mt-4 text-center" *ngIf="getSlotsForSelectedDate().length === 0">
+                <div class="alert alert-warning" role="alert">
+                  <i class="fas fa-exclamation-triangle me-2"></i>
+                  No time slots available for this date.
+                </div>
+              </div>
+            </div>
+
+            <!-- No Appointments Available -->
+            <div class="alert alert-info text-center" role="alert"
+              *ngIf="!loadingDates() && paginatedDates().length === 0">
+              <i class="fas fa-calendar-times fs-1 text-info mb-3"></i>
+              <h4>No Available Appointments</h4>
+              <p class="mb-3">
+                Dr. {{ doctor.fName }} has no available appointments at the moment.
+              </p>
+              <p>
+                Please check back later or contact another
+                <a routerLink="/doctors" class="text-decoration-none fw-medium">veterinarian</a> near you.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reviews Tab -->
+        <div class="tab-pane fade" [class.show]="activeTab === 'reviews'" [class.active]="activeTab === 'reviews'"
+          id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+          <section class="testimonials py-5">
+            <div class="elegant-card p-4 p-md-5">
+              <h3 class="text-center mb-5 fw-bold">Customer Reviews</h3>
+
+              <div *ngIf="testimonials.length > 0">
+                <ngb-carousel [interval]="5000" [wrap]="true" [keyboard]="true" [pauseOnHover]="true"
+                  [showNavigationArrows]="false" [showNavigationIndicators]="true" class="testimonials-carousel">
+                  <ng-container *ngFor="let t of testimonials">
+                    <ng-template ngbSlide>
+                      <div class="testimonial-group d-flex justify-content-center">
+                        <div class="testimonial-card">
+                          <div class="testimonial-content mb-4">
+                            <p class="fs-5 fst-italic text-muted">
+                              <i class="bi bi-quote quote-icon"></i>
+                              {{ t.content }}
+                            </p>
+                          </div>
+                          <div class="testimonial-profile">
+                            <div class="profile-info">
+                              <img [src]="getFullImageUrl(t.custImgURL)" alt="Customer Profile"
+                                class="rounded-circle" />
+                              <div>
+                                <h5 class="mb-1 fw-bold">{{ t.customerFullname }}</h5>
+                                <div class="rating mb-2">
+                                  <i *ngFor="let star of arrayOfRating(t.rating); index as i"
+                                    class="bi bi-star-fill text-warning"></i>
+                                </div>
+                                <small class="text-muted">{{ t.reviewDate | date : "mediumDate" }}</small>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </ng-container>
+                </ngb-carousel>
+
+                <!-- Custom Navigation Controls -->
+                <div class="custom-carousel-controls d-flex justify-content-center mt-4 gap-3">
+                  <button class="btn btn-outline-primary rounded-circle p-3" (click)="prev()"
+                    aria-label="Previous review">
+                    <i class="fas fa-arrow-left"></i>
+                  </button>
+                  <button class="btn btn-outline-primary rounded-circle p-3" (click)="next()" aria-label="Next review">
+                    <i class="fas fa-arrow-right"></i>
+                  </button>
                 </div>
               </div>
 
-              <div *ngIf="!loadingDates() && paginatedDates().length > 0" class="mb-5">
-                <h4 class="mb-3">Available Dates:</h4>
-                <div class="row g-3 text-center">
-                  <div class="col-6 col-md-3 col-lg-3" *ngFor="let date of paginatedDates()">
-                    <div
-                      class="card date-card p-3 shadow-sm"
-                      [class.active]="isSelected(date)"
-                      (click)="selectDate(date)"
-                    >
-                      <h5 class="card-title mb-0">{{ date | date : "EEE" }}</h5>
-                      <p class="card-text text-muted mb-0">
-                        {{ date | date : "MMM d" }}
-                      </p>
+              <!-- No Reviews Available -->
+              <div class="alert alert-info text-center" role="alert" *ngIf="testimonials.length === 0">
+                <i class="fas fa-comments fs-1 text-info mb-3"></i>
+                <h4>No Reviews Available</h4>
+                <p class="mb-3">
+                  Dr. {{ doctor.fName }} has no reviews yet.
+                </p>
+                <p>
+                  Please check back later or view another
+                  <a routerLink="/doctors" class="text-decoration-none fw-medium">veterinarian</a> near you.
+                </p>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- Blog Tab -->
+        <div class="tab-pane fade" [class.show]="activeTab === 'blog'" [class.active]="activeTab === 'blog'" id="blog"
+          role="tabpanel" aria-labelledby="blog-tab">
+          <div class="elegant-card p-4 p-md-5">
+            <section *ngIf="blogs.length > 0" class="py-3">
+              <h3 class="text-center mb-5 fw-bold">
+                Recent Blogs by Dr. {{ doctor.fName }}
+              </h3>
+              <div class="row g-4">
+                <div class="col-md-6 col-lg-4" *ngFor="let blog of paginatedBlogs()">
+                  <div class="card h-100 shadow-sm border-0">
+                    <a [routerLink]="`/blog/post/${blog.id}`" class="text-decoration-none">
+                      <img [src]="getFullImageUrl(blog.media)"
+                        onerror="this.onerror=null; this.src='https://placehold.co/600x400/E9ECEF/6C757D?text=Blog+Image';"
+                        class="card-img-top" style="height: 200px; object-fit: cover" alt="Blog Media" />
+                    </a>
+                    <div class="card-body d-flex flex-column">
+                      <a [routerLink]="`/blog/post/${blog.id}`" class="text-decoration-none">
+                        <h5 class="card-title text-dark fw-bold">{{ blog.title }}</h5>
+                      </a>
+                      <div class="mb-3 text-muted small">
+                        <ng-container *ngIf="blog.categoryName">
+                          <i class="fas fa-folder-open me-1"></i>
+                          {{ blog.categoryName }}
+                        </ng-container>
+                        <ng-container *ngIf="blog.categoryName && blog.topic">
+                          <span class="mx-2">|</span>
+                        </ng-container>
+                        <ng-container *ngIf="blog.topic">
+                          <i class="fas fa-tag me-1"></i>
+                          {{ blog.topic }}
+                        </ng-container>
+                      </div>
+                      <p class="card-text text-muted flex-grow-1" [innerHTML]="blog.excerpt"></p>
+                      <a [routerLink]="`/blog/post/${blog.id}`" class="btn btn-outline-primary mt-auto">
+                        Read More <i class="fas fa-arrow-right ms-1"></i>
+                      </a>
                     </div>
                   </div>
                 </div>
-                <nav aria-label="Dates Pagination" class="mt-4" *ngIf="totalPages() > 1">
-                  <ul class="nav nav-pills" id="myTab" role="tablist">
-                    @for (tab of tabs; track tab.id) {
-                    <li class="nav-item" role="presentation">
-                      <button
-                        class="nav-link-custom fw-medium py-3 px-4 px-md-5"
-                        [class.active]="activeTab === tab.id"
-                        [attr.id]="tab.id + '-tab'"
-                        data-bs-toggle="tab"
-                        [attr.data-bs-target]="'#' + tab.id"
-                        type="button"
-                        role="tab"
-                        [attr.aria-controls]="tab.id"
-                        [attr.aria-selected]="activeTab === tab.id"
-                        (click)="setActiveTab(tab.id)"
-                      >
-                        <i [class]="tab.icon + ' me-2'"></i>{{ tab.label }}
-                      </button>
+              </div>
+
+              <!-- Blog Pagination -->
+              <div *ngIf="totalPages() > 1" class="d-flex justify-content-center mt-5">
+                <nav aria-label="Blog pagination">
+                  <ul class="pagination">
+                    <li class="page-item" [class.disabled]="blogCurrentPage === 1">
+                      <a class="page-link" (click)="blogGoToPage(blogCurrentPage - 1)" role="button">
+                        <i class="fas fa-chevron-left me-1"></i>Previous
+                      </a>
                     </li>
-                    }
+                    <li class="page-item" *ngFor="let page of [].constructor(totalPages()); let i = index"
+                      [class.active]="blogCurrentPage === i + 1">
+                      <a class="page-link" (click)="blogGoToPage(i + 1)" role="button">{{ i + 1 }}</a>
+                    </li>
+                    <li class="page-item" [class.disabled]="blogCurrentPage === totalPages()">
+                      <a class="page-link" (click)="blogGoToPage(blogCurrentPage + 1)" role="button">
+                        Next<i class="fas fa-chevron-right ms-1"></i>
+                      </a>
+                    </li>
                   </ul>
                 </nav>
               </div>
+            </section>
 
-              <div *ngIf="selectedDate" class="mb-5">
-                <h4 class="mb-3">
-                  Time Slots for
-                  <span class="text-primary">{{ selectedDate | date : "fullDate" }}</span>
-                </h4>
-                <div class="row g-2">
-                  <div class="col-6 col-md-4 col-lg-3" *ngFor="let slot of getSlotsForSelectedDate()">
-                    <button
-                      class="btn w-100 time-slot-btn"
-                      [ngClass]="{
-                        'btn-outline-primary': !CustomerHasThisAppointmentSlot(slot),
-                        'btn-secondary': CustomerHasThisAppointmentSlot(slot)
-                      }"
-                      [disabled]="
-                        CustomerHasThisAppointmentSlot(slot) || slot.isFull || !slot.isActive
-                      "
-                      (click)="bookAppointment(slot)"
-                    >
-                      {{ slot.startTime | date : "shortTime" }} -
-                      {{ slot.endTime | date : "shortTime" }}
-                      <span class="badge bg-danger ms-2" *ngIf="CustomerHasThisAppointmentSlot(slot)"
-                        >Booked</span
-                      >
-                      <span class="badge bg-success ms-2" *ngIf="!CustomerHasThisAppointmentSlot(slot)"
-                        >Open</span
-                      >
-                    </button>
-                  </div>
-                </div>
-                <div class="mt-3 text-center" *ngIf="getSlotsForSelectedDate().length === 0">
-                  <p class="text-muted">No time slots available for this date.</p>
-                </div>
-              </div>
-            </div>
-
-            <div
-              class="alert alert-info text-center"
-              role="alert"
-              *ngIf="!loadingDates() && paginatedDates().length === 0"
-            >
-              <h4>No available appointments</h4>
-              <p>
-                Dr.{{ doctor.fName }} has no available appointments soon.
-                <br />Please, come back later or contact another
-                <a routerLink="/doctors">vet</a> near you.
+            <!-- No Blogs Available -->
+            <div *ngIf="blogs.length === 0" class="alert alert-info text-center" role="alert">
+              <i class="fas fa-blog fs-1 text-info mb-3"></i>
+              <h4>No Blogs Available</h4>
+              <p class="mb-0">
+                Dr. {{ doctor.fName }} has not published any blog posts yet. Please check back later.
               </p>
             </div>
           </div>
         </div>
-
-<div
-  class="tab-pane fade"
-  [class.show]="activeTab === 'reviews'"
-  [class.active]="activeTab === 'reviews'"
-  id="reviews"
-  role="tabpanel"
-  aria-labelledby="reviews-tab"
->
-  <section class="testimonials py-5">
-    <h3 class="section-title text-center mb-4">Customer Reviews</h3>
-    <div class="row justify-content-center" *ngIf="testimonials.length>0">
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-        <ngb-carousel
-          [interval]="5000"
-          [wrap]="true"
-          [keyboard]="true"
-          [pauseOnHover]="true"
-          [showNavigationArrows]="true"
-          [showNavigationIndicators]="true"
-          class="testimonials-carousel"
-        >
-          <ng-container *ngFor="let t of testimonials">
-            <ng-template ngbSlide>
-              <div class="testimonial-group d-flex justify-content-between">
-                <div class="testimonial-card">
-                  <div class="testimonial-content">
-                    <p><i class="bi bi-quote quote-icon"></i>{{ t.content }}</p>
-                  </div>
-                  <div class="testimonial-profile">
-
-                    <div class="profile-info">
-                      <img [src]="getFullImageUrl(t.custImgURL)" alt="Profile Image" />
-                      <div>
-                        <h3>{{ t.customerFullname }}</h3>
-                                            <div class="rating">
-                      <i
-                        *ngFor="let star of arrayOfRating(t.rating); index as i"
-                        class="bi bi-star-fill"
-                      ></i>
-                    </div>
-                        <h4>{{ t.reviewDate }}</h4>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ng-template>
-          </ng-container>
-        </ngb-carousel>
-        <div class="custom-carousel-controls d-flex justify-content-center mt-4 gap-3">
-          <button class="btn text-primary fs-3" (click)="prev()">
-            <i class="fas fa-arrow-left"></i>
-          </button>
-          <button class="btn text-primary fs-3" (click)="next()">
-            <i class="fas fa-arrow-right"></i>
-          </button>
-        </div>
       </div>
-    </div>
-            <div
-              class="alert alert-info text-center"
-              role="alert"
-              *ngIf="testimonials.length === 0"
-            >
-              <h4>No available Reviews</h4>
-              <p>
-                Dr.{{ doctor.fName }} has no  Reviews yet.
-                <br />Please, come back later or view another
-                <a routerLink="/doctors">vet</a> near you.
-              </p>
-            </div>
-  </section>
-</div>
 
-        <!-- <div
-          class="tab-pane fade"
-          [class.show]="activeTab === 'blog'"
-          [class.active]="activeTab === 'blog'"
-          id="blog"
-          role="tabpanel"
-          aria-labelledby="blog-tab"
-        >
-          <section *ngIf="blogs.length > 0" class="py-5">
-            <h3 class="section-title text-center mb-4">
-              Recent Blogs by Dr. {{ doctor.fName }}
-            </h3>
-            <div class="row g-4">
-              <div class="col-md-6 col-lg-4" *ngFor="let blog of blogs">
-                <div class="card h-100 shadow-sm">
-                  <a [routerLink]="`/blog/post/${blog.id}`">
-                    <img
-                      [src]="getFullImageUrl(blog.media)"
-                      onerror="this.onerror=null; this.src='https://placehold.co/600x400/E9ECEF/6C757D?text=Blog+Image';"
-                      class="card-img-top"
-                      style="height: 200px; object-fit: cover"
-                      alt="Blog Media"
-                    />
-                  </a>
-                  <div class="card-body d-flex flex-column">
-                    <a [routerLink]="`/blog/post/${blog.id}`" class="text-decoration-none">
-                      <h5 class="card-title">{{ blog.title }}</h5>
-                    </a>
-                    <div class="mb-2 text-muted small">
-                      <ng-container *ngIf="blog.categoryName">
-                        <i class="fas fa-folder-open me-1"></i>
-                        {{ blog.categoryName }}
-                      </ng-container>
-                      <ng-container *ngIf="blog.categoryName && blog.topic">
-                        <span class="mx-2">|</span>
-                      </ng-container>
-                      <ng-container *ngIf="blog.topic">
-                        <i class="fas fa-tag me-1"></i>
-                        {{ blog.topic }}
-                      </ng-container>
-                    </div>
-                    <p class="card-text text-truncate" [innerHTML]="blog.excerpt"></p>
-                    <a [routerLink]="`/blog/post/${blog.id}`" class="mt-auto stretched-link"
-                      >Read More</a
-                    >
-                  </div> -->
-                <!-- </div> -->
-              <!-- </div> -->
-            <!-- </div> -->
-          <!-- </section> -->
-        <!-- </div> -->
-         <div
-  class="tab-pane fade"
-  [class.show]="activeTab === 'blog'"
-  [class.active]="activeTab === 'blog'"
-  id="blog"
-  role="tabpanel"
-  aria-labelledby="blog-tab"
->
-  <section *ngIf="blogs.length > 0" class="py-5">
-    <h3 class="section-title text-center mb-4">
-      Recent Blogs by Dr. {{ doctor.fName }}
-    </h3>
-    <div class="row g-4">
-      <div class="col-md-6 col-lg-4" *ngFor="let blog of paginatedBlogs()">
-        <div class="card h-100 shadow-sm">
-          <a [routerLink]="`/blog/post/${blog.id}`">
-            <img
-              [src]="getFullImageUrl(blog.media)"
-              onerror="this.onerror=null; this.src='https://placehold.co/600x400/E9ECEF/6C757D?text=Blog+Image';"
-              class="card-img-top"
-              style="height: 200px; object-fit: cover"
-              alt="Blog Media"
-            />
-          </a>
-          <div class="card-body d-flex flex-column">
-            <a [routerLink]="`/blog/post/${blog.id}`" class="text-decoration-none">
-              <h5 class="card-title">{{ blog.title }}</h5>
-            </a>
-            <div class="mb-2 text-muted small">
-              <ng-container *ngIf="blog.categoryName">
-                <i class="fas fa-folder-open me-1"></i>
-                {{ blog.categoryName }}
-              </ng-container>
-              <ng-container *ngIf="blog.categoryName && blog.topic">
-                <span class="mx-2">|</span>
-              </ng-container>
-              <ng-container *ngIf="blog.topic">
-                <i class="fas fa-tag me-1"></i>
-                {{ blog.topic }}
-              </ng-container>
-            </div>
-            <p class="card-text text-truncate" [innerHTML]="blog.excerpt"></p>
-            <a [routerLink]="`/blog/post/${blog.id}`" class="mt-auto stretched-link"
-              >Read More</a
-            >
-          </div>
-        </div>
-      </div>
-    </div>
-    <div *ngIf="totalPages() > 1" class="d-flex justify-content-center mt-5">
-      <nav>
-        <ul class="pagination">
-          <li class="page-item" [class.disabled]="blogCurrentPage === 1">
-            <a class="page-link" (click)="blogGoToPage(blogCurrentPage - 1)">Previous</a>
-          </li>
-          <li class="page-item" *ngFor="let page of [].constructor(totalPages()); let i = index" [class.active]="blogCurrentPage === i + 1">
-            <a class="page-link" (click)="blogGoToPage(i + 1)">{{ i + 1 }}</a>
-          </li>
-          <li class="page-item" [class.disabled]="blogCurrentPage === totalPages()">
-            <a class="page-link" (click)="blogGoToPage(blogCurrentPage + 1)">Next</a>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </section>
-  <div
-    *ngIf="blogs.length === 0"
-    class="alert alert-info text-center"
-    role="alert"
-  >
-    <h4>No blogs available</h4>
-    <p>
-      Dr.{{ doctor.fName }} has not published any blog posts yet. Please check back later.
-    </p>
-  </div>
-</div>
-      </div>
-      <div class="d-flex justify-content-between align-items-center m-5 flex-wrap">
-        <button class="btn btn-outline-danger" (click)="goBack()">Go Back</button>
+      <!-- Back Button -->
+      <div class="d-flex justify-content-between align-items-center mt-5 flex-wrap">
+        <button class="btn btn-outline-danger px-4 py-2" (click)="goBack()">
+          <i class="fas fa-arrow-left me-2"></i>Go Back
+        </button>
       </div>
     </section>
   </div>

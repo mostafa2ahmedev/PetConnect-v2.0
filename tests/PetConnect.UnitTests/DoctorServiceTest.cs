@@ -145,6 +145,8 @@ namespace PetConnect.UnitTests
 
             _unitOfWorkMock.Setup(u => u.DoctorRepository.GetAll(false))
                 .Returns(doctors.AsQueryable());
+            _unitOfWorkMock.Setup(u => u.ReviewRepository.GetByDoctorId("1"))
+               .Returns(new List<Review>());
 
             // Act
             var result = _doctorService.GetAll().ToList();
@@ -174,6 +176,8 @@ namespace PetConnect.UnitTests
             };
 
             _unitOfWorkMock.Setup(u => u.DoctorRepository.GetByID("1")).Returns(doctor);
+            _unitOfWorkMock.Setup(u => u.ReviewRepository.GetByDoctorId("1"))
+               .Returns(new List<Review>());
 
             // Act
             var result = _doctorService.GetByID("1");

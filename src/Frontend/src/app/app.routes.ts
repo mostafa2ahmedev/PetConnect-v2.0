@@ -94,7 +94,11 @@ export const routes: Routes = [
     canActivate: [doctorGuardGuard],
   },
   // { path: 'doctors/:id', component: DoctorProfile, canActivate: [authGuard] },
-  { path: 'doctors/:id', component: CustomerViewDoctor, canActivate: [authGuard] },
+  {
+    path: 'doctors/:id',
+    component: CustomerViewDoctor,
+    canActivate: [authGuard],
+  },
   { path: 'doctor-details/:id', component: DoctorLearnMore },
   {
     path: 'doctors/update/:id',
@@ -148,7 +152,7 @@ export const routes: Routes = [
     component: UpdateProfile,
     canActivate: [authGuard],
   },
-      {path: 'profile/reviews',component:ReviewCustomerListOfReviews},
+  { path: 'profile/reviews', component: ReviewCustomerListOfReviews },
 
   {
     path: 'profile',
@@ -310,6 +314,6 @@ export const routes: Routes = [
     canActivate: [authGuard, CustomerGuard],
   },
   { path: 'checkout/:basketId', component: CheckoutComponent },
-    { path: 'order-success/:id', component: OrderSuccessComponent },
+  { path: 'order-success/:id', component: OrderSuccessComponent },
   { path: '**', component: NotFound },
 ];

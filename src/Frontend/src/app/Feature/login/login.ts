@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./login.css'],
 })
 export class Login implements OnInit {
+  loading: boolean = false;
   Email: string = '';
   Password: string = '';
   remembered: boolean = false;
@@ -24,6 +25,7 @@ export class Login implements OnInit {
 
   onLogin() {
     this.errorMessage = null;
+    this.loading = true; // ✅ start spinner immediately
 
     const loginData = {
       email: this.Email,
@@ -39,12 +41,10 @@ export class Login implements OnInit {
         storage.setItem('userId', res.id);
         storage.setItem('userRoles', JSON.stringify(res.roles));
 
-        // Optional: Store user details
         if (res.user) {
           storage.setItem('user', JSON.stringify(res.user));
         }
 
-        // Navigate first, then reload so the new page sees the updated state
         let targetRoute = '/doctors';
         if (this.accountService.isAdmin()) {
           targetRoute = '/admin';
@@ -52,9 +52,9 @@ export class Login implements OnInit {
           targetRoute = '/profile';
         } else if (this.accountService.isDoctor()) {
           targetRoute = '/doc-profile';
-        }else if (this.accountService.isSeller()) {
+        } else if (this.accountService.isSeller()) {
           targetRoute = '/seller';
-        };
+        }
 
         this.router.navigate([targetRoute]).then(() => {
           window.location.reload();
@@ -64,7 +64,8 @@ export class Login implements OnInit {
         console.error('Login failed', err);
         this.errorMessage =
           err.error?.message || 'Login failed. Please try again.';
-      }
+        this.loading = false; // ✅ stop spinner on error
+      },
     });
   }
 }

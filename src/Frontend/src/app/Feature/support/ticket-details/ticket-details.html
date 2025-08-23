@@ -9,15 +9,10 @@
     {{ ticketDetails.lastActivity }}
   </p>
   <div *ngIf="ticketDetails.pictureUrl" class="mt-2">
-    <img
-      *ngIf="
+    <img *ngIf="
         ticketDetails.pictureUrl.trim() && ticketDetails.pictureUrl?.trim()
-      "
-      [src]="getFullImageUrl(ticketDetails.pictureUrl)"
-      alt="Attachment"
-      class="img-fluid rounded"
-      style="max-height: 200px"
-    />
+      " [src]="getFullImageUrl(ticketDetails.pictureUrl)" alt="Attachment" class="img-fluid rounded"
+      style="max-height: 200px" />
   </div>
 
   <hr />
@@ -25,10 +20,7 @@
   <!-- Timeline -->
   <div class="timeline">
     <p>{{ ticketDetails.message }}</p>
-    <div
-      class="timeline-item mb-3"
-      *ngFor="let msg of ticketDetails.supportMessages"
-    >
+    <div class="timeline-item mb-3" *ngFor="let msg of ticketDetails.supportMessages">
       <div class="card shadow-sm">
         <div class="card-body">
           <h6>
@@ -42,13 +34,8 @@
             {{ msg.createdAt | date : "short" }}
           </small>
           <div *ngIf="msg.pictureUrl" class="mt-2">
-            <img
-              *ngIf="msg.pictureUrl.trim() && msg.pictureUrl?.trim()"
-              [src]="getFullImageUrl(msg.pictureUrl)"
-              alt="Attachment"
-              class="img-fluid rounded"
-              style="max-height: 200px"
-            />
+            <img *ngIf="msg.pictureUrl.trim() && msg.pictureUrl?.trim()" [src]="getFullImageUrl(msg.pictureUrl)"
+              alt="Attachment" class="img-fluid rounded" style="max-height: 200px" />
           </div>
         </div>
       </div>
@@ -67,11 +54,7 @@
 
         <div class="mb-3">
           <label class="form-label">Message</label>
-          <textarea
-            rows="4"
-            class="form-control"
-            formControlName="message"
-          ></textarea>
+          <textarea rows="4" class="form-control" formControlName="message"></textarea>
         </div>
 
         <div class="mb-3">
@@ -92,11 +75,7 @@
           />
         </div> -->
 
-        <button
-          type="submit"
-          class="btn btn-primary"
-          [disabled]="replyForm.invalid || submitting"
-        >
+        <button type="submit" class="btn btn-primary" [disabled]="replyForm.invalid || submitting">
           {{ submitting ? "Sending..." : "Send Reply" }}
         </button>
       </form>

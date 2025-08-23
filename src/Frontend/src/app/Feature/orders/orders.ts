@@ -8,59 +8,69 @@ import { OrderStatusEnum } from '../Seller/dashboard/order-status-enum';
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [CommonModule], 
-
+  imports: [CommonModule],
 
   templateUrl: './orders.html',
-  styleUrls: ['./orders.css']
+  styleUrls: ['./orders.css'],
 })
 export class OrdersComponent implements OnInit {
   orders: any[] = [];
- server = "https://localhost:7102/assets/ProductImages";
- orderStatusEnum = OrderStatusEnum;
+  server = 'https://localhost:7102/assets/ProductImages';
+  orderStatusEnum = OrderStatusEnum;
 
-currentPage: number = 1;
-pageSize: number = 2;
+  currentPage: number = 1;
+  pageSize: number = 2;
+  isLoading = true;
 
-  constructor(private http: HttpClient, private authService: AuthService, private location:Location) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+    private location: Location
+  ) {}
 
   ngOnInit() {
-    const customerId = this.authService.getCustomerIdFromToken();
-    if (customerId) {
-      this.http.get<any[]>(`https://localhost:7102/api/Order/customer/${customerId}`)
-        .subscribe({
-          next: (res) => {
-            this.orders = res;
-            console.log('Orders fetched successfully:', this.orders);
-          },
-          error: (err) => {
-            console.error('Error fetching orders:', err);
-          }
-        });
-    } else {
-      console.warn('No customer ID found in token.');
+    setTimeout(() => {
+      const customerId = this.authService.getCustomerIdFromToken();
+      if (customerId) {
+        this.http
+          .get<any[]>(`https://localhost:7102/api/Order/customer/${customerId}`)
+          .subscribe({
+            next: (res) => {
+              this.orders = res;
+              console.log('Orders fetched successfully:', this.orders);
+              this.isLoading = false;
+            },
+            error: (err) => {
+              console.error('Error fetching orders:', err);
+            },
+          });
+      } else {
+        console.warn('No customer ID found in token.');
+      }
+    }, 1500);
+  }
+  deleteOrder(id: number) {
+    const confirmDelete = window.confirm(
+      'Are you sure you want to delete this order?'
+    );
+    if (confirmDelete) {
+      this.http.delete(`https://localhost:7102/api/Order/${id}`).subscribe({
+        next: () => {
+          this.orders = this.orders.filter((order) => order.id !== id);
+        },
+        error: (err) => {
+          console.error('Error deleting order:', err);
+        },
+      });
     }
   }
-deleteOrder(id: number) {
-  const confirmDelete = window.confirm('Are you sure you want to delete this order?');
-  if (confirmDelete) {
-    this.http.delete(`https://localhost:7102/api/Order/${id}`).subscribe({
-      next: () => {
-        this.orders = this.orders.filter(order => order.id !== id);
-      },
-      error: (err) => {
-        console.error('Error deleting order:', err);
-      }
-    });
-  }
-}
-get pagedOrders() {
+  get pagedOrders() {
     const start = (this.currentPage - 1) * this.pageSize;
     return this.orders.slice(start, start + this.pageSize);
   }
- get totalPages(): number {
-  return Math.max(1, Math.ceil(this.orders.length / this.pageSize));
-}
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.orders.length / this.pageSize));
+  }
 
   nextPage() {
     if (this.currentPage < Math.ceil(this.orders.length / this.pageSize)) {
@@ -74,15 +84,19 @@ get pagedOrders() {
     }
   }
 
-  goBack(){
+  goBack() {
     this.location.back();
   }
-getStatusClass(status: string): string {
+  getStatusClass(status: string): string {
     switch (status) {
-      case 'Pending': return 'status-pending';
-      case 'Shipped': return 'status-shipped';
-      case 'Deny': return 'status-deny';
-      default: return 'status-default';
+      case 'Pending':
+        return 'status-pending';
+      case 'Shipped':
+        return 'status-shipped';
+      case 'Deny':
+        return 'status-deny';
+      default:
+        return 'status-default';
     }
   }
 }
